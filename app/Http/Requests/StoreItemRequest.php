@@ -11,7 +11,7 @@ class StoreItemRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +22,28 @@ class StoreItemRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'name' => ['required', 'max:255'],
+            // 'name' => ['required', 'unique:items', 'max:255'],
+            'category' => ['required'],
+            // 'image_path1' => [],
+            // 'image_path2' => [],
+            // 'image_path3' => [],
+            'stocks' => ['required', 'integer', 'min:0'],
+            'usage_status' => ['required'],
+            'end_user' => ['max:10'],
+            // 'location_of_use',
+            'storage_location' => ['required'],
+            'acquisition_category' => ['required'],
+            'price' => ['required', 'integer', 'min:0'],
+            // 'date_of_acquisition' => ['date'],
+            // 'inspection_schedule' => ['date'],
+            // 'disposal_schedule' => ['date'],
+            'manufacturer' => ['max:20'],
+            'product_number' => ['integer', 'min:0'],
+            'vendor' => ['max:20'],
+            'vendor_website_url' => ['url'],
+            // 'remarks' => ['max:1000'],
+            // 'qrcode_path'
         ];
     }
 }

@@ -3,52 +3,53 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head, router } from '@inertiajs/vue3';
 import { reactive } from 'vue';
 
-defineProps({
+const props = defineProps({
+    item: Object,
     errors: Object
 })
 
 const form = reactive({
-  id: null,
-  name: null,
-  category: "未選択",
-  image_path1: null,
-  image_path2: null,
-  image_path3: null,
-  stocks: null,
-  usage_status: "未選択",
-  end_user: null,
-  location_of_use: "未選択",
-  storage_location: "未選択",
-  acquisition_category: "未選択",
-  price: null,
-  date_of_acquisition: null,
-  inspection_schedule: null,
-  disposal_schedule: null,
-  manufacturer: null,
-  product_number: null,
-  vendor: null,
-  vendor_website_url: null,
-  remarks: null,
-  qrcode_path: null
+  id: props.item.id,
+  name: props.item.name,
+  category: props.item.category,
+  image_path1: props.item.image_path1,
+  image_path2: props.item.image_path2,
+  image_path3: props.item.image_path3,
+  stocks: props.item.stocks,
+  usage_status: props.item.usage_status,
+  end_user: props.item.end_user,
+  location_of_use: props.item.location_of_use,
+  storage_location: props.item.storage_location,
+  acquisition_category: props.item.acquisition_category,
+  price: props.item.price,
+  date_of_acquisition: props.item.date_of_acquisition,
+  inspection_schedule: props.item.inspection_schedule,
+  disposal_schedule: props.item.disposal_schedule,
+  manufacturer: props.item.manufacturer,
+  product_number: props.item.product_number,
+  vendor: props.item.vendor,
+  vendor_website_url: props.item.vendor_website_url,
+  remarks: props.item.remarks,
+  qrcode_path: props.item.qrcode_path
 })
 
 // v1.oで書き方が変わった
 // 旧　Inertia.post('/items', form)
-const storeItem = () => {
-  router.visit('/items', {
-    method: 'post',
+const updateItem = id => {
+  router.visit(route('items.update', { item: id }), {
+    method: 'put',
     data: form
   })
 }
 </script>
 
 <template>
-    <Head title="備品新規登録" />
+    <Head title="備品編集" />
 
     <AuthenticatedLayout>
         <template #header>
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                備品新規登録
+                備品編集
             </h2>
         </template>
 
@@ -59,7 +60,7 @@ const storeItem = () => {
 
                         <section class="text-gray-600 body-font relative">
 
-                            <form @submit.prevent="storeItem">
+                            <form @submit.prevent="updateItem(form.id)">
                                 <div class="container px-5 py-8 mx-auto">
                                     
                                     
@@ -95,7 +96,7 @@ const storeItem = () => {
                                                 <div class="relative">
                                                 <label for="image_path1" class="leading-7 text-sm text-gray-600">写真データ1</label>
                                                 <input type="file" @change="previewImage" id="image_path1" name="image_path1" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
-                                                <img  :src="image_path1" alt="Image preview...">
+                                                <img :src="image_path1" alt="Image preview...">
                                                 </div>
                                             </div>
                                             <div class="p-2 w-full">
@@ -276,7 +277,7 @@ const storeItem = () => {
                                         </div>
                                     </div>
                                     <div class="p-2 w-full">
-                                        <button class="flex mx-auto text-white bg-indigo-500 border-0 py-2 px-8 focus:outline-none hover:bg-indigo-600 rounded text-lg">登録する</button>
+                                        <button class="flex mx-auto text-white bg-indigo-500 border-0 py-2 px-8 focus:outline-none hover:bg-indigo-600 rounded text-lg">更新する</button>
                                     </div>                                      
                                     </div>
                                     </div>
