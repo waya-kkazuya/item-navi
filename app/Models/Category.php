@@ -10,6 +10,10 @@ class Category extends Model
     use HasFactory;
 
     public function item() {
-        return $this->hasOne(item::class);
+        return $this->hasOne(Item::class);
+    }
+
+    public function wish() {
+        return $this->hasOne(Wish::class);
     }
 }

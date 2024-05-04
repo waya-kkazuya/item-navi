@@ -5,6 +5,7 @@ use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Http\Controllers\ItemController;
+use App\Http\Controllers\WishController;
 
 /*
 |--------------------------------------------------------------------------
@@ -18,6 +19,9 @@ use App\Http\Controllers\ItemController;
 */
 
 Route::resource('items', ItemController::class)
+->middleware(['auth', 'verified']);
+
+Route::resource('wishes', WishController::class)
 ->middleware(['auth', 'verified']);
 
 

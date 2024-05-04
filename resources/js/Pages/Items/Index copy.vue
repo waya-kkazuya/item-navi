@@ -1,28 +1,12 @@
 <script setup>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import { Head, Link, router } from '@inertiajs/vue3';
+import { Head, Link } from '@inertiajs/vue3';
 import FlashMessage from '@/Components/FlashMessage.vue';
-import Pagination from '@/Components/Pagination.vue';
-import { ref } from 'vue';
 
 defineProps({
   items: Object
 })
 
-const search = ref('')
-const isTableView = ref('true')
-
-const searchItems = () => {
-  router.visit(route('items.index', { search: search.value }), {
-    method: 'get'
-  })
-}
-  // router.visit(route('items.index', { search: search.value }), {
-  //   method: 'get',
-  //   data: {
-  //     search: search.value
-  //   }
-  // })
 
 
 </script>
@@ -45,16 +29,8 @@ const searchItems = () => {
                           <div class="container px-5 py-8 mx-auto">
                             <FlashMessage />
                             <div class="flex pl-4 mt-4 lg:w-2/3 w-full mx-auto">
-                              <div class="flex">
-                                <input type="text" name="search" v-model="search">
-                                <button class="bg-blue-300 text-white py-2 px-2" @click="searchItems">検索</button>
-                              </div>
                               <Link as="button" :href="route('items.create')" class="flex ml-auto text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded">新規登録</Link>
                             </div>
-                          </div>
-
-                          <div class="mb-4 flex justify-end">
-                            <Pagination class="mt-6" :links="items.links"></Pagination>
                           </div>
 
                           <div class="min-w-full overflow-auto">
@@ -82,7 +58,7 @@ const searchItems = () => {
                               </tr>
                             </thead>
                             <tbody>
-                              <tr v-for="item in items.data" :key="item.id">
+                              <tr v-for="item in items" :key="item.id">
                                 <td class="border-b-2 border-gray-200 px-4 py-3">
                                   <Link class="text-blue-400" :href="route('items.show', { item: item.id })">
                                     {{ item.id }}
@@ -109,9 +85,7 @@ const searchItems = () => {
                             </tbody>
                           </table>
                         </div>
-                        <div class="mb-4 flex justify-end">
-                            <Pagination class="mt-6" :links="items.links"></Pagination>
-                          </div>
+                          
                       </section>
                     </div>
                 </div>

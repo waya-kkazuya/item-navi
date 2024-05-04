@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreItemRequest;
 use App\Http\Requests\UpdateItemRequest;
 use Inertia\Inertia;
+use Illuminate\Http\Request;
 
 
 class ItemController extends Controller
@@ -15,9 +16,11 @@ class ItemController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $items = Item::with('category')->select(
+        $items = Item::with('category')
+        ->searchItems($request->search)
+        ->select(
             'id',
             'name',
             'category_id',
@@ -40,7 +43,7 @@ class ItemController extends Controller
             'vendor_website_url',
             'remarks',
             'qrcode_path'
-        )->get();
+        )->paginate(20);
         
         // dd($items);
 
