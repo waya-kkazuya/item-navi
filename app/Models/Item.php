@@ -11,7 +11,7 @@ class Item extends Model
 
     protected $fillable = [
         'name',
-        'category',
+        'category_id',
         'image_path1',
         'image_path2',
         'image_path3',
@@ -32,6 +32,10 @@ class Item extends Model
         'remarks',
         'qrcode_path',
     ];
+
+    public function category() {
+        return $this->belongsTo(Category::class);
+    }
 
     public function scopeSearchItems($query, $input = null)
     {

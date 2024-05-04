@@ -24,7 +24,7 @@ class UpdateItemRequest extends FormRequest
         return [
             'name' => ['required', 'max:255'],
             // 'name' => ['required', 'unique:items', 'max:255'],
-            'category' => ['required'],
+            'category_id' => ['required'],
             // 'image_path1' => [],
             // 'image_path2' => [],
             // 'image_path3' => [],
@@ -41,7 +41,7 @@ class UpdateItemRequest extends FormRequest
             'manufacturer' => ['max:20'],
             'product_number' => ['integer', 'min:0'],
             'vendor' => ['max:20'],
-            'vendor_website_url' => ['url'],
+            // 'vendor_website_url' => ['url'],
             // 'remarks' => ['max:1000'],
             // 'qrcode_path'
         ];

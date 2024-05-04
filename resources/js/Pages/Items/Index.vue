@@ -63,7 +63,7 @@ defineProps({
                                   </Link>
                                 </td>
                                 <td class="border-b-2 border-gray-200 px-4 py-3">{{ item.name }}</td>
-                                <td class="border-b-2 border-gray-200 px-4 py-3">{{ item.category }}</td>
+                                <td class="border-b-2 border-gray-200 px-4 py-3">{{ item.category.name }}</td>
                                 <td class="border-b-2 border-gray-200 px-4 py-3">{{ item.image_path1 }}<img src="" alt=""></td>
                                 <td class="border-b-2 border-gray-200 px-4 py-3"><span>{{ item.stocks }}</span> <button class="ml-2 p-2 text-white bg-gray-400 border-0 focus:outline-none hover:bg-gray-500 rounded">入出庫</button></td>
                                 <td class="border-b-2 border-gray-200 px-4 py-3">{{ item.usage_status }}</td>

@@ -1,0 +1,34 @@
+<?php
+
+namespace Database\Seeders;
+
+use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
+
+class CategorySeeder extends Seeder
+{
+    /**
+     * Run the database seeds.
+     */
+    public function run(): void
+    {
+        DB::table('categories')->insert([
+            [
+                'name' => '消耗品'
+            ],
+            [
+                'name' => 'IT機器'
+            ],
+            [
+                'name' => 'ソフトウェアアカウント'
+            ],
+            [
+                'name' => '電化製品'
+            ],
+            [
+                'name' => '防災用品'
+            ]
+        ]);
+    }
+}

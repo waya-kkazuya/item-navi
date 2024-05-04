@@ -4,13 +4,14 @@ import { Head, router } from '@inertiajs/vue3';
 import { reactive } from 'vue';
 
 defineProps({
+    categories: Array,
     errors: Object
 })
 
 const form = reactive({
   id: null,
   name: null,
-  category: "未選択",
+  category_id: null,
   image_path1: null,
   image_path2: null,
   image_path3: null,
@@ -77,13 +78,14 @@ const storeItem = () => {
                                             <div class="p-2 w-full">
                                             <div class="relative">
                                                 <label for="category" class="leading-7 text-sm text-gray-600">カテゴリ</label><br>
-                                                <select name="category" id="category" v-model="form.category" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
-                                                    <option value="未選択">未選択</option>
+                                                <select name="category" id="category" v-model="form.category_id" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
+                                                    <option v-for="category in categories" :value="category.id" :key="category.id">{{ category.name }}</option>
+                                                    <!-- <option value="未選択">未選択</option>
                                                     <option value="消耗品">消耗品</option>
                                                     <option value="IT機器">IT機器</option>
                                                     <option value="ソフトウェアアカウント">ソフトウェアアカウント</option>
                                                     <option value="電化製品">電化製品</option>
-                                                    <option value="防災用品">防災用品</option>
+                                                    <option value="防災用品">防災用品</option> -->
                                                 </select>
                                                 <!-- <input type="text" id="category" name="category" v-model="form.category" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"> -->
                                                 <div v-if="errors.category" class="font-medium text-red-600">{{ errors.category }}</div>

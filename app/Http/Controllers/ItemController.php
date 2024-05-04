@@ -3,10 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\Item;
+use App\Models\Category;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreItemRequest;
 use App\Http\Requests\UpdateItemRequest;
 use Inertia\Inertia;
+
 
 class ItemController extends Controller
 {
@@ -15,10 +17,10 @@ class ItemController extends Controller
      */
     public function index()
     {
-        $items = Item::select(
+        $items = Item::with('category')->select(
             'id',
             'name',
-            'category',
+            'category_id',
             'image_path1',
             'image_path2',
             'image_path3',
@@ -39,6 +41,8 @@ class ItemController extends Controller
             'remarks',
             'qrcode_path'
         )->get();
+        
+        // dd($items);
 
         return Inertia::render('Items/Index', [
             'items' => $items
@@ -49,8 +53,12 @@ class ItemController extends Controller
      * Show the form for creating a new resource.
      */
     public function create()
-    {
-        return Inertia::render('Items/Create');
+    {   
+        $categories = Category::all();
+
+        return Inertia::render('Items/Create', [
+            'categories' => $categories
+        ]);
     }
 
     /**
@@ -61,7 +69,7 @@ class ItemController extends Controller
         Item::create([
             'id' => $request->id,
             'name' => $request->name,
-            'category' => $request->category ,
+            'category_id' => $request->category_id ,
             'image_path1' => $request->image_path1,
             'image_path2' => $request->image_path2,
             'image_path3' => $request->image_path3,
@@ -96,8 +104,11 @@ class ItemController extends Controller
     public function show(Item $item)
     {
         // dd($item);
+        // categoryとのリレーションをロード
+        $item_category = Item::with('category')->find($item->id);
+
         return Inertia::render('Items/Show', [
-            'item' => $item
+            'item' => $item_category
         ]);
     }
 
@@ -106,8 +117,13 @@ class ItemController extends Controller
      */
     public function edit(Item $item)
     {
+        // categoryとのリレーションをロード
+        $item_category = Item::with('category')->find($item->id);
+        $categories = Category::all();
+
         return Inertia::render('Items/Edit', [
-            'item' => $item
+            'item' => $item_category,
+            'categories' => $categories
         ]);
     }
 
@@ -115,10 +131,10 @@ class ItemController extends Controller
      * Update the specified resource in storage.
      */
     public function update(UpdateItemRequest $request, Item $item)
-    {
+    {      
         // dd($item->name, $request->name);
         $item->name = $request->name;
-        $item->category = $request->category;
+        $item->category_id = $request->category_id;
         $item->image_path1 = $request->image_path1;
         $item->image_path2 = $request->image_path2;
         $item->image_path3 = $request->image_path3;

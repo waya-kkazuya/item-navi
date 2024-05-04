@@ -17,8 +17,8 @@ class ItemSeeder extends Seeder
         DB::table('items')->insert([
             [
                 'name' => 'ペーパータオル',
-                'category' => '消耗品',
-                // 'category_id' => Category::all()->random()->id,
+                // 'category' => '消耗品',
+                'category_id' => Category::all()->random()->id,
                 'image_path1' => 'path1',
                 'image_path2' => 'path2',
                 'image_path3' => 'path3',
@@ -42,7 +42,7 @@ class ItemSeeder extends Seeder
             ],
             [
                 'name' => 'ノートパソコン',
-                'category' => 'IT機器',
+                'category_id' => Category::all()->random()->id,
                 'image_path1' => 'path1',
                 'image_path2' => 'path2',
                 'image_path3' => 'path3',
@@ -66,7 +66,7 @@ class ItemSeeder extends Seeder
             ],
             [
                 'name' => 'オフィス机',
-                'category' => 'オフィス家具',
+                'category_id' => Category::all()->random()->id,
                 'image_path1' => 'path1',
                 'image_path2' => 'path2',
                 'image_path3' => 'path3',

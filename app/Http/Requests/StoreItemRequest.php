@@ -24,7 +24,7 @@ class StoreItemRequest extends FormRequest
         return [
             'name' => ['required', 'max:255'],
             // 'name' => ['required', 'unique:items', 'max:255'],
-            'category' => ['required'],
+            'category_id' => ['required'],
             // 'image_path1' => [],
             // 'image_path2' => [],
             // 'image_path3' => [],
