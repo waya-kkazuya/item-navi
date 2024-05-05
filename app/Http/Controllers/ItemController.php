@@ -57,6 +57,8 @@ class ItemController extends Controller
      */
     public function create()
     {   
+        // Gate::authorize('staff-higher');
+
         $categories = Category::all();
 
         return Inertia::render('Items/Create', [
@@ -69,6 +71,8 @@ class ItemController extends Controller
      */
     public function store(StoreItemRequest $request)
     {
+        Gate::authorize('staff-higher');
+
         Item::create([
             'id' => $request->id,
             'name' => $request->name,
@@ -120,6 +124,8 @@ class ItemController extends Controller
      */
     public function edit(Item $item)
     {
+        // Gate::authorize('staff-higher');
+
         // categoryとのリレーションをロード
         $item_category = Item::with('category')->find($item->id);
         $categories = Category::all();
@@ -134,7 +140,9 @@ class ItemController extends Controller
      * Update the specified resource in storage.
      */
     public function update(UpdateItemRequest $request, Item $item)
-    {      
+    {
+        // Gate::authorize('staff-higher');
+        
         // dd($item->name, $request->name);
         $item->name = $request->name;
         $item->category_id = $request->category_id;

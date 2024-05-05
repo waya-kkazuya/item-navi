@@ -18,11 +18,16 @@ use App\Http\Controllers\WishController;
 |
 */
 
+// Route::middleware('can:user-higher')
+// ->group(function(){
+
+// });
+
 Route::resource('items', ItemController::class)
-->middleware(['auth', 'verified']);
+->middleware(['auth', 'verified', 'can:staff-higher']);
 
 Route::resource('wishes', WishController::class)
-->middleware(['auth', 'verified']);
+->middleware(['auth', 'verified', 'can:user-higher']);
 
 
 Route::get('/', function () {

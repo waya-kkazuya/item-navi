@@ -31,8 +31,8 @@ const showingNavigationDropdown = ref(false);
                             <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                                 <NavLink :href="route('dashboard')" :active="route().current('dashboard')">
                                     Dashboard
-                                </NavLink>
-                                <NavLink :href="route('items.index')" :active="route().current('items.index')">
+                                </NavLink>        
+                                <NavLink v-if="$page.props.auth.user_role <= 5" :href="route('items.index')" :active="route().current('items.index')">
                                     備品一覧
                                 </NavLink>
                                 <NavLink :href="route('wishes.index')" :active="route().current('wishes.index')">
