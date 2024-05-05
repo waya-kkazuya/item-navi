@@ -1,7 +1,7 @@
 <script setup>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head, router } from '@inertiajs/vue3';
-import { reactive } from 'vue';
+import { reactive, ref } from 'vue';
 
 defineProps({
     categories: Array,
@@ -33,6 +33,8 @@ const form = reactive({
   qrcode_path: null
 })
 
+const file_src = ref('')
+
 // v1.oで書き方が変わった
 // 旧　Inertia.post('/items', form)
 const storeItem = () => {
@@ -41,6 +43,17 @@ const storeItem = () => {
     data: form
   })
 }
+
+const handleFileUpload = (event) => {
+    form.image_path1 = event.target.files[0];
+  if (form.image_path1) {
+    file_src.value = URL.createObjectURL(form.image_path1);
+  }
+};
+
+// const handleFileUpload = event => {
+//     form.image_path1 = event.target.files[0];
+// }
 </script>
 
 <template>
@@ -93,26 +106,28 @@ const storeItem = () => {
                                             </div>
 
                                             <div class="flex justify-around">
-                                            <div class="p-2 w-full">
-                                                <div class="relative">
-                                                <label for="image_path1" class="leading-7 text-sm text-gray-600">写真データ1</label>
-                                                <input type="file" @change="previewImage" id="image_path1" name="image_path1" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
-                                                <img  :src="image_path1" alt="Image preview...">
+                                                <div class="p-2 w-full">
+                                                    <div class="relative">
+                                                        <label for="image_path1" class="leading-7 text-sm text-gray-600">写真データ1</label>
+                                                        <input type="file" @change="handleFileUpload" accept="image/png, image/jpeg, image/jpg" id="image_path1" name="image_path1" 
+                                                            class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
+                                                        <img v-if="file_src.value" :src="file_src.value" alt="Image preview...">
+                                                    </div>
                                                 </div>
-                                            </div>
-                                            <div class="p-2 w-full">
-                                                <div class="relative">
-                                                <label for="image_path2" class="leading-7 text-sm text-gray-600">写真データ2</label>
-                                                <input type="file" id="image_path2" name="image_path2" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
+                                                
+                                                <div class="p-2 w-full">
+                                                    <div class="relative">
+                                                    <label for="image_path2" class="leading-7 text-sm text-gray-600">写真データ2</label>
+                                                    <input type="file" id="image_path2" name="image_path2" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
+                                                    </div>
                                                 </div>
-                                            </div>
 
-                                            <div class="p-2 w-full">
-                                                <div class="relative">
-                                                <label for="image_path3" class="leading-7 text-sm text-gray-600">写真データ3</label>
-                                                <input type="file" id="image_path3" name="image_path3" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
+                                                <div class="p-2 w-full">
+                                                    <div class="relative">
+                                                    <label for="image_path3" class="leading-7 text-sm text-gray-600">写真データ3</label>
+                                                    <input type="file" id="image_path3" name="image_path3" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
+                                                    </div>
                                                 </div>
-                                            </div>
                                             </div>
                                         </div>
                                         

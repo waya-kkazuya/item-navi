@@ -9,6 +9,9 @@ use App\Http\Requests\StoreItemRequest;
 use App\Http\Requests\UpdateItemRequest;
 use Inertia\Inertia;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Gate;
+
 
 
 class ItemController extends Controller
@@ -18,6 +21,8 @@ class ItemController extends Controller
      */
     public function index(Request $request)
     {
+        // phpinfo();
+
         $items = Item::with('category')
         ->searchItems($request->search)
         ->select(
@@ -47,8 +52,14 @@ class ItemController extends Controller
         
         // dd($items);
 
+        // $items->getCollection()->transform(function ($item) {
+        //     $item->image_path1 = asset('storage/items/' . $item->image_path1);
+        //     return $item;
+        // });
+
         return Inertia::render('Items/Index', [
-            'items' => $items
+            'items' => $items,
+            // 'imagePath1' => asset('storage/items/' . $item->)
         ]);
     }
 
@@ -73,11 +84,20 @@ class ItemController extends Controller
     {
         Gate::authorize('staff-higher');
 
+        // dd($request->image_path1);
+
+        $imageFile = $request->image_path1;
+        if(!is_null($imageFile) && $imageFile->isValid()){
+            $created_image_path1 = Storage::putFile('public/items', $imageFile);
+        }
+
+        // dd($created_image_path1);
+
         Item::create([
             'id' => $request->id,
             'name' => $request->name,
             'category_id' => $request->category_id ,
-            'image_path1' => $request->image_path1,
+            'image_path1' => $created_image_path1,
             'image_path2' => $request->image_path2,
             'image_path3' => $request->image_path3,
             'stocks' => $request->stocks,
