@@ -4,16 +4,19 @@ import { Head, Link, router } from '@inertiajs/vue3';
 import FlashMessage from '@/Components/FlashMessage.vue';
 import Pagination from '@/Components/Pagination.vue';
 import { ref } from 'vue';
+import { stringify } from 'postcss';
 
 defineProps({
-  items: Object
+  items: Object,
+  sortDirection: String
 })
 
 const search = ref('')
+const sortDirection = ref(sortDirection)
 const isTableView = ref('true')
 
-const searchItems = () => {
-  router.visit(route('items.index', { search: search.value }), {
+const fetchItems = () => {
+  router.visit(route('items.index', { search: search.value, sortDirection: sortDirection.value }), {
     method: 'get'
   })
 }
@@ -23,6 +26,8 @@ const searchItems = () => {
   //     search: search.value
   //   }
   // })
+
+
 
 
 </script>
@@ -45,10 +50,15 @@ const searchItems = () => {
                           <div class="container px-5 py-8 mx-auto">
                             <FlashMessage />
                             <div class="flex pl-4 mt-4 lg:w-2/3 w-full mx-auto">
-                              <div class="flex">
-                                <input type="text" name="search" v-model="search">
-                                <button class="bg-blue-300 text-white py-2 px-2" @click="searchItems">検索</button>
-                              </div>
+                              <div class="flex items-center">
+                                <input type="text" name="search" v-model="search" placeholder="備品名で検索">
+                                <button class="bg-blue-300 text-white py-2 px-2" @click="fetchItems">検索</button>
+                                </div>
+
+                                <select class="ml-4" v-model="sortDirection" @change="fetchItems">
+                                  <option value="asc">昇順</option>
+                                  <option value="desc">降順</option>
+                                </select>
                               <Link as="button" :href="route('items.create')" class="flex ml-auto text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded">新規登録</Link>
                             </div>
                           </div>

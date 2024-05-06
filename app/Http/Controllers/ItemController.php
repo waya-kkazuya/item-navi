@@ -11,7 +11,7 @@ use Inertia\Inertia;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Gate;
-
+use Illuminate\Support\Facades\Log;
 
 
 class ItemController extends Controller
@@ -22,9 +22,13 @@ class ItemController extends Controller
     public function index(Request $request)
     {
         // phpinfo();
+        Log::info("sortDirection");
+        Log::info($request->query('sortDirection', 'asc'));
+
+        $sortDirection = $request->query('sortDirection', 'asc');
 
         $items = Item::with('category')
-        ->searchItems($request->search)
+        ->searchItems($request->query('search'))
         ->select(
             'id',
             'name',
@@ -48,7 +52,9 @@ class ItemController extends Controller
             'vendor_website_url',
             'remarks',
             'qrcode_path'
-        )->paginate(20);
+        )
+        ->orderBy('created_at', $sortDirection)
+        ->paginate(20);
         
         // dd($items);
 
@@ -59,9 +65,10 @@ class ItemController extends Controller
 
         return Inertia::render('Items/Index', [
             'items' => $items,
-            // 'imagePath1' => asset('storage/items/' . $item->)
+            'sortDirection' => $sortDirection
         ]);
     }
+    // 'imagePath1' => asset('storage/items/' . $item->)
 
     /**
      * Show the form for creating a new resource.
