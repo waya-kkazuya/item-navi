@@ -19,7 +19,7 @@ class ItemObserver
             'edited_field' => '-',
             'old_value' => '-',
             'new_value' => '-',
-            'edit_user' => Auth::user(),
+            'edit_user' => Auth::user()->name,
             'edited_at' => now(),            
         ]);
     }
