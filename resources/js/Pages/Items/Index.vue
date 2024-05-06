@@ -8,17 +8,22 @@ import { stringify } from 'postcss';
 
 defineProps({
   items: Object,
-  sortDirection: String
+  // sort: String
 })
 
 const search = ref('')
-const sortDirection = ref(sortDirection)
+// const sortDirection = ref(sort)
 const isTableView = ref('true')
 
 const fetchItems = () => {
-  router.visit(route('items.index', { search: search.value, sortDirection: sortDirection.value }), {
+  router.visit(route('items.index', { search: search.value }), {
     method: 'get'
   })
+  
+// const fetchItems = () => {
+//   router.visit(route('items.index', { search: search.value, sortDirection: sortDirection.value }), {
+//     method: 'get'
+//   })
 }
   // router.visit(route('items.index', { search: search.value }), {
   //   method: 'get',

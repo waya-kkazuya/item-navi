@@ -25,7 +25,7 @@ class ItemController extends Controller
         Log::info("sortDirection");
         Log::info($request->query('sortDirection', 'asc'));
 
-        $sortDirection = $request->query('sortDirection', 'asc');
+        // $sortDirection = $request->query('sortDirection', 'asc');
 
         $items = Item::with('category')
         ->searchItems($request->query('search'))
@@ -53,8 +53,8 @@ class ItemController extends Controller
             'remarks',
             'qrcode_path'
         )
-        ->orderBy('created_at', $sortDirection)
         ->paginate(20);
+        // ->orderBy('created_at', $sortDirection)
         
         // dd($items);
 
@@ -65,7 +65,7 @@ class ItemController extends Controller
 
         return Inertia::render('Items/Index', [
             'items' => $items,
-            'sortDirection' => $sortDirection
+            // 'sort' => $sortDirection
         ]);
     }
     // 'imagePath1' => asset('storage/items/' . $item->)
@@ -104,7 +104,7 @@ class ItemController extends Controller
             'id' => $request->id,
             'name' => $request->name,
             'category_id' => $request->category_id ,
-            'image_path1' => $created_image_path1,
+            'image_path1' => $request->image_path1,
             'image_path2' => $request->image_path2,
             'image_path3' => $request->image_path3,
             'stocks' => $request->stocks,
