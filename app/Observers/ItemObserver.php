@@ -13,13 +13,16 @@ class ItemObserver
      */
     public function created(Item $item): void
     {
+        // 注意
+        //createdはseederやfactoryでダミーデータを作成した時も動く
+        
         // 新規作成時はitem_idとedit_user,edited_atがあればいいのでは。
         Edithistory::create([
             'item_id' => $item->id,
             'edited_field' => '-',
             'old_value' => '-',
             'new_value' => '-',
-            'edit_user' => Auth::user()->name,
+            'edit_user' => Auth::user()->name ?? '',
             'edited_at' => now(),            
         ]);
     }

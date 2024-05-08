@@ -52,10 +52,14 @@ class ItemController extends Controller
             'vendor_website_url',
             'remarks',
             'qrcode_path'
-        )
-        ->paginate(20);
+        )->paginate(20);
         // ->orderBy('created_at', $sortDirection)
         
+        // $items->transform(function ($item) {
+        //     $item->image_path1 = asset('storage/' . $item->image_path1);
+        //     return $item;
+        // });
+
         // dd($items);
 
         // $items->getCollection()->transform(function ($item) {

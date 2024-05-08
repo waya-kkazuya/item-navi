@@ -8,4 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class ImageTest extends Model
 {
     use HasFactory;
+
+    protected $fillable = [
+        'name',
+        'file_name',
+    ];
 }

@@ -73,14 +73,15 @@ const fetchItems = () => {
                           </div>
 
                           <div class="min-w-full overflow-auto">
-                          <table class="table-auto min-w-full text-left whitespace-no-wrap">
+                          <table class="table-fixed min-w-full text-left whitespace-no-wrap">
                             <thead>
                               <tr>
                                 <th class="min-w-16 px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100 rounded-tl rounded-bl">Id</th>
                                 <th class="min-w-40 px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">備品名</th>
                                 <th class="min-w-20 px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">カテゴリ</th>
                                 <th class="min-w-28 px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">画像1パス</th>
-                                <th class="min-w-40 px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">在庫数</th>
+                                <th class="min-w-20 px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">在庫数</th>
+                                <th class="min-w-40 px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">入出庫</th>
                                 <th class="min-w-24 px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">利用状況</th>
                                 <th class="min-w-24 px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">使用者</th>
                                 <th class="min-w-32 px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">利用場所</th>
@@ -105,8 +106,9 @@ const fetchItems = () => {
                                 </td>
                                 <td class="border-b-2 border-gray-200 px-4 py-3">{{ item.name }}</td>
                                 <td class="border-b-2 border-gray-200 px-4 py-3">{{ item.category.name }}</td>
-                                <td class="border-b-2 border-gray-200 px-4 py-3">{{ item.image_path1 }}<img :src="item.image_path1" alt=""></td>
-                                <td class="border-b-2 border-gray-200 px-4 py-3"><span>{{ item.stocks }}</span> <button class="ml-2 p-2 text-white bg-gray-400 border-0 focus:outline-none hover:bg-gray-500 rounded">入出庫</button></td>
+                                <td class="h-24 border-b-2 border-gray-200 px-4 py-3"><img :src="item.image_path1" alt="" class="h-full w-full"></td>
+                                <td class="text-right border-b-2 border-gray-200 px-4 py-3"><span>{{ item.stocks }}</span></td>
+                                <td class="border-b-2 border-gray-200 px-4 py-3"><button class="ml-2 p-2 text-white bg-gray-400 border-0 focus:outline-none hover:bg-gray-500 rounded">入出庫</button></td>
                                 <td class="border-b-2 border-gray-200 px-4 py-3">{{ item.usage_status }}</td>
                                 <td class="border-b-2 border-gray-200 px-4 py-3">{{ item.end_user }}</td>
                                 <td class="border-b-2 border-gray-200 px-4 py-3">{{ item.location_of_use }}</td>

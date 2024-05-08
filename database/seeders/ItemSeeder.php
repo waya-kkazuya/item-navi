@@ -43,7 +43,7 @@ class ItemSeeder extends Seeder
             [
                 'name' => 'ノートパソコン',
                 'category_id' => Category::all()->random()->id,
-                'image_path1' => 'path1',
+                'image_path1' => 'storage/items/vvrfzBLIH38FgobtmDzuBw8II2lxhlVtIfzuqM3v.jpg',
                 'image_path2' => 'path2',
                 'image_path3' => 'path3',
                 'stocks' => '20',

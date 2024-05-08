@@ -6,6 +6,8 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Http\Controllers\ItemController;
 use App\Http\Controllers\WishController;
+use App\Http\Controllers\ImageTestController;
+use App\Models\ImageTest;
 
 /*
 |--------------------------------------------------------------------------
@@ -27,6 +29,9 @@ Route::resource('items', ItemController::class)
 ->middleware(['auth', 'verified', 'can:staff-higher']);
 
 Route::resource('wishes', WishController::class)
+->middleware(['auth', 'verified', 'can:user-higher']);
+
+Route::resource('image_tests', ImageTestController::class)
 ->middleware(['auth', 'verified', 'can:user-higher']);
 
 
