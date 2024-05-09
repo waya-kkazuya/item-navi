@@ -59,7 +59,7 @@ const handleFileUpload = (event) => {
                               <label for="file_name" class="leading-7 text-sm text-gray-600">画像データ</label>
                               <input type="file" @change="handleFileUpload" accept="image/png, image/jpeg, image/jpg" id="file_name" name="file_name" 
                                   class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
-                              <img v-if="file_src" :src="file_src" alt="Image preview..." class="mt-4">
+                              <img v-if="file_src" :src="file_src" alt="Image preview..." class="w-36 mt-4">
                               <div v-if="errors.file_name" class="font-medium text-red-600">{{ errors.file_name }}</div>
                           </div>
                           <div class="p-2 w-full">

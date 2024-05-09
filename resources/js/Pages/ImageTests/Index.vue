@@ -1,6 +1,7 @@
 <script setup>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head, Link } from '@inertiajs/vue3';
+import FlashMessage from '@/Components/FlashMessage.vue';
 
 defineProps({
   imageTests: Array,
@@ -18,6 +19,7 @@ defineProps({
         </template>
 
         <div class="py-12">
+            <FlashMessage />
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                 <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                     <div class="p-6 text-gray-900">
@@ -25,7 +27,9 @@ defineProps({
                       <div v-for="item in imageTests" :key="item.id">
                         <div>{{ item.name }}</div>
                         <div>{{ item.file_name }}</div>
-                        <img :src="item.file_name">
+                        <div class="w-32">
+                          <img :src="item.file_name">
+                        </div>
                       </div>  
                     </div>
                 </div>
