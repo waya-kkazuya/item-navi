@@ -12,6 +12,7 @@ use Intervention\Image\Drivers\Gd\Driver;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Log;
 use App\Http\Requests\UploadImageRequest;
+use App\Services\ImageService;
 
 class ImageTestController extends Controller
 {
@@ -44,32 +45,7 @@ class ImageTestController extends Controller
 
         $imageFile = $request->file_name;
         if(!is_null($imageFile) && $imageFile->isValid()){
-            // Storage::putの場合
-            $fileName = uniqid(rand().'_');
-            $extension = $imageFile->extension();
-            $fileNameToStore = $fileName. '.' . $extension;
-
-            // 希望するドライバーで新しいマネージャー インスタンスを作成する
-            $manager = new ImageManager(new Driver());
-
-            // 画像ファイルを読み込む
-            $image = $manager->read($imageFile);
-
-            // 画像をリサイズする
-            $image->resize(width: 1920, height: 1080);
-
-            // リサイズした画像を保存する(Storageいらず)
-            $image->save(public_path('/images/' . $fileNameToStore));
-
-            // ver2.0
-            // $resizedImage = Image::make($imageFile)->resize(1920, 1080)->encode();
-
-            // Storage::put('public/images/' . $fileNameToStore, $resizedImage );
-            // dd($imageFile, $image);
-
-            // putFileは自動でファイル名を生成
-            // リサイズなしの場合
-            // Storage::putFile('public/items', $imageFile);
+            ImageService::upload($imageFile, 'images');
         }
 
 
