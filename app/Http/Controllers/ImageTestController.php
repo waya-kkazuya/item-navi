@@ -21,6 +21,7 @@ class ImageTestController extends Controller
         // phpinfo();
 
         $imageTests = ImageTest::select(
+            'id',
             'name',
             'file_name',
         )->get();
@@ -44,21 +45,36 @@ class ImageTestController extends Controller
 
     public function store(UploadImageRequest $request)
     {
-        dd($request);
+        // dd($request);
         
         Gate::authorize('staff-higher');
 
+        $imageFiles = $request->file('file_name');
+
+        // dd($request->name);
+        // dd($imageFiles[0]);
         // dd($request);
 
-        $imageFile = $request->file_name;
-        if(!is_null($imageFile) && $imageFile->isValid()){
-            $fileNameToStore = ImageService::upload($imageFile, 'images');
+        if(!is_null($imageFiles)){
+            foreach($imageFiles as $imageFile){
+                $fileNameToStore = ImageService::upload($imageFile, 'images');
+                ImageTest::create([
+                    'name' => $request->name,
+                    'file_name' => $fileNameToStore
+                ]);
+            }
         }
 
-        ImageTest::create([
-            'name' => $request->name,
-            'file_name' => $fileNameToStore
-        ]);
+
+        // 単一ファイルの場合
+        // $imageFile = $request->file_name;
+        // if(!is_null($imageFile) && $imageFile->isValid()){
+        //     $fileNameToStore = ImageService::upload($imageFile, 'images');
+        // }
+        // ImageTest::create([
+        //     'name' => $request->name,
+        //     'file_name' => $fileNameToStore
+        // ]);
 
         // if(!is_null($imageFile) && $imageFile->isValid()){
 
@@ -72,13 +88,43 @@ class ImageTestController extends Controller
         
     }
 
-    public function edit($id)
+    public function edit(ImageTest $imageTest)
     {
+        return Inertia::render('ImageTests/Edit', [
+            'imageTest' => $imageTest
+        ]);
+    }
+
+    public function update(UploadImageRequest $request, ImageTest $imageTest)
+    {
+        $imageTest->name = $request->name;
+        // $imageTest->category_id = $request->file_name;
+        $imageTest->save();
+
+        return to_route('image_tests.index')
+        ->with([
+            'message' => '更新しました。',
+            'status' => 'success'
+        ]);
 
     }
 
-    public function update($id)
+    public function destroy(ImageTest $imageTest)
     {
+        // テーブル情報を削除する前にStorage内のファイルを削除
+        // 画像1つが1つのidに紐づけられている
+        $filePath = 'public/images/'. $imageTest->file_name;
+        if(Storage::exists($filePath)){
+            Storage::delete($filePath);
+        }
 
+        $imageTest->delete();
+
+        return to_route('image_tests.index')
+        ->with([
+            'message' => '削除しました。',
+            'status' => 'danger'
+        ]);
     }
+
 }

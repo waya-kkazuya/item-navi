@@ -15,15 +15,33 @@ const form = reactive({
 const file_src = ref('')
 
 const storeItem = () => {
+  let formData = new FormData();
+  formData.append('name', form.name);
+  form.file_name.forEach((file, index) => {
+    formData.append(`file_name[${index}]`, file);
+  });
+
   router.visit('/image_tests', {
     method: 'post',
-    data: form
+    data: formData
   })
 }
+
+// const storeItem = () => {
+//   router.visit('/image_tests', {
+//     method: 'post',
+//     data: form
+//   })
+// }
 
 
 
 const handleFileUpload = (event) => {
+  if(event.target.files.length > 3) {
+    alert('アップロードできる画像は3枚までです');
+    event.target.value = ''; // 選択状態を解除
+    return
+  }
   // formにはv-modelで値が入らないので、コードで入れる
   // 配列をform.file_nameに入れる
   form.file_name = Array.from(event.target.files);
