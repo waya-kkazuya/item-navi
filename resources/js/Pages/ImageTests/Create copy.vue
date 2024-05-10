@@ -25,13 +25,10 @@ const storeItem = () => {
 
 const handleFileUpload = (event) => {
   // formにはv-modelで値が入らないので、コードで入れる
-  // 配列をform.file_nameに入れる
-  form.file_name = Array.from(event.target.files);
-  // form.file_name = event.target.files[0];
+  form.file_name = event.target.files[0];
   // プレビュー画像表示用のいソースを書く
   if (form.file_name) {
-    file_src.value = form.file_name.map(file => URL.createObjectURL(file));
-    // file_src.value = URL.createObjectURL(form.file_name);
+    file_src.value = URL.createObjectURL(form.file_name);
   }
 };
 
@@ -64,10 +61,7 @@ const handleFileUpload = (event) => {
                                   class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
                               <!-- <input type="file" @change="handleFileUpload" accept="image/png, image/jpeg, image/jpg" id="file_name" name="file_name" 
                                   class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"> -->
-                              <div class="flex">
-                                <img v-for="(src, index) in file_src" :key="index" :src="src" alt="Image preview..." class="mr-6 w-36 mt-4">
-                              </div>
-                              <!-- <img v-if="file_src" :src="file_src" alt="Image preview..." class="w-36 mt-4"> -->
+                              <img v-if="file_src" :src="file_src" alt="Image preview..." class="w-36 mt-4">
                               <div v-if="errors.file_name" class="font-medium text-red-600">{{ errors.file_name }}</div>
                           </div>
                           <div class="p-2 w-full">

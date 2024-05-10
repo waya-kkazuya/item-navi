@@ -44,6 +44,8 @@ class ImageTestController extends Controller
 
     public function store(UploadImageRequest $request)
     {
+        dd($request);
+        
         Gate::authorize('staff-higher');
 
         // dd($request);
@@ -68,5 +70,15 @@ class ImageTestController extends Controller
             'status' => 'success'
         ]);
         
+    }
+
+    public function edit($id)
+    {
+
+    }
+
+    public function update($id)
+    {
+
     }
 }
