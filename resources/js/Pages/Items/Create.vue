@@ -13,9 +13,10 @@ const form = reactive({
   id: null,
   name: null,
   category_id: null,
-  image_path1: null,
-  image_path2: null,
-  image_path3: null,
+  file_name: null,
+//   image_path1: null,
+//   image_path2: null,
+//   image_path3: null,
   stocks: null,
   usage_status: "未選択",
   end_user: null,
@@ -38,17 +39,66 @@ const file_src = ref('')
 
 // v1.oで書き方が変わった
 // 旧　Inertia.post('/items', form)
+// const storeItem = () => {
+//   router.visit('/items', {
+//     method: 'post',
+//     data: form
+//   })
+// }
+
 const storeItem = () => {
-  router.visit('/items', {
-    method: 'post',
-    data: form
-  })
+    let formData = new FormData();
+    formData.append('name', form.name);
+    formData.append('category_id', form.category_id);
+    formData.append('stocks', form.stocks);
+    formData.append('usage_status', form.usage_status);
+    formData.append('end_user', form.end_user);
+    formData.append('location_of_use', form.location_of_use);
+    formData.append('storage_location', form.storage_location);
+    formData.append('acquisition_category', form.acquisition_category);
+    formData.append('price', form.price);
+    formData.append('date_of_acquisition', form.date_of_acquisition);
+    formData.append('inspection_schedule', form.inspection_schedule);
+    formData.append('disposal_schedule', form.disposal_schedule);
+    formData.append('manufacturer', form.manufacturer);
+    formData.append('product_number', form.product_number);
+    formData.append('vendor', form.vendor);
+    formData.append('vendor_website_url', form.vendor_website_url);
+    formData.append('remarks', form.remarks);
+    formData.append('qrcode_path', form.qrcode_path);
+    if(form.file_name){
+        form.file_name.forEach((file, index) => {
+            formData.append(`file_name[${index}]`, file);
+        });
+    }
+    
+    router.visit('/items', {
+        method: 'post',
+        data: formData
+    })
 }
 
+// const handleFileUpload = (event) => {
+//     form.image_path1 = event.target.files[0];
+//   if (form.image_path1) {
+//     file_src.value = URL.createObjectURL(form.image_path1);
+//   }
+// };
+
 const handleFileUpload = (event) => {
-    form.image_path1 = event.target.files[0];
-  if (form.image_path1) {
-    file_src.value = URL.createObjectURL(form.image_path1);
+  if(event.target.files.length > 3) {
+    alert('アップロードできる画像は3枚までです');
+    event.target.value = ''; // 選択状態を解除
+    return
+  }
+  // formにはv-modelで値が入らないので、コードで入れる
+  // 配列をform.file_nameに入れる
+  form.file_name = Array.from(event.target.files);
+  // form.file_name = event.target.files[0];
+  // プレビュー画像表示用のいソースを書く
+  if (form.file_name) {
+    file_src.value = form.file_name.map(file => URL.createObjectURL(file));
+    // file_src.value = URL.createObjectURL(form.file_name);
   }
 };
 
@@ -94,42 +144,32 @@ const handleFileUpload = (event) => {
                                                 <label for="category" class="leading-7 text-sm text-gray-600">カテゴリ</label><br>
                                                 <select name="category" id="category" v-model="form.category_id" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
                                                     <option v-for="category in categories" :value="category.id" :key="category.id">{{ category.name }}</option>
-                                                    <!-- <option value="未選択">未選択</option>
-                                                    <option value="消耗品">消耗品</option>
-                                                    <option value="IT機器">IT機器</option>
-                                                    <option value="ソフトウェアアカウント">ソフトウェアアカウント</option>
-                                                    <option value="電化製品">電化製品</option>
-                                                    <option value="防災用品">防災用品</option> -->
                                                 </select>
-                                                <!-- <input type="text" id="category" name="category" v-model="form.category" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"> -->
                                                 <div v-if="errors.category" class="font-medium text-red-600">{{ errors.category }}</div>
                                             </div>
                                             </div>
 
-                                            <div class="flex justify-around">
+                                            <!-- <div class="flex justify-around">
                                                 <div class="p-2 w-full">
                                                     <div class="relative">
-                                                        <label for="image_path1" class="leading-7 text-sm text-gray-600">写真データ1</label>
+                                                        <label for="file_name" class="leading-7 text-sm text-gray-600">画像データ ※3枚まで</label>
                                                         <input type="file" @change="handleFileUpload" accept="image/png, image/jpeg, image/jpg" id="image_path1" name="image_path1" 
                                                             class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
                                                         <img v-if="file_src.value" :src="file_src.value" alt="Image preview...">
                                                     </div>
                                                 </div>
-                                                
-                                                <div class="p-2 w-full">
-                                                    <div class="relative">
-                                                    <label for="image_path2" class="leading-7 text-sm text-gray-600">写真データ2</label>
-                                                    <input type="file" id="image_path2" name="image_path2" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
-                                                    </div>
-                                                </div>
+                                            </div> -->
 
-                                                <div class="p-2 w-full">
-                                                    <div class="relative">
-                                                    <label for="image_path3" class="leading-7 text-sm text-gray-600">写真データ3</label>
-                                                    <input type="file" id="image_path3" name="image_path3" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
-                                                    </div>
+                                            <div class="relative">
+                                                <label for="file_name" class="leading-7 text-sm text-gray-600">画像データ ※3枚まで</label>
+                                                <input type="file" @change="handleFileUpload" multiple accept="image/png, image/jpeg, image/jpg" id="file_name" name="file_name" 
+                                                    class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
+                                                <div class="flex">
+                                                    <img v-for="(src, index) in file_src" :key="index" :src=src alt="Image preview..." class="mr-6 w-36 mt-4">
                                                 </div>
+                                                <div v-if="errors.file_name" class="font-medium text-red-600">{{ errors.file_name }}</div>
                                             </div>
+
                                         </div>
                                         
                                         <div class="p-2 w-full mb-8">

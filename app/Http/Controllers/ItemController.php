@@ -12,7 +12,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
-
+use App\Services\ImageService;
 
 class ItemController extends Controller
 {
@@ -53,6 +53,11 @@ class ItemController extends Controller
             'remarks',
             'qrcode_path'
         )->paginate(20);
+
+        $items->map(function ($item) {
+            $item->file_name = asset('/images/' . $item->file_name);
+            return $item;
+        });
         // ->orderBy('created_at', $sortDirection)
         
         // $items->transform(function ($item) {
@@ -96,11 +101,37 @@ class ItemController extends Controller
         Gate::authorize('staff-higher');
 
         // dd($request->image_path1);
+        $imageFiles = $request->file('file_name');
+        // dd($imageFiles);
 
-        $imageFile = $request->image_path1;
-        if(!is_null($imageFile) && $imageFile->isValid()){
-            $created_image_path1 = Storage::putFile('public/items', $imageFile);
+        // $imageFile = $request->image_path1;
+        // if(!is_null($imageFile) && $imageFile->isValid()){
+        //     $created_image_path1 = Storage::putFile('public/items', $imageFile);
+        // }
+        // if(!is_null($imageFiles)){
+        //     foreach($imageFiles as $imageFile){
+        //         $fileNameToStore = ImageService::upload($imageFile, 'images');
+
+        //         // ImageTest::create([
+        //         //     'name' => $request->name,
+        //         //     'file_name' => $fileNameToStore
+        //         // ]);
+        //     }
+        // }
+
+        $fileNameToStores = [];
+        if(!is_null($imageFiles)){
+            $fileNameToStores = array_map(function ($imageFile) {
+                // ここで$imageFileを処理
+                // $processedは処理後の結果
+                $fileNameToStore = ImageService::upload($imageFile, 'images');
+                // $processed = processImageFile($imageFile); // 仮の処理関数
+                return $fileNameToStore;
+            }, $imageFiles);
         }
+        
+        // dd($fileNameToStores[0], $fileNameToStores[1], $fileNameToStores[2]);
+
 
         // dd($created_image_path1);
 
@@ -108,16 +139,16 @@ class ItemController extends Controller
             'id' => $request->id,
             'name' => $request->name,
             'category_id' => $request->category_id ,
-            'image_path1' => $request->image_path1,
-            'image_path2' => $request->image_path2,
-            'image_path3' => $request->image_path3,
-            'stocks' => $request->stocks,
+            'image_path1' => $fileNameToStores[0] ?? null,
+            'image_path2' => $fileNameToStores[1] ?? null,
+            'image_path3' => $fileNameToStores[2] ?? null,
+            'stocks' => $request->stocks ?? 0,
             'usage_status' => $request->usage_status,
             'end_user' => $request->end_user,
             'location_of_use' => $request->location_of_use,
             'storage_location' => $request->storage_location,
             'acquisition_category' => $request->acquisition_category,
-            'price' => $request->price,
+            'price' => $request->price ?? 0,
             'date_of_acquisition' => $request->date_of_acquisition,
             'inspection_schedule' => $request->inspection_schedule,
             'disposal_schedule' => $request->disposal_schedule,
