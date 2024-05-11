@@ -19,6 +19,7 @@ class ItemObserver
         // 新規作成時はitem_idとedit_user,edited_atがあればいいのでは。
         Edithistory::create([
             'item_id' => $item->id,
+            'category_id' => $item->category_id,
             'edited_field' => '-',
             'old_value' => '-',
             'new_value' => '-',
