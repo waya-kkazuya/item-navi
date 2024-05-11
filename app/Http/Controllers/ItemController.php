@@ -55,7 +55,12 @@ class ItemController extends Controller
         )->paginate(20);
 
         $items->map(function ($item) {
-            $item->file_name = asset('/images/' . $item->file_name);
+            // publicフォルダ内のパスから、シンボリックリンクでstorage/app/publicのデータを読み込む
+            // $item->file_name = asset('storage/images/' . $item->file_name);
+            // 'images'ではなく、'items'
+            $item->image_path1 = asset('storage/items/' . $item->image_path1);
+            $item->image_path2 = asset('storage/items/' . $item->image_path2);
+            $item->image_path3 = asset('storage/items/' . $item->image_path3);
             return $item;
         });
         // ->orderBy('created_at', $sortDirection)
@@ -124,13 +129,13 @@ class ItemController extends Controller
             $fileNameToStores = array_map(function ($imageFile) {
                 // ここで$imageFileを処理
                 // $processedは処理後の結果
-                $fileNameToStore = ImageService::upload($imageFile, 'images');
+                $fileNameToStore = ImageService::upload($imageFile, 'items');
                 // $processed = processImageFile($imageFile); // 仮の処理関数
                 return $fileNameToStore;
             }, $imageFiles);
         }
         
-        // dd($fileNameToStores[0], $fileNameToStores[1], $fileNameToStores[2]);
+        // dd($fileNameToStores, $fileNameToStores[0], $fileNameToStores[1], $fileNameToStores[2]);
 
 
         // dd($created_image_path1);
@@ -176,6 +181,10 @@ class ItemController extends Controller
         // categoryとのリレーションをロード
         $item_category = Item::with('category')->find($item->id);
 
+        $item_category->image_path1 = asset('storage/items/' . $item_category->image_path1);
+        $item_category->image_path2 = asset('storage/items/' . $item_category->image_path2);
+        $item_category->image_path3 = asset('storage/items/' . $item_category->image_path3);    
+
         return Inertia::render('Items/Show', [
             'item' => $item_category
         ]);
@@ -191,6 +200,10 @@ class ItemController extends Controller
         // categoryとのリレーションをロード
         $item_category = Item::with('category')->find($item->id);
         $categories = Category::all();
+
+        $item_category->image_path1 = asset('storage/items/' . $item_category->image_path1);
+        $item_category->image_path2 = asset('storage/items/' . $item_category->image_path2);
+        $item_category->image_path3 = asset('storage/items/' . $item_category->image_path3);    
 
         return Inertia::render('Items/Edit', [
             'item' => $item_category,

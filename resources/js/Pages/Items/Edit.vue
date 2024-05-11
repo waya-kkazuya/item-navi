@@ -88,26 +88,36 @@ const updateItem = id => {
                                             </div>
 
                                             <div class="flex justify-around">
-                                            <div class="p-2 w-full">
-                                                <div class="relative">
-                                                <label for="image_path1" class="leading-7 text-sm text-gray-600">写真データ1</label>
-                                                <input type="file" @change="previewImage" id="image_path1" name="image_path1" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
-                                                <img :src="image_path1" alt="Image preview...">
+                                                <!-- 画像がデータベースに保存されている枚数が2枚なら1枚アップロードできる、1枚なら2枚、0枚なら3枚
+                                                状況によってバリデーションルールを動的に変更させる v-ifで実装　-->
+                                                <div class="p-2 w-full">
+                                                    <div class="relative">
+                                                    <label for="image_path1" class="leading-7 text-sm text-gray-600">写真データ1</label>
+                                                    <input type="file" @change="previewImage" id="image_path1" name="image_path1" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
+                                                    <img :src="image_path1" alt="Image preview...">
+                                                    </div>
                                                 </div>
                                             </div>
-                                            <div class="p-2 w-full">
-                                                <div class="relative">
-                                                <label for="image_path2" class="leading-7 text-sm text-gray-600">写真データ2</label>
-                                                <input type="file" id="image_path2" name="image_path2" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
+                                    
+                                            <div class="flex justify-around">
+                                                <div class="relative w-32">
+                                                    <img :src="item.image_path1">
+                                                    <button class="absolute top-0 right-0 bg-gray-500 text-white py-1 px-2" @click="deleteItem()">
+                                                    ×
+                                                    </button>
                                                 </div>
-                                            </div>
-
-                                            <div class="p-2 w-full">
-                                                <div class="relative">
-                                                <label for="image_path3" class="leading-7 text-sm text-gray-600">写真データ3</label>
-                                                <input type="file" id="image_path3" name="image_path3" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
+                                                <div class="relative w-32">
+                                                    <img :src="item.image_path2">
+                                                    <button class="absolute top-0 right-0 bg-gray-500 text-white py-1 px-2" @click="deleteItem()">
+                                                    ×
+                                                    </button>
                                                 </div>
-                                            </div>
+                                                <div class="relative w-32">
+                                                    <img :src="item.image_path3">
+                                                    <button class="absolute top-0 right-0 bg-gray-500 text-white py-1 px-2" @click="deleteItem()">
+                                                    ×
+                                                    </button>
+                                                </div>
                                             </div>
                                         </div>
                                         

@@ -26,7 +26,6 @@ class ImageService
 
     // 希望するドライバーで新しいマネージャー インスタンスを作成する
     $manager = new ImageManager(new Driver());
-
     // 画像ファイルを読み込む
     $image = $manager->read($file);
 
@@ -34,7 +33,8 @@ class ImageService
     $image->resize(width: 1920, height: 1080);
 
     // リサイズした画像を保存する(Storageいらず)
-    $image->save(public_path('/'. $folderName . '/' . $fileNameToStore));
+    // $image->save(public_path('/'. $folderName . '/' . $fileNameToStore));
+    $image->save(storage_path('app/public/'. $folderName . '/' . $fileNameToStore));
 
     // ver2.0の書き方
     // $resizedImage = Image::make($imageFile)->resize(1920, 1080)->encode();
