@@ -179,11 +179,7 @@ class ItemController extends Controller
     {
         // dd($item);
         // categoryとのリレーションをロード
-        $item_category = Item::with('category')->find($item->id);
-
-        $item_category->image_path1 = asset('storage/items/' . $item_category->image_path1);
-        $item_category->image_path2 = asset('storage/items/' . $item_category->image_path2);
-        $item_category->image_path3 = asset('storage/items/' . $item_category->image_path3);    
+        $item_category = Item::with('category')->find($item->id);  
 
         return Inertia::render('Items/Show', [
             'item' => $item_category
@@ -201,9 +197,9 @@ class ItemController extends Controller
         $item_category = Item::with('category')->find($item->id);
         $categories = Category::all();
 
-        $item_category->image_path1 = asset('storage/items/' . $item_category->image_path1);
-        $item_category->image_path2 = asset('storage/items/' . $item_category->image_path2);
-        $item_category->image_path3 = asset('storage/items/' . $item_category->image_path3);    
+        // $item_category->image_path1 = asset('storage/items/' . $item_category->image_path1);
+        // $item_category->image_path2 = asset('storage/items/' . $item_category->image_path2);
+        // $item_category->image_path3 = asset('storage/items/' . $item_category->image_path3);    
 
         return Inertia::render('Items/Edit', [
             'item' => $item_category,

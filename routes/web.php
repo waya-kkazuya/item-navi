@@ -7,6 +7,7 @@ use Inertia\Inertia;
 use App\Http\Controllers\ItemController;
 use App\Http\Controllers\WishController;
 use App\Http\Controllers\ImageTestController;
+use App\Http\Controllers\AnalysisController;
 use App\Models\ImageTest;
 
 /*
@@ -24,6 +25,7 @@ use App\Models\ImageTest;
 // ->group(function(){
 
 // });
+Route::get('analysis', [AnalysisController::class, 'index'])->name('analysis');
 
 Route::resource('items', ItemController::class)
 ->middleware(['auth', 'verified', 'can:staff-higher']);

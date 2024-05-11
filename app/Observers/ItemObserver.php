@@ -34,6 +34,8 @@ class ItemObserver
     {
         $changes = $item->getChanges();
 
+        unset($changes['updated_at']);
+
         foreach ($changes as $field => $newValue) {
             $oldValue = $item->getOriginal($field);
 
@@ -42,7 +44,7 @@ class ItemObserver
                 'edited_field' => $field,
                 'old_value' => $oldValue,
                 'new_value' => $newValue,
-                'edit_user' => Auth::user(),
+                'edit_user' => Auth::user()->name ?? '',
                 'edited_at' => now(),            
             ]);
         }

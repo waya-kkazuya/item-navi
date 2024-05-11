@@ -60,19 +60,19 @@ const deleteItem = id => {
                                                 <div v-if="item.image_path1" class="p-2 w-full">
                                                     <div class="relative">
                                                     <label for="image_path1" class="leading-7 text-sm text-gray-600">写真データ1</label>
-                                                    <img  :src="item.image_path1" alt="Image preview...">
+                                                    <img  :src="`/storage/items/${item.image_path1}`" alt="Image preview...">
                                                     </div>
                                                 </div>
                                                 <div v-if="item.image_path2" class="p-2 w-full">
                                                     <div class="relative">
                                                     <label for="image_path2" class="leading-7 text-sm text-gray-600">写真データ2</label>
-                                                    <img :src="item.image_path2" alt="Image preview...">
+                                                    <img :src="`/storage/items/${item.image_path2}`" alt="Image preview...">
                                                     </div>
                                                 </div>
                                                 <div v-if="item.image_path3" class="p-2 w-full">
                                                     <div class="relative">
                                                     <label for="image_path3" class="leading-7 text-sm text-gray-600">写真データ3</label>
-                                                    <img :src="item.image_path3" alt="Image preview...">
+                                                    <img :src="`/storage/items/${item.image_path3}`" alt="Image preview...">
                                                     </div>
                                                 </div>
                                             </div>

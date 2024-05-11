@@ -101,19 +101,19 @@ const updateItem = id => {
                                     
                                             <div class="flex justify-around">
                                                 <div class="relative w-32">
-                                                    <img :src="item.image_path1">
+                                                    <img :src="`/storage/items/${item.image_path1}`">
                                                     <button class="absolute top-0 right-0 bg-gray-500 text-white py-1 px-2" @click="deleteItem()">
                                                     ×
                                                     </button>
                                                 </div>
                                                 <div class="relative w-32">
-                                                    <img :src="item.image_path2">
+                                                    <img :src="`/storage/items/${item.image_path2}`">
                                                     <button class="absolute top-0 right-0 bg-gray-500 text-white py-1 px-2" @click="deleteItem()">
                                                     ×
                                                     </button>
                                                 </div>
                                                 <div class="relative w-32">
-                                                    <img :src="item.image_path3">
+                                                    <img :src="`/storage/items/${item.image_path3}`">
                                                     <button class="absolute top-0 right-0 bg-gray-500 text-white py-1 px-2" @click="deleteItem()">
                                                     ×
                                                     </button>
