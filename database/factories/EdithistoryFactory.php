@@ -27,10 +27,11 @@ class EdithistoryFactory extends Factory
                 'disposal_schedule', 'manufacturer', 'product_number', 'vendor', 'vendor_website_url',
                 'remarks'];
 
+
         $categoryId = Category::all()->random()->id;
         $editedField = $this->faker->randomElement($itemColumn);
         
-        if($editedField === 'stocks' && $categoryId == 1 ) {
+        if($editedField === 'stocks') {
             $oldValue = $this->faker->numberBetween(1, 500);
             $newValue = $this->faker->numberBetween(1, 500);
         } elseif($editedField === 'price') {
@@ -59,14 +60,27 @@ class EdithistoryFactory extends Factory
             $newValue = $this->faker->name;
         }
 
+        $operationTypes = ['新規', '編集'];
+        $editTypes = ['通常', '棚卸'];
+        
+        $operationType = $this->faker->randomElement($operationTypes);
+      
+        if($operationType === '編集'){
+            $editType = $this->faker->randomElement($editTypes);
+        } else {
+            $editType = '通常';
+        }
+
         return [
+            'operation_type' => $operationType,
+            'edit_type' => $editType,
             'item_id' => Item::all()->random()->id,
             'category_id' => $categoryId,
             'edited_field'=> $editedField,
             'old_value' => $oldValue,
             'new_value'=> $newValue,
             'edit_user' => $this->faker->randomElement($user),
-            'edited_at' => $this->faker->dateTimeBetween($startDate = '-1 years', $endDate = 'now')->format('Y-m-d H:i:s')
+            'edited_at' => $this->faker->dateTimeBetween($startDate = '-2 years', $endDate = 'now')->format('Y-m-d H:i:s')
         ];
     }
 }

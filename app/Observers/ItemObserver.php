@@ -18,6 +18,8 @@ class ItemObserver
         
         // 新規作成時はitem_idとedit_user,edited_atがあればいいのでは。
         Edithistory::create([
+            'operation_type' => '新規',
+            'edit_type' => '通常' ,
             'item_id' => $item->id,
             'category_id' => $item->category_id,
             'edited_field' => '-',
@@ -37,10 +39,25 @@ class ItemObserver
 
         unset($changes['updated_at']);
 
+        // 仮置き
+        $edit_type = '通常';
+        // $edit_type = '棚卸';
+
+        // 棚卸時のURLを作成したら、Request::url()で$edit_typeを分ける
+        // $url = Request::url();
+        // if (strpos($url, 'normal-edit-url') !== false) {
+        //     $model->edithistory()->create(['edit_type' => '通常時']);
+        // } elseif (strpos($url, 'inventory-edit-url') !== false) {
+        //     $model->edithistory()->create(['edit_type' => '棚卸時']);
+        // }
+
+
         foreach ($changes as $field => $newValue) {
             $oldValue = $item->getOriginal($field);
 
             Edithistory::create([
+                'operation_type' => '編集',
+                'edit_type' => $edit_type,
                 'item_id' => $item->id,
                 'edited_field' => $field,
                 'old_value' => $oldValue,

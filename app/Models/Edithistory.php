@@ -10,6 +10,8 @@ class Edithistory extends Model
     use HasFactory;
 
     protected $fillable = [
+        'operation_type',
+        'edit_type',
         'item_id',
         'category_id',
         'edited_field',
