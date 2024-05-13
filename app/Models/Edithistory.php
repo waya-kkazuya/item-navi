@@ -12,6 +12,7 @@ class Edithistory extends Model
     protected $fillable = [
         'operation_type',
         'edit_type',
+        'action_type',
         'item_id',
         'category_id',
         'edited_field',
@@ -27,17 +28,17 @@ class Edithistory extends Model
         { return $query; }
 
         if(!is_null($startDate) && is_null($endDate))
-        { return $query->where('created_at', ">=", $startDate); }
+        { return $query->where('edited_at', ">=", $startDate); }
 
         if(is_null($startDate) && !is_null($endDate))
         {
-            return $query->where('created_at', '<=', $endDate);
+            return $query->where('edited_at', '<=', $endDate);
         }
 
         if(!is_null($startDate) && !is_null($endDate))
         {
-            return $query->where('created_at', ">=", $startDate)
-            ->where('created_at', '<=', $endDate);
+            return $query->where('edited_at', ">=", $startDate)
+            ->where('edited_at', '<=', $endDate);
         }
     }
 }

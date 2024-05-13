@@ -31,6 +31,21 @@ class DatabaseSeeder extends Seeder
 
         \App\Models\Item::factory(100)->create();
         \App\Models\Wish::factory(20)->create();
-        \App\Models\Edithistory::factory(1000)->create();
+
+
+        // \App\Models\Edithistory::factory(1000)->create();
+
+        // $editedAt = now();
+        // 2年前から徐々に日数を増やしていく(1~30日ごと)
+        $editedAt = now()->subYears(2);
+
+        for ($i = 0; $i < 1000; $i++) {
+            \App\Models\Edithistory::factory()->create(['edited_at' => $editedAt]);
+
+            // 3～4件ごとに日時をランダムに変更
+            if ($i % rand(3, 4) == 0) {
+                $editedAt = $editedAt->addDays(rand(1, 3));
+            }
+        }
     }
 }

@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
 use App\Services\ImageService;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 class ItemController extends Controller
 {
@@ -22,6 +23,7 @@ class ItemController extends Controller
     public function index(Request $request)
     {
         // phpinfo();
+
         Log::info("sortDirection");
         Log::info($request->query('sortDirection', 'asc'));
 
@@ -136,9 +138,9 @@ class ItemController extends Controller
         }
         
         // dd($fileNameToStores, $fileNameToStores[0], $fileNameToStores[1], $fileNameToStores[2]);
-
-
-        // dd($created_image_path1);
+        // QRコード生成、サービスに切り分け
+        $qrcodeName = 'QR' . uniqid(rand().'_') . '.png';
+        QrCode::format('png')->size(200)->generate('Hello Laravel!', storage_path('app/public/qrcode/' . $qrcodeName));
 
         Item::create([
             'id' => $request->id,
@@ -162,7 +164,7 @@ class ItemController extends Controller
             'vendor' => $request->vendor,
             'vendor_website_url' => $request->vendor_website_url,
             'remarks' => $request->remarks,
-            'qrcode_path' => $request->qrcode_path
+            'qrcode_path' => $qrcodeName
         ]);
 
         return to_route('items.index')

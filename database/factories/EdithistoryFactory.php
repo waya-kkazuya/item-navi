@@ -62,6 +62,7 @@ class EdithistoryFactory extends Factory
 
         $operationTypes = ['新規', '編集'];
         $editTypes = ['通常', '棚卸'];
+        $actionType = null;
         
         $operationType = $this->faker->randomElement($operationTypes);
       
@@ -71,9 +72,20 @@ class EdithistoryFactory extends Factory
             $editType = '通常';
         }
 
+        // edited_fieldがstocks在庫数だった場合、
+        // action_typeに入庫か出庫と記録する
+        if($editedField === 'stocks') {
+            if($newValue > $oldValue) {
+                $actionType = '入庫';
+            } else {
+                $actionType = '出庫';
+            }
+        }
+
         return [
             'operation_type' => $operationType,
             'edit_type' => $editType,
+            'action_type' => $actionType,
             'item_id' => Item::all()->random()->id,
             'category_id' => $categoryId,
             'edited_field'=> $editedField,
