@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Carbon\Carbon;
 
 class Edithistory extends Model
 {
@@ -32,7 +33,8 @@ class Edithistory extends Model
 
         if(is_null($startDate) && !is_null($endDate))
         {
-            return $query->where('edited_at', '<=', $endDate);
+            $endDate1 = Carbon::parse($endDate)->addDays(1);
+            return $query->where('edited_at', '<=', $endDate1);
         }
 
         if(!is_null($startDate) && !is_null($endDate))

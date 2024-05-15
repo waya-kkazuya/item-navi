@@ -19,13 +19,15 @@ class ItemFactory extends Factory
         $words1 = ['未使用', '使用中'];
         $words2 = ['作業室1', '作業室2', '玄関', '廊下', '給湯室', 'トイレ', '事務室'];
         $words3 = ['購入', 'リース（レンタル）', '譲渡', 'その他'];
+        $imagePath =['no_image.jpg', 'sample1.jpg', 'sample2.jpg', 'sample3.jpg', 'sample4.jpg', 'sample5.jpg',
+        'sample6.jpg', 'sample7.jpg', 'sample8.jpg', 'sample9.jpg', 'sample10.jpg',];
 
         return [
             'name' => $this->faker->name,
             'category_id' => $this->faker->numberBetween(1, 5),
-            'image_path1' => $this->faker->url,
-            // 'image_path2' => ,
-            // 'image_path3' => ,
+            'image_path1' => $this->faker->randomElement($imagePath),
+            'image_path2' => $this->faker->randomElement($imagePath),
+            'image_path3' => $this->faker->randomElement($imagePath),
             'stocks' => $this->faker->numberBetween(1, 500),
             'usage_status' => $this->faker->randomElement($words1),
             'end_user' => $this->faker->userName,

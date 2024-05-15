@@ -36,7 +36,14 @@ class AnalysisController extends Controller
 
         // dd($subQuery);
         // サブクエリで作ったものをさらに整える
+        // $data = DB::table($subQuery)
+        // ->get();
+
         $data = DB::table($subQuery)
+        ->select('action_type',
+            DB::raw('CASE WHEN action_type = "入庫" THEN new_value - old_value ELSE 0 END as input'),
+            DB::raw('CASE WHEN action_type = "出庫" THEN old_value - new_value ELSE 0 END as output'),
+            'edited_at')
         ->get();
 
         // dd($data);
