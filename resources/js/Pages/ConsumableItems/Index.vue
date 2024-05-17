@@ -7,43 +7,27 @@ import { ref } from 'vue';
 import { stringify } from 'postcss';
 
 defineProps({
-  items: Object,
-  // sort: String
+  consumableItems: Object,
 })
 
 const search = ref('')
-// const sortDirection = ref(sort)
 const isTableView = ref('true')
 
-const fetchItems = () => {
-  router.visit(route('items.index', { search: search.value }), {
-    method: 'get'
-  })
-  
 // const fetchItems = () => {
-//   router.visit(route('items.index', { search: search.value, sortDirection: sortDirection.value }), {
+//   router.visit(route('consumable_items.index', { search: search.value }), {
 //     method: 'get'
 //   })
-}
-  // router.visit(route('items.index', { search: search.value }), {
-  //   method: 'get',
-  //   data: {
-  //     search: search.value
-  //   }
-  // })
-
-
-
+// }
 
 </script>
 
 <template>
-    <Head title="備品一覧" />
+    <Head title="消耗品管理" />
 
     <AuthenticatedLayout>
         <template #header>
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-              備品一覧
+              消耗品管理
             </h2>
         </template>
 
@@ -59,17 +43,11 @@ const fetchItems = () => {
                                 <input type="text" name="search" v-model="search" placeholder="備品名で検索">
                                 <button class="bg-blue-300 text-white py-2 px-2" @click="fetchItems">検索</button>
                                 </div>
-
-                                <select class="ml-4" v-model="sortDirection" @change="fetchItems">
-                                  <option value="asc">昇順</option>
-                                  <option value="desc">降順</option>
-                                </select>
-                              <Link as="button" :href="route('items.create')" class="flex ml-auto text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded">新規登録</Link>
                             </div>
                           </div>
 
                           <div class="mb-4 flex justify-end">
-                            <Pagination class="mt-6" :links="items.links"></Pagination>
+                            <Pagination class="mt-6" :links="consumableItems.links"></Pagination>
                           </div>
 
                           <div class="min-w-full overflow-auto">
@@ -79,8 +57,9 @@ const fetchItems = () => {
                                 <th class="min-w-16 px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100 rounded-tl rounded-bl">Id</th>
                                 <th class="min-w-40 px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">備品名</th>
                                 <th class="min-w-20 px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">カテゴリ</th>
-                                <th class="min-w-28 px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">画像</th>
+                                <th class="min-w-28 px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">画像1パス</th>
                                 <th class="min-w-20 px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">在庫数</th>
+                                <th class="min-w-40 px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">入出庫</th>
                                 <th class="min-w-24 px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">利用状況</th>
                                 <th class="min-w-24 px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">使用者</th>
                                 <th class="min-w-32 px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">利用場所</th>
@@ -97,7 +76,7 @@ const fetchItems = () => {
                               </tr>
                             </thead>
                             <tbody>
-                              <tr v-for="item in items.data" :key="item.id">
+                              <tr v-for="item in consumableItems.data" :key="item.id">
                                 <td class="border-b-2 border-gray-200 px-4 py-3">
                                   <Link class="text-blue-400" :href="route('items.show', { item: item.id })">
                                     {{ item.id }}
@@ -107,6 +86,7 @@ const fetchItems = () => {
                                 <td class="border-b-2 border-gray-200 px-4 py-3">{{ item.category.name }}</td>
                                 <td class="h-24 border-b-2 border-gray-200 px-4 py-3"><img :src="item.image_path1" alt="" class="h-full w-full"></td>
                                 <td class="text-right border-b-2 border-gray-200 px-4 py-3"><span>{{ item.stocks }}</span></td>
+                                <td class="border-b-2 border-gray-200 px-4 py-3"><button class="ml-2 p-2 text-white bg-gray-400 border-0 focus:outline-none hover:bg-gray-500 rounded">入出庫</button></td>
                                 <td class="border-b-2 border-gray-200 px-4 py-3">{{ item.usage_status }}</td>
                                 <td class="border-b-2 border-gray-200 px-4 py-3">{{ item.end_user }}</td>
                                 <td class="border-b-2 border-gray-200 px-4 py-3">{{ item.location_of_use }}</td>
@@ -125,7 +105,7 @@ const fetchItems = () => {
                           </table>
                         </div>
                         <div class="mb-4 flex justify-end">
-                            <Pagination class="mt-6" :links="items.links"></Pagination>
+                            <Pagination class="mt-6" :links="consumableItems.links"></Pagination>
                           </div>
                       </section>
                     </div>

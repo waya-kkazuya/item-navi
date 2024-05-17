@@ -8,6 +8,7 @@ use App\Http\Controllers\ItemController;
 use App\Http\Controllers\WishController;
 use App\Http\Controllers\ImageTestController;
 use App\Http\Controllers\AnalysisController;
+use App\Http\Controllers\ConsumableItemsController;
 use App\Models\ImageTest;
 
 /*
@@ -26,6 +27,9 @@ use App\Models\ImageTest;
 
 // });
 Route::get('analysis', [AnalysisController::class, 'index'])->name('analysis');
+
+Route::get('consumable_items', [ConsumableItemsController::class, 'index'])->name('consumable_items');
+
 
 Route::resource('items', ItemController::class)
 ->middleware(['auth', 'verified', 'can:staff-higher']);

@@ -33,7 +33,10 @@ const showingNavigationDropdown = ref(false);
                                     Dashboard
                                 </NavLink>        
                                 <NavLink v-if="$page.props.auth.user_role <= 5" :href="route('items.index')" :active="route().current('items.index')">
-                                    備品一覧
+                                    備品管理
+                                </NavLink>
+                                <NavLink :href="route('consumable_items.index')" :active="route().current('consumable_items.index')">
+                                    消耗品管理
                                 </NavLink>
                                 <NavLink :href="route('wishes.index')" :active="route().current('wishes.index')">
                                     ウィッシュリスト
@@ -122,8 +125,11 @@ const showingNavigationDropdown = ref(false);
                             Dashboard
                         </ResponsiveNavLink>
                         <ResponsiveNavLink :href="route('items.index')" :active="route().current('items.index')">
-                            備品一覧
+                            備品管理
                         </ResponsiveNavLink>
+                        <!-- <ResponsiveNavLink :href="route('consumable_items.index')" :active="route().current('consumable_items.index')">
+                            消耗品管理
+                        </ResponsiveNavLink> -->
                         <ResponsiveNavLink :href="route('wishes.index')" :active="route().current('wishes.index')">
                             ウィッシュリスト
                         </ResponsiveNavLink>
