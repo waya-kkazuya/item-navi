@@ -19,7 +19,7 @@ const isTableView = ref('true')
 
 // ハーフモーダル用
 const isModalOpen = ref(false);
-const modalItem = ref(null);
+const modalItem = ref('');
 
 const openModal = (item) => {
   modalItem.value = item
@@ -143,11 +143,15 @@ const updateStock = (id) => {
                 <button @click="isModalOpen = true" class="px-4 py-2 bg-blue-500 text-white rounded">入出庫</button>
                 <transition name="modal">
                     <div v-show="isModalOpen" class="fixed bottom-0 w-full bg-white p-4 shadow-lg modal-content">
-                        <div>{{ modalItem.name }}</div>
-                        <h2 class="text-xl mb-2">入出庫</h2>
+                        <div>備品名：{{ modalItem.name }}</div>
+                        <div>在庫数：{{ modalItem.stocks }}</div>
+                        <h2 class="text-xl mb-2">入庫</h2><h2 class="text-xl mb-2">出庫</h2>
                         <p class="mb-4">いくつ入庫するか出庫するか入力してください。</p>
                         <input type="number" v-model="quantity" class="border p-2 mb-4 w-full">
-                        <button @click="isModalOpen = false" class="px-4 py-2 bg-red-500 text-white rounded">閉じる</button>
+                        <button>確定</button><button>キャンセル</button>
+                        <div>
+                          <button @click="isModalOpen = false" class="px-4 py-2 bg-red-500 text-white rounded">閉じる</button>
+                        </div>
                     </div>
                 </transition>
               </div>
