@@ -96,7 +96,8 @@ try{
                     </div>
                 </div>
             </div>
-                                        <!-- ハーフモーダル -->
+            
+            <!-- ハーフモーダル -->
             <div class="h-screen flex items-center justify-center">
                 <button @click="isModalOpen = true" class="px-4 py-2 bg-blue-500 text-white rounded">入出庫</button>
                 <transition name="modal">

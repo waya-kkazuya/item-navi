@@ -9,6 +9,7 @@ use App\Http\Controllers\WishController;
 use App\Http\Controllers\ImageTestController;
 use App\Http\Controllers\AnalysisController;
 use App\Http\Controllers\ConsumableItemsController;
+use App\Http\Controllers\UpdateStockController;
 use App\Models\ImageTest;
 
 /*
@@ -26,6 +27,8 @@ use App\Models\ImageTest;
 // ->group(function(){
 
 // });
+Route::put('updateStock', [UpdateStockController::class, 'update'])->name('updateStock');
+
 Route::get('analysis', [AnalysisController::class, 'index'])->name('analysis');
 
 Route::get('consumable_items', [ConsumableItemsController::class, 'index'])->name('consumable_items');
