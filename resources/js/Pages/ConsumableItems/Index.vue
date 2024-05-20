@@ -148,7 +148,7 @@ const updateStock = (id) => {
                         <h2 class="text-xl mb-2">入庫</h2><h2 class="text-xl mb-2">出庫</h2>
                         <p class="mb-4">いくつ入庫するか出庫するか入力してください。</p>
                         <input type="number" v-model="quantity" class="border p-2 mb-4 w-full">
-                        <button>確定</button><button>キャンセル</button>
+                        <button @click="updateStock(modalItem.id)">確定</button><button>キャンセル</button>
                         <div>
                           <button @click="isModalOpen = false" class="px-4 py-2 bg-red-500 text-white rounded">閉じる</button>
                         </div>

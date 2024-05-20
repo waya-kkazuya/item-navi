@@ -24,10 +24,11 @@ class ItemController extends Controller
     {
         // phpinfo();
 
-        Log::info("sortDirection");
-        Log::info($request->query('sortDirection', 'asc'));
+        // Log::info("sortDirection");
+        // Log::info($request->query('sortDirection', 'asc'));
 
-        // $sortDirection = $request->query('sortDirection', 'asc');
+        // 検索の場合、sortOrderはasc
+        $sortOrder = $request->query('sortOrder', 'asc');
 
         $items = Item::with('category')
         ->searchItems($request->query('search'))
@@ -54,7 +55,9 @@ class ItemController extends Controller
             'vendor_website_url',
             'remarks',
             'qrcode_path'
-        )->paginate(20);
+        )->orderBy('created_at', $sortOrder)
+        ->paginate(20);
+
 
         $items->map(function ($item) {
             // publicフォルダ内のパスから、シンボリックリンクでstorage/app/publicのデータを読み込む
@@ -65,26 +68,16 @@ class ItemController extends Controller
             $item->image_path3 = asset('storage/items/' . $item->image_path3);
             return $item;
         });
-        // ->orderBy('created_at', $sortDirection)
         
-        // $items->transform(function ($item) {
-        //     $item->image_path1 = asset('storage/' . $item->image_path1);
-        //     return $item;
-        // });
 
         // dd($items);
 
-        // $items->getCollection()->transform(function ($item) {
-        //     $item->image_path1 = asset('storage/items/' . $item->image_path1);
-        //     return $item;
-        // });
-
         return Inertia::render('Items/Index', [
             'items' => $items,
-            // 'sort' => $sortDirection
+            'sortOrder' => $sortOrder
         ]);
     }
-    // 'imagePath1' => asset('storage/items/' . $item->)
+
 
     /**
      * Show the form for creating a new resource.

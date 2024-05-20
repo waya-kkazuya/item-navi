@@ -8,22 +8,24 @@ import { stringify } from 'postcss';
 
 defineProps({
   items: Object,
-  // sort: String
 })
 
 const search = ref('')
-// const sortDirection = ref(sort)
+const sortOrder = ref('asc')
+
 const isTableView = ref('true')
 
 const fetchItems = () => {
   router.visit(route('items.index', { search: search.value }), {
     method: 'get'
   })
-  
-// const fetchItems = () => {
-//   router.visit(route('items.index', { search: search.value, sortDirection: sortDirection.value }), {
-//     method: 'get'
-//   })
+}
+
+// created_atで昇順降順プルダウン 
+const sortItems = () => {
+  router.visit(route('items.index', { sortOrder: sortOrder.value }), {
+    method: 'get'
+  })
 }
   // router.visit(route('items.index', { search: search.value }), {
   //   method: 'get',
@@ -60,7 +62,7 @@ const fetchItems = () => {
                                 <button class="bg-blue-300 text-white py-2 px-2" @click="fetchItems">検索</button>
                                 </div>
 
-                                <select class="ml-4" v-model="sortDirection" @change="fetchItems">
+                                <select class="ml-4" v-model="sortOrder" @change="sortItems">
                                   <option value="asc">昇順</option>
                                   <option value="desc">降順</option>
                                 </select>
