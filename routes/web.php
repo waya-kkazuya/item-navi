@@ -27,7 +27,7 @@ use App\Models\ImageTest;
 // ->group(function(){
 
 // });
-Route::put('updateStock', [UpdateStockController::class, 'update'])->name('updateStock');
+Route::put('updateStock/{id}', [UpdateStockController::class, 'updateStock'])->name('updateStock');
 
 Route::get('analysis', [AnalysisController::class, 'index'])->name('analysis');
 

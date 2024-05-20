@@ -8,10 +8,13 @@ import { stringify } from 'postcss';
 
 defineProps({
   items: Object,
+  categories: Array,
 })
 
 const search = ref('')
 const sortOrder = ref('asc')
+// 初期値をすべてに該当する:value=0にする
+const category_id = ref(0)
 
 const isTableView = ref('true')
 
@@ -27,6 +30,14 @@ const sortItems = () => {
     method: 'get'
   })
 }
+
+// 備品カテゴリプルダウンでフィルターする
+const filterItems = () => {
+    router.visit(route('items.index', { category_id: category_id.value }), {
+    method: 'get'
+  })
+}
+
   // router.visit(route('items.index', { search: search.value }), {
   //   method: 'get',
   //   data: {
@@ -56,17 +67,36 @@ const sortItems = () => {
                       <section class="text-gray-600 body-font">
                           <div class="container px-5 py-8 mx-auto">
                             <FlashMessage />
-                            <div class="flex pl-4 mt-4 lg:w-2/3 w-full mx-auto">
+                            <div class="flex items-center pl-4 mt-4 lg:w-2/3 w-full mx-auto">
                               <div class="flex items-center">
                                 <input type="text" name="search" v-model="search" placeholder="備品名で検索">
-                                <button class="bg-blue-300 text-white py-2 px-2" @click="fetchItems">検索</button>
-                                </div>
+                                <button class="w-16 bg-blue-300 text-white py-2 px-2" @click="fetchItems">検索</button>
+                              </div>
 
+                              <div>
                                 <select class="ml-4" v-model="sortOrder" @change="sortItems">
                                   <option value="asc">昇順</option>
                                   <option value="desc">降順</option>
                                 </select>
-                              <Link as="button" :href="route('items.create')" class="flex ml-auto text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded">新規登録</Link>
+                              </div>
+
+                              <div>
+                                <select v-model="category_id" @change="filterItems" class="ml-4">
+                                  <option :value="0">すべて</option>  
+                                  <option v-for="category in categories" :value="category.id" :key="category.id">{{ category.name }}</option>
+                                </select>
+                              </div>
+
+                              <!-- <div>
+                                <select v-model="" @change="" class="ml-4">
+                                  <option :value="">すべて</option>
+                                </select>
+                              </div> -->
+
+
+                              <div class="w-24">
+                                <Link as="button" :href="route('items.create')" class="ml-4 text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded">新規登録</Link>
+                            </div>
                             </div>
                           </div>
 

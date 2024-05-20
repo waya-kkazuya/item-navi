@@ -59,6 +59,7 @@ class ItemObserver
                 'operation_type' => '編集',
                 'edit_type' => $edit_type,
                 'item_id' => $item->id,
+                'category_id' => $item->category_id,
                 'edited_field' => $field,
                 'old_value' => $oldValue,
                 'new_value' => $newValue,

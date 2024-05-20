@@ -3,7 +3,7 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head, Link, router } from '@inertiajs/vue3';
 import FlashMessage from '@/Components/FlashMessage.vue';
 import Pagination from '@/Components/Pagination.vue';
-import { ref } from 'vue';
+import { ref, reactive } from 'vue';
 import { stringify } from 'postcss';
 
 defineProps({
@@ -27,24 +27,26 @@ const openModal = (item) => {
 }
 
 
-const quantity = ref(0);
-
 // 消耗品の在庫数更新用
-const newStockValue = ref('')
+const stockValue = ref(0)
+const action = ref('out')
+
+// const state = reactive({
+//   stockValue: 0,
+//   action: 'out'
+// })
 
 const updateStock = (id) => {
-  router.visit(route('updateStock', { item: id }), {
+  router.visit(route('updateStock', { id: id }), {
     method: 'put',
-    data: newStockValue.value
+    data: {
+      stockValue: stockValue.value,
+      action: action.value
+    }
   })
 }
 
 
-// const fetchItems = () => {
-//   router.visit(route('consumable_items.index', { search: search.value }), {
-//     method: 'get'
-//   })
-// }
 
 </script>
 
@@ -74,7 +76,7 @@ const updateStock = (id) => {
                           </div>
 
                           <div class="mb-4 flex justify-end">
-                            <Pagination class="mt-6" :links="consumableItems  .links"></Pagination>
+                            <Pagination class="mt-6" :links="consumableItems.links"></Pagination>
                           </div>
 
                           <div class="min-w-full overflow-auto">
@@ -140,17 +142,31 @@ const updateStock = (id) => {
               </div>
               <!-- ハーフモーダル -->
               <div class="h-screen flex items-center justify-center">
-                <button @click="isModalOpen = true" class="px-4 py-2 bg-blue-500 text-white rounded">入出庫</button>
+                <!-- <button @click="isModalOpen = true" class="px-4 py-2 bg-blue-500 text-white rounded">入出庫</button> -->
                 <transition name="modal">
-                    <div v-show="isModalOpen" class="fixed bottom-0 w-full bg-white p-4 shadow-lg modal-content">
-                        <div>備品名：{{ modalItem.name }}</div>
-                        <div>在庫数：{{ modalItem.stocks }}</div>
-                        <h2 class="text-xl mb-2">入庫</h2><h2 class="text-xl mb-2">出庫</h2>
-                        <p class="mb-4">いくつ入庫するか出庫するか入力してください。</p>
-                        <input type="number" v-model="quantity" class="border p-2 mb-4 w-full">
-                        <button @click="updateStock(modalItem.id)">確定</button><button>キャンセル</button>
+                    <div v-show="isModalOpen" class="fixed bottom-0 w-full bg-white p-4 shadow-lg modal-content flex flex-col items-center justify-center">
+                        <div>備品ID: {{ modalItem.id }}</div>
+                        <div>備品名: {{ modalItem.name }}</div>
+                        <div>在庫数: {{ modalItem.stocks }}</div>
+                        <div class="mb-4">いくつ入庫するか出庫するか入力してください。</div>
                         <div>
-                          <button @click="isModalOpen = false" class="px-4 py-2 bg-red-500 text-white rounded">閉じる</button>
+                          <input type="radio" id="in" name="stock" value="in" v-model="action">
+                          <label for="in">入庫</label>
+                        </div>
+                        <div>
+                          <input type="radio" id="out" name="stock" value="out" v-model="action" checked>
+                          <label for="out">出庫</label>
+                        </div>
+                        <div>
+                          <input type="number" v-model="stockValue" class="border p-2 mb-4 w-full" min="0">
+                          <div class="flex justify-center">
+                            <button @click="stockValue > 0 && updateStock(modalItem.id)" 
+                              class="px-4 py-2 text-white rounded"
+                              :class="{'bg-blue-500': stockValue > 0, 'bg-blue-200': stockValue <= 0}">
+                              確定
+                            </button>
+                            <button @click="isModalOpen = false" class="ml-4 px-4 py-2 bg-red-500 text-white rounded">キャンセル</button>
+                          </div>
                         </div>
                     </div>
                 </transition>

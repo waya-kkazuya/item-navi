@@ -30,7 +30,9 @@ class ItemController extends Controller
         // 検索の場合、sortOrderはasc
         $sortOrder = $request->query('sortOrder', 'asc');
 
-        $items = Item::with('category')
+        $category_id = $request->query('category_id', 0);
+
+        $query = Item::with('category')
         ->searchItems($request->query('search'))
         ->select(
             'id',
@@ -55,8 +57,14 @@ class ItemController extends Controller
             'vendor_website_url',
             'remarks',
             'qrcode_path'
-        )->orderBy('created_at', $sortOrder)
-        ->paginate(20);
+        )->orderBy('created_at', $sortOrder);
+
+        // カテゴリIDで0以外が指定されている場合、そのカテゴリのアイテムだけを取得
+        if ($category_id != 0) {
+            $query->where('category_id', $category_id);
+        }
+
+        $items = $query->paginate(20);
 
 
         $items->map(function ($item) {
@@ -72,9 +80,13 @@ class ItemController extends Controller
 
         // dd($items);
 
+        $categories = Category::all();
+
         return Inertia::render('Items/Index', [
             'items' => $items,
-            'sortOrder' => $sortOrder
+            'sortOrder' => $sortOrder,
+            'categories' => $categories,
+            'category_id' => $category_id
         ]);
     }
 
