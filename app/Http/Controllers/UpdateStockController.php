@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\LowStockDetectEvent;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Item;
@@ -53,6 +54,9 @@ class UpdateStockController extends Controller
 
 
         // イベント発火
+        // テスト
+        event(new LowStockDetectEvent($item));
+        // event(new LowStockDetectEvent('こんにちは！'));
 
 
 

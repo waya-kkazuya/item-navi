@@ -18,9 +18,12 @@ class EventServiceProvider extends ServiceProvider
         Registered::class => [
             SendEmailVerificationNotification::class,
         ],
-        LowStockDetect::class => [
-            SendNotification::class,
+        'App\Events\LowStockDetectEvent' => [
+            'App\Listeners\LowStockDetectListener',
         ],
+        // LowStockDetect::class => [
+        //     SendNotification::class,
+        // ],
     ];
 
     /**
