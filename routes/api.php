@@ -18,3 +18,7 @@ use App\Http\Controllers\Api\AnalysisController;
 Route::middleware('auth:sanctum')
 ->get('/analysis', [AnalysisController::class, 'index' ])
 ->name('api.analysis');
+
+Route::get('/notifications', function () {
+  return auth()->user()->unreadNotifications;
+});
