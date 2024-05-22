@@ -88,7 +88,7 @@ const updateStock = (id) => {
                                 <th class="min-w-20 px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">カテゴリ</th>
                                 <th class="min-w-28 px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">画像</th>
                                 <th class="min-w-20 px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">在庫数</th>
-                                <th class="min-w-20 px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">在庫数遷移</th>
+                                <th class="min-w-28 px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">在庫数遷移</th>
                                 <th class="min-w-40 px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">入出庫</th>
                                 <th class="min-w-24 px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">利用状況</th>
                                 <th class="min-w-24 px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">使用者</th>
@@ -117,9 +117,11 @@ const updateStock = (id) => {
                                 <td class="h-24 border-b-2 border-gray-200 px-4 py-3"><img :src="item.image_path1" alt="" class="h-full w-full"></td>
                                 <td class="text-right border-b-2 border-gray-200 px-4 py-3"><span>{{ item.stocks }}</span></td>
                                 <td class="text-right border-b-2 border-gray-200 px-4 py-3">
-                                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-10 h-10 transform scale-x-[-1]">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M7.5 14.25v2.25m3-4.5v4.5m3-6.75v6.75m3-9v9M6 20.25h12A2.25 2.25 0 0 0 20.25 18V6A2.25 2.25 0 0 0 18 3.75H6A2.25 2.25 0 0 0 3.75 6v12A2.25 2.25 0 0 0 6 20.25Z" />
-                                  </svg>
+                                  <Link class="" :href="route('consumable_items.history', { id: item.id })">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-10 h-10 flex items-center justify-center transform scale-x-[-1]">
+                                      <path stroke-linecap="round" stroke-linejoin="round" d="M7.5 14.25v2.25m3-4.5v4.5m3-6.75v6.75m3-9v9M6 20.25h12A2.25 2.25 0 0 0 20.25 18V6A2.25 2.25 0 0 0 18 3.75H6A2.25 2.25 0 0 0 3.75 6v12A2.25 2.25 0 0 0 6 20.25Z" />
+                                    </svg>
+                                  </Link>
                                 </td>
                                 <td class="border-b-2 border-gray-200 px-4 py-3"><button @click="openModal(item)" class="ml-2 p-2 text-white bg-gray-400 border-0 focus:outline-none hover:bg-gray-500 rounded">入出庫</button></td>
                                 <td class="border-b-2 border-gray-200 px-4 py-3">{{ item.usage_status }}</td>
