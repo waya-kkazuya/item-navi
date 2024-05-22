@@ -186,6 +186,7 @@ return [
          * Package Service Providers...
          */
         SimpleSoftwareIO\QrCode\QrCodeServiceProvider::class,
+        Jenssegers\Agent\AgentServiceProvider::class,
         // Intervention\Image\ImageServiceProvider::class,
         /*
          * Application Service Providers...
@@ -213,6 +214,7 @@ return [
         // 'ExampleClass' => App\Example\ExampleClass::class,
         // 'InterventionImage' => \Intervention\Image\Facades\Image::class
         'QrCode' => SimpleSoftwareIO\QrCode\Facades\QrCode::class,
+        'Agent' => Jenssegers\Agent\Facades\Agent::class,
     ])->toArray(),
 
 ];
