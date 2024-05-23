@@ -156,14 +156,13 @@ const updateStock = (id) => {
                         <div>備品ID: {{ modalItem.id }}</div>
                         <div>備品名: {{ modalItem.name }}</div>
                         <div>在庫数: {{ modalItem.stocks }}</div>
-                        <div class="mb-4">いくつ入庫するか出庫するか入力してください。</div>
                         <div>
                           <input type="radio" id="in" name="stock" value="in" v-model="action">
-                          <label for="in">入庫</label>
+                          <label for="in">在庫を追加する</label>
                         </div>
                         <div>
                           <input type="radio" id="out" name="stock" value="out" v-model="action" checked>
-                          <label for="out">出庫</label>
+                          <label for="out">在庫から取り出す</label>
                         </div>
                         <div>
                           <input type="number" v-model="stockValue" class="border p-2 mb-4 w-full" min="0">

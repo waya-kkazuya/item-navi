@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Inertia\Inertia;
 use App\Models\Item;
 use App\Models\Edithistory;
+use Illuminate\Support\Facades\DB;
 
 
 class ConsumableItemsController extends Controller
@@ -56,7 +57,7 @@ class ConsumableItemsController extends Controller
 
 
     // 在庫数遷移用メソッド
-    public function history($id)
+    public function history(Request $request, $id)
     {
         $subQuery = Edithistory::betweenDate($request->startDate, $request->endDate)
         ->where('category_id', 1)
@@ -88,11 +89,11 @@ class ConsumableItemsController extends Controller
 
 
         // APIなのでJSON形式で返す
-        return response()->json([
-            'data' => $data,
-            'labels' => $labels,
-            'stocks' => $stocks,
-        ], Response::HTTP_OK);
+        // return response()->json([
+        //     'data' => $data,
+        //     'labels' => $labels,
+        //     'stocks' => $stocks,
+        // ], Response::HTTP_OK);
 
         // このままではAPI
 
