@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\InventoryPlan;
 
 class Item extends Model
 {
@@ -36,6 +37,13 @@ class Item extends Model
     public function category() {
         return $this->belongsTo(Category::class);
     }
+
+    public function inventory_plans()
+    {
+        return $this->belongsToMany(InventoryPlan::class)
+        ->withPivot('item_id', 'inventory_date', 'inventory_person', 'insuffcient_data_status', 'insuffcient_data_details', 'unknown_assets_status', 'unknown_assets_details', 'inventory_status');
+    }
+
 
     public function scopeSearchItems($query, $input = null)
     {

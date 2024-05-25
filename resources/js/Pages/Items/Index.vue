@@ -38,6 +38,9 @@ const filterItems = () => {
   })
 }
 
+// 場所でフィルターする
+
+
   // router.visit(route('items.index', { search: search.value }), {
   //   method: 'get',
   //   data: {

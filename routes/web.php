@@ -27,7 +27,6 @@ use App\Models\ImageTest;
 // ->group(function(){
 
 // });
-Route::get('consumable_items/{id}/history', [ConsumableItemsController::class, 'history'])->name('consumable_items.history');
 
 Route::put('updateStock/{id}', [UpdateStockController::class, 'updateStock'])->name('updateStock');
 
@@ -35,6 +34,7 @@ Route::get('analysis', [AnalysisController::class, 'index'])->name('analysis');
 
 Route::get('consumable_items', [ConsumableItemsController::class, 'index'])->name('consumable_items');
 
+Route::get('consumable_items/{id}/history', [ConsumableItemsController::class, 'history'])->name('consumable_items.history');
 
 Route::resource('items', ItemController::class)
 ->middleware(['auth', 'verified', 'can:staff-higher']);

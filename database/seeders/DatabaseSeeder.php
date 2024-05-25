@@ -33,6 +33,7 @@ class DatabaseSeeder extends Seeder
 
         \App\Models\Item::factory(100)->create();
         \App\Models\Wish::factory(20)->create();
+        \App\Models\InventoryPlan::factory(3)->create();
 
 
         // \App\Models\Edithistory::factory(1000)->create();
