@@ -8,6 +8,7 @@ use Inertia\Inertia;
 use App\Models\Item;
 use App\Models\Edithistory;
 use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 
 
 class ConsumableItemsController extends Controller
@@ -56,17 +57,28 @@ class ConsumableItemsController extends Controller
     }
 
 
-    // 在庫数遷移用メソッド
-    public function history(Request $request, $id)
+    // 在庫数遷移画面用メソッド
+    // 最初の当日から1週間前までの
+    public function history($id)
     {
-        $subQuery = Edithistory::betweenDate($request->startDate, $request->endDate)
+        $item = Item::findOrFail($id);
+        $item->image_path1 = asset('storage/items/' . $item->image_path1);
+        $item->image_path2 = asset('storage/items/' . $item->image_path2);
+        $item->image_path3 = asset('storage/items/' . $item->image_path3);
+
+        // 今日の日付
+        $endDate = Carbon::today();
+        // 1週間前の日付
+        $startDate = Carbon::today()->subWeek();
+
+        $subQuery = Edithistory::betweenDate($startDate, $endDate)
         ->where('category_id', 1)
+        ->where('item_id', $id)
         ->where('edited_field', 'stocks')
         ->select('action_type', 'old_value', 'new_value','edited_at');
 
-        // $data = DB::table($subQuery)
-        // ->get();
 
+        // 入庫と出庫の場合でそれぞれ在庫数の差を取得している
         $data = DB::table($subQuery)
         ->select('action_type','old_value', 'new_value',
             DB::raw('CASE WHEN action_type = "入庫" THEN new_value - old_value ELSE 0 END as input'),
@@ -76,6 +88,8 @@ class ConsumableItemsController extends Controller
         ->get();
 
         // LineChart用の昇順のデータ
+        // reverse()では機能しないので、orderByで昇順に並べる
+        // 'new_value'はその時に確定した在庫数
         $forChart = DB::table($subQuery)
         ->select('new_value','edited_at')
         ->orderBy('edited_at', 'Asc')
@@ -83,22 +97,14 @@ class ConsumableItemsController extends Controller
 
         $labels = $forChart->pluck('edited_at');
         $stocks = $forChart->pluck('new_value');
-        // reverse()では機能しない、->pluckは単なる配列ではない？
-        // $labels = $data->pluck('edited_at')->reverse();
-        // $stocks = $data->pluck('new_value')->reverse();
 
-
-        // APIなのでJSON形式で返す
-        // return response()->json([
-        //     'data' => $data,
-        //     'labels' => $labels,
-        //     'stocks' => $stocks,
-        // ], Response::HTTP_OK);
-
-        // このままではAPI
+        // dd($data);
 
         return Inertia::render('ConsumableItems/History', [
-
+            'data' => $data,
+            'labels' => $labels,
+            'stocks' => $stocks,
+            'item' => $item
         ]);
     }
 }

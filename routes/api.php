@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AnalysisController;
+use App\Http\Controllers\Api\ConsumableItemsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -18,6 +19,10 @@ use App\Http\Controllers\Api\AnalysisController;
 Route::middleware('auth:sanctum')
 ->get('/analysis', [AnalysisController::class, 'index' ])
 ->name('api.analysis');
+
+Route::middleware('auth:sanctum')
+->get('/history', [ConsumableItemsController::class, 'history' ])
+->name('api.history');
 
 Route::get('/notifications', function () {
   return auth()->user()->unreadNotifications;

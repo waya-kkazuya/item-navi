@@ -7,19 +7,34 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use App\Models\Edithistory;
 use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
 
-
-class AnalysisController extends Controller
+class ConsumableItemsController extends Controller
 {
-    public function index(Request $request)
-    {
-        $subQuery = Edithistory::betweenDate($request->startDate, $request->endDate)
+    public function history(Request $request)
+    { 
+        Log::info('api.history');
+
+        if($request->type === 'month'){
+            // 今日の日付
+            $endDate = Carbon::today();
+            // 1ヵ月前の日付
+            $startDate = Carbon::today()->subMonth();
+        } else {
+            // 今日の日付
+            $endDate = Carbon::today();
+            // 1週間前の日付
+            $startDate = Carbon::today()->subWeek();
+        }
+
+
+        // 消耗品(category_id'が1)かつstocks
+        $subQuery = Edithistory::betweenDate($startDate, $endDate)
         ->where('category_id', 1)
+        ->where('item_id', $request->id)
         ->where('edited_field', 'stocks')
         ->select('action_type', 'old_value', 'new_value','edited_at');
-
-        // $data = DB::table($subQuery)
-        // ->get();
 
         $data = DB::table($subQuery)
         ->select('action_type','old_value', 'new_value',
@@ -30,6 +45,7 @@ class AnalysisController extends Controller
         ->get();
 
         // LineChart用の昇順のデータ
+        // reverse()では機能しないので、orderByで昇順に並べる
         $forChart = DB::table($subQuery)
         ->select('new_value','edited_at')
         ->orderBy('edited_at', 'Asc')
@@ -37,10 +53,6 @@ class AnalysisController extends Controller
 
         $labels = $forChart->pluck('edited_at');
         $stocks = $forChart->pluck('new_value');
-        // reverse()では機能しない、->pluckは単なる配列ではない？
-        // $labels = $data->pluck('edited_at')->reverse();
-        // $stocks = $data->pluck('new_value')->reverse();
-
 
         // APIなのでJSON形式で返す
         return response()->json([

@@ -8,7 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreItemRequest;
 use App\Http\Requests\UpdateItemRequest;
 use Inertia\Inertia;
-use Illuminate\Http\Request;
+use Illuminate\Http\Request;    
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
@@ -76,9 +76,6 @@ class ItemController extends Controller
             $item->image_path3 = asset('storage/items/' . $item->image_path3);
             return $item;
         });
-        
-
-        // dd($items);
 
         $categories = Category::all();
 

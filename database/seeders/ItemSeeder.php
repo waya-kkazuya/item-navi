@@ -18,11 +18,11 @@ class ItemSeeder extends Seeder
             [
                 'name' => 'ペーパータオル',
                 // 'category' => '消耗品',
-                'category_id' => Category::all()->random()->id,
+                'category_id' => 1,
                 'image_path1' => 'sample1.jpg',
                 'image_path2' => 'sample4.jpg',
                 'image_path3' => 'sample5.jpg',
-                'stocks' => '10',
+                'stocks' => '100',
                 'usage_status' => '使用中',
                 'end_user' => '後藤',
                 'location_of_use' => '廊下',
