@@ -28,7 +28,16 @@ class CategorySeeder extends Seeder
             ],
             [
                 'name' => '防災用品'
-            ]
+            ],
+            [
+                'name' => 'オフィス用品'
+            ],
+            [
+                'name' => 'オフィス家具'
+            ],
+            [
+                'name' => '作業道具'
+            ],
         ]);
     }
 }

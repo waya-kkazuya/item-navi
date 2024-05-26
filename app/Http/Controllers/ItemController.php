@@ -31,9 +31,11 @@ class ItemController extends Controller
         $sortOrder = $request->query('sortOrder', 'asc');
 
         $category_id = $request->query('category_id', 0);
+        
+        $search = $request->query('search', '');
 
         $query = Item::with('category')
-        ->searchItems($request->query('search'))
+        ->searchItems($search)
         ->select(
             'id',
             'name',
@@ -47,14 +49,14 @@ class ItemController extends Controller
             'location_of_use',
             'storage_location',
             'acquisition_category',
+            'where_to_buy',
             'price',
             'date_of_acquisition',
             'inspection_schedule',
             'disposal_schedule',
             'manufacturer',
             'product_number',
-            'vendor',
-            'vendor_website_url',
+            // 'vendor_website_url',
             'remarks',
             'qrcode_path'
         )->orderBy('created_at', $sortOrder);
@@ -81,9 +83,10 @@ class ItemController extends Controller
 
         return Inertia::render('Items/Index', [
             'items' => $items,
-            'sortOrder' => $sortOrder,
             'categories' => $categories,
-            'category_id' => $category_id
+            'sortOrder' => $sortOrder,
+            'category_id' => $category_id,
+            'search' => $search 
         ]);
     }
 
@@ -157,14 +160,13 @@ class ItemController extends Controller
             'location_of_use' => $request->location_of_use,
             'storage_location' => $request->storage_location,
             'acquisition_category' => $request->acquisition_category,
+            'where_to_buy' => $request->where_to_buy,
             'price' => $request->price ?? 0,
             'date_of_acquisition' => $request->date_of_acquisition,
             'inspection_schedule' => $request->inspection_schedule,
             'disposal_schedule' => $request->disposal_schedule,
             'manufacturer' => $request->manufacturer,
             'product_number' => $request->product_number,
-            'vendor' => $request->vendor,
-            'vendor_website_url' => $request->vendor_website_url,
             'remarks' => $request->remarks,
             'qrcode_path' => $qrcodeName
         ]);
@@ -228,14 +230,14 @@ class ItemController extends Controller
         $item->end_user = $request->end_user;
         $item->location_of_use = $request->location_of_use;
         $item->acquisition_category = $request->acquisition_category;
+        $item->where_to_buy = $request->where_to_buy;
         $item->price = $request->price;
         $item->date_of_acquisition = $request->date_of_acquisition;
         $item->inspection_schedule = $request->inspection_schedule;
         $item->disposal_schedule = $request->disposal_schedule;
         $item->manufacturer = $request->manufacturer;
         $item->product_number = $request->product_number;
-        $item->vendor = $request->vendor;
-        $item->vendor_website_url = $request->vendor_website_url;
+        // $item->vendor_website_url = $request->vendor_website_url;
         $item->remarks = $request->remarks;
         $item->qrcode_path = $request->qrcode_path;
         $item->save();

@@ -10,6 +10,7 @@ use App\Http\Controllers\ImageTestController;
 use App\Http\Controllers\AnalysisController;
 use App\Http\Controllers\ConsumableItemsController;
 use App\Http\Controllers\UpdateStockController;
+use App\Http\Controllers\InventoryPlanController;
 use App\Models\ImageTest;
 
 /*
@@ -37,6 +38,9 @@ Route::get('consumable_items', [ConsumableItemsController::class, 'index'])->nam
 Route::get('consumable_items/{id}/history', [ConsumableItemsController::class, 'history'])->name('consumable_items.history');
 
 Route::resource('items', ItemController::class)
+->middleware(['auth', 'verified', 'can:staff-higher']);
+
+Route::resource('inventory_plans', InventoryPlanController::class)
 ->middleware(['auth', 'verified', 'can:staff-higher']);
 
 Route::resource('wishes', WishController::class)

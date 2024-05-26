@@ -34,14 +34,13 @@ class UpdateItemRequest extends FormRequest
             // 'location_of_use',
             'storage_location' => ['required'],
             'acquisition_category' => ['required'],
+            'where_to_buy' => ['max:20'],
             'price' => ['required', 'integer', 'min:0'],
             // 'date_of_acquisition' => ['date'],
             // 'inspection_schedule' => ['date'],
             // 'disposal_schedule' => ['date'],
             'manufacturer' => ['max:20'],
-            'product_number' => ['integer', 'min:0'],
-            'vendor' => ['max:20'],
-            // 'vendor_website_url' => ['url'],
+            // 'product_number' => ['integer', 'min:0'], //文字列数字のみとは限らない
             // 'remarks' => ['max:1000'],
             // 'qrcode_path'
         ];

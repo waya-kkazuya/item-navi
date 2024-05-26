@@ -23,28 +23,18 @@ const form = reactive({
   location_of_use: "未選択",
   storage_location: "未選択",
   acquisition_category: "未選択",
+  where_to_buy: null,
   price: null,
   date_of_acquisition: new Date().toISOString().substr(0, 10),
   inspection_schedule: new Date().toISOString().substr(0, 10),
   disposal_schedule: new Date().toISOString().substr(0, 10),
   manufacturer: null,
   product_number: null,
-  vendor: null,
-  vendor_website_url: null,
   remarks: null,
   qrcode_path: null
 })
 
 const file_src = ref('')
-
-// v1.oで書き方が変わった
-// 旧　Inertia.post('/items', form)
-// const storeItem = () => {
-//   router.visit('/items', {
-//     method: 'post',
-//     data: form
-//   })
-// }
 
 const storeItem = () => {
     let formData = new FormData();
@@ -56,14 +46,13 @@ const storeItem = () => {
     formData.append('location_of_use', form.location_of_use);
     formData.append('storage_location', form.storage_location);
     formData.append('acquisition_category', form.acquisition_category);
+    formData.append('where_to_buy', form.where_to_buy);
     formData.append('price', form.price);
     formData.append('date_of_acquisition', form.date_of_acquisition);
     formData.append('inspection_schedule', form.inspection_schedule);
     formData.append('disposal_schedule', form.disposal_schedule);
     formData.append('manufacturer', form.manufacturer);
     formData.append('product_number', form.product_number);
-    formData.append('vendor', form.vendor);
-    formData.append('vendor_website_url', form.vendor_website_url);
     formData.append('remarks', form.remarks);
     formData.append('qrcode_path', form.qrcode_path);
     if(form.file_name){
@@ -258,6 +247,15 @@ const handleFileUpload = (event) => {
                                         </div>
 
                                         <div class="p-2 w-full">
+                                            <div class="relative">
+                                                <label for="where_to_buy" class="leading-7 text-sm text-gray-600">購入先</label>
+                                                <input type="text" id="where_to_buy" name="where_to_buy" v-model="form.where_to_buy" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
+                                                <div v-if="errors.where_to_buy" class="font-medium text-red-600">{{ errors.where_to_buy }}</div>
+                                            </div>
+                                        </div>
+
+
+                                        <div class="p-2 w-full">
                                         <div class="relative">
                                             <label for="price" class="leading-7 text-sm text-gray-600">取得価額</label>
                                             <input type="number" id="price" name="price" v-model="form.price" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
@@ -309,21 +307,6 @@ const handleFileUpload = (event) => {
                                         </div>
                                         </div>
 
-                                        <div class="p-2 w-full">
-                                        <div class="relative">
-                                            <label for="vendor" class="leading-7 text-sm text-gray-600">購入先</label>
-                                            <input type="text" id="vendor" name="vendor" v-model="form.vendor" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
-                                            <div v-if="errors.vendor" class="font-medium text-red-600">{{ errors.vendor }}</div>
-                                        </div>
-                                        </div>
-                                        
-                                        <div class="p-2 w-full">
-                                        <div class="relative">
-                                            <label for="vendor_website_url" class="leading-7 text-sm text-gray-600">購入サイトURL</label>
-                                            <input type="text" id="vendor_website_url" name="vendor_website_url" v-model="form.vendor_website_url" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
-                                            <div v-if="errors.vendor_website_url" class="font-medium text-red-600">{{ errors.vendor_website_url }}</div>
-                                        </div>
-                                        </div>
                                     
                                         <div class="p-2 w-full">
                                         <div class="relative">

@@ -7,7 +7,10 @@ namespace Database\Seeders;
 use App\Models\Category;
 use App\Models\Edithistory;
 use App\Models\ImageTest;
+use App\Models\InventoryPlan;
 use Illuminate\Database\Seeder;
+use Carbon\Carbon;
+use Illuminate\Support\Str;
 
 class DatabaseSeeder extends Seeder
 {
@@ -33,7 +36,46 @@ class DatabaseSeeder extends Seeder
 
         \App\Models\Item::factory(100)->create();
         \App\Models\Wish::factory(20)->create();
-        \App\Models\InventoryPlan::factory(3)->create();
+
+        $items = \App\Models\Item::all();
+        $startDate = Carbon::create(2024, 2, 1);
+
+        // InventoryPlan::factory(3)->create()
+        // ->each(function(InventoryPlan $inventoryPlan) use($items, $startDate) {
+        //     $inventoryPlan->items()->attach(
+        //         $items->random(rand(25,30))->pluck('id')->toArray(),
+        //         [
+        //             'inventory_date' => $startDate->addDays(rand(0, 59)), // 2024年2月1日~2024年3月31日の間の期間_棚卸し期間を想定
+        //             'inventory_person' => collect(['admin', 'staff', 'user'])->random(), // admin,staff,userの中のどれかの文字列
+        //             'insuffcient_data_status' => (bool)random_int(0, 1), // booleanの値
+        //             'insuffcient_data_details' => Str::random(20), // テキスト
+        //             'unknown_assets_status' => (bool)random_int(0, 1), // booleanの値
+        //             'unknown_assets_details' => Str::random(20), // テキスト
+        //             'inventory_status' => (bool)random_int(0, 1), // boolean値
+        //         ]
+        //     );
+        // });
+
+        InventoryPlan::factory(3)->create()
+        ->each(function(InventoryPlan $inventoryPlan) use($items, $startDate) {
+            $items->random(rand(25,30))->pluck('id')->each(function($itemId) use($inventoryPlan, $startDate) {
+                $startDateClone = clone $startDate;
+                $inventoryPlan->items()->attach(
+                    $itemId,
+                    [
+                        'inventory_date' => $startDateClone->addDays(rand(0, 59)), // 2024年2月1日~2024年3月31日の間の期間_棚卸し期間を想定
+                        'inventory_person' => collect(['admin', 'staff', 'user'])->random(), // admin,staff,userの中のどれかの文字列
+                        'insuffcient_data_status' => (bool)random_int(0, 1), // booleanの値
+                        'insuffcient_data_details' => Str::random(20), // テキスト
+                        'unknown_assets_status' => (bool)random_int(0, 1), // booleanの値
+                        'unknown_assets_details' => Str::random(20), // テキスト
+                        'inventory_status' => (bool)random_int(0, 1), // boolean値
+                    ]
+                );
+            });
+        });
+
+
 
 
         // \App\Models\Edithistory::factory(1000)->create();

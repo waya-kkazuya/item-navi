@@ -19,9 +19,9 @@ class InventoryPlanFactory extends Factory
     {
         return [
             'name' => $this->faker->name,
-            'item_id' => rand(1,Item::count()),
             'start_date' => $this->faker->dateTime,
             'end_date' => $this->faker->dateTime,
+            'status' => $this->faker->boolean
         ];
     }
 }

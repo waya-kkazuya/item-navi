@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('inventory_plan_item', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('inventory_plan_id')->constrained()->onUpdate('cascade');
             $table->foreignId('item_id')->constrained()->onUpdate('cascade');
             $table->dateTime('inventory_date');
             // $table->unsignedInteger('stocks');

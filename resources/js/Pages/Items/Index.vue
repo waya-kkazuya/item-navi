@@ -6,17 +6,25 @@ import Pagination from '@/Components/Pagination.vue';
 import { ref } from 'vue';
 import { stringify } from 'postcss';
 
-defineProps({
+const props = defineProps({
   items: Object,
   categories: Array,
+  sortOrder: String,
+  category_id: Number,
+  search: String
 })
 
-const search = ref('')
-const sortOrder = ref('asc')
-// 初期値をすべてに該当する:value=0にする
-const category_id = ref(0)
+// 検索用
+const search = ref(props.search)
+// ソート用
+const sortOrder = ref(props.sortOrder)
 
+// カテゴリプルダウン用(初期値は0)
+const category_id = ref(props.category_id)
+
+// 表示切替用
 const isTableView = ref('true')
+
 
 const fetchItems = () => {
   router.visit(route('items.index', { search: search.value }), {
@@ -72,7 +80,7 @@ const filterItems = () => {
                             <FlashMessage />
                             <div class="flex items-center pl-4 mt-4 lg:w-2/3 w-full mx-auto">
                               <div class="flex items-center">
-                                <input type="text" name="search" v-model="search" placeholder="備品名で検索">
+                                <input type="text" name="search" v-model="search" placeholder="備品名で検索" @keyup.enter="fetchItems">
                                 <button class="w-16 bg-blue-300 text-white py-2 px-2" @click="fetchItems">検索</button>
                               </div>
 
@@ -85,7 +93,7 @@ const filterItems = () => {
 
                               <div>
                                 <select v-model="category_id" @change="filterItems" class="ml-4">
-                                  <option :value="0">すべて
+                                  <option :value="0">カテゴリすべて
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
                                       <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
                                     </svg>
@@ -121,21 +129,21 @@ const filterItems = () => {
                               <tr>
                                 <th class="min-w-16 px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100 rounded-tl rounded-bl">Id</th>
                                 <th class="min-w-40 px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">備品名</th>
-                                <th class="min-w-20 px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">カテゴリ</th>
+                                <th class="min-w-40 px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">カテゴリ</th>
                                 <th class="min-w-28 px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">画像</th>
                                 <th class="min-w-20 px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">在庫数</th>
                                 <th class="min-w-24 px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">利用状況</th>
-                                <th class="min-w-24 px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">使用者</th>
+                                <th class="min-w-20 px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">使用者</th>
                                 <th class="min-w-32 px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">利用場所</th>
                                 <th class="min-w-32 px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">保管場所</th>
                                 <th class="min-w-32 px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">取得区分</th>
+                                <th class="min-w-20 px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">購入先</th>
                                 <th class="min-w-32 px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">取得価額</th>
                                 <th class="min-w-40 px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">取得年月日</th>
                                 <th class="min-w-40 px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">点検予定日</th>
                                 <th class="min-w-40 px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">廃棄予定日</th>
                                 <th class="min-w-32 px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">メーカー</th>
                                 <th class="min-w-32 px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">製品番号</th>
-                                <th class="min-w-20 px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">購入先</th>
                                 <th class="min-w-36 px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">備考</th>
                               </tr>
                             </thead>
@@ -155,14 +163,14 @@ const filterItems = () => {
                                 <td class="border-b-2 border-gray-200 px-4 py-3">{{ item.location_of_use }}</td>
                                 <td class="border-b-2 border-gray-200 px-4 py-3">{{ item.storage_location }}</td>
                                 <td class="border-b-2 border-gray-200 px-4 py-3">{{ item.acquisition_category }}</td>
+                                <td class="border-b-2 border-gray-200 px-4 py-3">{{ item.where_to_buy }}</td>
                                 <td class="border-b-2 border-gray-200 px-4 py-3">{{ item.price }}</td>
                                 <td class="border-b-2 border-gray-200 px-4 py-3">{{ item.date_of_acquisition }}</td>
                                 <td class="border-b-2 border-gray-200 px-4 py-3">{{ item.inspection_schedule }}</td>
                                 <td class="border-b-2 border-gray-200 px-4 py-3">{{ item.disposal_schedule }}</td>
                                 <td class="border-b-2 border-gray-200 px-4 py-3">{{ item.manufacturer }}</td>
                                 <td class="border-b-2 border-gray-200 px-4 py-3">{{ item.product_number }}</td>
-                                <td class="border-b-2 border-gray-200 px-4 py-3"><a :href="item.vendor_website_url" class="text-blue-500">{{ item.vendor }}</a></td>
-                                <td class="overflow-hidden whitespace-nowrap border-b-2 border-gray-200 px-4 py-3">{{ item.remarks }}</td>
+                                <td class="overflow-hidden whitespace-nowrap border-b-2 border-gray-200 px-4 py-3">{{ item.remarks ?? '' }}</td>
                               </tr>
                             </tbody>
                           </table>

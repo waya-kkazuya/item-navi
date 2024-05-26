@@ -6,6 +6,7 @@ use App\Models\InventoryPlan;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreInventoryPlanRequest;
 use App\Http\Requests\UpdateInventoryPlanRequest;
+use Inertia\Inertia;
 
 class InventoryPlanController extends Controller
 {
@@ -14,7 +15,13 @@ class InventoryPlanController extends Controller
      */
     public function index()
     {
-        //
+        $inventoryPlans = InventoryPlan::select('name','start_date', 'end_date', 'status')->get();
+
+        // dd($inventoryPlans);
+
+        return Inertia::render('InventoryPlans/Index', [
+            'inventoryPlans' => $inventoryPlans
+        ]);
     }
 
     /**
