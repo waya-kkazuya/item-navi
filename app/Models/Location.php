@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use App\Models\Item;
 use App\Models\Wish;
 
-class Category extends Model
+class Location extends Model
 {
     use HasFactory;
 

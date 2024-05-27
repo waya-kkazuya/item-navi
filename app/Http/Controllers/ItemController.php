@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Item;
 use App\Models\Category;
+use App\Models\Location;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreItemRequest;
 use App\Http\Requests\UpdateItemRequest;
@@ -34,7 +35,8 @@ class ItemController extends Controller
         
         $search = $request->query('search', '');
 
-        $query = Item::with('category')
+        // withによるeagerローディングではリレーションを使用する
+        $query = Item::with(['category',  'locationOfUse', 'storageLocation'])
         ->searchItems($search)
         ->select(
             'id',
@@ -46,8 +48,8 @@ class ItemController extends Controller
             'stocks',
             'usage_status',
             'end_user',
-            'location_of_use',
-            'storage_location',
+            'location_of_use_id',
+            'storage_location_id',
             'acquisition_category',
             'where_to_buy',
             'price',
@@ -99,9 +101,11 @@ class ItemController extends Controller
         // Gate::authorize('staff-higher');
 
         $categories = Category::all();
+        $locations = Location::all();
 
         return Inertia::render('Items/Create', [
-            'categories' => $categories
+            'categories' => $categories,
+            'locations' => $locations
         ]);
     }
 
@@ -147,6 +151,8 @@ class ItemController extends Controller
         $qrcodeName = 'QR' . uniqid(rand().'_') . '.png';
         QrCode::format('png')->size(200)->generate('Hello Laravel!', storage_path('app/public/qrcode/' . $qrcodeName));
 
+        // dd($request->location_of_use_id);
+
         Item::create([
             'id' => $request->id,
             'name' => $request->name,
@@ -157,8 +163,8 @@ class ItemController extends Controller
             'stocks' => $request->stocks ?? 0,
             'usage_status' => $request->usage_status,
             'end_user' => $request->end_user,
-            'location_of_use' => $request->location_of_use,
-            'storage_location' => $request->storage_location,
+            'location_of_use_id' => $request->location_of_use_id,
+            'storage_location_id' => $request->storage_location_id,
             'acquisition_category' => $request->acquisition_category,
             'where_to_buy' => $request->where_to_buy,
             'price' => $request->price ?? 0,
@@ -185,10 +191,10 @@ class ItemController extends Controller
     {
         // dd($item);
         // categoryとのリレーションをロード
-        $item_category = Item::with('category')->find($item->id);  
+        $item_category_location = Item::with(['category',  'locationOfUse', 'storageLocation'])->find($item->id);  
 
         return Inertia::render('Items/Show', [
-            'item' => $item_category
+            'item' => $item_category_location
         ]);
     }
 
@@ -202,6 +208,7 @@ class ItemController extends Controller
         // categoryとのリレーションをロード
         $item_category = Item::with('category')->find($item->id);
         $categories = Category::all();
+        $locations = Location::all();
 
         // $item_category->image_path1 = asset('storage/items/' . $item_category->image_path1);
         // $item_category->image_path2 = asset('storage/items/' . $item_category->image_path2);
@@ -209,7 +216,8 @@ class ItemController extends Controller
 
         return Inertia::render('Items/Edit', [
             'item' => $item_category,
-            'categories' => $categories
+            'categories' => $categories,
+            'locations' => $locations
         ]);
     }
 
@@ -228,7 +236,8 @@ class ItemController extends Controller
         $item->image_path3 = $request->image_path3;
         $item->usage_status = $request->usage_status;
         $item->end_user = $request->end_user;
-        $item->location_of_use = $request->location_of_use;
+        $item->location_of_use_id = $request->location_of_use_id;
+        $item->storage_location_id = $request->storage_location_id;
         $item->acquisition_category = $request->acquisition_category;
         $item->where_to_buy = $request->where_to_buy;
         $item->price = $request->price;
@@ -237,7 +246,6 @@ class ItemController extends Controller
         $item->disposal_schedule = $request->disposal_schedule;
         $item->manufacturer = $request->manufacturer;
         $item->product_number = $request->product_number;
-        // $item->vendor_website_url = $request->vendor_website_url;
         $item->remarks = $request->remarks;
         $item->qrcode_path = $request->qrcode_path;
         $item->save();

@@ -78,7 +78,7 @@ const filterItems = () => {
                       <section class="text-gray-600 body-font">
                           <div class="container px-5 py-8 mx-auto">
                             <FlashMessage />
-                            <div class="flex items-center pl-4 mt-4 lg:w-2/3 w-full mx-auto">
+                            <div class="flex justify-center items-center pl-4 mt-4 lg:w-2/3 w-full mx-auto">
                               <div class="flex items-center">
                                 <input type="text" name="search" v-model="search" placeholder="備品名で検索" @keyup.enter="fetchItems">
                                 <button class="w-16 bg-blue-300 text-white py-2 px-2" @click="fetchItems">検索</button>
@@ -106,6 +106,36 @@ const filterItems = () => {
                                 </select>
                               </div>
 
+                              
+                              <div>
+                                <select v-model="location_of_use" @change="filterLocationOfUse" class="ml-4">
+                                  <option :value="0">利用場所すべて
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                                      <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
+                                    </svg>
+                                  </option>  
+                                  <option v-for="category in categories" :value="category.id" :key="category.id">{{ category.name }}
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                                      <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
+                                    </svg>  
+                                  </option>
+                                </select>
+                              </div>
+
+                              <div>
+                                <select v-model="location_of_use" @change="filterStorageLocation" class="ml-4">
+                                  <option :value="0">保管場所すべて
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                                      <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
+                                    </svg>
+                                  </option>  
+                                  <option v-for="category in categories" :value="category.id" :key="category.id">{{ category.name }}
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                                      <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
+                                    </svg>  
+                                  </option>
+                                </select>
+                              </div>
                               <!-- <div>
                                 <select v-model="" @change="" class="ml-4">
                                   <option :value="">すべて</option>
@@ -137,11 +167,11 @@ const filterItems = () => {
                                 <th class="min-w-32 px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">利用場所</th>
                                 <th class="min-w-32 px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">保管場所</th>
                                 <th class="min-w-32 px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">取得区分</th>
-                                <th class="min-w-20 px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">購入先</th>
+                                <th class="min-w-32 px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">購入先</th>
                                 <th class="min-w-32 px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">取得価額</th>
-                                <th class="min-w-40 px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">取得年月日</th>
-                                <th class="min-w-40 px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">点検予定日</th>
-                                <th class="min-w-40 px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">廃棄予定日</th>
+                                <th class="min-w-36 px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">取得年月日</th>
+                                <th class="min-w-36 px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">点検予定日</th>
+                                <th class="min-w-36 px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">廃棄予定日</th>
                                 <th class="min-w-32 px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">メーカー</th>
                                 <th class="min-w-32 px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">製品番号</th>
                                 <th class="min-w-36 px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">備考</th>
@@ -160,8 +190,8 @@ const filterItems = () => {
                                 <td class="text-right border-b-2 border-gray-200 px-4 py-3"><span>{{ item.stocks }}</span></td>
                                 <td class="border-b-2 border-gray-200 px-4 py-3">{{ item.usage_status }}</td>
                                 <td class="border-b-2 border-gray-200 px-4 py-3">{{ item.end_user }}</td>
-                                <td class="border-b-2 border-gray-200 px-4 py-3">{{ item.location_of_use }}</td>
-                                <td class="border-b-2 border-gray-200 px-4 py-3">{{ item.storage_location }}</td>
+                                <td class="border-b-2 border-gray-200 px-4 py-3">{{ item.location_of_use.name }}</td>
+                                <td class="border-b-2 border-gray-200 px-4 py-3">{{ item.storage_location.name }}</td>
                                 <td class="border-b-2 border-gray-200 px-4 py-3">{{ item.acquisition_category }}</td>
                                 <td class="border-b-2 border-gray-200 px-4 py-3">{{ item.where_to_buy }}</td>
                                 <td class="border-b-2 border-gray-200 px-4 py-3">{{ item.price }}</td>

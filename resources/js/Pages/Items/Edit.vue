@@ -6,6 +6,7 @@ import { reactive } from 'vue';
 const props = defineProps({
     item: Object,
     categories: Array,
+    locations: Array,
     errors: Object
 })
 
@@ -19,8 +20,8 @@ const form = reactive({
   stocks: props.item.stocks,
   usage_status: props.item.usage_status,
   end_user: props.item.end_user,
-  location_of_use: props.item.location_of_use,
-  storage_location: props.item.storage_location,
+  location_of_use: props.item.location_of_use_id,
+  storage_location: props.item.storage_location_id,
   acquisition_category: props.item.acquisition_category,
   price: props.item.price,
   date_of_acquisition: props.item.date_of_acquisition,
@@ -92,7 +93,7 @@ const updateItem = id => {
                                                 状況によってバリデーションルールを動的に変更させる v-ifで実装　-->
                                                 <div class="p-2 w-full">
                                                     <div class="relative">
-                                                    <label for="image_path1" class="leading-7 text-sm text-gray-600">写真データ1</label>
+                                                    <label for="image_path1" class="leading-7 text-sm text-gray-600">画像</label>
                                                     <input type="file" @change="previewImage" id="image_path1" name="image_path1" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
                                                     <img :src="image_path1" alt="Image preview...">
                                                     </div>
@@ -154,38 +155,21 @@ const updateItem = id => {
 
                                         <div class="p-2 w-full">
                                         <div class="relative">
-                                            <label for="location_of_use" class="leading-7 text-sm text-gray-600">設置場所</label>
-                                            <select name="location_of_use" id="location_of_use" v-model="form.location_of_use" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
-                                                <option value="未選択">未選択</option>
-                                                <option value="作業室1">作業室1</option>
-                                                <option value="作業室2">作業室2</option>
-                                                <option value="玄関">玄関</option>
-                                                <option value="廊下">廊下</option>
-                                                <option value="給湯室">給湯室</option>
-                                                <option value="トイレ">トイレ</option>
-                                                <option value="事務室">事務室</option>
+                                            <label for="location_of_use_id" class="leading-7 text-sm text-gray-600">設置場所</label>
+                                            <select name="location_of_use_id" id="location_of_use_id" v-model="form.location_of_use_id" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
+                                                <option v-for="location in locations" :key="location.id" :value="location.id">{{ location.name }}</option>
                                             </select>
-                                            <!-- <input type="text" id="location_of_use" name="location_of_use" v-model="form.location_of_use" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"> -->
-                                            <div v-if="errors.location_of_use" class="font-medium text-red-600">{{ errors.location_of_use }}</div>
+                                            <div v-if="errors.location_of_use_id" class="font-medium text-red-600">{{ errors.location_of_use_id }}</div>
                                         </div>
                                         </div>
 
                                         <div class="p-2 w-full">
                                         <div class="relative">
-                                            <label for="storage_location" class="leading-7 text-sm text-gray-600">保管場所</label>
-                                            <select name="storage_location" id="storage_location" v-model="form.storage_location" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
-                                                <option value="未選択">未選択</option>
-                                                <option value="作業室1">作業室1</option>
-                                                <option value="作業室2">作業室2</option>
-                                                <option value="玄関">玄関</option>
-                                                <option value="廊下">廊下</option>
-                                                <option value="給湯室">給湯室</option>
-                                                <option value="トイレ">トイレ</option>
-                                                <option value="事務室">事務室</option>
-                                                <option value="倉庫">倉庫</option>
+                                            <label for="storage_location_id" class="leading-7 text-sm text-gray-600">保管場所</label>
+                                            <select name="storage_location_id" id="storage_location_id" v-model="form.storage_location_id" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
+                                                <option v-for="location in locations" :key="location.id" :value="location.id">{{ location.name }}</option>
                                             </select>
-                                            <!-- <input type="text" id="storage_location" name="storage_location" v-model="form.storage_location" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"> -->
-                                            <div v-if="errors.storage_location" class="font-medium text-red-600">{{ errors.storage_location }}</div>
+                                            <div v-if="errors.storage_location_id" class="font-medium text-red-600">{{ errors.storage_location_id }}</div>
                                         </div>
                                         </div>
                                     </div>

@@ -5,6 +5,7 @@ import { reactive, ref } from 'vue';
 
 defineProps({
     categories: Array,
+    locations: Array,
     errors: Object
 })
 
@@ -20,8 +21,8 @@ const form = reactive({
   stocks: null,
   usage_status: "未選択",
   end_user: null,
-  location_of_use: "未選択",
-  storage_location: "未選択",
+  location_of_use_id: 12, // 12は「未選択」
+  storage_location_id: 12, // 12は「未選択」
   acquisition_category: "未選択",
   where_to_buy: null,
   price: null,
@@ -43,8 +44,8 @@ const storeItem = () => {
     formData.append('stocks', form.stocks);
     formData.append('usage_status', form.usage_status);
     formData.append('end_user', form.end_user);
-    formData.append('location_of_use', form.location_of_use);
-    formData.append('storage_location', form.storage_location);
+    formData.append('location_of_use_id', form.location_of_use_id);
+    formData.append('storage_location_id', form.storage_location_id);
     formData.append('acquisition_category', form.acquisition_category);
     formData.append('where_to_buy', form.where_to_buy);
     formData.append('price', form.price);
@@ -179,7 +180,6 @@ const handleFileUpload = (event) => {
                                                 <option value="使用中">使用中</option>usage_status
                                                 <option value="未使用">未使用</option>
                                             </select>
-                                            <!-- <input type="text" id="usage_status" name="usage_status" v-model="form.usage_status" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"> -->
                                             <div v-if="errors.usage_status" class="font-medium text-red-600">{{ errors.usage_status }}</div>
                                         </div>
                                         </div>
@@ -193,39 +193,22 @@ const handleFileUpload = (event) => {
                                         </div>
 
                                         <div class="p-2 w-full">
-                                        <div class="relative">
-                                            <label for="location_of_use" class="leading-7 text-sm text-gray-600">設置場所</label>
-                                            <select name="location_of_use" id="location_of_use" v-model="form.location_of_use" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
-                                                <option value="未選択">未選択</option>
-                                                <option value="作業室1">作業室1</option>
-                                                <option value="作業室2">作業室2</option>
-                                                <option value="玄関">玄関</option>
-                                                <option value="廊下">廊下</option>
-                                                <option value="給湯室">給湯室</option>
-                                                <option value="トイレ">トイレ</option>
-                                                <option value="事務室">事務室</option>
-                                            </select>
-                                            <!-- <input type="text" id="location_of_use" name="location_of_use" v-model="form.location_of_use" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"> -->
-                                            <div v-if="errors.location_of_use" class="font-medium text-red-600">{{ errors.location_of_use }}</div>
-                                        </div>
+                                            <div class="relative">
+                                                <label for="location_of_use_id" class="leading-7 text-sm text-gray-600">利用場所</label>
+                                                <select name="location_of_use_id" id="location_of_use_id" v-model="form.location_of_use_id" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
+                                                    <option v-for="location in locations" :key="location.id" :value="location.id">{{ location.name }}</option>
+                                                </select>
+                                                <div v-if="errors.location_of_use_id" class="font-medium text-red-600">{{ errors.location_of_use_id }}</div>
+                                            </div>
                                         </div>
 
                                         <div class="p-2 w-full">
                                         <div class="relative">
-                                            <label for="storage_location" class="leading-7 text-sm text-gray-600">保管場所</label>
-                                            <select name="storage_location" id="storage_location" v-model="form.storage_location" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
-                                                <option value="未選択">未選択</option>
-                                                <option value="作業室1">作業室1</option>
-                                                <option value="作業室2">作業室2</option>
-                                                <option value="玄関">玄関</option>
-                                                <option value="廊下">廊下</option>
-                                                <option value="給湯室">給湯室</option>
-                                                <option value="トイレ">トイレ</option>
-                                                <option value="事務室">事務室</option>
-                                                <option value="倉庫">倉庫</option>
-                                            </select>
-                                            <!-- <input type="text" id="storage_location" name="storage_location" v-model="form.storage_location" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"> -->
-                                            <div v-if="errors.storage_location" class="font-medium text-red-600">{{ errors.storage_location }}</div>
+                                            <label for="storage_location_id" class="leading-7 text-sm text-gray-600">保管場所</label>
+                                            <select name="storage_location_id" id="storage_location_id" v-model="form.storage_location_id" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
+                                                    <option v-for="location in locations" :key="location.id" :value="location.id">{{ location.name }}</option>
+                                                </select>
+                                            <div v-if="errors.storage_location_id" class="font-medium text-red-600">{{ errors.storage_location_id }}</div>
                                         </div>
                                         </div>
                                     </div>

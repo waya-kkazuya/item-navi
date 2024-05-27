@@ -32,7 +32,7 @@ class UpdateItemRequest extends FormRequest
             'usage_status' => ['required'],
             'end_user' => ['max:10'],
             // 'location_of_use',
-            'storage_location' => ['required'],
+            // 'storage_location' => ['required'],
             'acquisition_category' => ['required'],
             'where_to_buy' => ['max:20'],
             'price' => ['required', 'integer', 'min:0'],

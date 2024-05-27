@@ -8,6 +8,7 @@ use App\Models\Category;
 use App\Models\Edithistory;
 use App\Models\ImageTest;
 use App\Models\InventoryPlan;
+use App\Models\Location;
 use Illuminate\Database\Seeder;
 use Carbon\Carbon;
 use Illuminate\Support\Str;
@@ -28,6 +29,7 @@ class DatabaseSeeder extends Seeder
 
         $this->call([
             CategorySeeder::class,
+            LocationSeeder::class,
             UserSeeder::class,
             ItemSeeder::class,
             EdithistorySeeder::class,
