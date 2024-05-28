@@ -36,7 +36,7 @@ class UpdateItemRequest extends FormRequest
             'acquisition_category' => ['required'],
             'where_to_buy' => ['max:20'],
             'price' => ['required', 'integer', 'min:0'],
-            'manufacturer' => ['max:20'],
+            // 'manufacturer' => ['max:20'],
             // 'product_number' => ['integer', 'min:0'], //文字列数字のみとは限らない、そして長い可能性
             // 'date_of_acquisition' => ['date'],
             // 'inspection_schedule' => ['date'],
