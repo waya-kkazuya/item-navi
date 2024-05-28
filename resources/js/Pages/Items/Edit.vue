@@ -71,55 +71,36 @@ const updateItem = id => {
 
                                         <div class="border bordr-4 mb-8">
                                             <div class="p-2 w-full">
-                                            <div class="relative">
-                                                <label for="name" class="leading-7 text-sm text-gray-600">備品名</label>
-                                                <input type="text" id="name" name="name" v-model="form.name" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
-                                                <div v-if="errors.name" class="font-medium text-red-600">{{ errors.name }}</div>
-                                            </div>
+                                                <div class="relative">
+                                                    <label for="name" class="leading-7 text-sm text-gray-600">備品名</label>
+                                                    <input type="text" id="name" name="name" v-model="form.name" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
+                                                    <div v-if="errors.name" class="font-medium text-red-600">{{ errors.name }}</div>
+                                                </div>
                                             </div>
                                             <div class="p-2 w-full">
-                                            <div class="relative">
-                                                <label for="category" class="leading-7 text-sm text-gray-600">カテゴリ</label><br>
-                                                <select name="category" id="category" v-model="form.category_id" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
-                                                    <option v-for="category in categories" :value="category.id" :key="category.id">{{ category.name }}</option>
-                                                </select>
-                                                <!-- <input type="text" id="category" name="category" v-model="form.category" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"> -->
-                                                <div v-if="errors.category" class="font-medium text-red-600">{{ errors.category }}</div>
-                                            </div>
+                                                <div class="relative">
+                                                    <label for="category" class="leading-7 text-sm text-gray-600">カテゴリ</label><br>
+                                                    <select name="category" id="category" v-model="form.category_id" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
+                                                        <option v-for="category in categories" :value="category.id" :key="category.id">{{ category.name }}</option>
+                                                    </select>
+                                                    <!-- <input type="text" id="category" name="category" v-model="form.category" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"> -->
+                                                    <div v-if="errors.category" class="font-medium text-red-600">{{ errors.category }}</div>
+                                                </div>
                                             </div>
 
+                                            <label class="ml-2 leading-7 text-sm text-gray-600">画像</label>
                                             <div class="flex justify-around">
-                                                <!-- あとから最初に登録した画像を編集できるのは良くないので、
-                                                ひとまず、画像を並べるだけにとどめる -->
-                                                <!-- 画像がデータベースに保存されている枚数が2枚なら1枚アップロードできる、1枚なら2枚、0枚なら3枚
-                                                状況によってバリデーションルールを動的に変更させる v-ifで実装　-->
-                                                <div class="p-2 w-full">
-                                                    <div class="relative">
-                                                    <label for="image_path1" class="leading-7 text-sm text-gray-600">画像</label>
-                                                    <input type="file" @change="previewImage" id="image_path1" name="image_path1" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
-                                                    <img :src="image_path1" alt="Image preview...">
-                                                    </div>
+                                                <div v-if="item.image_path1" class="p-2 w-full">
+                                                        <!-- <label for="image_path1" class="leading-7 text-sm text-gray-600">写真データ1</label> -->
+                                                        <img :src="`/storage/items/${item.image_path1}`" alt="Image preview...">
                                                 </div>
-                                            </div>
-                                    
-                                            <div class="flex justify-around">
-                                                <div class="relative w-32">
-                                                    <img :src="`/storage/items/${item.image_path1}`">
-                                                    <button class="absolute top-0 right-0 bg-gray-500 text-white py-1 px-2" @click="deleteItem()">
-                                                    ×
-                                                    </button>
+                                                <div v-if="item.image_path2" class="p-2 w-full">
+                                                        <!-- <label for="image_path2" class="leading-7 text-sm text-gray-600">写真データ2</label> -->
+                                                        <img :src="`/storage/items/${item.image_path2}`" alt="Image preview...">
                                                 </div>
-                                                <div class="relative w-32">
-                                                    <img :src="`/storage/items/${item.image_path2}`">
-                                                    <button class="absolute top-0 right-0 bg-gray-500 text-white py-1 px-2" @click="deleteItem()">
-                                                    ×
-                                                    </button>
-                                                </div>
-                                                <div class="relative w-32">
-                                                    <img :src="`/storage/items/${item.image_path3}`">
-                                                    <button class="absolute top-0 right-0 bg-gray-500 text-white py-1 px-2" @click="deleteItem()">
-                                                    ×
-                                                    </button>
+                                                <div v-if="item.image_path3" class="p-2 w-full">          
+                                                        <!-- <label for="image_path3" class="leading-7 text-sm text-gray-600">写真データ3</label> -->
+                                                        <img :src="`/storage/items/${item.image_path3}`" alt="Image preview...">
                                                 </div>
                                             </div>
                                         </div>
