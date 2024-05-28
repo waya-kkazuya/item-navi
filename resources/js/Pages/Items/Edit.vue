@@ -104,7 +104,7 @@ const updateItem = id => {
                                                     <span class="ml-1 leading-7 text-sm text-gray-600">個</span>
                                                     <div v-if="errors.stocks" class="font-medium text-red-600">{{ errors.stocks }}</div>
                                                 </div>
-                                                <div v-if="form.category_id == 2" class="p-4 w-full">
+                                                <div v-if="form.category_id == 2" class="w-full">
                                                     <label for="minimum_stock" class="leading-7 text-sm text-gray-600">最低在庫数</label><br>
                                                     <input type="number" id="minimum_stock" name="s tocks" v-model="form.minimum_stock" class="w-1/2 bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
                                                     <span class="ml-1 leading-7 text-sm text-gray-600">個</span>
