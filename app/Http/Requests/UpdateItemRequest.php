@@ -29,18 +29,18 @@ class UpdateItemRequest extends FormRequest
             // 'image_path2' => [],
             // 'image_path3' => [],
             'stocks' => ['required', 'integer', 'min:0'],
-            'usage_status' => ['required'],
+            // 'usage_status' => ['required'],
             'end_user' => ['max:10'],
             // 'location_of_use',
             // 'storage_location' => ['required'],
             'acquisition_category' => ['required'],
             'where_to_buy' => ['max:20'],
             'price' => ['required', 'integer', 'min:0'],
+            'manufacturer' => ['max:20'],
+            // 'product_number' => ['integer', 'min:0'], //文字列数字のみとは限らない、そして長い可能性
             // 'date_of_acquisition' => ['date'],
             // 'inspection_schedule' => ['date'],
             // 'disposal_schedule' => ['date'],
-            'manufacturer' => ['max:20'],
-            // 'product_number' => ['integer', 'min:0'], //文字列数字のみとは限らない
             // 'remarks' => ['max:1000'],
             // 'qrcode_path'
         ];

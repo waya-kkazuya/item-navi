@@ -14,7 +14,6 @@ return new class extends Migration
         Schema::create('items', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            // $table->string('category');
             $table->foreignId('category_id')->constrained('categories');
             $table->string('image_path1')->nullable();
             $table->string('image_path2')->nullable();
@@ -22,12 +21,11 @@ return new class extends Migration
             $table->unsignedInteger('stocks');
             // $table->foreignId('stock_id')->constrained();
             $table->string('usage_status');
-            $table->string('end_user')->nullable();
-            // $table->foreignId('end_user_id')->constrained();
+            $table->string('end_user')->nullable(); // end_userは手動で入力
             $table->string('location_of_use');
-            // $table->foreignId('location_of_use_id')->constrained();
+            // 後のmigrationで処理済み: $table->foreignId('location_of_use_id')->constrained();
             $table->string('storage_location');
-            // $table->foreignId('storage_location_id')->constrained();
+            // 後のmigrationで処理済み: $table->foreignId('storage_location_id')->constrained();
             $table->string('acquisition_category')->nullable();
             $table->double('price')->nullable();
             $table->date('date_of_acquisition')->nullable();

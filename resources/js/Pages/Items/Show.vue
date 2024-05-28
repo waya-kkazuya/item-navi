@@ -113,7 +113,7 @@ const deleteItem = id => {
                                                 <div class="relative">
                                                     <label for="location_of_use" class="leading-7 text-sm text-gray-600">設置場所</label>
                                                     <div id="location_of_use" class="w-full bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
-                                                    {{ item.location_of_use }}  
+                                                    {{ item.location_of_use.name }}
                                                     </div>
                                                 </div>
                                             </div>
@@ -122,7 +122,7 @@ const deleteItem = id => {
                                                 <div class="relative">
                                                     <label for="storage_location" class="leading-7 text-sm text-gray-600">保管場所</label>
                                                     <div id="storage_location" class="w-full bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
-                                                    {{ item.storage_location }}
+                                                    {{ item.storage_location.name }}
                                                     </div>
                                                 </div>
                                             </div>
@@ -143,6 +143,33 @@ const deleteItem = id => {
                                                     <label for="price" class="leading-7 text-sm text-gray-600">取得価額</label>
                                                     <div id="price" class="w-full bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
                                                     {{ item.price }}  
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="p-2 w-full">
+                                                <div class="relative">
+                                                    <label for="where_to_buy" class="leading-7 text-sm text-gray-600">購入先</label>
+                                                    <div id="where_to_buy" class="w-full bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
+                                                    {{ item.where_to_buy }}
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="p-2 w-full">
+                                                <div class="relative">
+                                                    <label for="manufacturer" class="leading-7 text-sm text-gray-600">メーカー</label>
+                                                    <div id="manufacturer" class="w-full bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
+                                                    {{ item.manufacturer }}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="p-2 w-full">
+                                                <div class="relative">
+                                                    <label for="product_number" class="leading-7 text-sm text-gray-600">製品番号</label>
+                                                    <div id="product_number" class="w-full bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
+                                                    {{ item.product_number }}
                                                     </div>
                                                 </div>
                                             </div>
@@ -177,38 +204,7 @@ const deleteItem = id => {
                                             </div>
                                         </div>
 
-                                        <div class="p-4 border bordr-4 mb-4">
-                                            <div class="p-2 w-full">
-                                                <div class="relative">
-                                                    <label for="manufacturer" class="leading-7 text-sm text-gray-600">メーカー</label>
-                                                    <div id="manufacturer" class="w-full bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
-                                                    {{ item.manufacturer }}
-                                                    </div>
-                                                </div>
-                                            </div>
-                                
-                                            <div class="p-2 w-full">
-                                                <div class="relative">
-                                                    <label for="product_number" class="leading-7 text-sm text-gray-600">製品番号</label>
-                                                    <div id="product_number" class="w-full bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
-                                                    {{ item.product_number }}
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <div class="p-2 w-full">
-                                                <div class="relative">
-                                                    <label for="vendor" class="leading-7 text-sm text-gray-600">購入先</label>
-                                                    <div id="vendor" class="w-full bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
-                                                    {{ item.vendor }}
-                                                    </div>
-                                                    <div class="mt-4">
-                                                    <a id="vendor_website_url" :href="item.vendor_website_url" target="_blank" rel="noopener noreferrer" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700">
-                                                        購入サイトへ
-                                                    </a>
-                                                    </div>
-                                                </div>
-                                            </div>               
+                                        <div class="p-4 border bordr-4 mb-4">      
                                     
                                             <div class="p-2 w-full">
                                                 <div class="relative">

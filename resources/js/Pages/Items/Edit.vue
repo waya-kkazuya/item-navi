@@ -89,6 +89,7 @@ const updateItem = id => {
                                             </div>
 
                                             <div class="flex justify-around">
+                                                <!-- あとから最初に登録した画像を編集できるのは良くない -->
                                                 <!-- 画像がデータベースに保存されている枚数が2枚なら1枚アップロードできる、1枚なら2枚、0枚なら3枚
                                                 状況によってバリデーションルールを動的に変更させる v-ifで実装　-->
                                                 <div class="p-2 w-full">
@@ -176,18 +177,26 @@ const updateItem = id => {
 
                                     <div class="border bordr-4 mb-8">
                                         <div class="p-2 w-full">
-                                        <div class="relative">
-                                            <label for="acquisition_category" class="leading-7 text-sm text-gray-600">取得区分</label>
-                                            <select name="acquisition_category" id="acquisition_category" v-model="form.acquisition_category" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
-                                                <option value="未選択">未選択</option>
-                                                <option value="購入">購入</option>
-                                                <option value="リース（レンタル）">リース（レンタル）</option>
-                                                <option value="譲渡">譲渡</option>
-                                                <option value="その他">その他</option>
-                                            </select>
-                                            <!-- <input type="text" id="acquisition_category" name="acquisition_category" v-model="form.acquisition_category" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"> -->
-                                            <div v-if="errors.acquisition_category" class="font-medium text-red-600">{{ errors.acquisition_category }}</div>
+                                            <div class="relative">
+                                                <label for="acquisition_category" class="leading-7 text-sm text-gray-600">取得区分</label>
+                                                <select name="acquisition_category" id="acquisition_category" v-model="form.acquisition_category" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
+                                                    <option value="未選択">未選択</option>
+                                                    <option value="購入">購入</option>
+                                                    <option value="リース（レンタル）">リース（レンタル）</option>
+                                                    <option value="譲渡">譲渡</option>
+                                                    <option value="その他">その他</option>
+                                                </select>
+                                                <!-- <input type="text" id="acquisition_category" name="acquisition_category" v-model="form.acquisition_category" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"> -->
+                                                <div v-if="errors.acquisition_category" class="font-medium text-red-600">{{ errors.acquisition_category }}</div>
+                                            </div>
                                         </div>
+
+                                        <div class="p-2 w-full">
+                                            <div class="relative">
+                                                <label for="where_to_buy" class="leading-7 text-sm text-gray-600">購入先</label>
+                                                <input type="text" id="where_to_buy" name="where_to_buy" v-model="form.where_to_buy" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
+                                                <div v-if="errors.where_to_buy" class="font-medium text-red-600">{{ errors.where_to_buy }}</div>
+                                            </div>
                                         </div>
 
                                         <div class="p-2 w-full">
@@ -239,22 +248,6 @@ const updateItem = id => {
                                             <label for="product_number" class="leading-7 text-sm text-gray-600">製品番号</label>
                                             <input type="text" id="product_number" name="product_number" v-model="form.product_number" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
                                             <div v-if="errors.product_number" class="font-medium text-red-600">{{ errors.product_number }}</div>
-                                        </div>
-                                        </div>
-
-                                        <div class="p-2 w-full">
-                                        <div class="relative">
-                                            <label for="vendor" class="leading-7 text-sm text-gray-600">購入先</label>
-                                            <input type="text" id="vendor" name="vendor" v-model="form.vendor" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
-                                            <div v-if="errors.vendor" class="font-medium text-red-600">{{ errors.vendor }}</div>
-                                        </div>
-                                        </div>
-                                        
-                                        <div class="p-2 w-full">
-                                        <div class="relative">
-                                            <label for="vendor_website_url" class="leading-7 text-sm text-gray-600">購入サイトURL</label>
-                                            <input type="text" id="vendor_website_url" name="vendor_website_url" v-model="form.vendor_website_url" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
-                                            <div v-if="errors.vendor_website_url" class="font-medium text-red-600">{{ errors.vendor_website_url }}</div>
                                         </div>
                                         </div>
                                     

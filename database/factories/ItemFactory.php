@@ -36,12 +36,11 @@ class ItemFactory extends Factory
             'acquisition_category' => $this->faker->randomElement($words3),
             'where_to_buy' => $this->faker->name,
             'price' => $this->faker->numberBetween(100, 50000),
+            'product_number' => $this->faker->regexify('[A-Za-z0-9]{10,20}'),
+            'manufacturer' => $this->faker->sentence(2),
             'date_of_acquisition' => $this->faker->dateTime,
             'inspection_schedule' => $this->faker->dateTime,
             'disposal_schedule' => $this->faker->dateTime,
-            'manufacturer' => $this->faker->name,
-            'product_number' => $this->faker->numberBetween(1001, 4999),
-            // 'vendor_website_url' => $this->faker->url,
             'remarks' => $this->faker->realText(20),
             'qrcode_path' => $this->faker->url
         ];

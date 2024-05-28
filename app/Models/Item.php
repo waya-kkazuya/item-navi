@@ -26,11 +26,11 @@ class Item extends Model
         'acquisition_category',
         'where_to_buy',
         'price',
+        'manufacturer',
+        'product_number',
         'date_of_acquisition',
         'inspection_schedule',
         'disposal_schedule',
-        'manufacturer',
-        'product_number',
         'remarks',
         'qrcode_path',
     ];
