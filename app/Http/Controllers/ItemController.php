@@ -46,6 +46,7 @@ class ItemController extends Controller
             'image_path2',
             'image_path3',
             'stocks',
+            'minimum_stock',
             'usage_status',
             'end_user',
             'location_of_use_id',
@@ -116,9 +117,7 @@ class ItemController extends Controller
     {
         Gate::authorize('staff-higher');
 
-        // dd($request->image_path1);
         $imageFiles = $request->file('file_name');
-        // dd($imageFiles);
 
         // $imageFile = $request->image_path1;
         // if(!is_null($imageFile) && $imageFile->isValid()){
@@ -153,6 +152,14 @@ class ItemController extends Controller
 
         // dd($request->location_of_use_id);
 
+        // もしもカテゴリが消耗品以外で、minimumに数値が入っていたらnullにする
+        // categoriesテーブルで消耗品のidは2
+        if($request->category_id == 2){
+            $minimum_stock = $request->minimum_stock;
+        } else {
+            $minimum_stock = null;
+        }
+
         Item::create([
             'id' => $request->id,
             'name' => $request->name,
@@ -161,6 +168,7 @@ class ItemController extends Controller
             'image_path2' => $fileNameToStores[1] ?? null,
             'image_path3' => $fileNameToStores[2] ?? null,
             'stocks' => $request->stocks ?? 0,
+            'minimum_stock' => $minimum_stock,
             'usage_status' => $request->usage_status,
             'end_user' => $request->end_user,
             'location_of_use_id' => $request->location_of_use_id,
@@ -234,6 +242,7 @@ class ItemController extends Controller
         $item->image_path1 = $request->image_path1;
         $item->image_path2 = $request->image_path2;
         $item->image_path3 = $request->image_path3;
+        $item->minimum_stock = $request->minimum_stock;
         $item->usage_status = $request->usage_status;
         $item->end_user = $request->end_user;
         $item->location_of_use_id = $request->location_of_use_id;

@@ -19,6 +19,7 @@ class Item extends Model
         'image_path2',
         'image_path3',
         'stocks',
+        'minimum_stock',
         'usage_status',
         'end_user',
         'location_of_use_id',

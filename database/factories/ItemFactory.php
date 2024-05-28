@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\Category;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -24,11 +25,11 @@ class ItemFactory extends Factory
 
         return [
             'name' => $this->faker->name,
-            'category_id' => $this->faker->numberBetween(1, 5),
+            'category_id' => $this->faker->numberBetween(2, Category::count()),
             'image_path1' => $this->faker->randomElement($imagePath),
             'image_path2' => $this->faker->randomElement($imagePath),
             'image_path3' => $this->faker->randomElement($imagePath),
-            'stocks' => $this->faker->numberBetween(1, 500),
+            'stocks' => $this->faker->numberBetween(1, 20),
             'usage_status' => $this->faker->randomElement($words1),
             'end_user' => $this->faker->userName,
             'location_of_use_id' => $this->faker->numberBetween(1, 11),

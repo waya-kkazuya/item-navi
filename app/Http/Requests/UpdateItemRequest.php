@@ -29,15 +29,16 @@ class UpdateItemRequest extends FormRequest
             // 'image_path2' => [],
             // 'image_path3' => [],
             'stocks' => ['required', 'integer', 'min:0'],
-            // 'usage_status' => ['required'],
+            'minimum_stock' => ['integer', 'min:0'],
+            // 'usage_status' => ['required'], // stringで定義されているがエラーになる可能性がある
             'end_user' => ['max:10'],
-            // 'location_of_use',
+            // 'location_of_use' => ['required'],
             // 'storage_location' => ['required'],
             'acquisition_category' => ['required'],
             'where_to_buy' => ['max:20'],
             'price' => ['required', 'integer', 'min:0'],
             // 'manufacturer' => ['max:20'],
-            // 'product_number' => ['integer', 'min:0'], //文字列数字のみとは限らない、そして長い可能性
+            // 'product_number' => ['max:100'], //文字列数字のみとは限らない、そして長い可能性
             // 'date_of_acquisition' => ['date'],
             // 'inspection_schedule' => ['date'],
             // 'disposal_schedule' => ['date'],

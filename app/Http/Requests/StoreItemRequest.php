@@ -29,6 +29,7 @@ class StoreItemRequest extends FormRequest
             // 'image_path2' => [],
             // 'image_path3' => [],
             'stocks' => ['required', 'integer', 'min:0'],
+            'minimum_stock' =>  ['integer', 'min:0'],
             // 'usage_status' => ['required'],
             'end_user' => ['max:10'],
             // 'location_of_use',

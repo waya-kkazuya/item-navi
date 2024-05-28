@@ -15,6 +15,9 @@ class CategorySeeder extends Seeder
     {
         DB::table('categories')->insert([
             [
+                'name' => '未選択'
+            ],
+            [
                 'name' => '消耗品'
             ],
             [
