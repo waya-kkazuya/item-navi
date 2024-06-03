@@ -55,8 +55,12 @@ class Item extends Model
     }
 
 
+    public function inspections()
+    {
+        return $this->hasMany(Inspection::class);
+    }
 
-
+    
     public function inventory_plans()
     {
         return $this->belongsToMany(InventoryPlan::class)

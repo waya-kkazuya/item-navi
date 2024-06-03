@@ -30,20 +30,20 @@ const showingNavigationDropdown = ref(false);
 
                             <!-- Navigation Links -->
                             <div class="items-center hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                                <NavLink :href="route('dashboard')" :active="route().current('dashboard')">
+                                <!-- <NavLink :href="route('dashboard')" :active="route().current('dashboard')">
                                     Dashboard
-                                </NavLink>        
+                                </NavLink>         -->
                                 <NavLink v-if="$page.props.auth.user_role <= 5" :href="route('items.index')" :active="route().current('items.index')">
                                     備品管理
                                 </NavLink>
                                 <NavLink :href="route('consumable_items')" :active="route().current('consumable_items')">
                                     消耗品管理
                                 </NavLink>
-                                <NavLink :href="route('inventory_plans.index')" :active="route().current('inventory_plans.index')">
-                                    棚卸計画
-                                </NavLink>
                                 <NavLink :href="route('wishes.index')" :active="route().current('wishes.index')">
                                     ウィッシュリスト
+                                </NavLink>
+                                <NavLink :href="route('inventory_plans.index')" :active="route().current('inventory_plans.index')">
+                                    棚卸計画
                                 </NavLink>
                                 
                                 <BellNotification />
@@ -138,20 +138,20 @@ const showingNavigationDropdown = ref(false);
                     class="sm:hidden"
                 >
                     <div class="pt-2 pb-3 space-y-1">
-                        <ResponsiveNavLink :href="route('dashboard')" :active="route().current('dashboard')">
+                        <!-- <ResponsiveNavLink :href="route('dashboard')" :active="route().current('dashboard')">
                             Dashboard
-                        </ResponsiveNavLink>
+                        </ResponsiveNavLink> -->
                         <ResponsiveNavLink :href="route('items.index')" :active="route().current('items.index')">
                             備品管理
                         </ResponsiveNavLink>
                         <ResponsiveNavLink :href="route('consumable_items')" :active="route().current('consumable_items')">
                             消耗品管理
                         </ResponsiveNavLink>
-                        <ResponsiveNavLink :href="route('inventory_plans.index')" :active="route().current('inventory_plans.index')">
-                            棚卸計画
-                        </ResponsiveNavLink>
                         <ResponsiveNavLink :href="route('wishes.index')" :active="route().current('wishes.index')">
                             ウィッシュリスト
+                        </ResponsiveNavLink>
+                        <ResponsiveNavLink :href="route('inventory_plans.index')" :active="route().current('inventory_plans.index')">
+                            棚卸計画
                         </ResponsiveNavLink>
                     </div>
 

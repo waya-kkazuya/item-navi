@@ -25,6 +25,8 @@ class LowStockDetectListener
     {
         // dd($event->greet);
 
+        // この部分をそれぞれのイベントのminimum_stockに変更
+        // if($event->item->stocks < $event->item->minimum_stock) {
         if ($event->item->stocks < 100) {
             // dd('100下回りました！');
             

@@ -8,6 +8,7 @@ use App\Models\Location;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreItemRequest;
 use App\Http\Requests\UpdateItemRequest;
+use App\Models\Inspection;
 use Inertia\Inertia;
 use Illuminate\Http\Request;    
 use Illuminate\Support\Facades\Storage;
@@ -15,6 +16,7 @@ use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
 use App\Services\ImageService;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
+use Illuminate\Support\Facades\DB;
 
 class ItemController extends Controller
 {
@@ -160,7 +162,27 @@ class ItemController extends Controller
             $minimum_stock = null;
         }
 
-        Item::create([
+        // DB::beginTransaction();
+
+        // try{
+        //     // ここに処理を書く
+            
+        //     DB::commit(); // ここで確定
+
+        //     return to_route('items.index')
+        //     ->with([
+        //         'message' => '登録しました。',
+        //         'status' => 'success'
+        //     ]);
+
+        // }catch(\Exception $e){
+        //     DB::rollBack();
+        // }
+
+
+
+        // 保存したオブジェクトを変数に入れてInspectionのcreateに使用する
+        $item = Item::create([
             'id' => $request->id,
             'name' => $request->name,
             'category_id' => $request->category_id ,
@@ -184,6 +206,18 @@ class ItemController extends Controller
             'remarks' => $request->remarks,
             'qrcode_path' => $qrcodeName
         ]);
+
+
+        // ここにも条件分岐、点検が必要な備品のカテゴリのときのみ保存する
+        Inspection::create([
+            'item_id' => $item->id,
+            'scheduled_date' => $request->inspection_schedule,
+            'inspection_date' => null, // migrationでnullableにする
+            'inspection_person' => '', // 空白は保存できるのか,nullとの違い
+            'status' => false, // 未実施がfalse
+            'next_scheduled_date' => null,
+        ]);
+
 
         return to_route('items.index')
         ->with([

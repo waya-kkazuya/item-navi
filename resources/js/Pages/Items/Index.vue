@@ -78,7 +78,15 @@ const filterItems = () => {
                       <section class="text-gray-600 body-font">
                           <div class="container px-5 py-8 mx-auto">
                             <FlashMessage />
+                            <div class="flex justify-end w-full">
+                                <Link as="button" :href="route('items.create')" class="flex items-center ml-4 text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded">
+                                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                                  </svg>
+                                  新規登録</Link>
+                             </div>
                             <div class="flex justify-center items-center pl-4 mt-4 lg:w-2/3 w-full mx-auto">
+                              
                               <div class="flex items-center">
                                 <input type="text" name="search" v-model="search" placeholder="備品名で検索" @keyup.enter="fetchItems">
                                 <button class="w-16 bg-blue-300 text-white py-2 px-2" @click="fetchItems">検索</button>
@@ -142,10 +150,6 @@ const filterItems = () => {
                                 </select>
                               </div> -->
 
-
-                              <div class="w-24">
-                                <Link as="button" :href="route('items.create')" class="ml-4 text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded">新規登録</Link>
-                            </div>
                             </div>
                           </div>
 
