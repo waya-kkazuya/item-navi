@@ -6,16 +6,24 @@ use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Laravel\Dusk\Browser;
 use Tests\DuskTestCase;
 
-class ExampleTest extends DuskTestCase
+class ItemsTest extends DuskTestCase
 {
     /**
-     * A basic browser test example.
+     * A Dusk test example.
      */
-    // public function testBasicExample(): void
+    // public function testExample(): void
     // {
     //     $this->browse(function (Browser $browser) {
     //         $browser->visit('/')
     //                 ->assertSee('Laravel');
     //     });
     // }
+
+    public function testItemsPageContainsText()
+    {
+        $this->browse(function (Browser $browser) {
+            $browser->visit('/items')
+                ->assertSeeIn('table th', '備品名'); 
+        });
+    }
 }

@@ -18,6 +18,7 @@ use App\Services\ImageService;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use Illuminate\Support\Facades\DB;
 
+
 class ItemController extends Controller
 {
     /**
@@ -33,7 +34,10 @@ class ItemController extends Controller
         // 検索の場合、sortOrderはasc
         $sortOrder = $request->query('sortOrder', 'asc');
 
+        // プルダウンの数値、第2引数は初期値
         $category_id = $request->query('category_id', 0);
+        $location_of_use_id = $request->query('location_of_use_id', 0);
+        $storage_location_id = $request->query('storage_location_id', 0);
         
         $search = $request->query('search', '');
 
@@ -66,14 +70,34 @@ class ItemController extends Controller
             'qrcode_path'
         )->orderBy('created_at', $sortOrder);
 
+
+        // フィルター部分はFatコントローラー防止で、分離できる
+        // カテゴリでフィルター
         // カテゴリIDで0以外が指定されている場合、そのカテゴリのアイテムだけを取得
         if ($category_id != 0) {
             $query->where('category_id', $category_id);
         }
 
+        // 利用場所でフィルター
+        // 利用場所すべてでvalue=0(利用場所すべて)以外が指定されている場合、その利用場所のItemだけを取得
+        // 念のため  < location::count()のように値チェックをするべきか、
+        // ブラウザから入力される恐れがあるかもしれにな
+        if ($location_of_use_id != 0) {
+            $query->where('location_of_use_id', $location_of_use_id);
+        }
+
+        // 保管場所でフィルター
+        // 保管場所すべてでvalue=0(利用場所すべて)以外が指定されている場合、その利用場所のItemだけを取得
+        // 念のため  < location::count()のようにするべきか
+        if ($location_of_use_id != 0) {
+            $query->where('storage_location_id', $storage_location_id);
+        }
+
+
+        // ペジネーション
         $items = $query->paginate(20);
 
-
+        // 画像3つを変換
         $items->map(function ($item) {
             // publicフォルダ内のパスから、シンボリックリンクでstorage/app/publicのデータを読み込む
             // $item->file_name = asset('storage/images/' . $item->file_name);
@@ -84,13 +108,19 @@ class ItemController extends Controller
             return $item;
         });
 
+
+
+        // プルダウン用
         $categories = Category::all();
+        $locations = Location::all();
 
         return Inertia::render('Items/Index', [
             'items' => $items,
             'categories' => $categories,
+            'locations' => $locations,
             'sortOrder' => $sortOrder,
             'category_id' => $category_id,
+            'location_of_use' => $location_of_use_id,
             'search' => $search 
         ]);
     }

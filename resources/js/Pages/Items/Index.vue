@@ -6,47 +6,80 @@ import Pagination from '@/Components/Pagination.vue';
 import { ref } from 'vue';
 import { stringify } from 'postcss';
 
+
 const props = defineProps({
   items: Object,
   categories: Array,
+  locations: Array,
+  search: String,
   sortOrder: String,
   category_id: Number,
-  search: String
+  location_of_use_id: Number,
+  storage_location_id: Number,
 })
 
 // 検索用
 const search = ref(props.search)
 // ソート用
-const sortOrder = ref(props.sortOrder)
+const sortOrder = ref(props.sortOrder ?? asc)
 
-// カテゴリプルダウン用(初期値は0)
+// カテゴリプルダウン用(初期値は0)、更新したらその値
+// コントローラーをまたいで
 const category_id = ref(props.category_id)
+const location_of_use_id = ref(props.location_of_use_id ?? 0)
+const storage_location_id = ref(props.storage_location_id ?? 0)
 
 // 表示切替用
 const isTableView = ref('true')
 
-
-const fetchItems = () => {
-  router.visit(route('items.index', { search: search.value }), {
+// すべてのフィルターをまとめる
+const fetchAndFilterItems = () => {
+  router.visit(route('items.index', {
+    search: search.value,
+    sortOrder: sortOrder.value,
+    category_id: category_id.value,
+    location_of_use_id: location_of_use_id.value,
+    storage_location_id: storage_location_id.value
+  }), {
     method: 'get'
   })
 }
 
-// created_atで昇順降順プルダウン 
-const sortItems = () => {
-  router.visit(route('items.index', { sortOrder: sortOrder.value }), {
-    method: 'get'
-  })
-}
 
-// 備品カテゴリプルダウンでフィルターする
-const filterItems = () => {
-    router.visit(route('items.index', { category_id: category_id.value }), {
-    method: 'get'
-  })
-}
+// const fetchItems = () => {
+//   router.visit(route('items.index', { search: search.value }), {
+//     method: 'get'
+//   })
+// }
 
-// 場所でフィルターする
+// // created_atで昇順降順プルダウン 
+// const sortItems = () => {
+//   router.visit(route('items.index', { sortOrder: sortOrder.value }), {
+//     method: 'get'
+//   })
+// }
+
+// // 備品カテゴリプルダウンでフィルターする
+// const filterItemsByCategory = () => {
+//     router.visit(route('items.index', { category_id: category_id.value }), {
+//     method: 'get'
+//   })
+// }
+
+// // 利用場所でフィルターする
+// const filterItemsByLocationOfUse = () => {
+//     router.visit(route('items.index', { location_of_use_id: location_of_use_id.value }), {
+//     method: 'get'
+//   })
+// }
+
+// // 保管場所でフィルターする
+// const filterItemsByStorageLocation = () => {
+//     router.visit(route('items.index', { storage_location_id: storage_location_id.value }), {
+//     method: 'get'
+//   })
+// }
+
 
 
   // router.visit(route('items.index', { search: search.value }), {
@@ -88,19 +121,19 @@ const filterItems = () => {
                             <div class="flex justify-center items-center pl-4 mt-4 lg:w-2/3 w-full mx-auto">
                               
                               <div class="flex items-center">
-                                <input type="text" name="search" v-model="search" placeholder="備品名で検索" @keyup.enter="fetchItems">
-                                <button class="w-16 bg-blue-300 text-white py-2 px-2" @click="fetchItems">検索</button>
+                                <input type="text" name="search" v-model="search" placeholder="備品名で検索" @keyup.enter="fetchAndFilterItems">
+                                <button class="w-16 bg-blue-300 text-white py-2 px-2" @click="fetchAndFilterItems">検索</button>
                               </div>
 
                               <div>
-                                <select class="ml-4" v-model="sortOrder" @change="sortItems">
+                                <select class="ml-4" v-model="sortOrder" @change="fetchAndFilterItems">
                                   <option value="asc">昇順</option>
                                   <option value="desc">降順</option>
                                 </select>
                               </div>
 
                               <div>
-                                <select v-model="category_id" @change="filterItems" class="ml-4">
+                                <select v-model="category_id" @change="fetchAndFilterItems" class="ml-4">
                                   <option :value="0">カテゴリすべて
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
                                       <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
@@ -116,13 +149,13 @@ const filterItems = () => {
 
                               
                               <div>
-                                <select v-model="location_of_use" @change="filterLocationOfUse" class="ml-4">
+                                <select v-model="location_of_use_id" @change="fetchAndFilterItems" class="ml-4">
                                   <option :value="0">利用場所すべて
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
                                       <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
                                     </svg>
-                                  </option>  
-                                  <option v-for="category in categories" :value="category.id" :key="category.id">{{ category.name }}
+                                  </option> 
+                                  <option v-for="location in locations" :value="location.id" :key="location.id">{{ location.name }}
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
                                       <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
                                     </svg>  
@@ -131,26 +164,27 @@ const filterItems = () => {
                               </div>
 
                               <div>
-                                <select v-model="location_of_use" @change="filterStorageLocation" class="ml-4">
+                                <select v-model="storage_location_id" @change="fetchAndFilterItems" class="ml-4">
                                   <option :value="0">保管場所すべて
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
                                       <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
                                     </svg>
                                   </option>  
-                                  <option v-for="category in categories" :value="category.id" :key="category.id">{{ category.name }}
+                                  <option v-for="location in locations" :value="location.id" :key="location.id">{{ location.name }}
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
                                       <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
                                     </svg>  
                                   </option>
                                 </select>
                               </div>
-                              <!-- <div>
-                                <select v-model="" @change="" class="ml-4">
-                                  <option :value="">すべて</option>
-                                </select>
-                              </div> -->
 
                             </div>
+                          </div>
+
+
+                          <div v-if="items.data.length === 0">
+                            <p>該当の備品は見つかりませんでした</p>
+                            ここにイラストを表示
                           </div>
 
                           <div class="mb-4 flex justify-end">

@@ -29,13 +29,24 @@ use App\Models\ImageTest;
 
 // });
 
-Route::put('updateStock/{id}', [UpdateStockController::class, 'updateStock'])->name('updateStock');
-
+// グラフテスト用
 Route::get('analysis', [AnalysisController::class, 'index'])->name('analysis');
 
-Route::get('consumable_items', [ConsumableItemsController::class, 'index'])->name('consumable_items');
 
-Route::get('consumable_items/{id}/history', [ConsumableItemsController::class, 'history'])->name('consumable_items.history');
+// それぞれに適切な権限レベル(admin,staff,user)のmiddlewareをかける
+
+// 消耗品 ConsumableItemsController
+// middleware('can:user-higher')
+
+Route::middleware('can:user-higher')->group(function () {
+    Route::get('consumable_items', [ConsumableItemsController::class, 'index'])->name('consumable_items');
+
+    Route::put('updateStock/{id}', [UpdateStockController::class, 'updateStock'])->name('updateStock');
+
+    Route::get('consumable_items/{id}/history', [ConsumableItemsController::class, 'history'])->name('consumable_items.history');
+});
+
+
 
 Route::resource('items', ItemController::class)
 ->middleware(['auth', 'verified', 'can:staff-higher']);
@@ -43,6 +54,7 @@ Route::resource('items', ItemController::class)
 Route::resource('inventory_plans', InventoryPlanController::class)
 ->middleware(['auth', 'verified', 'can:staff-higher']);
 
+// ウィッシュリスト
 Route::resource('wishes', WishController::class)
 ->middleware(['auth', 'verified', 'can:user-higher']);
 
