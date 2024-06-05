@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use App\Models\Category;
 use App\Models\Location;
 use App\Models\InventoryPlan;
+use Carbon\Carbon;
 
 class Item extends Model
 {
@@ -79,5 +80,9 @@ class Item extends Model
         }
     }
 
+    public function getCreatedAtAttribute($value)
+    {
+        return Carbon::parse($value)->format('Y-m-d');
+    }
     
 }

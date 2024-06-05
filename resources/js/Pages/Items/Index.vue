@@ -182,10 +182,10 @@ const fetchAndFilterItems = () => {
                           </div>
 
 
-                          <div v-if="items.data.length === 0">
+                          <!-- <div v-if="items.data.length === 0">
                             <p>該当の備品は見つかりませんでした</p>
                             ここにイラストを表示
-                          </div>
+                          </div> -->
 
                           <div class="mb-4 flex justify-end">
                             <Pagination class="mt-6" :links="items.links"></Pagination>
@@ -196,6 +196,7 @@ const fetchAndFilterItems = () => {
                             <thead>
                               <tr>
                                 <th class="min-w-16 px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100 rounded-tl rounded-bl">Id</th>
+                                <th class="min-w-36 px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">登録日</th>
                                 <th class="min-w-40 px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">備品名</th>
                                 <th class="min-w-40 px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">カテゴリ</th>
                                 <th class="min-w-28 px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">画像</th>
@@ -222,6 +223,7 @@ const fetchAndFilterItems = () => {
                                     {{ item.id }}
                                   </Link>
                                 </td>
+                                <td class="border-b-2 border-gray-200 px-4 py-3">{{ item.created_at }}</td>
                                 <td class="border-b-2 border-gray-200 px-4 py-3">{{ item.name }}</td>
                                 <td class="border-b-2 border-gray-200 px-4 py-3">{{ item.category.name }}</td>
                                 <td class="h-24 border-b-2 border-gray-200 px-4 py-3"><img :src="item.image_path1" alt="" class="h-full w-full"></td>

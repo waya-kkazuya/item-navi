@@ -67,7 +67,8 @@ class ItemController extends Controller
             'product_number',
             // 'vendor_website_url',
             'remarks',
-            'qrcode_path'
+            'qrcode_path',
+            'created_at'
         )->orderBy('created_at', $sortOrder);
 
 
@@ -105,6 +106,7 @@ class ItemController extends Controller
             $item->image_path1 = asset('storage/items/' . $item->image_path1);
             $item->image_path2 = asset('storage/items/' . $item->image_path2);
             $item->image_path3 = asset('storage/items/' . $item->image_path3);
+
             return $item;
         });
 
