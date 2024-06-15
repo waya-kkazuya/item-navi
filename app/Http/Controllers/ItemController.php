@@ -30,6 +30,8 @@ class ItemController extends Controller
 
         // Log::info("sortDirection");
         // Log::info($request->query('sortDirection', 'asc'));
+        
+        $search = $request->query('search', '');
 
         // 検索の場合、sortOrderはasc
         $sortOrder = $request->query('sortOrder', 'asc');
@@ -38,8 +40,8 @@ class ItemController extends Controller
         $category_id = $request->query('category_id', 0);
         $location_of_use_id = $request->query('location_of_use_id', 0);
         $storage_location_id = $request->query('storage_location_id', 0);
-        
-        $search = $request->query('search', '');
+        $isTableView = $request->query('isTableView', true);
+
 
         // withによるeagerローディングではリレーションを使用する
         $query = Item::with(['category',  'locationOfUse', 'storageLocation'])
@@ -123,7 +125,8 @@ class ItemController extends Controller
             'sortOrder' => $sortOrder,
             'category_id' => $category_id,
             'location_of_use' => $location_of_use_id,
-            'search' => $search 
+            'search' => $search,
+            'isTableView' => $isTableView
         ]);
     }
 

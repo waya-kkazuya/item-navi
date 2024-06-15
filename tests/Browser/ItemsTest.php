@@ -23,7 +23,8 @@ class ItemsTest extends DuskTestCase
     {
         $this->browse(function (Browser $browser) {
             $browser->visit('/items')
-                ->assertSeeIn('table th', '備品名'); 
+                ->assertSee('備品名'); 
+                // ->assertSeeIn('table th', '備品名'); 
         });
     }
 }

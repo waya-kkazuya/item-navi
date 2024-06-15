@@ -80,6 +80,7 @@ class Item extends Model
         }
     }
 
+    // createad_atを'Y-m-d'形式にするアクセサ
     public function getCreatedAtAttribute($value)
     {
         return Carbon::parse($value)->format('Y-m-d');
