@@ -92,6 +92,15 @@ return [
             // 'encrypt' => env('DB_ENCRYPT', 'yes'),
             // 'trust_server_certificate' => env('DB_TRUST_SERVER_CERTIFICATE', 'false'),
         ],
+        
+        'mysql_testing' => [
+            'driver' => 'mysql',
+            'host' => env('TESTING_DB_HOST', 'localhost'),
+            'port' => env('TESTING_DB_PORT', '3306'),
+            'database' => env('TESTING_DB_DATABASE', 'ems_testing'),
+            'username' => env('TESTING_DB_USERNAME', 'ems_testing'),
+            'password' => env('TESTING_DB_PASSWORD', 'password123'),
+        ],
 
     ],
 
@@ -147,5 +156,4 @@ return [
         ],
 
     ],
-
 ];
