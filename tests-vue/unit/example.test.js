@@ -1,3 +1,13 @@
-test('two plus two is four', () => {
-  expect(2 + 2).toBe(4);
-});
+import Vue from 'vue';
+import { mount } from '@vue/test-utils';
+
+const App = {
+  template:`
+  <div>Hello World</div>
+  `
+}
+
+test("test App Component",function(){
+  const wrapper = mount(App);
+  console.log(wrapper.text())
+})
