@@ -70,7 +70,8 @@ class Item extends Model
 
 
     public function scopeSearchItems($query, $input = null)
-    {
+    {   
+        // $input=検索ワードがemptyの場合はすべての備品一覧を返す
         if(!empty($input)){
             if(Item::where('name', 'like', "%{$input}%")->exists())
             {
