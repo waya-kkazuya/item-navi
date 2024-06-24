@@ -39,6 +39,9 @@ class ItemController extends Controller
         // プルダウンの数値、第2引数は初期値
         $category_id = $request->query('category_id', 0);
         $location_of_use_id = $request->query('location_of_use_id', 0);
+        Log::info("location_of_use_id");
+        Log::info($location_of_use_id);
+        // dd($location_of_use_id);
         $storage_location_id = $request->query('storage_location_id', 0);
         $isTableView = $request->query('isTableView', true);
 
@@ -122,10 +125,11 @@ class ItemController extends Controller
             'items' => $items,
             'categories' => $categories,
             'locations' => $locations,
+            'search' => $search,
             'sortOrder' => $sortOrder,
             'category_id' => $category_id,
-            'location_of_use' => $location_of_use_id,
-            'search' => $search,
+            'location_of_use_id' => $location_of_use_id,
+            'storage_location_id' => $storage_location_id,
             'isTableView' => $isTableView
         ]);
     }

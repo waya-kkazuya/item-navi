@@ -13,10 +13,9 @@ const props = defineProps({
   locations: Array,
   search: String,
   sortOrder: String,
-  category_id: Number,
-  location_of_use_id: Number,
-  storage_location_id: Number,
-  //isTableView: Boolean,
+  category_id: String,
+  location_of_use_id: String,
+  storage_location_id: String,
 })
 
 // 検索用
@@ -30,9 +29,10 @@ const category_id = ref(props.category_id)
 const location_of_use_id = ref(props.location_of_use_id ?? 0)
 const storage_location_id = ref(props.storage_location_id ?? 0)
 
-// 表示切替用 セッションを使用する
+// 表示切替用 セッションにisTableViewを保存する
 const isTableView = ref(sessionStorage.getItem('isTableView') !== 'false')
 // const isTableView = ref(props.isTableView ?? true)
+
 
 // すべてのフィルターをまとめる
 const fetchAndFilterItems = () => {
@@ -54,6 +54,7 @@ watch(isTableView, (newValue) => {
 })
 
 onMounted(() => {
+  console.log(props.location_of_use_id)
   if (sessionStorage.getItem('isTableView') === null) {
     isTableView.value = true
     sessionStorage.setItem('isTableView', 'true')
