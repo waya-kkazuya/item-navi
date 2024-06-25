@@ -207,6 +207,7 @@ const toggleSortOrder = () => {
                                   </svg>
                                 </button>
                               </div>
+
                             </div>
                           </div>
 
@@ -220,7 +221,7 @@ const toggleSortOrder = () => {
                             <Pagination class="mt-6" :links="items.links"></Pagination>
                           </div>
 
-                          <!-- 表示切替 -->
+                          <!-- 行表示 -->
                           <div v-if="isTableView">
                             <div class="min-w-full overflow-auto">
                               <table class="table-fixed min-w-full text-left whitespace-no-wrap">
@@ -280,12 +281,14 @@ const toggleSortOrder = () => {
 
                           <!-- タイル表示 -->
                           <div v-else>
-                            <div class="flex flex-wrap -m-4">
+                            <div class="flex flex-wrap -mx-4">
                               <template v-for="item in items.data" :key="item.id">
-                                <div class="lg:w-1/4 w-1/2 p-4 border">
+                                <div class="lg:w-1/5 w-1/2 p-4 border">
                                   <div class="">
-                                    <h3 class="text-gray-500 text-xs tracking-widest title-font mb-1">{{ item.category.name }}</h3>
-                                    <h2 class="text-gray-900 title-font text-lg font-medium">{{ item.name }}</h2>
+                                    <div class="flex items-end">
+                                      <h2 class="text-gray-900 title-font text-lg font-medium">{{ item.name }}</h2>
+                                      <h3 class="ml-2 text-gray-500 text-xs tracking-widest title-font mb-1">{{ item.category.name }}</h3>
+                                    </div>
                                     <a class="mb-4 block relative h-48">
                                       <img alt="ecommerce" class="object-cover object-center w-full h-full block" :src="item.image_path1">
                                     </a>
