@@ -18,7 +18,9 @@ class ItemControllerTest extends TestCase
         ]);
 
         $this->actingAs($user)->get('items')
-            ->assertOk();
+            ->assertOk()
+            ->assertInertia(fn ($page) => $page->component('Items/Index')
+            ->has('items'));
 
 
             

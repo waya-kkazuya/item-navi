@@ -25,12 +25,7 @@ class ItemController extends Controller
      * Display a listing of the resource.
      */
     public function index(Request $request)
-    {
-        // phpinfo();
-
-        // Log::info("sortDirection");
-        // Log::info($request->query('sortDirection', 'asc'));
-        
+    {        
         $search = $request->query('search', '');
 
         // 作成日でソートの値、初期値はasc
@@ -39,13 +34,11 @@ class ItemController extends Controller
         // プルダウンの数値、第2引数は初期値で0
         $category_id = $request->query('category_id', 0);
         $location_of_use_id = $request->query('location_of_use_id', 0);
-        Log::info("location_of_use_id");
-        Log::info($location_of_use_id);
+        // Log::info("location_of_use_id");
+        // Log::info($location_of_use_id);
         // dd($location_of_use_id);
 
         $storage_location_id = $request->query('storage_location_id', 0);
-        $isTableView = $request->query('isTableView', true);
-
 
         // withによるeagerローディングではリレーションを使用する
         $query = Item::with(['category',  'locationOfUse', 'storageLocation'])
@@ -84,27 +77,24 @@ class ItemController extends Controller
         // カテゴリでフィルター
         // カテゴリIDで0以外が指定されている場合、そのカテゴリのアイテムだけを取得
         // DBに設定されているidしか入力できないようif文に条件追加
-        if ($category_id != 0) {
+        if ($category_id > 0 && $category_id <= Category::max('id')) {
             $query->where('category_id', $category_id);
         }
 
         
         // Location::max(id)を使用して、Locationsテーブルに存在するidを指定する
-        if ($location_of_use_id > 0 && $location_of_use_id < Location::max('id')) {
+        if ($location_of_use_id > 0 && $location_of_use_id <= Location::max('id')) {
             $query->where('location_of_use_id', $location_of_use_id);
         }
 
         // カラムに存在しない、idでクエリを実行すると動作がおかしくなる
         // $query->where('location_of_use_id', 99);
 
-        Log::info("location_of_use_id、if分の下");
-        Log::info($location_of_use_id);
-
 
         // // 保管場所でフィルター
         // // 保管場所すべてでvalue=0(利用場所すべて)以外が指定されている場合、その利用場所のItemだけを取得
         // // 念のため  < location::count()のようにするべきか
-        if ($storage_location_id > 0 && $storage_location_id < Location::max('id')) {
+        if ($storage_location_id > 0 && $storage_location_id <= Location::max('id')) {
             $query->where('storage_location_id', $storage_location_id);
         }
 
@@ -148,7 +138,6 @@ class ItemController extends Controller
             'category_id' => $category_id,
             'location_of_use_id' => $location_of_use_id,
             'storage_location_id' => $storage_location_id,
-            'isTableView' => $isTableView
         ]);
     }
 
