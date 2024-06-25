@@ -18,20 +18,21 @@ const props = defineProps({
   storage_location_id: String,
 })
 
-// 検索用
+// 行表示・タイル表示の切替 セッションにisTableViewを保存する
+const isTableView = ref(sessionStorage.getItem('isTableView') !== 'false')
+// const isTableView = ref(props.isTableView ?? true)
+
+// 作成日でソート
+const sortOrder = ref(props.sortOrder ?? 'asc')
+
+// 検索フォーム
 const search = ref(props.search)
-// ソート用
-const sortOrder = ref(props.sortOrder ?? asc)
 
 // カテゴリプルダウン用(初期値は0)、更新したらその値
 // コントローラーをまたいで
 const category_id = ref(props.category_id)
 const location_of_use_id = ref(props.location_of_use_id ?? 0)
 const storage_location_id = ref(props.storage_location_id ?? 0)
-
-// 表示切替用 セッションにisTableViewを保存する
-const isTableView = ref(sessionStorage.getItem('isTableView') !== 'false')
-// const isTableView = ref(props.isTableView ?? true)
 
 
 // すべてのフィルターをまとめる
@@ -42,10 +43,20 @@ const fetchAndFilterItems = () => {
     category_id: category_id.value,
     location_of_use_id: location_of_use_id.value,
     storage_location_id: storage_location_id.value,
-    isTableView: isTableView.value
   }), {
     method: 'get'
   })
+}
+
+const resetState = () => {
+  //それぞれのリアクティブな値もデフォルトの値に戻して、プルダウンや検索フォームに反映する 
+  search.value = ''
+  sortOrder.value = 'asc'
+  category_id.value = 0
+  location_of_use_id.value = 0
+  storage_location_id.value = 0
+
+  fetchAndFilterItems()
 }
 
 // watchでisTableViewを監視している
@@ -96,7 +107,7 @@ const toggleSortOrder = () => {
                              </div>
                              
                             <div class="flex justify-center items-center pl-4 mt-4 lg:w-2/3 w-full mx-auto">
-                              <!-- 切り替えボタン -->
+                              <!-- 行表示・タイル表示の切り替えボタン -->
                               <div class="mr-4 flex">
                                 <button @click="isTableView = true" class="h-10" :class="{ 'selected': isTableView }">
                                   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-10 h-10 p-2 rounded" style="border: 1px solid black;">
@@ -109,8 +120,6 @@ const toggleSortOrder = () => {
                                     </svg>
                                 </button>
                               </div>
-                              
-
 
 
                               <!-- 作成日でソート -->
@@ -143,7 +152,7 @@ const toggleSortOrder = () => {
 
                               <div>
                                 <select v-model="category_id" @change="fetchAndFilterItems"  class="h-10">
-                                  <option :value="0">カテゴリすべて
+                                  <option :value="0">カテゴリ
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
                                       <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
                                     </svg>
@@ -200,8 +209,8 @@ const toggleSortOrder = () => {
 
                               <!-- 条件をすべてリセットするボタン -->
                               <div>
-                                <button @click="reset" class="flex items-center w-24 ml-4 text-white bg-indigo-500 border-0 p-2 focus:outline-none hover:bg-indigo-600 rounded">
-                                  リセット
+                                <button @click="resetState" class="flex justify-center items-center w-32 p-2 ml-4 text-white bg-indigo-500 border-0 p-2 focus:outline-none hover:bg-indigo-600 rounded">
+                                  <div>リセットする</div>
                                   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99" />
                                   </svg>
@@ -217,6 +226,7 @@ const toggleSortOrder = () => {
                             ここにイラストを表示
                           </div> -->
 
+                          
                           <div class="mb-4 flex justify-end">
                             <Pagination class="mt-6" :links="items.links"></Pagination>
                           </div>
@@ -227,11 +237,11 @@ const toggleSortOrder = () => {
                               <table class="table-fixed min-w-full text-left whitespace-no-wrap">
                                 <thead>
                                   <tr>
-                                    <th class="min-w-16 px-4 py-3 title-font tracking-wider font-medium text-white text-sm bg-sky-600 rounded-tl rounded-bl">Id</th>
+                                    <th class="min-w-8 px-4 py-3 title-font tracking-wider font-medium text-white text-sm bg-sky-600 rounded-tl rounded-bl">Id</th>
                                     <th class="min-w-36 px-4 py-3 title-font tracking-wider font-medium text-white text-sm bg-sky-600">登録日</th>
+                                    <th class="min-w-28 px-4 py-3 title-font tracking-wider font-medium text-white text-sm bg-sky-600">画像</th>
                                     <th class="min-w-40 px-4 py-3 title-font tracking-wider font-medium text-white text-sm bg-sky-600">備品名</th>
                                     <th class="min-w-40 px-4 py-3 title-font tracking-wider font-medium text-white text-sm bg-sky-600">カテゴリ</th>
-                                    <th class="min-w-28 px-4 py-3 title-font tracking-wider font-medium text-white text-sm bg-sky-600">画像</th>
                                     <th class="min-w-20 px-4 py-3 title-font tracking-wider font-medium text-white text-sm bg-sky-600">在庫数</th>
                                     <th class="min-w-24 px-4 py-3 title-font tracking-wider font-medium text-white text-sm bg-sky-600">利用状況</th>
                                     <th class="min-w-20 px-4 py-3 title-font tracking-wider font-medium text-white text-sm bg-sky-600">使用者</th>
@@ -256,9 +266,9 @@ const toggleSortOrder = () => {
                                       </Link>
                                     </td>
                                     <td class="border-b-2 border-gray-200 px-4 py-3">{{ item.created_at }}</td>
+                                    <td class="h-24 border-b-2 border-gray-200 px-4 py-3"><img :src="item.image_path1" alt="" class="h-full w-full"></td>
                                     <td class="border-b-2 border-gray-200 px-4 py-3">{{ item.name }}</td>
                                     <td class="border-b-2 border-gray-200 px-4 py-3">{{ item.category.name }}</td>
-                                    <td class="h-24 border-b-2 border-gray-200 px-4 py-3"><img :src="item.image_path1" alt="" class="h-full w-full"></td>
                                     <td class="text-right border-b-2 border-gray-200 px-4 py-3"><span>{{ item.stocks }}</span></td>
                                     <td class="border-b-2 border-gray-200 px-4 py-3">{{ item.usage_status }}</td>
                                     <td class="border-b-2 border-gray-200 px-4 py-3">{{ item.end_user }}</td>

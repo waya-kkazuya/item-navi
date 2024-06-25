@@ -33,15 +33,16 @@ class ItemController extends Controller
         
         $search = $request->query('search', '');
 
-        // 検索の場合、sortOrderはasc
+        // 作成日でソートの値、初期値はasc
         $sortOrder = $request->query('sortOrder', 'asc');
 
-        // プルダウンの数値、第2引数は初期値
+        // プルダウンの数値、第2引数は初期値で0
         $category_id = $request->query('category_id', 0);
         $location_of_use_id = $request->query('location_of_use_id', 0);
         Log::info("location_of_use_id");
         Log::info($location_of_use_id);
         // dd($location_of_use_id);
+
         $storage_location_id = $request->query('storage_location_id', 0);
         $isTableView = $request->query('isTableView', true);
 
@@ -77,25 +78,33 @@ class ItemController extends Controller
         )->orderBy('created_at', $sortOrder);
 
 
+        // // ブラウザから直接値を入力されることを考慮して事前に対策する
+
         // フィルター部分はFatコントローラー防止で、分離できる
         // カテゴリでフィルター
         // カテゴリIDで0以外が指定されている場合、そのカテゴリのアイテムだけを取得
+        // DBに設定されているidしか入力できないようif文に条件追加
         if ($category_id != 0) {
             $query->where('category_id', $category_id);
         }
 
-        // 利用場所でフィルター
-        // 利用場所すべてでvalue=0(利用場所すべて)以外が指定されている場合、その利用場所のItemだけを取得
-        // 念のため  < location::count()のように値チェックをするべきか、
-        // ブラウザから入力される恐れがあるかもしれにな
-        if ($location_of_use_id != 0) {
+        
+        // Location::max(id)を使用して、Locationsテーブルに存在するidを指定する
+        if ($location_of_use_id > 0 && $location_of_use_id < Location::max('id')) {
             $query->where('location_of_use_id', $location_of_use_id);
         }
 
-        // 保管場所でフィルター
-        // 保管場所すべてでvalue=0(利用場所すべて)以外が指定されている場合、その利用場所のItemだけを取得
-        // 念のため  < location::count()のようにするべきか
-        if ($location_of_use_id != 0) {
+        // カラムに存在しない、idでクエリを実行すると動作がおかしくなる
+        // $query->where('location_of_use_id', 99);
+
+        Log::info("location_of_use_id、if分の下");
+        Log::info($location_of_use_id);
+
+
+        // // 保管場所でフィルター
+        // // 保管場所すべてでvalue=0(利用場所すべて)以外が指定されている場合、その利用場所のItemだけを取得
+        // // 念のため  < location::count()のようにするべきか
+        if ($storage_location_id > 0 && $storage_location_id < Location::max('id')) {
             $query->where('storage_location_id', $storage_location_id);
         }
 
@@ -116,10 +125,19 @@ class ItemController extends Controller
         });
 
 
-
-        // プルダウン用
+        // プルダウン用データ
         $categories = Category::all();
         $locations = Location::all();
+
+        // itemsテーブルで使用しているidのみ抽出
+        $locationOfUseIds = Item::distinct()->pluck('location_of_use_id');
+        $storageLocationIds = Item::distinct()->pluck('storage_location_id');
+        
+        // dd($locationOfUseIds);
+        // dd($storageLocationIds);
+        // dd($locations);
+
+        
 
         return Inertia::render('Items/Index', [
             'items' => $items,
@@ -144,6 +162,7 @@ class ItemController extends Controller
 
         $categories = Category::all();
         $locations = Location::all();
+
 
         return Inertia::render('Items/Create', [
             'categories' => $categories,
