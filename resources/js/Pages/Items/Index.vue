@@ -61,6 +61,12 @@ onMounted(() => {
   }
 })
 
+const toggleSortOrder = () => {
+  sortOrder.value = sortOrder.value === 'asc' ? 'desc' : 'asc'
+  fetchAndFilterItems()
+};
+
+
 </script>
 
 <template>
@@ -104,25 +110,39 @@ onMounted(() => {
                                 </button>
                               </div>
                               
-                              <div class="flex items-center">
-                                <input type="text" name="search" v-model="search" placeholder="備品名で検索" @keyup.enter="fetchAndFilterItems" class="h-10">
-                                <button class="w-10 bg-blue-300 text-white py-2 px-2" @click="fetchAndFilterItems">
-                                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
-                                  </svg>
-                                  <!-- 検索 -->
+
+
+
+                              <!-- 作成日でソート -->
+                              <div class="ml-4">
+                                <button @click="toggleSortOrder" class="flex w-24">
+                                  <div>作成日</div>
+                                  <div>
+                                    <div v-if="sortOrder == 'asc'">
+                                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="size-5">
+                                        <path fill-rule="evenodd" d="M10 18a.75.75 0 0 1-.75-.75V4.66L7.3 6.76a.75.75 0 0 1-1.1-1.02l3.25-3.5a.75.75 0 0 1 1.1 0l3.25 3.5a.75.75 0 1 1-1.1 1.02l-1.95-2.1v12.59A.75.75 0 0 1 10 18Z" clip-rule="evenodd" />
+                                      </svg>
+                                    </div>
+                                    <div v-else>
+                                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="size-5">
+                                        <path fill-rule="evenodd" d="M10 2a.75.75 0 0 1 .75.75v12.59l1.95-2.1a.75.75 0 1 1 1.1 1.02l-3.25 3.5a.75.75 0 0 1-1.1 0l-3.25-3.5a.75.75 0 1 1 1.1-1.02l1.95 2.1V2.75A.75.75 0 0 1 10 2Z" clip-rule="evenodd" />
+                                      </svg>
+                                    </div>
+                                  </div>
                                 </button>
                               </div>
 
-                              <div>
+
+                              <!-- 作成日ソート -->
+                              <!-- <div>
                                 <select v-model="sortOrder" @change="fetchAndFilterItems"  class="ml-4 h-10">
                                   <option value="asc">昇順</option>
                                   <option value="desc">降順</option>
                                 </select>
-                              </div>
+                              </div> -->
 
                               <div>
-                                <select v-model="category_id" @change="fetchAndFilterItems"  class="ml-4 h-10">
+                                <select v-model="category_id" @change="fetchAndFilterItems"  class="h-10">
                                   <option :value="0">カテゴリすべて
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
                                       <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
@@ -165,6 +185,17 @@ onMounted(() => {
                                     </svg>  
                                   </option>
                                 </select>
+                              </div>
+
+                              <!-- 検索フォーム -->
+                              <div class="ml-8 flex items-center">
+                                <input type="text" name="search" v-model="search" placeholder="備品名で検索" @keyup.enter="fetchAndFilterItems" class="w-60
+                                 h-10">
+                                <button class="w-10 bg-blue-300 text-white py-2 px-2" @click="fetchAndFilterItems">
+                                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
+                                  </svg>                              
+                                </button>
                               </div>
 
                               <!-- 条件をすべてリセットするボタン -->
