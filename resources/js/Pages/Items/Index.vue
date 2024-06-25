@@ -61,52 +61,6 @@ onMounted(() => {
   }
 })
 
-// const fetchItems = () => {
-//   router.visit(route('items.index', { search: search.value }), {
-//     method: 'get'
-//   })
-// }
-
-// // created_atで昇順降順プルダウン 
-// const sortItems = () => {
-//   router.visit(route('items.index', { sortOrder: sortOrder.value }), {
-//     method: 'get'
-//   })
-// }
-
-// // 備品カテゴリプルダウンでフィルターする
-// const filterItemsByCategory = () => {
-//     router.visit(route('items.index', { category_id: category_id.value }), {
-//     method: 'get'
-//   })
-// }
-
-// // 利用場所でフィルターする
-// const filterItemsByLocationOfUse = () => {
-//     router.visit(route('items.index', { location_of_use_id: location_of_use_id.value }), {
-//     method: 'get'
-//   })
-// }
-
-// // 保管場所でフィルターする
-// const filterItemsByStorageLocation = () => {
-//     router.visit(route('items.index', { storage_location_id: storage_location_id.value }), {
-//     method: 'get'
-//   })
-// }
-
-
-
-  // router.visit(route('items.index', { search: search.value }), {
-  //   method: 'get',
-  //   data: {
-  //     search: search.value
-  //   }
-  // })
-
-
-
-
 </script>
 
 <template>
