@@ -74,8 +74,7 @@ class ItemController extends Controller
         // // ブラウザから直接値を入力されることを考慮して事前に対策する
 
         // フィルター部分はFatコントローラー防止で、分離できる
-        // カテゴリでフィルター
-        // カテゴリIDで0以外が指定されている場合、そのカテゴリのアイテムだけを取得
+
         // DBに設定されているidしか入力できないようif文に条件追加
         if ($category_id > 0 && $category_id <= Category::max('id')) {
             $query->where('category_id', $category_id);
@@ -91,9 +90,6 @@ class ItemController extends Controller
         // $query->where('location_of_use_id', 99);
 
 
-        // // 保管場所でフィルター
-        // // 保管場所すべてでvalue=0(利用場所すべて)以外が指定されている場合、その利用場所のItemだけを取得
-        // // 念のため  < location::count()のようにするべきか
         if ($storage_location_id > 0 && $storage_location_id <= Location::max('id')) {
             $query->where('storage_location_id', $storage_location_id);
         }
@@ -122,13 +118,8 @@ class ItemController extends Controller
         // itemsテーブルで使用しているidのみ抽出
         $locationOfUseIds = Item::distinct()->pluck('location_of_use_id');
         $storageLocationIds = Item::distinct()->pluck('storage_location_id');
-        
-        // dd($locationOfUseIds);
-        // dd($storageLocationIds);
-        // dd($locations);
 
         
-
         return Inertia::render('Items/Index', [
             'items' => $items,
             'categories' => $categories,

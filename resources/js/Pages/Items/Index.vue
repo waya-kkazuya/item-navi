@@ -237,9 +237,9 @@ const toggleSortOrder = () => {
                               <table class="table-fixed min-w-full text-left whitespace-no-wrap">
                                 <thead>
                                   <tr>
-                                    <th class="min-w-8 px-4 py-3 title-font tracking-wider font-medium text-white text-sm bg-sky-600 rounded-tl rounded-bl">Id</th>
+                                    <th class="min-w-24 px-4 py-3 title-font tracking-wider font-medium text-white text-sm bg-sky-600 rounded-tl rounded-bl">管理ID</th>
                                     <th class="min-w-36 px-4 py-3 title-font tracking-wider font-medium text-white text-sm bg-sky-600">登録日</th>
-                                    <th class="min-w-28 px-4 py-3 title-font tracking-wider font-medium text-white text-sm bg-sky-600">画像</th>
+                                    <!-- <th class="min-w-28 px-4 py-3 title-font tracking-wider font-medium text-white text-sm bg-sky-600">画像</th> -->
                                     <th class="min-w-40 px-4 py-3 title-font tracking-wider font-medium text-white text-sm bg-sky-600">備品名</th>
                                     <th class="min-w-40 px-4 py-3 title-font tracking-wider font-medium text-white text-sm bg-sky-600">カテゴリ</th>
                                     <th class="min-w-20 px-4 py-3 title-font tracking-wider font-medium text-white text-sm bg-sky-600">在庫数</th>
@@ -266,7 +266,7 @@ const toggleSortOrder = () => {
                                       </Link>
                                     </td>
                                     <td class="border-b-2 border-gray-200 px-4 py-3">{{ item.created_at }}</td>
-                                    <td class="h-24 border-b-2 border-gray-200 px-4 py-3"><img :src="item.image_path1" alt="" class="h-full w-full"></td>
+                                    <!-- <td class="h-24 border-b-2 border-gray-200 px-4 py-3"><img :src="item.image_path1" alt="" class="h-full w-full"></td> -->
                                     <td class="border-b-2 border-gray-200 px-4 py-3">{{ item.name }}</td>
                                     <td class="border-b-2 border-gray-200 px-4 py-3">{{ item.category.name }}</td>
                                     <td class="text-right border-b-2 border-gray-200 px-4 py-3"><span>{{ item.stocks }}</span></td>
