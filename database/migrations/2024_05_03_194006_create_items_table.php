@@ -19,7 +19,6 @@ return new class extends Migration
             $table->string('image_path2')->nullable();
             $table->string('image_path3')->nullable();
             $table->unsignedInteger('stocks');
-            // $table->foreignId('stock_id')->constrained();
             $table->string('usage_status');
             $table->string('end_user')->nullable(); // end_userは手動で入力
             $table->string('location_of_use');
