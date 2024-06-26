@@ -142,14 +142,6 @@ const toggleSortOrder = () => {
                                 </button>
                               </div>
 
-                              <!-- 作成日ソート -->
-                              <!-- <div>
-                                <select v-model="sortOrder" @change="fetchAndFilterItems"  class="ml-4 h-10">
-                                  <option value="asc">昇順</option>
-                                  <option value="desc">降順</option>
-                                </select>
-                              </div> -->
-
                               <div>
                                 <select v-model="category_id" @change="fetchAndFilterItems" class="h-9 text-sm">
                                   <option :value="0">カテゴリ
