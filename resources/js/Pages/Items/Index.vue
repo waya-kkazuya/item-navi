@@ -97,8 +97,9 @@ const toggleSortOrder = () => {
                       <section class="text-gray-600 body-font">
                           <div class="container px-5 py-8 mx-auto">
                             <FlashMessage />
+
                             <div class="flex justify-end w-full">
-                                <Link as="button" :href="route('items.create')" class="flex items-center ml-4 text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded">
+                                <Link as="button" :href="route('items.create')" class="flex items-center ml-4 text-white text-sm bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded">
                                   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
                                   </svg>
@@ -125,7 +126,7 @@ const toggleSortOrder = () => {
                               <!-- 作成日でソート -->
                               <div class="ml-4">
                                 <button @click="toggleSortOrder" class="flex w-24">
-                                  <div>作成日</div>
+                                  <div class="text-sm">作成日</div>
                                   <div>
                                     <div v-if="sortOrder == 'asc'">
                                       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="size-5">
@@ -141,7 +142,6 @@ const toggleSortOrder = () => {
                                 </button>
                               </div>
 
-
                               <!-- 作成日ソート -->
                               <!-- <div>
                                 <select v-model="sortOrder" @change="fetchAndFilterItems"  class="ml-4 h-10">
@@ -151,7 +151,7 @@ const toggleSortOrder = () => {
                               </div> -->
 
                               <div>
-                                <select v-model="category_id" @change="fetchAndFilterItems"  class="h-10">
+                                <select v-model="category_id" @change="fetchAndFilterItems" class="h-9 text-sm">
                                   <option :value="0">カテゴリ
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
                                       <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
@@ -167,7 +167,7 @@ const toggleSortOrder = () => {
 
                               
                               <div>
-                                <select v-model="location_of_use_id" @change="fetchAndFilterItems" class="ml-4 h-10">
+                                <select v-model="location_of_use_id" @change="fetchAndFilterItems" class="ml-4 h-9 text-sm">
                                   <option :value="0">利用場所すべて
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
                                       <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
@@ -182,7 +182,7 @@ const toggleSortOrder = () => {
                               </div>
 
                               <div>
-                                <select v-model="storage_location_id" @change="fetchAndFilterItems" class="ml-4 h-10">
+                                <select v-model="storage_location_id" @change="fetchAndFilterItems" class="ml-4 h-9 text-sm">
                                   <option :value="0">保管場所すべて
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
                                       <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
@@ -198,8 +198,7 @@ const toggleSortOrder = () => {
 
                               <!-- 検索フォーム -->
                               <div class="ml-8 flex items-center">
-                                <input type="text" name="search" v-model="search" placeholder="備品名で検索" @keyup.enter="fetchAndFilterItems" class="w-60
-                                 h-10">
+                                <input type="text" name="search" v-model="search" placeholder="備品名で検索" @keyup.enter="fetchAndFilterItems" class="w-60 h-9 text-sm">
                                 <button class="w-10 bg-blue-300 text-white py-2 px-2" @click="fetchAndFilterItems">
                                   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
@@ -209,11 +208,11 @@ const toggleSortOrder = () => {
 
                               <!-- 条件をすべてリセットするボタン -->
                               <div>
-                                <button @click="resetState" class="flex justify-center items-center w-32 p-2 ml-4 text-white bg-indigo-500 border-0 p-2 focus:outline-none hover:bg-indigo-600 rounded">
-                                  <div>リセットする</div>
+                                <button @click="resetState" class="flex justify-center items-center w-32 h-9 p-2 ml-4 text-white bg-indigo-500 border-0 p-2 focus:outline-none hover:bg-indigo-600 rounded text-sm">
                                   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99" />
                                   </svg>
+                                  <div class="ml-2">リセット</div>
                                 </button>
                               </div>
 
