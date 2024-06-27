@@ -13,7 +13,11 @@ module.exports = {
     // babel-jestを使用してすべてのjsファイルを処理します
     '.*\\.(js)$': 'babel-jest',
   },
-  testMatch: ['<rootDir>/tests-vue/**/*.test.js'],
+  // testMatch: ['<rootDir>/tests-vue/**/*.test.js'],
+  testMatch: [
+    '<rootDir>/tests-vue/unit/components/**/*.spec.js',
+    '<rootDir>/tests-vue/unit/components/**/*.test.js'
+  ],
   moduleNameMapper: {
     "^@vue/test-utils": "<rootDir>/node_modules/@vue/test-utils/dist/vue-test-utils.cjs.js",
     '^@/(.*)$': '<rootDir>/resources/js/$1'
