@@ -259,30 +259,30 @@ const toggleSortOrder = () => {
                                   </tr>
                                 </thead>
                                 <tbody>
-                                  <tr v-for="item in items.data" :key="item.id">
+                                  <tr v-for="(item, index) in items.data" :key="item.id">
                                     <td class="border-b-2 border-gray-200 px-4 py-3">
                                       <Link class="text-blue-400" :href="route('items.show', { item: item.id })">
                                         {{ item.id }}
                                       </Link>
                                     </td>
-                                    <td class="border-b-2 border-gray-200 px-4 py-3">{{ item.created_at }}</td>
+                                    <td class="border-b-2 border-gray-200 px-4 py-3" :class="`created_at-${index}`">{{ item.created_at }}</td>
                                     <!-- <td class="h-24 border-b-2 border-gray-200 px-4 py-3"><img :src="item.image_path1" alt="" class="h-full w-full"></td> -->
-                                    <td class="border-b-2 border-gray-200 px-4 py-3">{{ item.name }}</td>
-                                    <td class="border-b-2 border-gray-200 px-4 py-3">{{ item.category.name }}</td>
-                                    <td class="text-right border-b-2 border-gray-200 px-4 py-3"><span>{{ item.stocks }}</span></td>
-                                    <td class="border-b-2 border-gray-200 px-4 py-3">{{ item.usage_status }}</td>
-                                    <td class="border-b-2 border-gray-200 px-4 py-3">{{ item.end_user }}</td>
-                                    <td class="border-b-2 border-gray-200 px-4 py-3">{{ item.location_of_use.name }}</td>
-                                    <td class="border-b-2 border-gray-200 px-4 py-3">{{ item.storage_location.name }}</td>
-                                    <td class="border-b-2 border-gray-200 px-4 py-3">{{ item.acquisition_category }}</td>
-                                    <td class="border-b-2 border-gray-200 px-4 py-3">{{ item.where_to_buy }}</td>
-                                    <td class="border-b-2 border-gray-200 px-4 py-3">{{ item.price }}</td>
-                                    <td class="border-b-2 border-gray-200 px-4 py-3">{{ item.date_of_acquisition }}</td>
-                                    <td class="border-b-2 border-gray-200 px-4 py-3">{{ item.inspection_schedule }}</td>
-                                    <td class="border-b-2 border-gray-200 px-4 py-3">{{ item.disposal_schedule }}</td>
-                                    <td class="border-b-2 border-gray-200 px-4 py-3">{{ item.manufacturer }}</td>
-                                    <td class="border-b-2 border-gray-200 px-4 py-3">{{ item.product_number }}</td>
-                                    <td class="overflow-hidden whitespace-nowrap border-b-2 border-gray-200 px-4 py-3">{{ item.remarks ?? '' }}</td>
+                                    <td class="border-b-2 border-gray-200 px-4 py-3" :class="`name-${index}`">{{ item.name }}</td>
+                                    <td class="border-b-2 border-gray-200 px-4 py-3" :class="`category-${index}`">{{ item.category.name }}</td>
+                                    <td class="text-right border-b-2 border-gray-200 px-4 py-3" :class="`stocks-${index}`"><span>{{ item.stocks }}</span></td>
+                                    <td class="border-b-2 border-gray-200 px-4 py-3" :class="`usage_status-${index}`">{{ item.usage_status }}</td>
+                                    <td class="border-b-2 border-gray-200 px-4 py-3" :class="`end_user-${index}`">{{ item.end_user }}</td>
+                                    <td class="border-b-2 border-gray-200 px-4 py-3" :class="`location_of_use-${index}`">{{ item.location_of_use.name }}</td>
+                                    <td class="border-b-2 border-gray-200 px-4 py-3" :class="`storage_location-${index}`">{{ item.storage_location.name }}</td>
+                                    <td class="border-b-2 border-gray-200 px-4 py-3" :class="`acquisition_category-${index}`">{{ item.acquisition_category }}</td>
+                                    <td class="border-b-2 border-gray-200 px-4 py-3" :class="`where_to_buy-${index}`">{{ item.where_to_buy }}</td>
+                                    <td class="border-b-2 border-gray-200 px-4 py-3" :class="`price-${index}`">{{ item.price }}</td>
+                                    <td class="border-b-2 border-gray-200 px-4 py-3" :class="`date_of_acquisition-${index}`">{{ item.date_of_acquisition }}</td>
+                                    <td class="border-b-2 border-gray-200 px-4 py-3" :class="`inspection_schedule-${index}`">{{ item.inspection_schedule }}</td>
+                                    <td class="border-b-2 border-gray-200 px-4 py-3" :class="`disposal_schedule-${index}`">{{ item.disposal_schedule }}</td>
+                                    <td class="border-b-2 border-gray-200 px-4 py-3" :class="`manufacturer-${index}`">{{ item.manufacturer }}</td>
+                                    <td class="border-b-2 border-gray-200 px-4 py-3" :class="`product_number-${index}`">{{ item.product_number }}</td>
+                                    <td class="overflow-hidden whitespace-nowrap border-b-2 border-gray-200 px-4 py-3" :class="`remarks-${index}`">{{ item.remarks ?? '' }}</td>
                                   </tr>
                                 </tbody>
                               </table>
