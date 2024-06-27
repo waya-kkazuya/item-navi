@@ -260,7 +260,7 @@ const toggleSortOrder = () => {
                                 </thead>
                                 <tbody>
                                   <tr v-for="(item, index) in items.data" :key="item.id" class="item">
-                                    <td class="border-b-2 border-gray-200 px-4 py-3">
+                                    <td class="border-b-2 border-gray-200 px-4 py-3" :class="`id-${index}`">
                                       <Link class="text-blue-400" :href="route('items.show', { item: item.id })">
                                         {{ item.id }}
                                       </Link>
