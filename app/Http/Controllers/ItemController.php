@@ -95,8 +95,14 @@ class ItemController extends Controller
         }
 
 
+        // paginateじゃなくget()の時のデータ構造解析
+        // dd($query->get());
+
         // ペジネーション
         $items = $query->paginate(20);
+
+        // paginate()時のデータ構造を分析
+        // dd($items);
 
         // 画像3つを変換
         $items->map(function ($item) {

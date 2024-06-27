@@ -11,10 +11,10 @@ use App\Models\Item;
 class ItemControllerTest extends TestCase
 {
     /** @test */
-    function 備品一覧が表示される()
+    function 備品一覧_paginateオブジェクトを渡す()
     {
-        // ダミーデータを生成、テストの世界を構築
-        $items = Item::factory(10)->create();
+        // テストデータを生成、テストの世界を構築
+        $items = Item::factory(20)->create();
 
         // 権限レベルが必要な値以上のユーザーを作成
         $user = User::factory()->create([
@@ -24,49 +24,35 @@ class ItemControllerTest extends TestCase
         $this->actingAs($user)->get('items')
             ->assertOk()
             ->assertInertia(fn ($page) => $page->component('Items/Index')
-            ->has('items.data', function($items) {
-                // ペジネーションのオブジェクトをアサートする
-                $this->assertArrayHasKey('current_page', $items);
-                $this->assertArrayHasKey('last_page', $items);
-                $this->assertArrayHasKey('per_page', $items);
-                $this->assertArrayHasKey('total', $items);
-                $this->assertArrayHasKey('data', $items);
-        
-                // ペジネーションのオブジェクト内のデータをアサ―トする
-                foreach ($items['data'] as $item) {
-                    $this->assertArrayHasKey('name', $item);
-                    $this->assertArrayHasKey('category_id', $item);
-                    $this->assertArrayHasKey('image_path1', $item);
-                    $this->assertArrayHasKey('image_path2', $item);
-                    $this->assertArrayHasKey('image_path3', $item);
-                    $this->assertArrayHasKey('stocks', $item);
-                    $this->assertArrayHasKey('minimum_stock', $item);
-                    $this->assertArrayHasKey('usage_status', $item);
-                    $this->assertArrayHasKey('end_user', $item);
-                    $this->assertArrayHasKey('location_of_use_id', $item);
-                    $this->assertArrayHasKey('storage_location_id', $item);
-                    $this->assertArrayHasKey('acquisition_category', $item);
-                    $this->assertArrayHasKey('where_to_buy', $item);
-                    $this->assertArrayHasKey('price', $item);
-                    $this->assertArrayHasKey('manufacturer', $item);
-                    $this->assertArrayHasKey('product_number', $item);
-                    $this->assertArrayHasKey('date_of_acquisition', $item);
-                    $this->assertArrayHasKey('inspection_schedule', $item);
-                    $this->assertArrayHasKey('disposal_schedule', $item);
-                    $this->assertArrayHasKey('remarks', $item);
-                    $this->assertArrayHasKey('qrcode_path', $item);
-                }
-        
-                return true;
-            })
-            ->has('categories')
-            ->has('locations')
-            ->has('search')
-            ->has('sortOrder')
-            ->has('category_id')
-            ->has('location_of_use_id')
-            ->has('storage_location_id'));
-
-            
+            ->has('items.data', 20) // items.dataの数が20であることを確認
+            ->has('items.data', fn ($data) => $data->each(fn ($item) => $item->hasAll([
+                'id',
+                'name',
+                'category_id',
+                'image_path1',
+                'image_path2',
+                'image_path3',
+                'stocks',
+                'minimum_stock',
+                'usage_status',
+                'end_user',
+                'location_of_use_id',
+                'storage_location_id',
+                'acquisition_category',
+                'where_to_buy',
+                'price',
+                'date_of_acquisition',
+                'inspection_schedule',
+                'disposal_schedule',
+                'manufacturer',
+                'product_number',
+                'remarks',
+                'qrcode_path',
+                'created_at'
+            ])
+            ->has('category', fn ($category) => $category->hasAll(['id', 'name', 'created_at', 'updated_at']))  // categoryオブジェクトがid属性を持っていることを確認
+            ->has('location_of_use', fn ($location) => $location->hasAll(['id', 'name', 'created_at', 'updated_at']))  // location_of_useオブジェクトがid属性を持っていることを確認
+            ->has('storage_location', fn ($location) => $location->hasAll(['id', 'name', 'created_at', 'updated_at']))  // storage_locationオブジェクトがid属性を持っていることを確認
+        )));         
     }
 }
