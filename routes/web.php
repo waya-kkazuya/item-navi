@@ -51,6 +51,18 @@ Route::middleware('can:user-higher')->group(function () {
 Route::resource('items', ItemController::class)
 ->middleware(['auth', 'verified', 'can:staff-higher']);
 
+// Route::middleware(['auth', 'verified', 'can:staff-higher'])->group(function () {
+//     Route::get('/items', [ItemController::class, 'index']);
+//     Route::get('/items/create', [ItemController::class, 'create']);
+//     Route::post('/items', [ItemController::class, 'store']);
+//     Route::get('/items/{item}', [ItemController::class, 'show']);
+//     Route::get('/items/{item}/edit', [ItemController::class, 'edit']);
+//     Route::put('/items/{item}', [ItemController::class, 'update']);
+//     Route::delete('/items/{item}', [ItemController::class, 'destroy']);
+// ソフトデリートを追加
+// });
+
+
 Route::resource('inventory_plans', InventoryPlanController::class)
 ->middleware(['auth', 'verified', 'can:staff-higher']);
 
