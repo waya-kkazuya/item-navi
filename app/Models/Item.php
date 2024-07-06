@@ -12,6 +12,7 @@ use Carbon\Carbon;
 class Item extends Model
 {
     use HasFactory;
+    // use SoftDeletes;
 
     protected $fillable = [
         'name',
