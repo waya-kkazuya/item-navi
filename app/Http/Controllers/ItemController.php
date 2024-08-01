@@ -8,7 +8,10 @@ use App\Models\Location;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreItemRequest;
 use App\Http\Requests\UpdateItemRequest;
+use App\Models\AcquisitionMethod;
 use App\Models\Inspection;
+use App\Models\Unit;
+use App\Models\UsageStatus;
 use Inertia\Inertia;
 use Illuminate\Http\Request;    
 use Illuminate\Support\Facades\Storage;
@@ -140,6 +143,7 @@ class ItemController extends Controller
 
 
 
+
     /**
      * Show the form for creating a new resource.
      */
@@ -149,11 +153,16 @@ class ItemController extends Controller
 
         $categories = Category::all();
         $locations = Location::all();
-
+        $units = Unit::all();
+        $usage_statuses = UsageStatus::all();
+        $acquisition_methods = AcquisitionMethod::all();
 
         return Inertia::render('Items/Create', [
             'categories' => $categories,
-            'locations' => $locations
+            'locations' => $locations,
+            'units' => $units,
+            'usageStatuses' => $usage_statuses,
+            'acquisitionMethods' => $acquisition_methods,
         ]);
     }
 

@@ -15,9 +15,6 @@ class LocationSeeder extends Seeder
     {
         DB::table('locations')->insert([
             [
-                'name' => '未選択'
-            ],
-            [
                 'name' => '作業室１'
             ],
             [

@@ -9,6 +9,7 @@ use App\Models\Edithistory;
 use App\Models\ImageTest;
 use App\Models\InventoryPlan;
 use App\Models\Location;
+use App\Models\Unit;
 use Illuminate\Database\Seeder;
 use Carbon\Carbon;
 use Illuminate\Support\Str;
@@ -33,6 +34,7 @@ class DatabaseSeeder extends Seeder
             UsageStatusSeeder::class,
             AcquisitionMethodSeeder::class,
             LocationSeeder::class,
+            UnitSeeder::class,
             // ItemSeeder::class,
             // EdithistorySeeder::class,
             // ImageTestSeeder::class

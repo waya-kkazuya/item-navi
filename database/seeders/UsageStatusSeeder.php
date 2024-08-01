@@ -15,9 +15,6 @@ class UsageStatusSeeder extends Seeder
     {
         DB::table('usage_statuses')->insert([
             [
-                'name' => '未選択'
-            ],
-            [
                 'name' => '使用中'
             ],
             [

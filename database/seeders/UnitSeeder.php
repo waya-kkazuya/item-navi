@@ -6,25 +6,25 @@ use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
-class AcquisitionMethodSeeder extends Seeder
+class UnitSeeder extends Seeder
 {
     /**
      * Run the database seeds.
      */
     public function run(): void
     {
-        DB::table('acquisition_methods')->insert([
+        DB::table('units')->insert([
             [
-                'name' => '購入'
+                'name' => '個'
             ],
             [
-                'name' => 'リース（レンタル）'
+                'name' => '箱'
             ],
             [
-                'name' => '譲渡'
+                'name' => '袋'
             ],
             [
-                'name' => 'その他'
+                'name' => 'セット'
             ],
         ]);
     }
