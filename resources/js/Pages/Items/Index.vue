@@ -13,14 +13,11 @@ const props = defineProps({
   locations: Array,
   search: String,
   sortOrder: String,
-  category_id: String,
-  location_of_use_id: String,
-  storage_location_id: String,
+  category_id: Number,
+  location_of_use_id: Number,
+  storage_location_id: Number,
 })
 
-// 行表示・タイル表示の切替 セッションにisTableViewを保存する
-const isTableView = ref(sessionStorage.getItem('isTableView') !== 'false')
-// const isTableView = ref(props.isTableView ?? true)
 
 // 作成日でソート
 const sortOrder = ref(props.sortOrder ?? 'asc')
@@ -59,12 +56,16 @@ const resetState = () => {
   fetchAndFilterItems()
 }
 
+// 行表示・タイル表示の切替 セッションにisTableViewを保存する
+const isTableView = ref(sessionStorage.getItem('isTableView') !== 'false')
+
 // watchでisTableViewを監視している
 watch(isTableView, (newValue) => {
   sessionStorage.setItem('isTableView', newValue)
 })
 
 onMounted(() => {
+  console.log(props.items)
   console.log(props.location_of_use_id)
   if (sessionStorage.getItem('isTableView') === null) {
     isTableView.value = true
@@ -73,6 +74,7 @@ onMounted(() => {
 })
 
 const toggleSortOrder = () => {
+  // 昇順降順の切り替え
   sortOrder.value = sortOrder.value === 'asc' ? 'desc' : 'asc'
   fetchAndFilterItems()
 };
@@ -109,8 +111,8 @@ const toggleSortOrder = () => {
                               </div>
                             </div>
 
+                            <!-- 行表示・タイル表示の切り替えボタン -->
                             <div class="flex justify-center items-center pl-4 mt-4 lg:w-2/3 w-full mx-auto">
-                              <!-- 行表示・タイル表示の切り替えボタン -->
                               <div class="mr-4 flex">
                                 <button @click="isTableView = true" class="h-10" :class="{ 'selected': isTableView }">
                                   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-10 h-10 p-2 rounded" style="border: 1px solid black;">
@@ -144,6 +146,7 @@ const toggleSortOrder = () => {
                                 </button>
                               </div>
 
+                              <!-- 備品カテゴリプルダウン -->
                               <div>
                                 <select v-model="category_id" @change="fetchAndFilterItems" class="h-9 text-sm">
                                   <option :value="0">カテゴリ
@@ -159,7 +162,7 @@ const toggleSortOrder = () => {
                                 </select>
                               </div>
 
-                              
+                              <!-- 利用場所のプルダウン -->
                               <div>
                                 <select v-model="location_of_use_id" @change="fetchAndFilterItems" class="ml-4 h-9 text-sm">
                                   <option :value="0">利用場所すべて
@@ -175,6 +178,7 @@ const toggleSortOrder = () => {
                                 </select>
                               </div>
 
+                              <!-- 保管場所のプルダウン -->
                               <div>
                                 <select v-model="storage_location_id" @change="fetchAndFilterItems" class="ml-4 h-9 text-sm">
                                   <option :value="0">保管場所すべて
@@ -232,8 +236,8 @@ const toggleSortOrder = () => {
                                   <tr>
                                     <th class="min-w-24 px-4 py-3 title-font tracking-wider font-medium text-white text-sm bg-sky-700 rounded-tl rounded-bl">管理ID</th>
                                     <th class="min-w-36 px-4 py-3 title-font tracking-wider font-medium text-white text-sm bg-sky-700">登録日</th>
-                                    <!-- <th class="min-w-28 px-4 py-3 title-font tracking-wider font-medium text-white text-sm bg-sky-700">画像</th> -->
                                     <th class="min-w-40 px-4 py-3 title-font tracking-wider font-medium text-white text-sm bg-sky-700">備品名</th>
+                                    <th class="min-w-28 px-4 py-3 title-font tracking-wider font-medium text-white text-sm bg-sky-700">画像</th>
                                     <th class="min-w-40 px-4 py-3 title-font tracking-wider font-medium text-white text-sm bg-sky-700">カテゴリ</th>
                                     <th class="min-w-20 px-4 py-3 title-font tracking-wider font-medium text-white text-sm bg-sky-700">在庫数</th>
                                     <th class="min-w-24 px-4 py-3 title-font tracking-wider font-medium text-white text-sm bg-sky-700">利用状況</th>
@@ -241,7 +245,7 @@ const toggleSortOrder = () => {
                                     <th class="min-w-32 px-4 py-3 title-font tracking-wider font-medium text-white text-sm bg-sky-700">利用場所</th>
                                     <th class="min-w-32 px-4 py-3 title-font tracking-wider font-medium text-white text-sm bg-sky-700">保管場所</th>
                                     <th class="min-w-32 px-4 py-3 title-font tracking-wider font-medium text-white text-sm bg-sky-700">取得区分</th>
-                                    <th class="min-w-32 px-4 py-3 title-font tracking-wider font-medium text-white text-sm bg-sky-700">購入先</th>
+                                    <th class="min-w-32 px-4 py-3 title-font tracking-wider font-medium text-white text-sm bg-sky-700">取得先</th>
                                     <th class="min-w-32 px-4 py-3 title-font tracking-wider font-medium text-white text-sm bg-sky-700">取得価額</th>
                                     <th class="min-w-36 px-4 py-3 title-font tracking-wider font-medium text-white text-sm bg-sky-700">取得年月日</th>
                                     <th class="min-w-36 px-4 py-3 title-font tracking-wider font-medium text-white text-sm bg-sky-700">点検予定日</th>
@@ -255,20 +259,21 @@ const toggleSortOrder = () => {
                                   <tr v-for="(item, index) in items.data" :key="item.id" class="item">
                                     <td class="border-b-2 border-gray-200 px-4 py-3" :class="`id-${index}`">
                                       <Link class="text-blue-400" :href="route('items.show', { item: item.id })">
-                                        {{ item.id }}
+                                        {{ item.management_id }}
                                       </Link>
                                     </td>
                                     <td class="border-b-2 border-gray-200 px-4 py-3" :class="`created_at-${index}`">{{ item.created_at }}</td>
-                                    <!-- <td class="h-24 border-b-2 border-gray-200 px-4 py-3"><img :src="item.image_path1" alt="" class="h-full w-full"></td> -->
                                     <td class="border-b-2 border-gray-200 px-4 py-3" :class="`name-${index}`">{{ item.name }}</td>
+                                    <td class="h-24 border-b-2 border-gray-200 px-4 py-3"><img :src="item.image_path1" alt="画像" class=""></td>
                                     <td class="border-b-2 border-gray-200 px-4 py-3" :class="`category-${index}`">{{ item.category.name }}</td>
-                                    <td class="text-right border-b-2 border-gray-200 px-4 py-3" :class="`stocks-${index}`"><span>{{ item.stocks }}</span></td>
-                                    <td class="border-b-2 border-gray-200 px-4 py-3" :class="`usage_status-${index}`">{{ item.usage_status }}</td>
+                                    <td class="text-right border-b-2 border-gray-200 px-4 py-3" :class="`stock-${index}`"><span>{{ item.stock }}</span></td>
+                                    <td class="text-right border-b-2 border-gray-200 px-4 py-3" :class="`unit-${index}`"><span>{{ item.unit.name }}</span></td>
+                                    <td class="border-b-2 border-gray-200 px-4 py-3" :class="`usage_status-${index}`">{{ item.usage_status.name }}</td>
                                     <td class="border-b-2 border-gray-200 px-4 py-3" :class="`end_user-${index}`">{{ item.end_user }}</td>
                                     <td class="border-b-2 border-gray-200 px-4 py-3" :class="`location_of_use-${index}`">{{ item.location_of_use.name }}</td>
                                     <td class="border-b-2 border-gray-200 px-4 py-3" :class="`storage_location-${index}`">{{ item.storage_location.name }}</td>
-                                    <td class="border-b-2 border-gray-200 px-4 py-3" :class="`acquisition_category-${index}`">{{ item.acquisition_category }}</td>
-                                    <td class="border-b-2 border-gray-200 px-4 py-3" :class="`where_to_buy-${index}`">{{ item.where_to_buy }}</td>
+                                    <td class="border-b-2 border-gray-200 px-4 py-3" :class="`acquisition_category-${index}`">{{ item.acquisition_method.name }}</td>
+                                    <td class="border-b-2 border-gray-200 px-4 py-3" :class="`where_to_buy-${index}`">{{ item.acquisition_source }}</td>
                                     <td class="border-b-2 border-gray-200 px-4 py-3" :class="`price-${index}`">{{ item.price }}</td>
                                     <td class="border-b-2 border-gray-200 px-4 py-3" :class="`date_of_acquisition-${index}`">{{ item.date_of_acquisition }}</td>
                                     <td class="border-b-2 border-gray-200 px-4 py-3" :class="`inspection_schedule-${index}`">{{ item.inspection_schedule }}</td>
@@ -305,11 +310,24 @@ const toggleSortOrder = () => {
                               </template>
                             </div>
                           </div>
-                          <div class="mb-4 flex justify-end">
+                          <!-- <div class="mb-4 flex justify-end">
                             <Pagination class="mt-6" :links="items.links"></Pagination>
-                          </div>
+                          </div> -->
 
-                          
+                          <!-- テスト
+                          <div>
+                            <table>
+                                <tbody>
+                                    <tr v-for="item in items" :key="item.id">
+                                        <td>{{ item.management_id }}</td>
+                                        <td>{{ item.created_at }}</td>
+                                        <td>{{ item.name }}</td>
+                                        <td><img :src="item.image_path1" alt="Item Image"></td>
+                                        <td>{{ item.category.name }}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div> -->
                         
                       </section>
                     </div>
