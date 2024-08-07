@@ -13,8 +13,9 @@ class Inspection extends Model
         'item_id',
         'scheduled_date',
         'inspection_date',
-        'inspection_person',
         'status',
+        'inspection_person',
+        'details',
         'next_scheduled_date',
     ];
 
