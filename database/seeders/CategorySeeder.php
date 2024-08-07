@@ -42,6 +42,9 @@ class CategorySeeder extends Seeder
                 'name' => '清掃用具'
             ],
             [
+                'name' => '食料品'
+            ],
+            [
                 'name' => 'その他'
             ],
         ]);
