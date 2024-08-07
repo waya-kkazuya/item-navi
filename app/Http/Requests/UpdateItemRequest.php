@@ -22,27 +22,28 @@ class UpdateItemRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => ['required', 'max:255'],
-            // 'name' => ['required', 'unique:items', 'max:255'],
-            'category_id' => ['required'],
-            // 'image_path1' => [],
-            // 'image_path2' => [],
-            // 'image_path3' => [],
-            'stocks' => ['required', 'integer', 'min:0'],
-            'minimum_stock' => ['integer', 'min:0'],
-            // 'usage_status' => ['required'], // stringで定義されているがエラーになる可能性がある
-            'end_user' => ['max:10'],
-            // 'location_of_use' => ['required'],
-            // 'storage_location' => ['required'],
-            'acquisition_category' => ['required'],
-            'where_to_buy' => ['max:20'],
-            'price' => ['required', 'integer', 'min:0'],
-            // 'manufacturer' => ['max:20'],
-            // 'product_number' => ['max:100'], //文字列数字のみとは限らない、そして長い可能性
-            // 'date_of_acquisition' => ['date'],
-            // 'inspection_schedule' => ['date'],
-            // 'disposal_schedule' => ['date'],
-            // 'remarks' => ['max:1000'],
+            // 'image1' => [], // 正方形画像 画像名の命名規則にしたがって制限をかける、何文字以内
+            // 'image2' => [], // 2:1にトリミングした画像
+            // 'image3' => [],
+            'name' => ['required', 'min:3' ,'max:20'],
+            'category_id' => ['required', 'exists:categories,id'],
+            'stock' => ['required', 'integer', 'min:0', 'max:100'],
+            'unit_id' => ['required', 'exists:units,id'] ,
+            'minimum_stock' =>  ['integer', 'min:0', 'max:50'],
+            'notification' => ['required', 'boolean'],
+            'usage_status' => ['required', 'exists::usage_statuses,id'],
+            'end_user' => ['min:1','max:10'],
+            'location_of_use' => ['required', 'exists:locations,id'],
+            'storage_location' => ['required', 'exists:locations,id'],
+            'acquisition_method' => ['required', 'exists:acquisition_methods,id'],
+            'acquisition_source' => ['min:1', 'max:20'],
+            'date_of_acquisition' => ['required', 'date'],
+            'price' => ['required', 'integer', 'min:0', 'max:1000000'],
+            'manufacturer' => ['min:1','max:20'],
+            'product_number' => ['min:1', 'max:30'],
+            'remarks' => ['min:1', 'max:500'],
+            'inspection_schedule' => ['date'],
+            'disposal_schedule' => ['date'],
             // 'qrcode_path'
         ];
     }
