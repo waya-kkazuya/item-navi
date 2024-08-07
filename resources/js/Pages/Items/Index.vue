@@ -100,14 +100,7 @@ const toggleSortOrder = () => {
 
                             <div class="flex justify-end space-x-4">
                               <div class="">
-                                <!-- routeをCSVダウンロード機能と置き換える -->
-                                <Link as="button" :href="route('items.create')" class="w-36 flex items-center text-white text-sm bg-gray-400 border-0 py-2 px-6 focus:outline-none hover:bg-gray-500 rounded">
-                                    CSVダウンロード
-                                </Link>
-                              </div>
-
-                              <div class="">
-                                  <Link as="button" :href="route('items.create')" class="flex items-center text-white text-sm bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded">
+                                  <Link as="button" :href="route('items.create')" class="flex items-center text-white text-sm bg-green-500 border-0 py-2 px-6 focus:outline-none hover:bg-green-600 rounded">
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
                                       <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
                                     </svg>
@@ -237,25 +230,25 @@ const toggleSortOrder = () => {
                               <table class="table-fixed min-w-full text-left whitespace-no-wrap">
                                 <thead>
                                   <tr>
-                                    <th class="min-w-24 px-4 py-3 title-font tracking-wider font-medium text-white text-sm bg-sky-600 rounded-tl rounded-bl">管理ID</th>
-                                    <th class="min-w-36 px-4 py-3 title-font tracking-wider font-medium text-white text-sm bg-sky-600">登録日</th>
-                                    <!-- <th class="min-w-28 px-4 py-3 title-font tracking-wider font-medium text-white text-sm bg-sky-600">画像</th> -->
-                                    <th class="min-w-40 px-4 py-3 title-font tracking-wider font-medium text-white text-sm bg-sky-600">備品名</th>
-                                    <th class="min-w-40 px-4 py-3 title-font tracking-wider font-medium text-white text-sm bg-sky-600">カテゴリ</th>
-                                    <th class="min-w-20 px-4 py-3 title-font tracking-wider font-medium text-white text-sm bg-sky-600">在庫数</th>
-                                    <th class="min-w-24 px-4 py-3 title-font tracking-wider font-medium text-white text-sm bg-sky-600">利用状況</th>
-                                    <th class="min-w-20 px-4 py-3 title-font tracking-wider font-medium text-white text-sm bg-sky-600">使用者</th>
-                                    <th class="min-w-32 px-4 py-3 title-font tracking-wider font-medium text-white text-sm bg-sky-600">利用場所</th>
-                                    <th class="min-w-32 px-4 py-3 title-font tracking-wider font-medium text-white text-sm bg-sky-600">保管場所</th>
-                                    <th class="min-w-32 px-4 py-3 title-font tracking-wider font-medium text-white text-sm bg-sky-600">取得区分</th>
-                                    <th class="min-w-32 px-4 py-3 title-font tracking-wider font-medium text-white text-sm bg-sky-600">購入先</th>
-                                    <th class="min-w-32 px-4 py-3 title-font tracking-wider font-medium text-white text-sm bg-sky-600">取得価額</th>
-                                    <th class="min-w-36 px-4 py-3 title-font tracking-wider font-medium text-white text-sm bg-sky-600">取得年月日</th>
-                                    <th class="min-w-36 px-4 py-3 title-font tracking-wider font-medium text-white text-sm bg-sky-600">点検予定日</th>
-                                    <th class="min-w-36 px-4 py-3 title-font tracking-wider font-medium text-white text-sm bg-sky-600">廃棄予定日</th>
-                                    <th class="min-w-32 px-4 py-3 title-font tracking-wider font-medium text-white text-sm bg-sky-600">メーカー</th>
-                                    <th class="min-w-32 px-4 py-3 title-font tracking-wider font-medium text-white text-sm bg-sky-600">製品番号</th>
-                                    <th class="min-w-36 px-4 py-3 title-font tracking-wider font-medium text-white text-sm bg-sky-600">備考</th>
+                                    <th class="min-w-24 px-4 py-3 title-font tracking-wider font-medium text-white text-sm bg-sky-700 rounded-tl rounded-bl">管理ID</th>
+                                    <th class="min-w-36 px-4 py-3 title-font tracking-wider font-medium text-white text-sm bg-sky-700">登録日</th>
+                                    <!-- <th class="min-w-28 px-4 py-3 title-font tracking-wider font-medium text-white text-sm bg-sky-700">画像</th> -->
+                                    <th class="min-w-40 px-4 py-3 title-font tracking-wider font-medium text-white text-sm bg-sky-700">備品名</th>
+                                    <th class="min-w-40 px-4 py-3 title-font tracking-wider font-medium text-white text-sm bg-sky-700">カテゴリ</th>
+                                    <th class="min-w-20 px-4 py-3 title-font tracking-wider font-medium text-white text-sm bg-sky-700">在庫数</th>
+                                    <th class="min-w-24 px-4 py-3 title-font tracking-wider font-medium text-white text-sm bg-sky-700">利用状況</th>
+                                    <th class="min-w-20 px-4 py-3 title-font tracking-wider font-medium text-white text-sm bg-sky-700">使用者</th>
+                                    <th class="min-w-32 px-4 py-3 title-font tracking-wider font-medium text-white text-sm bg-sky-700">利用場所</th>
+                                    <th class="min-w-32 px-4 py-3 title-font tracking-wider font-medium text-white text-sm bg-sky-700">保管場所</th>
+                                    <th class="min-w-32 px-4 py-3 title-font tracking-wider font-medium text-white text-sm bg-sky-700">取得区分</th>
+                                    <th class="min-w-32 px-4 py-3 title-font tracking-wider font-medium text-white text-sm bg-sky-700">購入先</th>
+                                    <th class="min-w-32 px-4 py-3 title-font tracking-wider font-medium text-white text-sm bg-sky-700">取得価額</th>
+                                    <th class="min-w-36 px-4 py-3 title-font tracking-wider font-medium text-white text-sm bg-sky-700">取得年月日</th>
+                                    <th class="min-w-36 px-4 py-3 title-font tracking-wider font-medium text-white text-sm bg-sky-700">点検予定日</th>
+                                    <th class="min-w-36 px-4 py-3 title-font tracking-wider font-medium text-white text-sm bg-sky-700">廃棄予定日</th>
+                                    <th class="min-w-32 px-4 py-3 title-font tracking-wider font-medium text-white text-sm bg-sky-700">メーカー</th>
+                                    <th class="min-w-32 px-4 py-3 title-font tracking-wider font-medium text-white text-sm bg-sky-700">製品番号</th>
+                                    <th class="min-w-36 px-4 py-3 title-font tracking-wider font-medium text-white text-sm bg-sky-700">備考</th>
                                   </tr>
                                 </thead>
                                 <tbody>
