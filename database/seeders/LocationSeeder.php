@@ -47,6 +47,9 @@ class LocationSeeder extends Seeder
             [
                 'name' => '倉庫'
             ],
+            [
+                'name' => 'その他'
+            ],
         ]);
     }
 }
