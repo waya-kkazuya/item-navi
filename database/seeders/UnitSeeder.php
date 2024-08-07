@@ -26,6 +26,24 @@ class UnitSeeder extends Seeder
             [
                 'name' => 'セット'
             ],
+            [
+                'name' => '台'
+            ],
+            [
+                'name' => 'ライセンス'
+            ],
+            [
+                'name' => '本'
+            ],
+            [
+                'name' => 'リットル'
+            ],
+            [
+                'name' => '枚'
+            ],
+            [
+                'name' => '束'
+            ],
         ]);
     }
 }
