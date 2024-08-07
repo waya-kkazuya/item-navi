@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Category;
 use App\Models\Location;
+use App\Models\Unit;
 use App\Models\InventoryPlan;
 use Carbon\Carbon;
 
@@ -15,36 +16,41 @@ class Item extends Model
     // use SoftDeletes;
 
     protected $fillable = [
+        'management_id',
         'name',
         'category_id',
-        'image_path1',
-        'image_path2',
-        'image_path3',
-        'stocks',
+        'image1',
+        'stock',
+        'unit_id',
         'minimum_stock',
-        'usage_status',
+        'notification',
+        'usage_status_id',
         'end_user',
         'location_of_use_id',
         'storage_location_id',
-        'acquisition_category',
-        'where_to_buy',
+        'acquisition_method_id',
+        'acquisition_source',
         'price',
+        'date_of_acquisition',
         'manufacturer',
         'product_number',
-        'date_of_acquisition',
-        'inspection_schedule',
-        'disposal_schedule',
         'remarks',
-        'qrcode_path',
+        'qrcode',
     ];
 
     public function category() {
         return $this->belongsTo(Category::class);
     }
 
-    // public function location() {
-    //     return $this->belongsTo(Location::class);
-    // }
+    public function unit()
+    {
+        return $this->belongsTo(Unit::class);       
+    }
+
+    public function usageStatus()
+    {
+        return $this->belongsTo(UsageStatus::class);       
+    }
 
     public function locationOfUse()
     {
@@ -56,18 +62,28 @@ class Item extends Model
         return $this->belongsTo(Location::class, 'storage_location_id');
     }
 
+    public function acquisitionMethod()
+    {
+        return $this->belongsTo(UsageStatus::class);       
+    }
 
     public function inspections()
     {
         return $this->hasMany(Inspection::class);
     }
 
-    
-    public function inventory_plans()
+    public function disposals()
     {
-        return $this->belongsToMany(InventoryPlan::class)
-        ->withPivot('item_id', 'inventory_date', 'inventory_person', 'insuffcient_data_status', 'insuffcient_data_details', 'unknown_assets_status', 'unknown_assets_details', 'inventory_status');
+        return $this->hasOne(Disposal::class);
     }
+
+    
+    // 次期バージョンで実装する棚卸用中間テーブルのリレーション
+    // public function inventory_plans()
+    // {
+    //     return $this->belongsToMany(InventoryPlan::class)
+    //     ->withPivot('item_id', 'inventory_date', 'inventory_person', 'insuffcient_data_status', 'insuffcient_data_details', 'unknown_assets_status', 'unknown_assets_details', 'inventory_status');
+    // }
 
 
     public function scopeSearchItems($query, $input = null)
