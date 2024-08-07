@@ -18,7 +18,10 @@ class AcquisitionMethodSeeder extends Seeder
                 'name' => '購入'
             ],
             [
-                'name' => 'リース（レンタル）'
+                'name' => 'レンタル'
+            ],
+            [
+                'name' => 'リース'
             ],
             [
                 'name' => '譲渡'
