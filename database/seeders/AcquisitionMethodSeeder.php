@@ -27,6 +27,9 @@ class AcquisitionMethodSeeder extends Seeder
                 'name' => '譲渡'
             ],
             [
+                'name' => 'サブスクリプション'
+            ],
+            [
                 'name' => 'その他'
             ],
         ]);
