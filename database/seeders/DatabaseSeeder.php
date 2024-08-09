@@ -36,7 +36,7 @@ class DatabaseSeeder extends Seeder
             LocationSeeder::class,
             UnitSeeder::class,
             ItemSeeder::class,
-            // EdithistorySeeder::class,
+            EdithistorySeeder::class,
             // ImageTestSeeder::class
         ]);
 
