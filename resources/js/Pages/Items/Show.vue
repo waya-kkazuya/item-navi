@@ -59,20 +59,7 @@ const deleteItem = id => {
                                             <div class="flex justify-around">
                                                 <div v-if="item.image_path1" class="p-2 w-full">
                                                     <div class="relative">
-                                                        <!-- <label for="image_path1" class="leading-7 text-sm text-gray-600">写真データ1</label> -->
-                                                        <img :src="`/storage/items/${item.image_path1}`" alt="Image preview...">
-                                                    </div>
-                                                </div>
-                                                <div v-if="item.image_path2" class="p-2 w-full">
-                                                    <div class="relative">
-                                                        <!-- <label for="image_path2" class="leading-7 text-sm text-gray-600">写真データ2</label> -->
-                                                        <img :src="`/storage/items/${item.image_path2}`" alt="Image preview...">
-                                                    </div>
-                                                </div>
-                                                <div v-if="item.image_path3" class="p-2 w-full">
-                                                    <div class="relative">
-                                                        <!-- <label for="image_path3" class="leading-7 text-sm text-gray-600">写真データ3</label> -->
-                                                        <img :src="`/storage/items/${item.image_path3}`" alt="Image preview...">
+                                                        <img :src="item.image1" alt="Image preview...">
                                                     </div>
                                                 </div>
                                             </div>
@@ -83,7 +70,7 @@ const deleteItem = id => {
                                                     <label for="stocks" class="leading-7 text-sm text-gray-600">在庫数</label><br>
                                                     <div class="flex items-center">
                                                         <div id="stocks"  class="w-1/4 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
-                                                            {{ item.stocks }}
+                                                            {{ item.stock }}
                                                         </div>
                                                         <span class="ml-1 leading-7 text-sm text-gray-600">個</span>
                                                     </div>
