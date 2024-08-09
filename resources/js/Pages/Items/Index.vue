@@ -5,6 +5,7 @@ import FlashMessage from '@/Components/FlashMessage.vue';
 import Pagination from '@/Components/Pagination.vue';
 import { ref, onMounted, watch } from 'vue';
 import { stringify } from 'postcss';
+import MicroModal from '@/Components/Micromodal.vue';
 
 
 const props = defineProps({
@@ -13,9 +14,10 @@ const props = defineProps({
   locations: Array,
   search: String,
   sortOrder: String,
-  category_id: Number,
-  location_of_use_id: Number,
-  storage_location_id: Number,
+  categoryId: Number,
+  locationOfUseId: Number,
+  storageLocationId: Number,
+  totalCount: Number,
 })
 
 
@@ -27,9 +29,9 @@ const search = ref(props.search)
 
 // カテゴリプルダウン用(初期値は0)、更新したらその値
 // コントローラーをまたいで
-const category_id = ref(props.category_id)
-const location_of_use_id = ref(props.location_of_use_id ?? 0)
-const storage_location_id = ref(props.storage_location_id ?? 0)
+const categoryId = ref(props.categoryId)
+const locationOfUseId = ref(props.locationOfUseId ?? 0)
+const storageLocationId = ref(props.storageLocationId ?? 0)
 
 
 // すべてのフィルターをまとめる
@@ -37,9 +39,9 @@ const fetchAndFilterItems = () => {
   router.visit(route('items.index', {
     search: search.value,
     sortOrder: sortOrder.value,
-    category_id: category_id.value,
-    location_of_use_id: location_of_use_id.value,
-    storage_location_id: storage_location_id.value,
+    categoryId: categoryId.value,
+    locationOfUseId: locationOfUseId.value,
+    storageLocationId: storageLocationId.value,
   }), {
     method: 'get'
   })
@@ -49,9 +51,9 @@ const resetState = () => {
   //それぞれのリアクティブな値もデフォルトの値に戻して、プルダウンや検索フォームに反映する 
   search.value = ''
   sortOrder.value = 'asc'
-  category_id.value = 0
-  location_of_use_id.value = 0
-  storage_location_id.value = 0
+  categoryId.value = 0
+  locationOfUseId.value = 0
+  storageLocationId.value = 0
 
   fetchAndFilterItems()
 }
@@ -66,7 +68,7 @@ watch(isTableView, (newValue) => {
 
 onMounted(() => {
   console.log(props.items)
-  console.log(props.location_of_use_id)
+  console.log(props.locationOfUseId)
   if (sessionStorage.getItem('isTableView') === null) {
     isTableView.value = true
     sessionStorage.setItem('isTableView', 'true')
@@ -148,7 +150,7 @@ const toggleSortOrder = () => {
 
                               <!-- 備品カテゴリプルダウン -->
                               <div>
-                                <select v-model="category_id" @change="fetchAndFilterItems" class="h-9 text-sm">
+                                <select v-model="categoryId" @change="fetchAndFilterItems" class="h-9 text-sm">
                                   <option :value="0">カテゴリ
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
                                       <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
@@ -164,7 +166,7 @@ const toggleSortOrder = () => {
 
                               <!-- 利用場所のプルダウン -->
                               <div>
-                                <select v-model="location_of_use_id" @change="fetchAndFilterItems" class="ml-4 h-9 text-sm">
+                                <select v-model="locationOfUseId" @change="fetchAndFilterItems" class="ml-4 h-9 text-sm">
                                   <option :value="0">利用場所すべて
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
                                       <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
@@ -180,7 +182,7 @@ const toggleSortOrder = () => {
 
                               <!-- 保管場所のプルダウン -->
                               <div>
-                                <select v-model="storage_location_id" @change="fetchAndFilterItems" class="ml-4 h-9 text-sm">
+                                <select v-model="storageLocationId" @change="fetchAndFilterItems" class="ml-4 h-9 text-sm">
                                   <option :value="0">保管場所すべて
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
                                       <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
@@ -223,18 +225,22 @@ const toggleSortOrder = () => {
                             ここにイラストを表示
                           </div> -->
 
+
                           
-                          <div class="mb-4 flex justify-end">
-                            <Pagination class="mt-6" :links="items.links"></Pagination>
+                          <div class="mb-4 flex justify-end items-center">
+                            <div class="font-medium">備品合計 {{ totalCount }}件</div>
+                            <Pagination class="ml-4" :links="items.links"></Pagination>
                           </div>
 
+                         
                           <!-- 行表示 -->
                           <div v-if="isTableView">
                             <div class="min-w-full overflow-auto">
                               <table class="table-fixed min-w-full text-left whitespace-no-wrap">
                                 <thead>
                                   <tr>
-                                    <th class="min-w-24 px-4 py-3 title-font tracking-wider font-medium text-white text-sm bg-sky-700 rounded-tl rounded-bl">管理ID</th>
+                                    <th class="min-w-16 px-4 py-3 title-font tracking-wider font-medium text-white text-sm bg-sky-700">履歴</th>
+                                    <th class="min-w-32 px-4 py-3 title-font tracking-wider font-medium text-white text-sm bg-sky-700">管理ID</th>
                                     <th class="min-w-36 px-4 py-3 title-font tracking-wider font-medium text-white text-sm bg-sky-700">登録日</th>
                                     <th class="min-w-40 px-4 py-3 title-font tracking-wider font-medium text-white text-sm bg-sky-700">備品名</th>
                                     <th class="min-w-28 px-4 py-3 title-font tracking-wider font-medium text-white text-sm bg-sky-700">画像</th>
@@ -257,6 +263,10 @@ const toggleSortOrder = () => {
                                 </thead>
                                 <tbody>
                                   <tr v-for="(item, index) in items.data" :key="item.id" class="item">
+                                    <td class="border-b-2 border-gray-200 px-4 py-3">
+                                       <!-- マイクロモーダル -->
+                                      <MicroModal v-bind:item="item" />
+                                    </td>
                                     <td class="border-b-2 border-gray-200 px-4 py-3" :class="`id-${index}`">
                                       <Link class="text-blue-400" :href="route('items.show', { item: item.id })">
                                         {{ item.management_id }}
@@ -264,10 +274,9 @@ const toggleSortOrder = () => {
                                     </td>
                                     <td class="border-b-2 border-gray-200 px-4 py-3" :class="`created_at-${index}`">{{ item.created_at }}</td>
                                     <td class="border-b-2 border-gray-200 px-4 py-3" :class="`name-${index}`">{{ item.name }}</td>
-                                    <td class="h-24 border-b-2 border-gray-200 px-4 py-3"><img :src="item.image_path1" alt="画像" class=""></td>
+                                    <td class="border-b-2 border-gray-200 px-4 py-3 max-w-full h-auto"><img :src="item.image_path1" alt="画像" class=""></td>
                                     <td class="border-b-2 border-gray-200 px-4 py-3" :class="`category-${index}`">{{ item.category.name }}</td>
-                                    <td class="text-right border-b-2 border-gray-200 px-4 py-3" :class="`stock-${index}`"><span>{{ item.stock }}</span></td>
-                                    <td class="text-right border-b-2 border-gray-200 px-4 py-3" :class="`unit-${index}`"><span>{{ item.unit.name }}</span></td>
+                                    <td class="text-right border-b-2 border-gray-200 px-4 py-3" :class="`stock-${index}`"><span>{{ item.stock }}{{ item.unit.name }}</span></td>
                                     <td class="border-b-2 border-gray-200 px-4 py-3" :class="`usage_status-${index}`">{{ item.usage_status.name }}</td>
                                     <td class="border-b-2 border-gray-200 px-4 py-3" :class="`end_user-${index}`">{{ item.end_user }}</td>
                                     <td class="border-b-2 border-gray-200 px-4 py-3" :class="`location_of_use-${index}`">{{ item.location_of_use.name }}</td>
@@ -280,12 +289,13 @@ const toggleSortOrder = () => {
                                     <td class="border-b-2 border-gray-200 px-4 py-3" :class="`disposal_schedule-${index}`">{{ item.disposal_schedule }}</td>
                                     <td class="border-b-2 border-gray-200 px-4 py-3" :class="`manufacturer-${index}`">{{ item.manufacturer }}</td>
                                     <td class="border-b-2 border-gray-200 px-4 py-3" :class="`product_number-${index}`">{{ item.product_number }}</td>
-                                    <td class="overflow-hidden whitespace-nowrap border-b-2 border-gray-200 px-4 py-3" :class="`remarks-${index}`">{{ item.remarks ?? '' }}</td>
+                                    <td class="border-b-2 border-gray-200 px-4 py-3" :class="`remarks-${index}`">{{ item.remarks ?? '' }}</td>
                                   </tr>
                                 </tbody>
                               </table>
                             </div>
                           </div>
+
 
                           <!-- タイル表示 -->
                           <div v-else>
@@ -293,26 +303,37 @@ const toggleSortOrder = () => {
                               <template v-for="item in items.data" :key="item.id">
                                 <div class="lg:w-1/5 w-1/2 p-4 border">
                                   <div class="">
+                                    <a class="mb-2 block relative h-48">
+                                      <Link class="text-blue-400" :href="route('items.show', { item: item.id })">
+                                        <img alt="ecommerce" class="object-cover object-center w-full h-full block" :src="item.image_path1">
+                                      </Link>
+                                    </a>
                                     <div class="flex items-end">
-                                      <h2 class="text-gray-900 title-font text-lg font-medium">{{ item.name }}</h2>
                                       <h3 class="ml-2 text-gray-500 text-xs tracking-widest title-font mb-1">{{ item.category.name }}</h3>
                                     </div>
-                                    <a class="mb-4 block relative h-48">
-                                      <img alt="ecommerce" class="object-cover object-center w-full h-full block" :src="item.image_path1">
-                                    </a>
-                                    <div class="mt-4">
-                                      <span class="mt-4">利用場所: {{ item.location_of_use.name }}</span><br>
-                                      <span class="mt-4">保管場所: {{ item.storage_location.name }}</span><br>
-                                      <span class="ml-4">在庫: {{ item.stocks }}個</span>
+                                    <div class="">
+                                      <span class="text-gray-900 title-font font-medium">{{ item.management_id }}</span>
+                                      <span class="ml-4 text-gray-900 title-font font-medium">{{ item.name }}</span>
+                                    </div>
+                                    <div class="flex">
+                                      <Link as="button" :href="route('items.create')" class="flex items-center text-white text-sm bg-gray-500 border-0 py-2 px-6 focus:outline-none hover:bg-gray-600 rounded">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                                        履歴
+                                      </Link>
+                                      <Link as="button" :href="route('items.show', { item: item.id })" class="flex items-center text-white text-sm bg-blue-800 border-0 py-2 px-6 focus:outline-none hover:bg-blue-900 rounded">
+                                        詳細を見る
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h13M12 5l7 7-7 7"/></svg>
+                                      </Link>
                                     </div>
                                   </div>
                                 </div>
                               </template>
                             </div>
                           </div>
-                          <!-- <div class="mb-4 flex justify-end">
+
+                          <div class="mb-4 flex justify-end">
                             <Pagination class="mt-6" :links="items.links"></Pagination>
-                          </div> -->
+                          </div>
 
                           <!-- テスト
                           <div>
