@@ -33,8 +33,8 @@ const form = reactive({
   whereToBuy: null,
   price: 0,
   dateOfAcquisition: new Date().toISOString().substr(0, 10),
-  inspectionSchedule: new Date().toISOString().substr(0, 10),
-  disposalSchedule: new Date().toISOString().substr(0, 10),
+  inspectionSchedule: null, // 初期値はnull
+  disposalSchedule: null, // 初期値はnull
   manufacturer: null,
   productNumber: null,
   remarks: null,
