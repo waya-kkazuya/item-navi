@@ -20,8 +20,8 @@ class ItemSeeder extends Seeder
 
         DB::table('items')->insert([
             [
-                'name' => 'ペーパータオル',
-                'management_id' => 'CO-1000',
+                'name' => 'ペーパータオルテスト',
+                'management_id' => 'CO-0000',
                 'category_id' => 2,
                 'image1' => 'sample1.jpg',
                 'stock' => '10',
