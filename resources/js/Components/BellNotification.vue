@@ -8,11 +8,13 @@ const showModal = ref(false);
 
 onMounted(async () => {
   try {
-    const response = await axios.get('/api/notifications');
-    notifications.value = response.data;
-    console.log(notifications.value)
-  } catch (error) {
-    console.error(error);
+    await axios.get('/api/notifications')
+    .then(res => {
+      console.log(res.data)
+      notifications.value = response.data;
+    })
+  } catch (e) {
+    console.error(e);
   }
 });
 </script>
