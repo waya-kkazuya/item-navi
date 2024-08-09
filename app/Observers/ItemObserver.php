@@ -72,13 +72,12 @@ class ItemObserver
         // category_idはitemにあるし、category_id(カテゴリ)も変化する可能性がある
         Edithistory::create([
             'edit_mode' => 'normal' ,
-            'operation_type' => 'create',
+            'operation_type' => 'store',
             'item_id' => $item->id,
-            'edited_field' => '-', //nullに
-            'old_value' => '-',
-            'new_value' => '-',
-            'edit_user' => Auth::user()->name ?? '',
-            'edited_at' => now(),            
+            'edited_field' => null,
+            'old_value' => null,
+            'new_value' => null,
+            'edit_user' => Auth::user()->name ?? '',      
         ]);
     }
 
@@ -90,11 +89,8 @@ class ItemObserver
         // ソフとデリートを除外する必要あるか
         // unset($changes['softdeletes']);
 
-
-
         // 仮置き
         $edit_mode = 'normal';
-        // $edit_type = '棚卸';
 
         // ココの部分は通常時の分だけでも作ってしまった方が良い
         // 棚卸時のURLを作成したら、Request::url()で$edit_typeを分ける
@@ -110,14 +106,13 @@ class ItemObserver
             $oldValue = $item->getOriginal($field);
 
             Edithistory::create([
-                'edit_type' => $edit_mode,
+                'edit_mode' => $edit_mode,
                 'operation_type' => 'update',
                 'item_id' => $item->id,
                 'edited_field' => $field,
                 'old_value' => $oldValue,
                 'new_value' => $newValue,
-                'edit_user' => Auth::user()->name ?? '',
-                'edited_at' => now(),            
+                'edit_user' => Auth::user()->name ?? '',       
             ]);
         }
     }
@@ -131,17 +126,13 @@ class ItemObserver
         // ソフトデリート
         Edithistory::create([
             'edit_mode' => 'normal' ,
-            'operation_type' => 'create',
+            'operation_type' => 'delete',
             'item_id' => $item->id,
-            'edited_field' => '-', //nullに
-            'old_value' => '-',
-            'new_value' => '-',
-            'edit_user' => Auth::user()->name ?? '',
-            'edited_at' => now(),            
+            'edited_field' => null,
+            'old_value' => null,
+            'new_value' => null,
+            'edit_user' => Auth::user()->name ?? '',        
         ]);
-
-
-
     }
 
     /**
@@ -149,7 +140,15 @@ class ItemObserver
      */
     public function restored(Item $item): void
     {
-        //
+        // 備品復元時
+        Edithistory::create([
+            'edit_mode' => 'normal' ,
+            'operation_type' => 'restore',
+            'item_id' => $item->id,
+            'edited_field' => null,
+            'old_value' => null,
+            'new_value' => null,       
+        ]);
     }
 
     /**
