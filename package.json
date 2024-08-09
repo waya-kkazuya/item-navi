@@ -25,6 +25,7 @@
     "dependencies": {
         "chart.js": "^3.9.1",
         "faker": "^5.5.3",
+        "micromodal": "^0.4.10",
         "vitest": "^1.6.0",
         "vue-chart-3": "^3.1.8"
     }
