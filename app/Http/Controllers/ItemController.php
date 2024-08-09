@@ -26,7 +26,8 @@ class ItemController extends Controller
 {
 
     public function index(Request $request)
-    {   
+    {  
+        Gate::authorize('staff-higher');
 
         $search = $request->query('search', '');
 
@@ -71,6 +72,8 @@ class ItemController extends Controller
         )->orderBy('created_at', $sortOrder);
 
 
+        
+
         // // ブラウザから直接値を入力されることを考慮して事前に対策する
 
         // フィルター部分はFatコントローラー防止で、分離できる
@@ -94,6 +97,9 @@ class ItemController extends Controller
         }
 
 
+        $total_count = $query->count();
+
+
         // paginateじゃなくget()の時のデータ構造解析
         // dd($query->get());
 
@@ -102,7 +108,19 @@ class ItemController extends Controller
         // // map関数を使用するとpaginateオブジェクトの構造が変わり、ペジネーションが使えなくなる
         // コレクションを取得して変換
         $items->getCollection()->transform(function ($item) {
-            $item->image_path1 = asset('storage/items/' . $item->image1);
+            // image1カラムがnullかチェック
+            if(is_null($item->image1)) {
+                $item->image_path1 = asset('storage/items/No_Image.jpg');
+            } else {
+                // image1の画像名のファイルが存在するかチェックする
+                if(Storage::exists('public/items/' . $item->image1)) {
+                    // 画像ファイルが存在する場合
+                    $item->image_path1 = asset('storage/items/' . $item->image1);
+                } else {
+                    // 画像ファイルが存在しない場合
+                    $item->image_path1 = asset('storage/items/No_Image.jpg');
+                }
+            }
             return $item;
         });
 
@@ -132,9 +150,10 @@ class ItemController extends Controller
             'locations' => $locations,
             'search' => $search,
             'sortOrder' => $sortOrder,
-            'category_id' => $category_id,
-            'location_of_use_id' => $location_of_use_id,
-            'storage_location_id' => $storage_location_id,
+            'categoryId' => $category_id,
+            'locationOfUseId' => $location_of_use_id,
+            'storageLocationId' => $storage_location_id,
+            'totalCount' => $total_count
         ]);
     }
 
@@ -143,7 +162,7 @@ class ItemController extends Controller
 
     public function create()
     {   
-        // Gate::authorize('staff-higher');
+        Gate::authorize('staff-higher');
 
         $categories = Category::all();
         $locations = Location::all();
@@ -353,6 +372,19 @@ class ItemController extends Controller
         ->with([
             'message' => '削除しました。',
             'status' => 'danger'
+        ]);
+    }
+
+    public function forceDelete($id)
+    {
+        
+    }
+
+    public function disposedItemIndex(){
+        $disposedItems = Item::onlyTrashed()->get();
+        
+        return Inertia::render('Items/Index', [
+            'disposedItems' => $disposedItems,
         ]);
     }
 }

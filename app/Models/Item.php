@@ -9,11 +9,11 @@ use App\Models\Location;
 use App\Models\Unit;
 use App\Models\InventoryPlan;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Item extends Model
 {
-    use HasFactory;
-    // use SoftDeletes;
+    use HasFactory, SoftDeletes;
 
     protected $fillable = [
         'management_id',

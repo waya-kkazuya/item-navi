@@ -34,8 +34,8 @@ return new class extends Migration
             $table->string('product_number')->nullable();
             $table->text('remarks')->nullable();
             $table->string('qrcode')->nullable();
-            $table->softDeletes();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

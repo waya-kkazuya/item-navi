@@ -12,6 +12,7 @@ use App\Http\Controllers\ConsumableItemsController;
 use App\Http\Controllers\UpdateStockController;
 use App\Http\Controllers\InventoryPlanController;
 use App\Models\ImageTest;
+use App\Models\Item;
 
 /*
 |--------------------------------------------------------------------------
@@ -24,13 +25,8 @@ use App\Models\ImageTest;
 |
 */
 
-// Route::middleware('can:user-higher')
-// ->group(function(){
 
-// });
 
-// グラフテスト用
-Route::get('analysis', [AnalysisController::class, 'index'])->name('analysis');
 
 
 // それぞれに適切な権限レベル(admin,staff,user)のmiddlewareをかける
@@ -51,27 +47,31 @@ Route::middleware('can:user-higher')->group(function () {
 Route::resource('items', ItemController::class)
 ->middleware(['auth', 'verified', 'can:staff-higher']);
 
-// Route::middleware(['auth', 'verified', 'can:staff-higher'])->group(function () {
-//     Route::get('/items', [ItemController::class, 'index']);
-//     Route::get('/items/create', [ItemController::class, 'create']);
-//     Route::post('/items', [ItemController::class, 'store']);
-//     Route::get('/items/{item}', [ItemController::class, 'show']);
-//     Route::get('/items/{item}/edit', [ItemController::class, 'edit']);
-//     Route::put('/items/{item}', [ItemController::class, 'update']);
-//     Route::delete('/items/{item}', [ItemController::class, 'destroy']);
-// ソフトデリートを追加
-// });
+// 廃棄された備品
+Route::prefix('disposed-items')
+->middleware('auth',)->group(function(){
+    Route::get('index', [ItemController::class, 'disposedItemIndex'])
+    ->name('disposeditems.index');
+});
 
 
-Route::resource('inventory_plans', InventoryPlanController::class)
-->middleware(['auth', 'verified', 'can:staff-higher']);
+
+// グラフテスト用
+// Route::get('analysis', [AnalysisController::class, 'index'])->name('analysis');
 
 // ウィッシュリスト
-Route::resource('wishes', WishController::class)
-->middleware(['auth', 'verified', 'can:user-higher']);
+// Route::resource('wishes', WishController::class)
+// ->middleware(['auth', 'verified', 'can:user-higher']);
 
-Route::resource('image_tests', ImageTestController::class)
-->middleware(['auth', 'verified', 'can:user-higher']);
+// // 棚卸計画
+// Route::resource('inventory_plans', InventoryPlanController::class)
+// ->middleware(['auth', 'verified', 'can:staff-higher']);
+
+// 画像テスト
+// Route::resource('image_tests', ImageTestController::class)
+// ->middleware(['auth', 'verified', 'can:user-higher']);
+
+
 
 
 Route::get('/', function () {
@@ -83,10 +83,14 @@ Route::get('/', function () {
     ]);
 });
 
+
+// ダッシュボード
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
+
+// プロフィール編集用ルート
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
