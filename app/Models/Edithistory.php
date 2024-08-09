@@ -11,17 +11,22 @@ class Edithistory extends Model
     use HasFactory;
 
     protected $fillable = [
+        'edit_mode',
         'operation_type',
-        'edit_type',
-        'action_type',
         'item_id',
         'category_id',
         'edited_field',
         'old_value',
         'new_value',
         'edit_user',
-        'edited_at'
     ];
+
+    public function scopeItemHistory()
+    {
+        
+        
+    }
+
 
     public function scopeBetweenDate($query, $startDate = null, $endDate = null)
     {
