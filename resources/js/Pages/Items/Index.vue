@@ -102,7 +102,25 @@ const toggleSortOrder = () => {
                           <div class="container px-5 py-8 mx-auto">
                             <FlashMessage />
 
-                            <div class="flex justify-end space-x-4">
+                            <div class="flex justify-between space-x-4">
+                              
+                              <!-- Toggle Switch -->
+                              <label for="toggle" class="flex items-center cursor-pointer">
+                                  <!-- Toggle -->
+                                  <div class="relative">
+                                      <!-- Input -->
+                                      <input id="toggle" type="checkbox" class="sr-only">
+                                      <!-- Line -->
+                                      <div class="block bg-gray-300 w-14 h-8 rounded-full "></div>
+                                      <!-- Dot -->
+                                      <div class="dot absolute left-1 top-1 bg-white w-6 h-6 rounded-full transition"></div>
+                                  </div>
+                                  <!-- Label -->
+                                  <div class="ml-3 text-gray-700 font-medium">
+                                      廃棄済みの備品を表示する
+                                  </div>
+                              </label>
+
                               <div class="">
                                   <Link as="button" :href="route('items.create')" class="flex items-center text-white text-sm bg-green-500 border-0 py-2 px-6 focus:outline-none hover:bg-green-600 rounded">
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
@@ -113,19 +131,22 @@ const toggleSortOrder = () => {
                               </div>
                             </div>
 
-                            <!-- 行表示・タイル表示の切り替えボタン -->
+                            
                             <div class="flex justify-center items-center pl-4 mt-4 lg:w-2/3 w-full mx-auto">
-                              <div class="mr-4 flex">
-                                <button @click="isTableView = true" class="h-10" :class="{ 'selected': isTableView }">
-                                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-10 h-10 p-2 rounded" style="border: 1px solid black;">
+                              <!-- 行表示・タイル表示の切り替えボタン -->
+                              <div class="mr-4 flex space-x-0">
+                                <div @click="isTableView = true" class="h-10 rounded-l-full" 
+                                :class="{ 'bg-gray-300': isTableView, 'bg-white': !isTableView }">
+                                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-10 h-10 p-2 rounded-l-full" style="border: 1px solid black;">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
                                   </svg>
-                                </button>
-                                <button @click="isTableView = false" class="h-10" :class="{ 'selected': !isTableView }">
-                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-10 h-10 p-2 rounded" style="border: 1px solid black;">
+                                </div>
+                                <div @click="isTableView = false" class="h-10 rounded-r-full" 
+                                :class="{ 'bg-gray-300': !isTableView, 'bg-white': isTableView }">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-10 h-10 p-2 rounded-r-full" style="border: 1px solid black;">
                                       <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6A2.25 2.25 0 0 1 6 3.75h2.25A2.25 2.25 0 0 1 10.5 6v2.25a2.25 2.25 0 0 1-2.25 2.25H6a2.25 2.25 0 0 1-2.25-2.25V6ZM3.75 15.75A2.25 2.25 0 0 1 6 13.5h2.25a2.25 2.25 0 0 1 2.25 2.25V18a2.25 2.25 0 0 1-2.25 2.25H6A2.25 2.25 0 0 1 3.75 18v-2.25ZM13.5 6a2.25 2.25 0 0 1 2.25-2.25H18A2.25 2.25 0 0 1 20.25 6v2.25A2.25 2.25 0 0 1 18 10.5h-2.25a2.25 2.25 0 0 1-2.25-2.25V6ZM13.5 15.75a2.25 2.25 0 0 1 2.25-2.25H18a2.25 2.25 0 0 1 2.25 2.25V18A2.25 2.25 0 0 1 18 20.25h-2.25A2.25 2.25 0 0 1 13.5 18v-2.25Z" />
                                     </svg>
-                                </button>
+                                </div>
                               </div>
 
 
@@ -357,3 +378,12 @@ const toggleSortOrder = () => {
             </div>
     </AuthenticatedLayout>
 </template>
+
+<style>
+    input:checked ~ .dot {
+        transform: translateX(100%);
+    }
+    input:checked ~ .block {
+        background-color: black;
+    }
+</style>
