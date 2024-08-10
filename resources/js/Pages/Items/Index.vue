@@ -20,6 +20,8 @@ const props = defineProps({
   totalCount: Number,
 })
 
+// 読み取り専用のitemsを変更出来るようスプレッド構文でコピーする
+const localItems = ref({...props.items});
 
 // 作成日でソート
 const sortOrder = ref(props.sortOrder ?? 'asc')
@@ -82,6 +84,46 @@ const toggleSortOrder = () => {
 };
 
 
+// 備品<-->廃棄済み備品の表示切り替え
+// 初期値はfalse
+const showDisposal = ref(false);
+const toggleItems = async () => {
+  // showDisposal.value = !showDisposal.value;
+  // showDisposalの値で叩くAPIのURLを変える
+  console.log(showDisposal.value)
+  const url = showDisposal.value ? 'api/items?disposal=true' : 'api/items?disposal=false';
+  console.log(url)
+  try {
+    const res = await axios.get(url)
+    // 受け取るデータはどんな型か
+    
+    console.log(res.data)
+    localItems.value = res.data
+    console.log(localItems.value)
+  } catch (e) {
+    console.log('エラーメッセージです', e.message)
+  }
+};
+
+// props.itemsが新しい値になったら、代入
+watch(() => props.items, (newItems) => {
+  localItems.value = {...newItems};
+});
+
+// const editHistories = async () => {
+//   try {
+//     await axios.get(`api/edithistory/?item_id=${props.item.id}`)
+//     .then( res => {
+//       console.log(res.data)
+//       editHistoriesData.value = res.data;
+//     })
+//     toggleStatus()
+//   } catch(e) {
+//       console.log(e.message)
+//   }
+// }
+
+
 </script>
 
 <template>
@@ -104,15 +146,14 @@ const toggleSortOrder = () => {
 
                             <div class="flex justify-between space-x-4">
                               
-                              <!-- Toggle Switch -->
+                              <!-- チェックボックスを使用したトグルボタン -->
                               <label for="toggle" class="flex items-center cursor-pointer">
-                                  <!-- Toggle -->
                                   <div class="relative">
                                       <!-- Input -->
-                                      <input id="toggle" type="checkbox" class="sr-only">
-                                      <!-- Line -->
+                                      <input id="toggle" type="checkbox" v-model="showDisposal" @change="toggleItems" class="sr-only">
+                                      <!-- 背景 -->
                                       <div class="block bg-gray-300 w-14 h-8 rounded-full "></div>
-                                      <!-- Dot -->
+                                      <!-- 丸 -->
                                       <div class="dot absolute left-1 top-1 bg-white w-6 h-6 rounded-full transition"></div>
                                   </div>
                                   <!-- Label -->
@@ -260,6 +301,7 @@ const toggleSortOrder = () => {
                               <table class="table-fixed min-w-full text-left whitespace-no-wrap">
                                 <thead>
                                   <tr>
+                                    <th class="min-w-16 px-4 py-3 title-font tracking-wider font-medium text-white text-sm bg-sky-700">復元</th>
                                     <th class="min-w-16 px-4 py-3 title-font tracking-wider font-medium text-white text-sm bg-sky-700">履歴</th>
                                     <th class="min-w-32 px-4 py-3 title-font tracking-wider font-medium text-white text-sm bg-sky-700">管理ID</th>
                                     <th class="min-w-36 px-4 py-3 title-font tracking-wider font-medium text-white text-sm bg-sky-700">登録日</th>
@@ -283,34 +325,37 @@ const toggleSortOrder = () => {
                                   </tr>
                                 </thead>
                                 <tbody>
-                                  <tr v-for="(item, index) in items.data" :key="item.id" class="item">
-                                    <td class="border-b-2 border-gray-200 px-4 py-3">
+                                  <tr v-for="(item, index) in localItems.data" :key="item.id" class="item">
+                                    <td>
+                                      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M16 12l-4-4-4 4M12 16V9"/></svg>
+                                    </td>
+                                    <td class="border-b-2 border-gray-200 px-4 py-3" :class="showDisposal ? 'bg-red-100' : ''">
                                        <!-- マイクロモーダル -->
                                       <MicroModal v-bind:item="item" />
                                     </td>
-                                    <td class="border-b-2 border-gray-200 px-4 py-3" :class="`id-${index}`">
+                                    <td class="border-b-2 border-gray-200 px-4 py-3" :class="showDisposal ? 'bg-red-100' : ''">
                                       <Link class="text-blue-400" :href="route('items.show', { item: item.id })">
                                         {{ item.management_id }}
                                       </Link>
                                     </td>
-                                    <td class="border-b-2 border-gray-200 px-4 py-3" :class="`created_at-${index}`">{{ item.created_at }}</td>
-                                    <td class="border-b-2 border-gray-200 px-4 py-3" :class="`name-${index}`">{{ item.name }}</td>
-                                    <td class="border-b-2 border-gray-200 px-4 py-3 max-w-full h-auto"><img :src="item.image_path1" alt="画像" class=""></td>
-                                    <td class="border-b-2 border-gray-200 px-4 py-3" :class="`category-${index}`">{{ item.category.name }}</td>
-                                    <td class="text-right border-b-2 border-gray-200 px-4 py-3" :class="`stock-${index}`"><span>{{ item.stock }}{{ item.unit.name }}</span></td>
-                                    <td class="border-b-2 border-gray-200 px-4 py-3" :class="`usage_status-${index}`">{{ item.usage_status.name }}</td>
-                                    <td class="border-b-2 border-gray-200 px-4 py-3" :class="`end_user-${index}`">{{ item.end_user }}</td>
-                                    <td class="border-b-2 border-gray-200 px-4 py-3" :class="`location_of_use-${index}`">{{ item.location_of_use.name }}</td>
-                                    <td class="border-b-2 border-gray-200 px-4 py-3" :class="`storage_location-${index}`">{{ item.storage_location.name }}</td>
-                                    <td class="border-b-2 border-gray-200 px-4 py-3" :class="`acquisition_category-${index}`">{{ item.acquisition_method.name }}</td>
-                                    <td class="border-b-2 border-gray-200 px-4 py-3" :class="`where_to_buy-${index}`">{{ item.acquisition_source }}</td>
-                                    <td class="border-b-2 border-gray-200 px-4 py-3" :class="`price-${index}`">{{ item.price }}</td>
-                                    <td class="border-b-2 border-gray-200 px-4 py-3" :class="`date_of_acquisition-${index}`">{{ item.date_of_acquisition }}</td>
-                                    <td class="border-b-2 border-gray-200 px-4 py-3" :class="`inspection_schedule-${index}`">{{ item.inspection_schedule }}</td>
-                                    <td class="border-b-2 border-gray-200 px-4 py-3" :class="`disposal_schedule-${index}`">{{ item.disposal_schedule }}</td>
-                                    <td class="border-b-2 border-gray-200 px-4 py-3" :class="`manufacturer-${index}`">{{ item.manufacturer }}</td>
-                                    <td class="border-b-2 border-gray-200 px-4 py-3" :class="`product_number-${index}`">{{ item.product_number }}</td>
-                                    <td class="border-b-2 border-gray-200 px-4 py-3" :class="`remarks-${index}`">{{ item.remarks ?? '' }}</td>
+                                    <td class="border-b-2 border-gray-200 px-4 py-3" :class="showDisposal ? 'bg-red-100' : ''">{{ item.created_at }}</td>
+                                    <td class="border-b-2 border-gray-200 px-4 py-3" :class="showDisposal ? 'bg-red-100' : ''">{{ item.name }}</td>
+                                    <td class="border-b-2 border-gray-200 px-4 py-3 max-w-full h-auto" :class="showDisposal ? 'bg-red-100' : ''"><img :src="item.image_path1" alt="画像" class=""></td>
+                                    <td class="border-b-2 border-gray-200 px-4 py-3" :class="showDisposal ? 'bg-red-100' : ''">{{ item.category.name }}</td>
+                                    <td class="text-right border-b-2 border-gray-200 px-4 py-3" :class="showDisposal ? 'bg-red-100' : ''"><span>{{ item.stock }}{{ item.unit.name }}</span></td>
+                                    <td class="border-b-2 border-gray-200 px-4 py-3" :class="showDisposal ? 'bg-red-100' : ''">{{ item.usage_status.name }}</td>
+                                    <td class="border-b-2 border-gray-200 px-4 py-3" :class="showDisposal ? 'bg-red-100' : ''">{{ item.end_user }}</td>
+                                    <td class="border-b-2 border-gray-200 px-4 py-3" :class="showDisposal ? 'bg-red-100' : ''">{{ item.location_of_use.name }}</td>
+                                    <td class="border-b-2 border-gray-200 px-4 py-3" :class="showDisposal ? 'bg-red-100' : ''">{{ item.storage_location.name }}</td>
+                                    <td class="border-b-2 border-gray-200 px-4 py-3" :class="showDisposal ? 'bg-red-100' : ''">{{ item.acquisition_method.name }}</td>
+                                    <td class="border-b-2 border-gray-200 px-4 py-3" :class="showDisposal ? 'bg-red-100' : ''">{{ item.acquisition_source }}</td>
+                                    <td class="border-b-2 border-gray-200 px-4 py-3" :class="showDisposal ? 'bg-red-100' : ''">{{ item.price }}</td>
+                                    <td class="border-b-2 border-gray-200 px-4 py-3" :class="showDisposal ? 'bg-red-100' : ''">{{ item.date_of_acquisition }}</td>
+                                    <td class="border-b-2 border-gray-200 px-4 py-3" :class="showDisposal ? 'bg-red-100' : ''">{{ item.inspection_schedule }}</td>
+                                    <td class="border-b-2 border-gray-200 px-4 py-3" :class="showDisposal ? 'bg-red-100' : ''">{{ item.disposal_schedule }}</td>
+                                    <td class="border-b-2 border-gray-200 px-4 py-3" :class="showDisposal ? 'bg-red-100' : ''">{{ item.manufacturer }}</td>
+                                    <td class="border-b-2 border-gray-200 px-4 py-3" :class="showDisposal ? 'bg-red-100' : ''">{{ item.product_number }}</td>
+                                    <td class="border-b-2 border-gray-200 px-4 py-3" :class="showDisposal ? 'bg-red-100' : ''">{{ item.remarks ?? '' }}</td>
                                   </tr>
                                 </tbody>
                               </table>
@@ -321,9 +366,9 @@ const toggleSortOrder = () => {
                           <!-- タイル表示 -->
                           <div v-else>
                             <div class="flex flex-wrap -mx-4">
-                              <template v-for="item in items.data" :key="item.id">
-                                <div class="lg:w-1/5 w-1/2 p-4 border">
-                                  <div class="">
+                              <template v-for="item in localItems.data" :key="item.id">
+                                <div class="lg:w-1/5 w-1/2 p-4 border" :class="showDisposal ? 'bg-red-100' : ''">
+                                  <div class="" >
                                     <a class="mb-2 block relative h-48">
                                       <Link class="text-blue-400" :href="route('items.show', { item: item.id })">
                                         <img alt="ecommerce" class="object-cover object-center w-full h-full block" :src="item.image_path1">

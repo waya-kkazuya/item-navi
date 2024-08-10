@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AnalysisController;
 use App\Http\Controllers\Api\ConsumableItemsController;
 use App\Models\Edithistory;
+use App\Http\Controllers\ItemController;
 
 /*
 |--------------------------------------------------------------------------
@@ -22,6 +23,11 @@ Route::middleware('auth:sanctum')
   return $request->user();
 });
 
+// apiはprefixでURLに付いているはず
+Route::middleware(['auth:sanctum', 'verified', 'can:staff-higher'])
+->get('/items', [ItemController::class, 'index']);
+
+
 Route::middleware('auth:sanctum')
 ->get('/edithistory', function (Request $request) {
   return Edithistory::where('item_id', $request->item_id)
@@ -29,6 +35,7 @@ Route::middleware('auth:sanctum')
   ->take(10)
   ->get();
 });
+
 
 
 

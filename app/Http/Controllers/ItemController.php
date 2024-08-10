@@ -40,10 +40,9 @@ class ItemController extends Controller
         $storage_location_id = $request->query('storage_location_id', 0);
         // Log::info("location_of_use_id");
 
-        // withによるeagerローディングではリレーションを使用する
-        $query = Item::with(['category', 'unit', 'usageStatus', 'locationOfUse', 'storageLocation', 'acquisitionMethod'])
-        ->searchItems($search)
-        ->select(
+
+        $withRelations = ['category', 'unit', 'usageStatus', 'locationOfUse', 'storageLocation', 'acquisitionMethod'];
+        $selectFields = [
             'id',
             'management_id',
             'name',
@@ -69,7 +68,29 @@ class ItemController extends Controller
             'qrcode',
             'deleted_at',
             'created_at'
-        )->orderBy('created_at', $sortOrder);
+        ];
+    
+        Log::info("$request->has('disposal')");
+        Log::info($request->has('disposal'));
+        Log::info("$request->disposal");
+        Log::info($request->disposal);
+
+        // 明示的に厳密にイコールにしたらできた
+        if ($request->disposal === 'true') {
+            $query = Item::onlyTrashed();
+        } else {
+            $query = Item::whereNull('deleted_at');
+        }
+
+
+        // withによるeagerローディングではリレーションを使用する
+        $query = $query->with($withRelations)
+        ->searchItems($search)
+        ->select($selectFields)
+        ->orderBy('created_at', $sortOrder);
+
+
+        
 
 
         
@@ -83,7 +104,7 @@ class ItemController extends Controller
         // $query->where('location_of_use_id', 99);
 
         // DBに設定されているidの時のみ反映
-        // 各プルダウン変更時のクエリ
+        // 各プルダウン変更時のクエリ、ローカルスコープに切り出しリファクタリング
         if (Category::where('id', $category_id)->exists()) {
             $query->where('category_id', $category_id);
         }
@@ -143,6 +164,12 @@ class ItemController extends Controller
         $storageLocationIds = Item::distinct()->pluck('storage_location_id');
         $storageOfLocation = Location::whereIn('id', $storageLocationIds)->get();
 
+
+        // 要完了
+        if ($request->has('disposal')) {
+            return $items;
+        }
+
         
         return Inertia::render('Items/Index', [
             'items' => $items,
@@ -155,6 +182,9 @@ class ItemController extends Controller
             'storageLocationId' => $storage_location_id,
             'totalCount' => $total_count
         ]);
+
+
+        
     }
 
 
