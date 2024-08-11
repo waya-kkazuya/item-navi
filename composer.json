@@ -10,7 +10,7 @@
         "guzzlehttp/guzzle": "^7.2",
         "illuminate/filesystem": "*",
         "inertiajs/inertia-laravel": "^0.6.8",
-        "intervention/image": "^3.6",
+        "intervention/image": "*",
         "jenssegers/agent": "^2.6",
         "laravel/framework": "^10.0",
         "laravel/sanctum": "^3.2",

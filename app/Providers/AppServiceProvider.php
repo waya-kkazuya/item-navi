@@ -5,6 +5,7 @@ namespace App\Providers;
 use App\Models\Item;
 use App\Observers\ItemObserver;
 use Illuminate\Support\ServiceProvider;
+use Inertia\Inertia;
 
 
 class AppServiceProvider extends ServiceProvider
@@ -23,5 +24,8 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Item::observe(ItemObserver::class);
+        Inertia::share('errors', function () {
+            return session()->get('errors') ? session()->get('errors')->getBag('default')->getMessages() : (object) [];
+        });
     }
 }
