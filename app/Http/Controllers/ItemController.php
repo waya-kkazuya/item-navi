@@ -12,6 +12,7 @@ use App\Models\AcquisitionMethod;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreItemRequest;
 use App\Http\Requests\UpdateItemRequest;
+use App\Models\Disposal;
 use Inertia\Inertia;
 use Illuminate\Http\Request;    
 use Illuminate\Support\Facades\Storage;
@@ -91,8 +92,6 @@ class ItemController extends Controller
 
 
         
-
-
         
 
         // // ブラウザから直接値を入力されることを考慮して事前に対策する
@@ -214,6 +213,10 @@ class ItemController extends Controller
     public function store(StoreItemRequest $request)
     {
         Gate::authorize('staff-higher');
+        
+        // dd('store');
+        // 画像が一枚の時の保存処理とImageServiceが必要
+        // トリミング、画像の大きさと比率によって、トリミングの仕方を変える
 
         // $imageFiles = $request->file('file_name');　//複数ファイルの際の処理
 
@@ -238,63 +241,89 @@ class ItemController extends Controller
         //     }, $imageFiles);
         // }
 
-
+        //　画像保存のやり方複数
+        // 1,Storage::putFile 
+        // $created_image_path1 = Storage::putFile('public/items', $imageFile);
+        // 2,
+        // use Intervention\Image\ImageManager;
+        // use Intervention\Image\Drivers\Gd\Driver;
         
+        $imageFile = $request->imageFile; // 一時保存
+        // Storage::putFileは自動的に名前を付けてくれる
+        // ->isValid()は念のため、ちゃんとアップロードできているかチェックしてくれる
+        // フォルダも無ければ自動的に作成してくれる
+        if(!is_null($imageFile) && $imageFile->isValid() ){
+            Storage::putFile('public/items', $imageFile);
+        }
+
+
         // dd($fileNameToStores, $fileNameToStores[0], $fileNameToStores[1], $fileNameToStores[2]);
         // QRコード生成、サービスに切り分け
-        $qrcodeName = 'QR' . uniqid(rand().'_') . '.png';
-        QrCode::format('png')->size(200)->generate('Hello Laravel!', storage_path('app/public/qrcode/' . $qrcodeName));
+        // $qrcodeName = 'QR' . uniqid(rand().'_') . '.png';
+        // QrCode::format('png')->size(200)->generate('Hello Laravel!', storage_path('app/public/qrcode/' . $qrcodeName));
 
 
 
         // もしもカテゴリが消耗品以外で、minimumに数値が入っていたらnullにする
         // categoriesテーブルで消耗品のidは2
-        if($request->category_id == 2){
-            $minimum_stock = $request->minimum_stock;
+        if($request->categoryId == 1){
+            $minimum_stock = $request->minimumStock;
         } else {
             $minimum_stock = null;
         }
 
-    
+        // dd($minimum_stock);
         
-        DB::beginTransaction();
+        // DB::beginTransaction();
 
-        try{
+        // try{
             // 保存したオブジェクトを変数に入れてInspectionのcreateに使用する
             $item = Item::create([
                 'id' => $request->id,
                 'name' => $request->name,
-                'category_id' => $request->category_id ,
-                'image1' => $fileNameToStore ?? null,
-                'stocks' => $request->stocks ?? 0,
-                'minimum_stock' => $minimum_stock,
-                'usage_status' => $request->usage_status,
-                'end_user' => $request->end_user,
-                'location_of_use_id' => $request->location_of_use_id,
-                'storage_location_id' => $request->storage_location_id,
-                'acquisition_category' => $request->acquisition_category,
-                'where_to_buy' => $request->where_to_buy,
-                'price' => $request->price ?? 0,
-                'date_of_acquisition' => $request->date_of_acquisition,
-                'inspection_schedule' => $request->inspection_schedule,
-                'disposal_schedule' => $request->disposal_schedule,
+                'category_id' => $request->categoryId ,
+                'image1' => null,
+                'stock' => $request->stock ?? 0,
+                'unit_id' => $request->unitId,
+                'minimum_stock' => $request->minimumStock,
+                'notification' => $request->notification,
+                'usage_status_id' => $request->usageStatusId,
+                'end_user' => $request->endUser,
+                'location_of_use_id' => $request->locationOfUseId,
+                'storage_location_id' => $request->storageLocationId,
+                'acquisition_method_id' => $request->acquisitionMethodId,
+                'acquisition_source' => $request->acquisitionSource,
+                'price' => $request->price,
+                'date_of_acquisition' => $request->dateOfAcquisition,
                 'manufacturer' => $request->manufacturer,
-                'product_number' => $request->product_number,
+                'product_number' => $request->productNumber,
+                // 'inspection_schedule' => $request->inspectionSchedule,
+                // 'disposal_schedule' => $request->disposalSchedule,
                 'remarks' => $request->remarks,
-                'qrcode_path' => $qrcodeName
+                'qrcode' => null,
             ]);
 
             // ここにも条件分岐、点検が必要な備品のカテゴリのときのみ保存する
-            Inspection::create([
-                'item_id' => $item->id,
-                'scheduled_date' => $request->inspection_schedule,
-                'inspection_date' => null, // migrationでnullableにする
-                'inspection_person' => '', // 空白は保存できるのか,nullとの違い
-                'status' => false, // 未実施がfalse
-                'next_scheduled_date' => null,
-            ]);
+            // Inspection::create([
+            //     'item_id' => $item->id,
+            //     'scheduled_date' => $request->inspectionSchedule,
+            //     'Inspection_date' => null, // migrationでnullableにする
+            //     'status' => false, // 未実施がfalse
+            //     'inspection_person' => null, // 空白は保存できるのか,nullとの違い
+            //     'details' => null, 
+            // ]);
+
+            // Disposal::create([
+            //     'item_id' => $item->id,
+            //     'scheduled_date' => $request->disposalSchedule,
+            //     'disposal_date' => null, // migrationでnullableにする
+            //     'disposal_person' => '', // 空白は保存できるのか,nullとの違い
+            //     'details' => null, 
+            // ]);
             
-            DB::commit(); // ここで確定
+            // DB::commit(); // ここで確定
+
+            Log::info('commitした');
 
             return to_route('items.index')
             ->with([
@@ -302,27 +331,30 @@ class ItemController extends Controller
                 'status' => 'success'
             ]);
 
-        }catch(ValidationException $e){
-            DB::rollBack();
-            // 保存した画像の削除処理、取り消し
-            if (isset($imagePath)) {
-                Storage::disk('public')->delete($imagePath);
-            }
-            return redirect()->back()->withErrors($e->errors())->withInput();
-        }catch(\Exception $e){
-            DB::rollBack();
-            // 保存した画像の削除処理、取り消し
-            if (isset($imagePath)) {
-                Storage::disk('public')->delete($imagePath);
-            }
-            return redirect()->back()
-            ->with('error', '登録中にエラーが発生しました')->withInput();
-        }
+        // }catch(ValidationException $e){
+        //     DB::rollBack();
+
+        //     return redirect()->back()
+        //     ->with([
+        //         'message' => '登録中にエラーが発生しました',
+        //         'status' => 'danger'
+        //     ]);
+        //     // ->withErrors($e->errors())->withInput();
+
+        // }catch(\Exception $e){
+        //     DB::rollBack();
+
+        //     return redirect()->back()
+        //     ->with([
+        //         'message' => '登録中にエラーが発生しました',
+        //         'status' => 'danger'
+        //     ]);
+        //     // ->withInput();
+        // }
     }
 
-    /**
-     * Display the specified resource.
-     */
+
+
     public function show(Item $item)
     {
         // dd($item);

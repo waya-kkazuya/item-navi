@@ -21,30 +21,30 @@ class StoreItemRequest extends FormRequest
      */
     public function rules(): array
     {
+        // Vue側の命名規則であることに注意
         return [
             // 'image1' => [], // 正方形画像 画像名の命名規則にしたがって制限をかける、何文字以内
-            // 'image2' => [], // 2:1にトリミングした画像
-            // 'image3' => [],
+            'imageFile' => ['nullable', 'image', 'mimes:jpeg,png,jpg', 'max:2048'],
             'name' => ['required', 'min:3' ,'max:20'],
-            'category_id' => ['required', 'exists:categories,id'],
+            'categoryId' => ['required', 'exists:categories,id'],
             'stock' => ['required', 'integer', 'min:0', 'max:100'],
-            'unit_id' => ['required', 'exists:units,id'] ,
-            'minimum_stock' =>  ['integer', 'min:0', 'max:50'],
+            'unitId' => ['required', 'exists:units,id'] ,
+            'minimumStock' =>  ['integer', 'min:0', 'max:50'],
             'notification' => ['required', 'boolean'],
-            'usage_status' => ['required', 'exists::usage_statuses,id'],
-            'end_user' => ['min:1','max:10'],
-            'location_of_use' => ['required', 'exists:locations,id'],
-            'storage_location' => ['required', 'exists:locations,id'],
-            'acquisition_method' => ['required', 'exists:acquisition_methods,id'],
-            'acquisition_source' => ['min:1', 'max:20'],
-            'date_of_acquisition' => ['required', 'date'],
+            'usageStatusId' => ['required', 'exists:usage_statuses,id'],
+            'endUser' => ['nullable','max:10'],
+            'locationOfUseId' => ['required', 'exists:locations,id'],
+            'storageLocationId' => ['required', 'exists:locations,id'],
+            'acquisitionMethodId' => ['required', 'exists:acquisition_methods,id'],
+            'acquisitionSource' => ['min:1', 'max:20'],
             'price' => ['required', 'integer', 'min:0', 'max:1000000'],
-            'manufacturer' => ['min:1','max:20'],
-            'product_number' => ['min:1', 'max:30'],
-            'remarks' => ['min:1', 'max:500'],
-            'inspection_schedule' => ['date'],
-            'disposal_schedule' => ['date'],
-            // 'qrcode_path'
+            'dateOfAcquisition' => ['required', 'date'],
+            'manufacturer' => ['nullable', 'max:20'],
+            'productNumber' => ['nullable', 'max:30'],
+            'remarks' => ['nullable', 'max:500'],
+            'inspectionSchedule' => ['nullable','date'],
+            'disposalSchedule' => ['nullable', 'date'],
+            // 'qrcode'
         ];
     }
 }

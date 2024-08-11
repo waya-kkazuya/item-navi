@@ -5,6 +5,7 @@ namespace App\Observers;
 use App\Models\Item;
 use App\Models\Edithistory;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\ValidationException;
 
 class ItemObserver
 {

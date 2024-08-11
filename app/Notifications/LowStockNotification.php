@@ -48,7 +48,7 @@ class LowStockNotification extends Notification
     {
         return [
             'item_name' => $this->item->name,
-            'quantity' => $this->item->stocks,
+            'quantity' => $this->item->stock,
             'message' => '在庫が少なくなっています'
         ];
     }
