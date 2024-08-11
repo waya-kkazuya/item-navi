@@ -14,7 +14,7 @@ const props = defineProps({
 })
 
 // useFormは後回し
-const form = reactive({
+const form = useForm({
   id: null,
   imageFile: null,
   name: null,
@@ -37,7 +37,9 @@ const form = reactive({
   inspectionSchedule: null, // 初期値はnull
   disposalSchedule: null, // 初期値はnull
   remarks: null,
+//   errors: []
 //   qrcode: null,
+
 })
 
 const file_preview_src = ref('')
@@ -52,11 +54,24 @@ const handleFileUpload = (event) => {
 };
 
 // 画像が1枚の場合はFormDataは生成しなくて良い
+// const storeItem = () => {
+//     router.visit('/items', {
+//         method: 'post',
+//         data: form,
+//         onError: (errors) => {
+//             form.errors = errors
+//         }
+//     })
+// }
+
+// router.visitではuseFormの入力値保持機能は使えない
+// form.postなら入力値保持機能(old関数))が使える
 const storeItem = () => {
-    router.visit('/items', {
-        method: 'post',
-        data: form
-    })
+  form.post('/items', {
+    // onError: (errors) => {
+    //   form.errors = errors
+    // }
+  })
 }
 
 
@@ -101,7 +116,7 @@ const clearDate = () => {
                                                         </div>
 
                                                         <div class="p-2 w-full">
-                                                            <label for="fileName" class="leading-7 text-sm text-gray-600">画像</label>
+                                                            <label for="fileName" class="leading-7 text-sm text-blue-900">画像</label>
                                                             <label for="fileName" class="relative cursor-pointer">
                                                                 <input type="file" @change="handleFileUpload" multiple accept="image/png, image/jpeg, image/jpg" id="fileName" name="fileName" 
                                                                     class="sr-only">
@@ -121,12 +136,16 @@ const clearDate = () => {
                                                 <div class="col-span-4">
                                                     <div class="p-4 border bordr-4 mb-8">
                                                         <div class="p-2 w-full">
-                                                            <label for="name" class="leading-7 text-sm text-gray-600">備品名</label>
+                                                            <label for="name" class="leading-7 text-sm text-blue-900">
+                                                                備品名 <span class="text-red-600">*</span>
+                                                            </label>
                                                             <input type="text" id="name" name="name" v-model="form.name" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
                                                             <div v-if="errors.name" class="font-medium text-red-600">{{ errors.name }}</div>
                                                         </div>
                                                         <div class="p-2 w-full">
-                                                            <label for="categoryId" class="leading-7 text-sm text-gray-600">カテゴリ</label><br>
+                                                            <label for="categoryId" class="leading-7 text-sm text-blue-900">
+                                                                カテゴリ <span class="text-red-600">*</span>
+                                                            </label><br>
                                                             <select name="categoryId" id="categoryId" v-model="form.categoryId" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
                                                                 <option :value="0">選択してください</option>  
                                                                 <option v-for="category in categories" :value="category.id" :key="category.id">{{ category.name }}</option>
@@ -139,10 +158,10 @@ const clearDate = () => {
                                                     
                                                     <div class="p-4 border bordr-4 mb-8">
                                                         <div class="pl-2 w-full">
-                                                            <label for="stock" class="leading-7 text-sm text-gray-600">在庫数</label><br>
-                                                            <input type="number" id="stock" name="stock" v-model="form.stock"
-                                                            class="w-1/4 bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
-                                                    
+                                                            <label for="stock" class="leading-7 text-sm text-blue-900">
+                                                                在庫数 <span class="text-red-600">*</span>
+                                                            </label><br>
+                                                            <input type="number" id="stock" name="stock" v-model="form.stock" class="w-1/4 bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
                                                             <select name="unit" id="unit" v-model="form.unitId" class="w-1/6 bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
                                                                 <option v-for="unit in units" :value="unit.id" :key="unit.id">{{ unit.name }}</option>
                                                             </select>
@@ -150,10 +169,10 @@ const clearDate = () => {
                                                             <div v-if="errors.unit" class="font-medium text-red-600">{{ errors.unit }}</div>
                                                         </div>
                                                         <div v-show="form.categoryId == 1" class="mt-4 pl-2 w-full">
-                                                            <label for="minimumStock" class="leading-7 text-sm text-gray-600">通知在庫数</label><br>
+                                                            <label for="minimumStock" class="leading-7 text-sm text-blue-900">通知在庫数</label><br>
                                                             <input type="number" id="minimumStock" name="minimumStock" v-model="form.minimumStock"
                                                             class="w-1/4 bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
-                                                            <!-- <span class="ml-1 leading-7 text-sm text-gray-600">個</span> -->
+                                                            <!-- <span class="ml-1 leading-7 text-sm text-blue-900">個</span> -->
                                                             <select name="unit" id="unit" v-model="form.unitId" class="w-1/6 bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
                                                                 <option v-for="unit in units" :value="unit.id" :key="unit.id">{{ unit.name }}</option>  
                                                             </select>
@@ -167,7 +186,9 @@ const clearDate = () => {
 
                                                     <div class="p-4 border bordr-4 mb-8">
                                                         <div class="p-2 w-full">
-                                                            <label for="usageStatusId" class="leading-7 text-sm text-gray-600">利用状況</label>
+                                                            <label for="usageStatusId" class="leading-7 text-sm text-blue-900">
+                                                                利用状況 <span class="text-red-600">*</span>
+                                                            </label>
                                                             <select name="usageStatusId" id="usageStatusId" v-model="form.usageStatusId" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
                                                                 <option :value="0">選択してください</option>
                                                                 <option v-for="usageStatus in usageStatuses" :value="usageStatus.id" :key="usageStatus.id">{{ usageStatus.name }}</option>
@@ -176,13 +197,15 @@ const clearDate = () => {
                                                         </div>
 
                                                         <div class="p-2 w-full">
-                                                            <label for="endUser" class="leading-7 text-sm text-gray-600">使用者</label>
+                                                            <label for="endUser" class="leading-7 text-sm text-blue-900">使用者</label>
                                                             <input type="text" id="endUser" name="endUser" v-model="form.endUser" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
                                                             <div v-if="errors.endUser" class="font-medium text-red-600">{{ errors.endUser }}</div>       
                                                         </div>
 
                                                         <div class="p-2 w-full">
-                                                            <label for="locationOfUseId" class="leading-7 text-sm text-gray-600">利用場所</label>
+                                                            <label for="locationOfUseId" class="leading-7 text-sm text-blue-900">
+                                                                利用場所 <span class="text-red-600">*</span>
+                                                            </label>
                                                             <select name="locationOfUseId" id="locationOfUseId" v-model="form.locationOfUseId" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
                                                                 <option :value="0">選択してください</option>
                                                                 <option v-for="location in locations" :key="location.id" :value="location.id">{{ location.name }}</option>
@@ -191,7 +214,9 @@ const clearDate = () => {
                                                         </div>
 
                                                         <div class="p-2 w-full">
-                                                            <label for="storageLocationId" class="leading-7 text-sm text-gray-600">保管場所</label>
+                                                            <label for="storageLocationId" class="leading-7 text-sm text-blue-900">
+                                                                保管場所 <span class="text-red-600">*</span>
+                                                            </label>
                                                             <select name="storageLocationId" id="storageLocationId" v-model="form.storageLocationId" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
                                                                 <option :value="0">選択してください</option>
                                                                 <option v-for="location in locations" :key="location.id" :value="location.id">{{ location.name }}</option>
@@ -202,7 +227,9 @@ const clearDate = () => {
 
                                                     <div class="p-4 border bordr-4 mb-8">
                                                         <div class="p-2 w-full">
-                                                            <label for="acquisitionMethodId" class="leading-7 text-sm text-gray-600">取得区分</label>
+                                                            <label for="acquisitionMethodId" class="leading-7 text-sm text-blue-900">
+                                                                取得区分 <span class="text-red-600">*</span>
+                                                            </label>
                                                             <select name="acquisitionMethodId" id="acquisitionMethodId" v-model="form.acquisitionMethodId" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
                                                                 <option :value="0">選択してください</option>
                                                                 <option v-for="acquisitionMethod in acquisitionMethods" :key="acquisitionMethod.id" :value="acquisitionMethod.id">{{ acquisitionMethod.name }}</option>
@@ -211,20 +238,26 @@ const clearDate = () => {
                                                         </div>
 
                                                         <div class="p-2 w-full">
-                                                            <label for="acquisitionSource" class="leading-7 text-sm text-gray-600">取得先</label>
+                                                            <label for="acquisitionSource" class="leading-7 text-sm text-blue-900">
+                                                                取得先 <span class="text-red-600">*</span>
+                                                            </label>
                                                             <input type="text" id="acquisitionSource" name="acquisitionSource" v-model="form.acquisitionSource" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
                                                             <div v-if="errors.acquisitionSource" class="font-medium text-red-600">{{ errors.acquisitionSource }}</div>
                                                         </div>
 
 
                                                         <div class="p-2 w-full">
-                                                            <label for="price" class="leading-7 text-sm text-gray-600">取得価額</label>
+                                                            <label for="price" class="leading-7 text-sm text-blue-900">
+                                                                取得価額 <span class="text-red-600">*</span>
+                                                            </label>
                                                             <input type="number" id="price" name="price" v-model="form.price" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
                                                             <div v-if="errors.price" class="font-medium text-red-600">{{ errors.price }}</div>
                                                         </div>
 
                                                         <div class="p-2 w-full">
-                                                            <label for="dateOfAcquisition" class="leading-7 text-sm text-gray-600">取得年月日</label>
+                                                            <label for="dateOfAcquisition" class="leading-7 text-sm text-blue-900">
+                                                                取得年月日 <span class="text-red-600">*</span>
+                                                            </label>
                                                             <div class="relative">
                                                                 <input type="date" id="dateOfAcquisition" name="dateOfAcquisition" v-model="form.dateOfAcquisition" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
                                                                 <button type="button" @click="clearDate" class="absolute right-12 top-1/2 transform -translate-y-1/2 text-gray-500" text-lg>×</button>
@@ -235,13 +268,13 @@ const clearDate = () => {
 
                                                     <div class="p-4 border bordr-4 mb-8">
                                                         <div class="p-2 w-full">
-                                                            <label for="inspectionSchedule" class="leading-7 text-sm text-gray-600">点検時期</label>
+                                                            <label for="inspectionSchedule" class="leading-7 text-sm text-blue-900">点検時期</label>
                                                             <input type="date" id="inspectionSchedule" name="inspectionSchedule" v-model="form.inspectionSchedule" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
                                                             <div v-if="errors.inspectionSchedule" class="font-medium text-red-600">{{ errors.inspectionSchedule }}</div>
                                                         </div>
 
                                                         <div class="p-2 w-full">
-                                                            <label for="disposalSchedule" class="leading-7 text-sm text-gray-600">廃棄時期</label>
+                                                            <label for="disposalSchedule" class="leading-7 text-sm text-blue-900">廃棄時期</label>
                                                             <input type="date" id="disposalSchedule" name="disposalSchedule" v-model="form.disposalSchedule" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
                                                             <div v-if="errors.disposalSchedule" class="font-medium text-red-600">{{ errors.disposalSchedule }}</div>
                                                         </div>
@@ -249,20 +282,20 @@ const clearDate = () => {
 
                                                     <div class="p-4 border bordr-4 mb-4">
                                                         <div class="p-2 w-full">
-                                                            <label for="manufacturer" class="leading-7 text-sm text-gray-600">メーカー</label>
+                                                            <label for="manufacturer" class="leading-7 text-sm text-blue-900">メーカー</label>
                                                             <input type="text" id="manufacturer" name="manufacturer" v-model="form.manufacturer" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
                                                             <div v-if="errors.manufacturer" class="font-medium text-red-600">{{ errors.manufacturer }}</div>
                                                         </div>
                                                         
                                                         <div class="p-2 w-full">
-                                                            <label for="productNumber" class="leading-7 text-sm text-gray-600">製品番号</label>
+                                                            <label for="productNumber" class="leading-7 text-sm text-blue-900">製品番号</label>
                                                             <input type="text" id="productNumber" name="productNumber" v-model="form.productNumber" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
                                                             <div v-if="errors.productNumber" class="font-medium text-red-600">{{ errors.productNumber }}</div>
                                                         </div>
 
                                                     
                                                         <div class="p-2 w-full">
-                                                            <label for="remarks" class="leading-7 text-sm text-gray-600">備考</label>
+                                                            <label for="remarks" class="leading-7 text-sm text-blue-900">備考</label>
                                                             <textarea id="remarks" name="remarks" maxlength="500" v-model="form.remarks" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 h-32 text-base outline-none text-gray-700 py-1 px-3 resize-none leading-6 transition-colors duration-200 ease-in-out"></textarea>
                                                             <div v-if="errors.remarks" class="font-medium text-red-600">{{ errors.remarks }}</div>
                                                         </div>

@@ -21,6 +21,10 @@ use Illuminate\Support\Facades\Log;
 use App\Services\ImageService;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use Illuminate\Support\Facades\DB;
+use App\Http\Requests\CombinedRequest;
+use Illuminate\Support\Facades\Validator;
+use Carbon\Carbon;
+use Intervention\Image\ImageManagerStatic as InterventionImage;
 
 
 class ItemController extends Controller
@@ -253,7 +257,15 @@ class ItemController extends Controller
         // ->isValid()は念のため、ちゃんとアップロードできているかチェックしてくれる
         // フォルダも無ければ自動的に作成してくれる
         if(!is_null($imageFile) && $imageFile->isValid() ){
-            Storage::putFile('public/items', $imageFile);
+            // Storage::putFile('public/items', $imageFile); //リサイズ無しの場合、名前も付けてくれる
+            $fileName = uniqid(rand().'_'); // ランダムな名前
+            $extension = $imageFile->extension();
+            $fileNameToStore = $fileName. '.' . $extension;
+
+            $resizedImage = InterventionImage::make($imageFile)->resize(800, 600)->encode();
+
+            Storage::put('public/items/' . $fileNameToStore,
+            $resizedImage);
         }
 
 
@@ -275,6 +287,8 @@ class ItemController extends Controller
         // dd($minimum_stock);
         
         // DB::beginTransaction();
+
+        Log::info('Item::create前');
 
         // try{
             // 保存したオブジェクトを変数に入れてInspectionのcreateに使用する
@@ -303,23 +317,63 @@ class ItemController extends Controller
                 'qrcode' => null,
             ]);
 
-            // ここにも条件分岐、点検が必要な備品のカテゴリのときのみ保存する
-            // Inspection::create([
-            //     'item_id' => $item->id,
-            //     'scheduled_date' => $request->inspectionSchedule,
-            //     'Inspection_date' => null, // migrationでnullableにする
-            //     'status' => false, // 未実施がfalse
-            //     'inspection_person' => null, // 空白は保存できるのか,nullとの違い
-            //     'details' => null, 
-            // ]);
+            Log::info('Inspection::create前');
 
-            // Disposal::create([
-            //     'item_id' => $item->id,
-            //     'scheduled_date' => $request->disposalSchedule,
-            //     'disposal_date' => null, // migrationでnullableにする
-            //     'disposal_person' => '', // 空白は保存できるのか,nullとの違い
-            //     'details' => null, 
-            // ]);
+
+            // ここにも条件分岐、点検が必要な備品のカテゴリのときのみ保存する
+            if($request->filled('inspectionSchedule')) {
+
+                // inspectionScheduleのバリデーション
+                // 取得日から3年後まで
+                // $validator = Validator::make($request->all(), [
+                //     'inspectionSchedule' => ['required', 'date'],
+                // ]);
+
+                $validator = Validator::make($request->all(), [
+                    'inspectionSchedule' => [
+                        'required',
+                        'date',
+                        function ($attribute, $value, $fail) use ($request) {
+                            $dateOfAcquisition = Carbon::parse($request->dateOfAcquisition);
+                            $inspectionSchedule = Carbon::parse($value);
+                            if ($inspectionSchedule->gt($dateOfAcquisition->addYears(3))) {
+                                $fail('The ' . $attribute . ' must be within 3 years from the date of acquisition.');
+                            }
+                        },
+                    ],
+                ]);
+
+                Inspection::create([
+                    'item_id' => $item->id,
+                    'scheduled_date' => $request->inspectionSchedule,
+                    'inspection_date' => null, // migrationでnullableにする
+                    'status' => false, // 未実施がfalse
+                    'inspection_person' => null, // 空白は保存できるのか,nullとの違い
+                    'details' => null, 
+                ]);
+            }
+
+            Log::info('Disposal::create前');
+            if($request->filled('disposalSchedule')) {
+
+                // disposalScheduleのバリデーション
+                $validator = Validator::make($request->all(), [
+                    'disposalSchedule' => ['required', 'date'],
+                ]);
+
+                Disposal::create([
+                    'item_id' => $item->id,
+                    'scheduled_date' => $request->disposalSchedule,
+                    'disposal_date' => null, // migrationでnullableにする
+                    'disposal_person' => '', // 空白は保存できるのか,nullとの違い
+                    'details' => null, 
+                ]);
+            }
+            
+
+
+
+
             
             // DB::commit(); // ここで確定
 

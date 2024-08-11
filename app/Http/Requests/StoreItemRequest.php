@@ -42,8 +42,8 @@ class StoreItemRequest extends FormRequest
             'manufacturer' => ['nullable', 'max:20'],
             'productNumber' => ['nullable', 'max:30'],
             'remarks' => ['nullable', 'max:500'],
-            'inspectionSchedule' => ['nullable','date'],
-            'disposalSchedule' => ['nullable', 'date'],
+            // 'inspectionSchedule' => ['nullable','date'],
+            // 'disposalSchedule' => ['nullable', 'date'],
             // 'qrcode'
         ];
     }
