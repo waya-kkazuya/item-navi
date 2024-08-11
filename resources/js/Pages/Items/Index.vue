@@ -140,10 +140,9 @@ watch(() => props.items, (newItems) => {
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                 <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                     <div class="p-6 text-gray-900">
+                      <FlashMessage />
                       <section class="text-gray-600 body-font">
                           <div class="container px-5 py-8 mx-auto">
-                            <FlashMessage />
-
                             <div class="flex justify-between space-x-4">
                               
                               <!-- チェックボックスを使用したトグルボタン -->
