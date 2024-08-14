@@ -54,6 +54,7 @@ class EdithistorySeeder extends Seeder
                 'old_value' => null,
                 'new_value'=> null,
                 'edit_user' => 'admin',
+                'edit_reason_id' => null, 
                 'created_at' => '2024*04-01', //created_atは処理が行われたタイミング
             ],
             [
@@ -64,6 +65,7 @@ class EdithistorySeeder extends Seeder
                 'old_value' => 20,
                 'new_value'=> 18,
                 'edit_user' => 'admin',
+                'edit_reason_id' => null, 
                 'created_at' => '2024*04-02', //created_atは処理が行われたタイミング
             ],
             [
@@ -74,6 +76,7 @@ class EdithistorySeeder extends Seeder
                 'old_value' => 'ペーパータオル1',
                 'new_value'=> 'ペーパータオル',
                 'edit_user' => 'admin',
+                'edit_reason_id' => null, 
                 'created_at' => '2024*04-03', //created_atは処理が行われたタイミング
             ],
             [
@@ -84,6 +87,7 @@ class EdithistorySeeder extends Seeder
                 'old_value' => 1,
                 'new_value'=> 2,
                 'edit_user' => 'admin',
+                'edit_reason_id' => null, 
                 'created_at' => '2024*04-04', //created_atは処理が行われたタイミング
             ],
             [
@@ -94,6 +98,7 @@ class EdithistorySeeder extends Seeder
                 'old_value' => null,
                 'new_value'=> null,
                 'edit_user' => 'admin',
+                'edit_reason_id' => null, 
                 'created_at' => '2024*04-05', //created_atは処理が行われたタイミング
             ],
             [
@@ -104,6 +109,7 @@ class EdithistorySeeder extends Seeder
                 'old_value' => null,
                 'new_value'=> null,
                 'edit_user' => 'admin',
+                'edit_reason_id' => null, 
                 'created_at' => '2024*04-06', //created_atは処理が行われたタイミング
             ],
         ]);

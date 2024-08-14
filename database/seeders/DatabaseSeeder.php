@@ -35,6 +35,7 @@ class DatabaseSeeder extends Seeder
             AcquisitionMethodSeeder::class,
             LocationSeeder::class,
             UnitSeeder::class,
+            EditReasonSeeder::class,
             ItemSeeder::class,
             EdithistorySeeder::class,
             // ImageTestSeeder::class
