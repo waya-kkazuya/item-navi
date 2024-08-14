@@ -68,6 +68,8 @@ watch(isTableView, (newValue) => {
   sessionStorage.setItem('isTableView', newValue)
 })
 
+// プルダウン、ソートの情報もセッションに保存するかどうか
+
 onMounted(() => {
   console.log(props.items)
   console.log(props.locationOfUseId)
@@ -324,7 +326,7 @@ watch(() => props.items, (newItems) => {
                                   </tr>
                                 </thead>
                                 <tbody>
-                                  <tr v-for="(item, index) in localItems.data" :key="item.id" class="item">
+                                  <tr v-for="item in localItems.data" :key="item.id" class="item">
                                     <td>
                                       <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M16 12l-4-4-4 4M12 16V9"/></svg>
                                     </td>
@@ -346,12 +348,12 @@ watch(() => props.items, (newItems) => {
                                     <td class="border-b-2 border-gray-200 px-4 py-3" :class="showDisposal ? 'bg-red-100' : ''">{{ item.end_user }}</td>
                                     <td class="border-b-2 border-gray-200 px-4 py-3" :class="showDisposal ? 'bg-red-100' : ''">{{ item.location_of_use.name }}</td>
                                     <td class="border-b-2 border-gray-200 px-4 py-3" :class="showDisposal ? 'bg-red-100' : ''">{{ item.storage_location.name }}</td>
-                                    <td class="border-b-2 border-gray-200 px-4 py-3" :class="showDisposal ? 'bg-red-100' : ''">{{ item.acquisition_method.name }}</td>
+                                    <td class="border-b-2 border-gray-200 px-4 py-3" :class="showDisposal ? 'bg-red-100' : ''">{{ item.acquisition_method ? item.acquisition_method.name : '' }}</td>
                                     <td class="border-b-2 border-gray-200 px-4 py-3" :class="showDisposal ? 'bg-red-100' : ''">{{ item.acquisition_source }}</td>
                                     <td class="border-b-2 border-gray-200 px-4 py-3" :class="showDisposal ? 'bg-red-100' : ''">{{ item.price }}</td>
                                     <td class="border-b-2 border-gray-200 px-4 py-3" :class="showDisposal ? 'bg-red-100' : ''">{{ item.date_of_acquisition }}</td>
-                                    <td class="border-b-2 border-gray-200 px-4 py-3" :class="showDisposal ? 'bg-red-100' : ''">{{ item.inspection_schedule }}</td>
-                                    <td class="border-b-2 border-gray-200 px-4 py-3" :class="showDisposal ? 'bg-red-100' : ''">{{ item.disposal_schedule }}</td>
+                                    <td class="border-b-2 border-gray-200 px-4 py-3" :class="showDisposal ? 'bg-red-100' : ''">{{ item.pending_inspection_date || ''  }}</td>
+                                    <td class="border-b-2 border-gray-200 px-4 py-3" :class="showDisposal ? 'bg-red-100' : ''">{{ item.disposal ? item.disposal.scheduled_date : '' }}</td>
                                     <td class="border-b-2 border-gray-200 px-4 py-3" :class="showDisposal ? 'bg-red-100' : ''">{{ item.manufacturer }}</td>
                                     <td class="border-b-2 border-gray-200 px-4 py-3" :class="showDisposal ? 'bg-red-100' : ''">{{ item.product_number }}</td>
                                     <td class="border-b-2 border-gray-200 px-4 py-3" :class="showDisposal ? 'bg-red-100' : ''">{{ item.remarks ?? '' }}</td>

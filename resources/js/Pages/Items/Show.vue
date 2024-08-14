@@ -4,8 +4,18 @@ import { Head, Link, router } from '@inertiajs/vue3';
 
 
 defineProps({
-    item: Object
+    item: Object,
+    pendingInspection: {
+        type: Object,
+        default: null
+    }
 })
+
+
+const inspectItem = id => {
+
+}
+
 
 const deleteItem = id => {
     router.visit(route('items.destroy', { item: id }), {
@@ -28,190 +38,211 @@ const deleteItem = id => {
 
         <div class="py-12">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+                <!-- ここから白い背景 -->
                 <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                     <div class="p-6 text-gray-900">
 
                         <section class="text-gray-600 body-font relative">
-
-                            <div class="container px-5 py-8 mx-auto">
-                                                     
-                                <div class="lg:w-1/2 md:w-2/3 mx-auto">
+                            <FlashMessage />
+                            <div class="container px-5 py-8 mx-auto">                                    
+                                <div class="md:w-full mx-auto">
                                     <div class="-m-2">
+                                        <div class="grid grid-cols-1 md:grid-cols-6 gap-4">
 
-                                        <div class="p-4 border bordr-4 mb-8">
-                                            <div class="p-2 w-full">
-                                                <div class="relative">
-                                                    <label for="name" class="leading-7 text-sm text-gray-600">備品名</label>
-                                                    <div id="name" class="w-full bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
-                                                        {{ item.name }}
-                                                    </div>
-                                                </div>                                                
-                                            </div>
-                                            <div class="p-2 w-full">
-                                                <div class="relative">
-                                                    <label for="category" class="leading-7 text-sm text-gray-600">カテゴリ</label><br>
-                                                    <div id="category" class="w-full bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
-                                                        {{ item.category.name }}
-                                                    </div>
-                                            </div>
-                                            </div>
+                                            <div class="col-span-2">
+                                                <div class="p-4 border bordr-4 mb-8">
 
-                                            <div class="flex justify-around">
-                                                <div v-if="item.image_path1" class="p-2 w-full">
-                                                    <div class="relative">
-                                                        <img :src="item.image1" alt="Image preview...">
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        
-                                            <div class="p-2 w-full mb-8">
-                                                <div class="relative">
-                                                    <label for="stocks" class="leading-7 text-sm text-gray-600">在庫数</label><br>
-                                                    <div class="flex items-center">
-                                                        <div id="stocks"  class="w-1/4 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
-                                                            {{ item.stock }}
+
+                                                    <div class="p-2 w-full">
+                                                        <label for="fileName" class="leading-7 text-sm text-blue-900">画像</label>    
+                                                        <div v-if="item.image_path1" class="flex justify-center">
+                                                            <img :src="item.image_path1" alt="画像" class="mr-6 w-48 mt-4">
                                                         </div>
-                                                        <span class="ml-1 leading-7 text-sm text-gray-600">個</span>
                                                     </div>
                                                 </div>
                                             </div>
+                                            <div class="col-span-4">
+                                                <div class="p-4 border bordr-4 mb-8">
+                                                    <div class="p-2 w-full">
+                                                        <label for="name" class="leading-7 text-sm text-blue-900">
+                                                            備品名
+                                                        </label>
+                                                        <div id="name" name="name" class="w-full bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
+                                                            {{ item.name }}
+                                                        </div>
+                                                    </div>
+                                                    <div class="p-2 w-full">
+                                                        <label for="categoryId" class="leading-7 text-sm text-blue-900">
+                                                            カテゴリ
+                                                        </label><br>
+                                                        <div class="w-full bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
+                                                            {{ item.category.name }}
+                                                        </div>
+                                                    </div>  
+                                                </div>
+                                                
+                                                <div class="p-4 border bordr-4 mb-8">
+                                                    <div class="pl-2 w-full">
+                                                        <label for="stock" class="leading-7 text-sm text-blue-900">
+                                                            在庫数
+                                                        </label><br>
+                                                        <div class="flex items-center">
+                                                            <div id="stock" name="stock" class="w-1/4 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
+                                                                {{ item.stock }}
+                                                            </div>
+                                                            <div class="w-1/6 ml-2">
+                                                                {{ item.unit.name }}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div v-show="item.categoryId == 1" class="mt-4 pl-2 w-full">
+                                                        <label for="minimumStock" class="leading-7 text-sm text-blue-900">通知在庫数</label><br>
+                                                        <div id="minimumStock" name="minimumStock" class="w-1/4 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
+                                                            {{ item.minimumStock }}
+                                                        </div>
+                                                        <div class="w-1/6 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
+                                                            {{ item.unit.name }}
+                                                        </div>
+                                                    </div>
+                                                    <div v-show="item.categoryId == 1" class="mt-4 pl-2 w-full">
+                                                        <div class="flex items-center">
+                                                            <svg v-if="item.notification" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 11 12 14 22 4"></polyline><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path></svg>
+                                                            <svg v-else xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect></svg>
+                                                            <label for="notification" class="ml-1">在庫数が通知在庫数以下になったら通知する</label>
+                                                        </div>
+                                                    </div>
+                                                </div>
 
-                                        <div class="p-4 border bordr-4 mb-8">
-                                            <div class="p-2 w-full">
-                                                <div class="relative">
-                                                    <label for="usage_status" class="leading-7 text-sm text-gray-600">利用状況</label>
-                                                    <div id="usage_status" class="w-full bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
-                                                    {{ item.usage_status }}
+                                                <div class="p-4 border bordr-4 mb-8">
+                                                    <div class="p-2 w-full">
+                                                        <label for="usageStatusId" class="leading-7 text-sm text-blue-900">
+                                                            利用状況 <span class="text-red-600">*</span>
+                                                        </label>
+                                                        <div name="usageStatusId" id="usageStatusId" class="w-full bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
+                                                            {{ item.usage_status.name }}
+                                                        </div>
                                                     </div>
-                                                </div>
-                                            </div>
 
-                                            <div class="p-2 w-full">
-                                                <div class="relative">
-                                                    <label for="end_user" class="leading-7 text-sm text-gray-600">使用者</label>
-                                                    <div id="end_user" class="w-full bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
-                                                    {{ item.end_user }}  
+                                                    <div class="p-2 w-full">
+                                                        <label for="endUser" class="leading-7 text-sm text-blue-900">使用者</label>
+                                                        <div id="endUser" name="endUser" class="w-full bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out min-h-[2em]">
+                                                            {{ item.end_user || ' ' }}
+                                                        </div>
                                                     </div>
-                                                </div>
-                                            </div>
 
-                                            <div class="p-2 w-full">
-                                                <div class="relative">
-                                                    <label for="location_of_use" class="leading-7 text-sm text-gray-600">設置場所</label>
-                                                    <div id="location_of_use" class="w-full bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
-                                                    {{ item.location_of_use.name }}
+                                                    <div class="p-2 w-full">
+                                                        <label for="locationOfUseId" class="leading-7 text-sm text-blue-900">
+                                                            利用場所 <span class="text-red-600">*</span>
+                                                        </label>
+                                                        <div name="locationOfUseId" id="locationOfUseId" class="w-full bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
+                                                            {{ item.location_of_use.name }}
+                                                        </div>
                                                     </div>
-                                                </div>
-                                            </div>
 
-                                            <div class="p-2 w-full">
-                                                <div class="relative">
-                                                    <label for="storage_location" class="leading-7 text-sm text-gray-600">保管場所</label>
-                                                    <div id="storage_location" class="w-full bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
-                                                    {{ item.storage_location.name }}
+                                                    <div class="p-2 w-full">
+                                                        <label for="storageLocationId" class="leading-7 text-sm text-blue-900">
+                                                            保管場所 <span class="text-red-600">*</span>
+                                                        </label>
+                                                        <div name="storageLocationId" id="storageLocationId" class="w-full bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
+                                                            {{ item.storage_location.name }}
+                                                        </div>
                                                     </div>
                                                 </div>
-                                            </div>
-                                        </div>
 
-                                        <div class="p-4 border bordr-4 mb-8">
-                                            <div class="p-2 w-full">
-                                                <div class="relative">
-                                                    <label for="acquisition_category" class="leading-7 text-sm text-gray-600">取得区分</label>
-                                                    <div id="acquisition_category" class="w-full bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
-                                                    {{ item.acquisition_category }}  
+                                                <div class="p-4 border bordr-4 mb-8">
+                                                    <div class="p-2 w-full">
+                                                        <label for="acquisitionMethodId" class="leading-7 text-sm text-blue-900">
+                                                            取得区分 <span class="text-red-600">*</span>
+                                                        </label>
+                                                        <div name="acquisitionMethodId" id="acquisitionMethodId" class="w-full bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
+                                                            {{ item.acquisition_method.name }}
+                                                        </div>
                                                     </div>
-                                                </div>
-                                            </div>
 
-                                            <div class="p-2 w-full">
-                                                <div class="relative">
-                                                    <label for="price" class="leading-7 text-sm text-gray-600">取得価額</label>
-                                                    <div id="price" class="w-full bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
-                                                    {{ item.price }}  
+                                                    <div class="p-2 w-full">
+                                                        <label for="acquisitionSource" class="leading-7 text-sm text-blue-900">
+                                                            取得先 <span class="text-red-600">*</span>
+                                                        </label>
+                                                        <div id="acquisitionSource" name="acquisitionSource" class="w-full min-h-[2em] bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
+                                                            {{ item.acquisition_source || ' ' }}
+                                                        </div>
                                                     </div>
-                                                </div>
-                                            </div>
-                                            
-                                            <div class="p-2 w-full">
-                                                <div class="relative">
-                                                    <label for="where_to_buy" class="leading-7 text-sm text-gray-600">購入先</label>
-                                                    <div id="where_to_buy" class="w-full bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
-                                                    {{ item.where_to_buy }}
-                                                    </div>
-                                                </div>
-                                            </div>
 
-                                            <div class="p-2 w-full">
-                                                <div class="relative">
-                                                    <label for="manufacturer" class="leading-7 text-sm text-gray-600">メーカー</label>
-                                                    <div id="manufacturer" class="w-full bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
-                                                    {{ item.manufacturer }}
+
+                                                    <div class="p-2 w-full">
+                                                        <label for="price" class="leading-7 text-sm text-blue-900">
+                                                            取得価額 <span class="text-red-600">*</span>
+                                                        </label>
+                                                        <div id="price" name="price" class="w-full bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
+                                                            {{ item.price }}
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="p-2 w-full">
+                                                        <label for="dateOfAcquisition" class="leading-7 text-sm text-blue-900">
+                                                            取得年月日 <span class="text-red-600">*</span>
+                                                        </label>
+                                                        <div id="dateOfAcquisition" name="dateOfAcquisition" class="w-full bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
+                                                            {{ item.date_of_acquisition ?? '' }}
+                                                        </div>
                                                     </div>
                                                 </div>
-                                            </div>
 
-                                            <div class="p-2 w-full">
-                                                <div class="relative">
-                                                    <label for="product_number" class="leading-7 text-sm text-gray-600">製品番号</label>
-                                                    <div id="product_number" class="w-full bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
-                                                    {{ item.product_number }}
+                                                <div class="p-4 border bordr-4 mb-8">
+                                                    <div class="p-2 w-full">
+                                                        <label for="inspectionSchedule" class="leading-7 text-sm text-blue-900">点検予定日</label>
+                                                        <div class="flex items-center">
+                                                            <div id="inspectionSchedule" name="inspectionSchedule" class="w-1/2 flex-grow min-h-[2em] bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
+                                                                {{ pendingInspection ? pendingInspection.scheduled_date : '' }}
+                                                            </div>
+                                                            <div class="w-1/2">
+                                                                <button @click="inspectItem(item.id)" class="flex mx-auto text-white bg-sky-500 border-0 py-2 px-8 focus:outline-none hover:bg-red-600 rounded">点検する</button>
+                                                            </div>
+                                                        </div>
+                                                        <div class="mt-4">前回の点検日 2023年6月1日</div>
+                                                    </div>
+
+                                                    <div class="p-2 w-full">
+                                                        <label for="disposalSchedule" class="leading-7 text-sm text-blue-900">廃棄予定日</label>
+                                                        <div class="flex items-center">
+                                                            <div type="date" id="disposalSchedule" name="disposalSchedule" class="w-1/2 min-h-[2em] bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
+                                                                {{ item.disposal ? item.disposal.scheduled_date : '' }}
+                                                            </div>
+                                                            <div class="w-full">
+                                                                <button @click="deleteItem(item.id)" class="flex mx-auto text-white bg-red-500 border-0 py-2 px-8 focus:outline-none hover:bg-red-600 rounded">廃棄する</button>
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                 </div>
-                                            </div>
 
-                                            <div class="p-2 w-full">
-                                                <div class="relative">
-                                                    <label for="date_of_acquisition" class="leading-7 text-sm text-gray-600">取得年月日</label>
-                                                    <div id="date_of_acquisition" class="w-full bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
-                                                    {{ item.date_of_acquisition }}
+                                                <div class="p-4 border bordr-4 mb-4">
+                                                    <div class="p-2 w-full">
+                                                        <label for="manufacturer" class="leading-7 text-sm text-blue-900">メーカー</label>
+                                                        <div id="manufacturer" name="manufacturer" class="w-full min-h-[2em] bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
+                                                            {{ item.manufacturer }}
+                                                        </div>
+                                                    </div>
+                                                    <div class="p-2 w-full">
+                                                        <label for="productNumber" class="leading-7 text-sm text-blue-900">製品番号</label>
+                                                        <div id="productNumber" name="productNumber" class="w-full min-h-[2em] bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
+                                                            {{ item.product_number }}    
+                                                        </div>
+                                                    </div>
+                                                    <div class="p-2 w-full">
+                                                        <label for="remarks" class="leading-7 text-sm text-blue-900">備考</label>
+                                                        <div id="remarks" name="remarks" class="overflow-y-auto max-h-32 whitespace-pre-wrap w-full bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 h-32 text-base outline-none text-gray-700 py-1 px-3 resize-none leading-6 transition-colors duration-200 ease-in-out">
+                                                            {{ item.remarks }}    
+                                                        </div>
                                                     </div>
                                                 </div>
-                                            </div>
-                                        </div>
-
-                                        <div class="p-4 border bordr-4 mb-8">
-                                            <div class="p-2 w-full">
-                                                <div class="relative">
-                                                    <label for="inspection_schedule" class="leading-7 text-sm text-gray-600">点検時期</label>
-                                                    <div id="inspection_schedule" class="w-full bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
-                                                    {{ item.inspection_schedule }}
-                                                    </div>
+                                                <div class="p-2 w-full">
+                                                    <Link as="button" :href="route('items.edit', { item: item.id })" class="flex mx-auto text-white bg-indigo-500 border-0 py-2 px-8 focus:outline-none hover:bg-indigo-600 rounded text-lg">編集する</Link>
                                                 </div>
-                                            </div>
 
-                                            <div class="p-2 w-full">
-                                                <div class="relative">
-                                                    <label for="disposal_schedule" class="leading-7 text-sm text-gray-600">廃棄時期</label>
-                                                    <div id="disposal_schedule" class="w-full bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
-                                                    {{ item.disposal_schedule }}
-                                                    </div>
-                                                </div>
                                             </div>
-                                        </div>
-
-                                        <div class="p-4 border bordr-4 mb-4">      
-                                    
-                                            <div class="p-2 w-full">
-                                                <div class="relative">
-                                                    <label for="remarks" class="leading-7 text-sm text-gray-600">備考</label>
-                                                    <div id="remarks" class="whitespace-pre-wrap w-full bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 h-32 text-base outline-none text-gray-700 py-1 px-3 resize-none leading-6 transition-colors duration-200 ease-in-out">
-                                                        {{ item.remarks }}
-                                                    </div>
-                                                    <!-- <div id="remarks" v-html="nl2br(item.remarks)" class="w-full bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 h-32 text-base outline-none text-gray-700 py-1 px-3 resize-none leading-6 transition-colors duration-200 ease-in-out">
-                                                    </div> -->
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="p-2 w-full">
-                                            <Link as="button" :href="route('items.edit', { item: item.id })" class="flex mx-auto text-white bg-indigo-500 border-0 py-2 px-8 focus:outline-none hover:bg-indigo-600 rounded text-lg">編集する</Link>
-                                        </div>
-                                        <div class="mt-8 p-2 w-full">
-                                            <button @click="deleteItem(item.id)" class="flex mx-auto text-white bg-red-500 border-0 py-2 px-8 focus:outline-none hover:bg-red-600 rounded text-lg">削除する</button>
-                                        </div>
-
+                                        </div>                      
                                     </div>
+
                                 </div>
                             </div>
                         </section>

@@ -72,7 +72,7 @@ class Item extends Model
         return $this->hasMany(Inspection::class);
     }
 
-    public function disposals()
+    public function disposal()
     {
         return $this->hasOne(Disposal::class);
     }

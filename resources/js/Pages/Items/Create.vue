@@ -13,33 +13,31 @@ const props = defineProps({
     errors: Object
 })
 
-// useFormは後回し
-const form = useForm({
-  id: null,
-  imageFile: null,
-  name: null,
-  categoryId: 0, 
-//   image1: null, //保存する際は画像名 
-  stock: 1, // 最初から1を入力しておく
-  unitId: 1,
-  minimumStock: 0,
-  notification: true,
-  usageStatusId: 0,
-  endUser: null,
-  locationOfUseId: 0, // locationsテーブルで1は「未選択」
-  storageLocationId: 0, // locationsテーブルで1は「未選択」
-  acquisitionMethodId: 0,
-  acquisitionSource: null,
-  price: 0,
-  dateOfAcquisition: new Date().toISOString().substr(0, 10),
-  manufacturer: null,
-  productNumber: null,
-  inspectionSchedule: null, // 初期値はnull
-  disposalSchedule: null, // 初期値はnull
-  remarks: null,
-//   errors: []
-//   qrcode: null,
 
+const form = useForm({
+    id: null,
+    imageFile: null,
+    name: null,
+    categoryId: 0, 
+    //   image1: null, //保存する際は画像名 
+    stock: 1, // 最初から1を入力しておく
+    unitId: 1,
+    minimumStock: 0,
+    notification: true,
+    usageStatusId: 0,
+    endUser: null,
+    locationOfUseId: 0, // locationsテーブルで1は「未選択」
+    storageLocationId: 0, // locationsテーブルで1は「未選択」
+    acquisitionMethodId: 0,
+    acquisitionSource: null,
+    price: 0,
+    dateOfAcquisition: new Date().toISOString().substr(0, 10),
+    manufacturer: null,
+    productNumber: null,
+    inspectionSchedule: null, // 初期値はnull
+    disposalSchedule: null, // 初期値はnull
+    remarks: null,
+    //   qrcode: null,
 })
 
 const file_preview_src = ref('')
@@ -76,8 +74,14 @@ const storeItem = () => {
 
 
 // 「×」ボタンで日付リセット
-const clearDate = () => {
+const clearDateOfAcquisition = () => {
     form.dateOfAcquisition = '';
+};
+const clearInspectionSchedule = () => {
+    form.inspectionSchedule = '';
+};
+const clearDisposalSchedule = () => {
+    form.disposalSchedule = '';
 };
 
 </script>
@@ -109,12 +113,6 @@ const clearDate = () => {
                                                 <div class="col-span-2">
                                                     <div class="p-4 border bordr-4 mb-8">
 
-                                                        <div v-if="errors.length" class="alert alert-danger">
-                                                            <ul>
-                                                                <li v-for="(error, index) in errors" :key="index">{{ error }}</li>
-                                                            </ul>
-                                                        </div>
-
                                                         <div class="p-2 w-full">
                                                             <label for="fileName" class="leading-7 text-sm text-blue-900">画像</label>
                                                             <label for="fileName" class="relative cursor-pointer">
@@ -126,7 +124,7 @@ const clearDate = () => {
                                                                     </svg>
                                                                 </div>     
                                                             </label>    
-                                                            <div v-if="file_preview_src" class="flex">
+                                                            <div v-if="file_preview_src" class="">
                                                                 <img :src=file_preview_src alt="画像プレビュー" class="mr-6 w-48 mt-4">
                                                             </div>
                                                             <div v-if="errors.imageFile" class="font-medium text-red-600">{{ errors.imageFile }}</div>
@@ -241,7 +239,7 @@ const clearDate = () => {
                                                             <label for="acquisitionSource" class="leading-7 text-sm text-blue-900">
                                                                 取得先 <span class="text-red-600">*</span>
                                                             </label>
-                                                            <input type="text" id="acquisitionSource" name="acquisitionSource" v-model="form.acquisitionSource" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
+                                                            <input type="text" id="acquisitionSource" name="acquisitionSource" v-model="form.acquisitionSource" placeholder="例 Amazonなど" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
                                                             <div v-if="errors.acquisitionSource" class="font-medium text-red-600">{{ errors.acquisitionSource }}</div>
                                                         </div>
 
@@ -260,7 +258,7 @@ const clearDate = () => {
                                                             </label>
                                                             <div class="relative">
                                                                 <input type="date" id="dateOfAcquisition" name="dateOfAcquisition" v-model="form.dateOfAcquisition" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
-                                                                <button type="button" @click="clearDate" class="absolute right-12 top-1/2 transform -translate-y-1/2 text-gray-500" text-lg>×</button>
+                                                                <button type="button" @click="clearDateOfAcquisition" class="absolute right-12 top-1/2 transform -translate-y-1/2 text-gray-500" text-lg>×</button>
                                                             </div>
                                                             <div v-if="errors.dateOfAcquisition" class="font-medium text-red-600">{{ errors.dateOfAcquisition }}</div>
                                                         </div>
@@ -268,14 +266,20 @@ const clearDate = () => {
 
                                                     <div class="p-4 border bordr-4 mb-8">
                                                         <div class="p-2 w-full">
-                                                            <label for="inspectionSchedule" class="leading-7 text-sm text-blue-900">点検時期</label>
-                                                            <input type="date" id="inspectionSchedule" name="inspectionSchedule" v-model="form.inspectionSchedule" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
+                                                            <label for="inspectionSchedule" class="leading-7 text-sm text-blue-900">点検予定日</label>
+                                                            <div class="relative">
+                                                                <input type="date" id="inspectionSchedule" name="inspectionSchedule" v-model="form.inspectionSchedule" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
+                                                                <button type="button" @click="clearInspectionSchedule" class="absolute right-12 top-1/2 transform -translate-y-1/2 text-gray-500" text-lg>×</button>
+                                                            </div>
                                                             <div v-if="errors.inspectionSchedule" class="font-medium text-red-600">{{ errors.inspectionSchedule }}</div>
                                                         </div>
 
                                                         <div class="p-2 w-full">
-                                                            <label for="disposalSchedule" class="leading-7 text-sm text-blue-900">廃棄時期</label>
-                                                            <input type="date" id="disposalSchedule" name="disposalSchedule" v-model="form.disposalSchedule" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
+                                                            <label for="disposalSchedule" class="leading-7 text-sm text-blue-900">廃棄予定日</label>
+                                                            <div class="relative">
+                                                                <input type="date" id="disposalSchedule" name="disposalSchedule" v-model="form.disposalSchedule" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
+                                                                <button type="button" @click="clearDisposalSchedule" class="absolute right-12 top-1/2 transform -translate-y-1/2 text-gray-500" text-lg>×</button>
+                                                            </div>
                                                             <div v-if="errors.disposalSchedule" class="font-medium text-red-600">{{ errors.disposalSchedule }}</div>
                                                         </div>
                                                     </div>

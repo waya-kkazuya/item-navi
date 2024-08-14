@@ -7,31 +7,35 @@ use App\Models\Category;
 use App\Models\Unit;
 use App\Models\Location;
 use App\Models\Inspection;
+use App\Models\Disposal;
 use App\Models\UsageStatus;
 use App\Models\AcquisitionMethod;
+use App\Models\EditReason;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreItemRequest;
 use App\Http\Requests\UpdateItemRequest;
-use App\Models\Disposal;
-use Inertia\Inertia;
+use App\Http\Requests\CombinedRequest;
 use Illuminate\Http\Request;    
+use Inertia\Inertia;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
-use App\Services\ImageService;
+use Illuminate\Support\Facades\Session;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use Illuminate\Support\Facades\DB;
-use App\Http\Requests\CombinedRequest;
 use Illuminate\Support\Facades\Validator;
+use Intervention\Image\ImageManager;
+use Intervention\Image\Drivers\Gd\Driver;
 use Carbon\Carbon;
-use Intervention\Image\ImageManagerStatic as InterventionImage;
-
+use App\Services\ImageService;
 
 class ItemController extends Controller
 {
 
     public function index(Request $request)
     {  
+        // dd(phpinfo());
+
         Gate::authorize('staff-higher');
 
         $search = $request->query('search', '');
@@ -45,8 +49,7 @@ class ItemController extends Controller
         $storage_location_id = $request->query('storage_location_id', 0);
         // Log::info("location_of_use_id");
 
-
-        $withRelations = ['category', 'unit', 'usageStatus', 'locationOfUse', 'storageLocation', 'acquisitionMethod'];
+        $withRelations = ['category', 'unit', 'usageStatus', 'locationOfUse', 'storageLocation', 'acquisitionMethod', 'inspections', 'disposal'];
         $selectFields = [
             'id',
             'management_id',
@@ -121,8 +124,12 @@ class ItemController extends Controller
         }
 
 
-        $total_count = $query->count();
+        $query->get()->map(function ($item) {
+            $item->pending_inspection_date = $item->inspections->where('status', false)->sortBy('scheduled_date')->first()->scheduled_date ?? null;
+            return $item;
+        });
 
+        $total_count = $query->count();
 
         // paginateじゃなくget()の時のデータ構造解析
         // dd($query->get());
@@ -145,6 +152,10 @@ class ItemController extends Controller
                     $item->image_path1 = asset('storage/items/No_Image.jpg');
                 }
             }
+
+            // pending_inspection_dateの設定
+            $item->pending_inspection_date = $item->inspections->where('status', false)->sortBy('scheduled_date')->first()->scheduled_date ?? null;
+
             return $item;
         });
 
@@ -157,7 +168,7 @@ class ItemController extends Controller
         $categories = Category::all();
         $locations = Location::all();
 
-        // itemsテーブルで使用しているidのみ抽出
+        // itemsテーブルで使用しているidのみ抽出してユーザビリティを上げる
         // locationsを加工し、利用場所用の使用されているloactionsデータ
         // 保管場所の中で使用されているlocationsデータをVueファイルに渡してプルダウンに反映する
         $locationOfUseIds = Item::distinct()->pluck('location_of_use_id');
@@ -167,8 +178,9 @@ class ItemController extends Controller
         $storageLocationIds = Item::distinct()->pluck('storage_location_id');
         $storageOfLocation = Location::whereIn('id', $storageLocationIds)->get();
 
+        // dd($items);
 
-        // 要完了
+        // 廃棄済み備品用API情報
         if ($request->has('disposal')) {
             return $items;
         }
@@ -184,10 +196,7 @@ class ItemController extends Controller
             'locationOfUseId' => $location_of_use_id,
             'storageLocationId' => $storage_location_id,
             'totalCount' => $total_count
-        ]);
-
-
-        
+        ]); 
     }
 
 
@@ -216,164 +225,115 @@ class ItemController extends Controller
 
     public function store(StoreItemRequest $request)
     {
-        Gate::authorize('staff-higher');
+        Gate::authorize('staff-higher');        
         
-        // dd('store');
-        // 画像が一枚の時の保存処理とImageServiceが必要
-        // トリミング、画像の大きさと比率によって、トリミングの仕方を変える
 
-        // $imageFiles = $request->file('file_name');　//複数ファイルの際の処理
+        // 画像保存もトランザクション処理内に入れるかどうか
+        // DB::beginTransaction();
 
-        // $imageFile = $request->image_path1;
-        // if(!is_null($imageFile) && $imageFile->isValid()){
-        //     $created_image_path1 = Storage::putFile('public/items', $imageFile);
-        // }
-        // if(!is_null($imageFiles)){
-        //     foreach($imageFiles as $imageFile){
-        //         $fileNameToStore = ImageService::upload($imageFile, 'images');
-        //     }
-        // }
-
-        // $fileNameToStores = [];
-        // if(!is_null($imageFiles)){
-        //     $fileNameToStores = array_map(function ($imageFile) {
-        //         // ここで$imageFileを処理
-        //         // $processedは処理後の結果
-        //         $fileNameToStore = ImageService::upload($imageFile, 'items');
-        //         // $processed = processImageFile($imageFile); // 仮の処理関数
-        //         return $fileNameToStore;
-        //     }, $imageFiles);
-        // }
-
-        //　画像保存のやり方複数
-        // 1,Storage::putFile 
-        // $created_image_path1 = Storage::putFile('public/items', $imageFile);
-        // 2,
-        // use Intervention\Image\ImageManager;
-        // use Intervention\Image\Drivers\Gd\Driver;
-        
-        $imageFile = $request->imageFile; // 一時保存
-        // Storage::putFileは自動的に名前を付けてくれる
-        // ->isValid()は念のため、ちゃんとアップロードできているかチェックしてくれる
-        // フォルダも無ければ自動的に作成してくれる
-        if(!is_null($imageFile) && $imageFile->isValid() ){
-            // Storage::putFile('public/items', $imageFile); //リサイズ無しの場合、名前も付けてくれる
-            $fileName = uniqid(rand().'_'); // ランダムな名前
-            $extension = $imageFile->extension();
-            $fileNameToStore = $fileName. '.' . $extension;
-
-            $resizedImage = InterventionImage::make($imageFile)->resize(800, 600)->encode();
-
-            Storage::put('public/items/' . $fileNameToStore,
-            $resizedImage);
-        }
+        // try{
 
 
-        // dd($fileNameToStores, $fileNameToStores[0], $fileNameToStores[1], $fileNameToStores[2]);
-        // QRコード生成、サービスに切り分け
-        // $qrcodeName = 'QR' . uniqid(rand().'_') . '.png';
-        // QrCode::format('png')->size(200)->generate('Hello Laravel!', storage_path('app/public/qrcode/' . $qrcodeName));
+            // 画像アップロード
+            $imageFile = $request->imageFile; // 一時保存
+            // ->isValid()は念のため、ちゃんとアップロードできているかチェックしてくれる
+            $fileNameToStore = null;
+            if(!is_null($imageFile) && $imageFile->isValid() ){
+                $fileNameToStore = ImageService::resizeUpload($imageFile);
+            }
 
+
+            // // QRコード生成、QrCodeServiceに切り分ける
+            // // ※消耗品のときだけcategory_id=1のときだけ生成する
+            // if($item->category_id == 1){
+            //     // QrCode::format('png')->size(200)->generate('Hello Laravel!', storage_path('app/public/qrcode/' . $qrcodeName));
+            //     // png生成にはImagickが必要
+            //     $qrCode = QrCode::format('png')->size(200)->generate('Hello Laravel!');
+            //     $qrManager = new ImageManager(new Driver());
+            //     $qrImage = $qrManager->read($qrCode)->resize(30, 30);
+
+            //     $label = $qrManager->create(91, 55)->fill('fff');
+            //     $label->place(
+            //         $qrImage,
+            //         'top-left', 
+            //         15, 
+            //         15,
+            //     );
+            //     $label->text('管理ID ' . $item->management_id, 50, 15, function($font) {
+            //         $font->size(12);
+            //         $font->color('#000');
+            //     });
+            //     $label->text('備品名 ' . $item->name, 50, 30, function($font) {
+            //         $font->size(12);
+            //         $font->color('#000');
+            //     });
+            //     $label->text('備品カテゴリ ' . $item->category->name, 50, 45, function($font) {
+            //         $font->size(12);
+            //         $font->color('#000');
+            //     });
+
+
+            //     $labelName = $item->id . '_label.jpg';
+            //     Storage::put('labels/' . $labelName, $label->encodeByExtension('jpg'));
+            //     // 画像データをjpegへエンコードする
+
+            //     // 画像をStorage/public/qrcodesに保存する
+            //     // return $qrCodeNameToStore;
+            // }
 
 
         // もしもカテゴリが消耗品以外で、minimumに数値が入っていたらnullにする
-        // categoriesテーブルで消耗品のidは2
+        // categoriesテーブルで消耗品のidは1、定数に入れる
         if($request->categoryId == 1){
             $minimum_stock = $request->minimumStock;
         } else {
             $minimum_stock = null;
         }
 
-        // dd($minimum_stock);
-        
-        // DB::beginTransaction();
 
-        Log::info('Item::create前');
 
-        // try{
+
             // 保存したオブジェクトを変数に入れてInspectionのcreateに使用する
             $item = Item::create([
                 'id' => $request->id,
                 'name' => $request->name,
                 'category_id' => $request->categoryId ,
-                'image1' => null,
+                'image1' => $fileNameToStore ?: null,
                 'stock' => $request->stock ?? 0,
                 'unit_id' => $request->unitId,
                 'minimum_stock' => $request->minimumStock,
                 'notification' => $request->notification,
                 'usage_status_id' => $request->usageStatusId,
-                'end_user' => $request->endUser,
+                'end_user' => $request->endUser ?: null,
                 'location_of_use_id' => $request->locationOfUseId,
                 'storage_location_id' => $request->storageLocationId,
                 'acquisition_method_id' => $request->acquisitionMethodId,
-                'acquisition_source' => $request->acquisitionSource,
+                'acquisition_source' => $request->acquisitionSource ?: null,
                 'price' => $request->price,
                 'date_of_acquisition' => $request->dateOfAcquisition,
-                'manufacturer' => $request->manufacturer,
-                'product_number' => $request->productNumber,
-                // 'inspection_schedule' => $request->inspectionSchedule,
-                // 'disposal_schedule' => $request->disposalSchedule,
-                'remarks' => $request->remarks,
+                'manufacturer' => $request->manufacturer ?: null,
+                'product_number' => $request->productNumber ?: null,
+                'remarks' => $request->remarks ?: null,
                 'qrcode' => null,
             ]);
 
-            Log::info('Inspection::create前');
+            Inspection::create([
+                'item_id' => $item->id,
+                'scheduled_date' => $request->inspectionSchedule,
+                'inspection_date' => null, // migrationでnullableにする
+                'status' => false, // 未実施がfalse
+                'inspection_person' => null, // 空白は保存できるのか,nullとの違い
+                'details' => null, 
+            ]);
 
-
-            // ここにも条件分岐、点検が必要な備品のカテゴリのときのみ保存する
-            if($request->filled('inspectionSchedule')) {
-
-                // inspectionScheduleのバリデーション
-                // 取得日から3年後まで
-                // $validator = Validator::make($request->all(), [
-                //     'inspectionSchedule' => ['required', 'date'],
-                // ]);
-
-                $validator = Validator::make($request->all(), [
-                    'inspectionSchedule' => [
-                        'required',
-                        'date',
-                        function ($attribute, $value, $fail) use ($request) {
-                            $dateOfAcquisition = Carbon::parse($request->dateOfAcquisition);
-                            $inspectionSchedule = Carbon::parse($value);
-                            if ($inspectionSchedule->gt($dateOfAcquisition->addYears(3))) {
-                                $fail('The ' . $attribute . ' must be within 3 years from the date of acquisition.');
-                            }
-                        },
-                    ],
-                ]);
-
-                Inspection::create([
-                    'item_id' => $item->id,
-                    'scheduled_date' => $request->inspectionSchedule,
-                    'inspection_date' => null, // migrationでnullableにする
-                    'status' => false, // 未実施がfalse
-                    'inspection_person' => null, // 空白は保存できるのか,nullとの違い
-                    'details' => null, 
-                ]);
-            }
-
-            Log::info('Disposal::create前');
-            if($request->filled('disposalSchedule')) {
-
-                // disposalScheduleのバリデーション
-                $validator = Validator::make($request->all(), [
-                    'disposalSchedule' => ['required', 'date'],
-                ]);
-
-                Disposal::create([
-                    'item_id' => $item->id,
-                    'scheduled_date' => $request->disposalSchedule,
-                    'disposal_date' => null, // migrationでnullableにする
-                    'disposal_person' => '', // 空白は保存できるのか,nullとの違い
-                    'details' => null, 
-                ]);
-            }
-            
-
-
-
-
+            Disposal::create([
+                'item_id' => $item->id,
+                'scheduled_date' => $request->disposalSchedule,
+                'disposal_date' => null, // migrationでnullableにする
+                'disposal_person' => '', // 空白は保存できるのか,nullとの違い
+                'details' => null, 
+            ]);
+        
             
             // DB::commit(); // ここで確定
 
@@ -412,32 +372,78 @@ class ItemController extends Controller
     public function show(Item $item)
     {
         // dd($item);
-        // categoryとのリレーションをロード
-        $item_category_location = Item::with(['category',  'locationOfUse', 'storageLocation'])->find($item->id);  
+        $withRelations = ['category', 'unit', 'usageStatus', 'locationOfUse', 'storageLocation', 'acquisitionMethod', 'inspections', 'disposal'];
+        $item = Item::with($withRelations)->find($item->id);  
+
+        // statusがfalseの点検予定日だけを取得し、日付でソートして最も古いものを取得
+        $pendingInspection = $item->inspections->where('status', false)->sortBy('scheduled_date')->first();
+
+        // image1カラムがnullかチェック
+        if (is_null($item->image1)) {
+            $item->image_path1 = asset('storage/items/No_Image.jpg');
+        } else {
+            // image1の画像名のファイルが存在するかチェックする
+            if (Storage::exists('public/items/' . $item->image1)) {
+                // 画像ファイルが存在する場合
+                $item->image_path1 = asset('storage/items/' . $item->image1);
+            } else {
+                // 画像ファイルが存在しない場合
+                $item->image_path1 = asset('storage/items/No_Image.jpg');
+            }
+        }
+
+        // dd($pendingInspection);
 
         return Inertia::render('Items/Show', [
-            'item' => $item_category_location
+            'item' => $item,
+            'pendingInspection' => $pendingInspection,
         ]);
     }
 
 
     public function edit(Item $item)
     {
-        // Gate::authorize('staff-higher');
+        Gate::authorize('staff-higher');
 
-        // categoryとのリレーションをロード
-        $item_category = Item::with('category')->find($item->id);
+        $withRelations = ['category', 'unit', 'usageStatus', 'locationOfUse', 'storageLocation', 'acquisitionMethod', 'inspections', 'disposal'];
+        $item = Item::with($withRelations)->find($item->id);  
+
+        // statusがfalseの点検予定日だけを取得し、日付でソートして最も古いものを取得
+        $pendingInspection = $item->inspections->where('status', false)->sortBy('scheduled_date')->first();
+
+        // image1カラムがnullかチェック
+        if (is_null($item->image1)) {
+            $item->image_path1 = asset('storage/items/No_Image.jpg');
+        } else {
+            // image1の画像名のファイルが存在するかチェックする
+            if (Storage::exists('public/items/' . $item->image1)) {
+                // 画像ファイルが存在する場合
+                $item->image_path1 = asset('storage/items/' . $item->image1);
+            } else {
+                // 画像ファイルが存在しない場合
+                $item->image_path1 = asset('storage/items/No_Image.jpg');
+            }
+        }
+
+        // dd($pendingInspection);
+
         $categories = Category::all();
         $locations = Location::all();
-
-        // $item_category->image_path1 = asset('storage/items/' . $item_category->image_path1);
-        // $item_category->image_path2 = asset('storage/items/' . $item_category->image_path2);
-        // $item_category->image_path3 = asset('storage/items/' . $item_category->image_path3);    
+        $units = Unit::all();
+        $usage_statuses = UsageStatus::all();
+        $acquisition_methods = AcquisitionMethod::all();
+        $edit_reasons = EditReason::all();
 
         return Inertia::render('Items/Edit', [
-            'item' => $item_category,
+            'item' => $item,
+            'pendingInspection' => $pendingInspection,
             'categories' => $categories,
-            'locations' => $locations
+            'locations' => $locations,
+            'units' => $units,
+            'usageStatuses' => $usage_statuses,
+            'acquisitionMethods' => $acquisition_methods,
+            'pendingInspection' => $pendingInspection,
+            'editReasons' => $edit_reasons,
         ]);
     }
 
@@ -445,36 +451,114 @@ class ItemController extends Controller
 
     public function update(UpdateItemRequest $request, Item $item)
     {
-        // Gate::authorize('staff-higher');
-        
-        // dd($item->name, $request->name);
-        $item->name = $request->name;
-        $item->category_id = $request->category_id;
-        $item->image_path1 = $request->image_path1;
-        $item->image_path2 = $request->image_path2;
-        $item->image_path3 = $request->image_path3;
-        $item->minimum_stock = $request->minimum_stock;
-        $item->usage_status = $request->usage_status;
-        $item->end_user = $request->end_user;
-        $item->location_of_use_id = $request->location_of_use_id;
-        $item->storage_location_id = $request->storage_location_id;
-        $item->acquisition_category = $request->acquisition_category;
-        $item->where_to_buy = $request->where_to_buy;
-        $item->price = $request->price;
-        $item->date_of_acquisition = $request->date_of_acquisition;
-        $item->inspection_schedule = $request->inspection_schedule;
-        $item->disposal_schedule = $request->disposal_schedule;
-        $item->manufacturer = $request->manufacturer;
-        $item->product_number = $request->product_number;
-        $item->remarks = $request->remarks;
-        $item->qrcode_path = $request->qrcode_path;
-        $item->save();
+        Gate::authorize('staff-higher');
 
-        return to_route('items.index')
-        ->with([
-            'message' => '更新しました。',
-            'status' => 'success'
-        ]);
+        // dd($request->name, $request->pendingInspection, $item->name);
+
+
+        // 課題１ Inspectionsのschedule
+        // 課題２ 画像の変更処理　順番はどうか
+        // １、DB上のitem->image1の画像のファイル名変更
+        // ２、元の画像のファイル名からパス作成→元の画像ファイルの削除処理
+        
+        // トランザクション処理をする、ItemObserverでもDBにも保存するため
+        // DB::beginTransaction();
+
+        // try {
+            dd($request->imageFile);
+
+            // 画像アップロード
+            $imageFile = $request->imageFile; // 一時保存
+            // ->isValid()は念のため、ちゃんとアップロードできているかチェックしてくれる
+            $fileNameToStore = null;
+            if(!is_null($imageFile) && $imageFile->isValid() ){
+                $fileNameToStore = ImageService::resizeUpload($imageFile);
+            }
+
+
+
+
+            // dd($request->editReasonId, $request->editReasonText);
+            // 編集理由はItemObserverのEditedメソッドで保存するので、
+            // Sessionに一旦保存して、Edithistoryの保存する
+             // 編集理由をセッションに保存->ItemObserverのupdatedメソッドで取得
+            Session::put('editReasonId', $request->editReasonId);
+            Session::put('editReasonText', $request->editReasonText);
+
+
+            // Itemの更新
+            // $item->image_path1 = $request->image_path1;
+            $item->name = $request->name;
+            $item->category_id = $request->categoryId;
+            $item->image1 = $fileNameToStore ?: null;
+            $item->stock = $request->stock;
+            $item->unit_id = $request->unitId;
+            $item->minimum_stock = $request->minimumStock;
+            $item->notification = $request->notification;
+            $item->usage_status_id = $request->usageStatusId;
+            $item->end_user = $request->endUser;
+            $item->location_of_use_id = $request->locationOfUseId;
+            $item->storage_location_id = $request->storageLocationId;
+            $item->acquisition_method_id = $request->acquisitionMethodId;
+            $item->acquisition_source = $request->acquisitionSource;
+            $item->price = $request->price;
+            $item->date_of_acquisition = $request->dateOfAcquisition;
+            // $item->inspection_schedule = $request->inspection_schedule;
+            // $item->disposal_schedule = $request->disposal_schedule;
+            $item->manufacturer = $request->manufacturer;
+            $item->product_number = $request->productNumber;
+            $item->remarks = $request->remarks;
+            $item->save();
+
+
+            // 点検フォームが空欄で編集で追加するパターン
+            // 最初から点検フォームに入っている（DBに保存しているパターン）パターン
+            // 点検データの更新または作成
+            
+            // 点検日が保存しているレコードがあれば、データを取得して保存
+            // 泣ければ新しく作成 
+            if($request->pendingInspection) {
+                $pendingInspection = $item->inspections()->where('id', $request->pendingInspection['id'])->first(); //渡ってきたオブジェクトを取得
+                // 既存の点検データを更新
+                $pendingInspection->update(['scheduled_date' => $request->inspectionSchedule]);
+            } else {
+                // 新しい点検データを作成
+                $item->inspections()->create(['scheduled_date' => $request->inspectionSchedule]);
+            }
+    
+            // 廃棄フォームの更新または作成
+            $disposal = $item->disposal()->first();
+            if ($disposal) {
+                // 既存のDisposalデータを更新
+                $disposal->update(['scheduled_date' => $request->disposalSchedule]);
+            } else {
+                // 新しいDisposalデータを作成
+                $item->disposal()->create(['scheduled_date' => $request->disposalSchedule]);
+            }    
+            
+
+            // DB::commit();
+
+            return to_route('items.index')
+            ->with([
+                'message' => '更新しました。',
+                'status' => 'success'
+            ]);
+
+        
+
+        // } catch (\Exception $e) {
+        //     DB::rollBack();
+
+    //     return redirect()->back()
+    //     ->with([
+    //         'message' => '登録中にエラーが発生しました',
+    //         'status' => 'danger'
+    //     ]);
+        // }
+
+
+
     }
 
     /**

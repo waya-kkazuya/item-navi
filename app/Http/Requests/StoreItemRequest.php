@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Carbon\Carbon;
 
 class StoreItemRequest extends FormRequest
 {
@@ -23,8 +24,8 @@ class StoreItemRequest extends FormRequest
     {
         // Vue側の命名規則であることに注意
         return [
-            // 'image1' => [], // 正方形画像 画像名の命名規則にしたがって制限をかける、何文字以内
-            'imageFile' => ['nullable', 'image', 'mimes:jpeg,png,jpg', 'max:2048'],
+            'image1' => ['nullable'], // 正方形画像 画像名の命名規則にしたがって制限をかける、何文字以内
+            'imageFile' => ['nullable', 'image', 'mimes:jpeg,png,jpg'],
             'name' => ['required', 'min:3' ,'max:20'],
             'categoryId' => ['required', 'exists:categories,id'],
             'stock' => ['required', 'integer', 'min:0', 'max:100'],
@@ -42,9 +43,38 @@ class StoreItemRequest extends FormRequest
             'manufacturer' => ['nullable', 'max:20'],
             'productNumber' => ['nullable', 'max:30'],
             'remarks' => ['nullable', 'max:500'],
-            // 'inspectionSchedule' => ['nullable','date'],
-            // 'disposalSchedule' => ['nullable', 'date'],
-            // 'qrcode'
+            
+            // inspectionScheduleのバリデーション
+            'inspectionSchedule' => [
+                'date',
+                'nullable',
+                function ($attribute, $value, $fail) {
+                    $dateOfAcquisition = Carbon::parse(request()->input('dateOfAcquisition'));
+                    $inspectionSchedule = Carbon::parse($value);
+                    if ($inspectionSchedule->lt($dateOfAcquisition)) {
+                        $fail('点検予定日は取得年月日以降の日付を入力してください');
+                    }                    
+                    if ($inspectionSchedule->gt($dateOfAcquisition->addYears(3))) {
+                        $fail('点検予定日は取得年月日から3年以内の日付を入力してください');
+                    }
+                },
+            ],
+            
+            // disposalScheduleのバリデーション
+            'disposalSchedule' => [
+                'date',
+                'nullable',
+                function ($attribute, $value, $fail) {
+                    $dateOfAcquisition = Carbon::parse(request()->input('dateOfAcquisition'));
+                    $disposalSchedule = Carbon::parse($value);
+                    if ($disposalSchedule->lt($dateOfAcquisition)) {
+                        $fail('廃棄予定日は取得年月日以降の日付を入力してください');
+                    }                    
+                    if ($disposalSchedule->gt($dateOfAcquisition->addYears(3))) {
+                        $fail('廃棄予定日は取得年月日から3年以内の日付を入力してください');
+                    }
+                },
+            ],
         ];
     }
 }

@@ -19,6 +19,8 @@ class Edithistory extends Model
         'old_value',
         'new_value',
         'edit_user',
+        'edit_reason_id',
+        'edit_reason_text'
     ];
 
     public function scopeItemHistory()

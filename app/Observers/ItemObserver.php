@@ -6,6 +6,7 @@ use App\Models\Item;
 use App\Models\Edithistory;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
+use Illuminate\Support\Facades\Session;
 
 class ItemObserver
 {
@@ -69,6 +70,8 @@ class ItemObserver
         // 注意
         //createdはseederやfactoryでダミーデータを作成した時も動く
         
+
+
         // 新規作成時はitem_idとedit_user,edited_atがあればいいのでは。
         // category_idはitemにあるし、category_id(カテゴリ)も変化する可能性がある
         Edithistory::create([
@@ -82,26 +85,29 @@ class ItemObserver
         ]);
     }
 
+
     public function updated(Item $item): void
     {
         $changes = $item->getChanges();
 
         unset($changes['updated_at']);
-        // ソフとデリートを除外する必要あるか
+        // ソフとデリートを除外する必要あるか->なさそう
         // unset($changes['softdeletes']);
+
+
+        // セッションから編集理由を取得
+        $editReasonId = Session::get('editReasonId');
+        $editReasonText = Session::get('editReasonText');
+
+        // dd($editReasonId, $editReasonText);
 
         // 仮置き
         $edit_mode = 'normal';
 
-        // ココの部分は通常時の分だけでも作ってしまった方が良い
-        // 棚卸時のURLを作成したら、Request::url()で$edit_typeを分ける
-        // $url = Request::url();
-        // if (strpos($url, 'normal-edit-url') !== false) {
-        //     $model->edithistory()->create(['edit_type' => '通常時']);
-        // } elseif (strpos($url, 'inventory-edit-url') !== false) {
-        //     $model->edithistory()->create(['edit_type' => '棚卸時']);
-        // }
-
+        // Edithistoryにedit_reasonカラムを追加
+        // 備品編集updateを行った際、セッションに編集理由を保存
+        // ここで取り出し、Edithistoryに保存
+        // □UpdateItemRequestのリクエストファイルにバージョンルールを記載する
 
         foreach ($changes as $field => $newValue) {
             $oldValue = $item->getOriginal($field);
@@ -113,9 +119,22 @@ class ItemObserver
                 'edited_field' => $field,
                 'old_value' => $oldValue,
                 'new_value' => $newValue,
-                'edit_user' => Auth::user()->name ?? '',       
+                'edit_user' => Auth::user()->name ?? '',
+                'edit_reason_id' => $editReasonId, //プルダウン
+                'edit_reason_text' => $editReasonText, //その他テキストエリア
             ]);
         }
+
+                // ココの部分は通常時の分だけでも作ってしまった方が良い
+        // 棚卸時のURLを作成したら、Request::url()で$edit_typeを分ける
+        // $url = Request::url();
+        // if (strpos($url, 'normal-edit-url') !== false) {
+        //     $model->edithistory()->create(['edit_type' => '通常時']);
+        // } elseif (strpos($url, 'inventory-edit-url') !== false) {
+        //     $model->edithistory()->create(['edit_type' => '棚卸時']);
+        // }
+
+
     }
 
 
