@@ -31,8 +31,24 @@ use App\Models\Item;
 
 // それぞれに適切な権限レベル(admin,staff,user)のmiddlewareをかける
 
-// 消耗品 ConsumableItemsController
-// middleware('can:user-higher')
+
+
+
+
+Route::resource('items', ItemController::class)
+->middleware(['auth', 'verified', 'can:staff-higher']);
+
+Route::post('/items/{id}/restore', [ItemController::class, 'restore'])->name('items.restore')
+->middleware(['auth', 'verified', 'can:staff-higher']);
+
+// 廃棄された備品
+// Route::prefix('disposed-items')
+// ->middleware(['auth', 'verified', 'can:staff-higher'])->group(function(){
+//     Route::get('index', [ItemController::class, 'disposedItemIndex'])
+//     ->name('disposeditems.index');
+
+// });
+
 
 Route::middleware('can:user-higher')->group(function () {
     Route::get('consumable_items', [ConsumableItemsController::class, 'index'])->name('consumable_items');
@@ -44,28 +60,17 @@ Route::middleware('can:user-higher')->group(function () {
 
 
 
-Route::resource('items', ItemController::class)
-->middleware(['auth', 'verified', 'can:staff-higher']);
-
-// 廃棄された備品
-Route::prefix('disposed-items')
-->middleware('auth',)->group(function(){
-    Route::get('index', [ItemController::class, 'disposedItemIndex'])
-    ->name('disposeditems.index');
-});
-
-
 
 // グラフテスト用
 // Route::get('analysis', [AnalysisController::class, 'index'])->name('analysis');
 
 // ウィッシュリスト
-// Route::resource('wishes', WishController::class)
-// ->middleware(['auth', 'verified', 'can:user-higher']);
+Route::resource('wishes', WishController::class)
+->middleware(['auth', 'verified', 'can:user-higher']);
 
 // // 棚卸計画
-// Route::resource('inventory_plans', InventoryPlanController::class)
-// ->middleware(['auth', 'verified', 'can:staff-higher']);
+Route::resource('inventory_plans', InventoryPlanController::class)
+->middleware(['auth', 'verified', 'can:staff-higher']);
 
 // 画像テスト
 // Route::resource('image_tests', ImageTestController::class)

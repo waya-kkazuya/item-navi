@@ -570,10 +570,32 @@ class ItemController extends Controller
 
         return to_route('items.index')
         ->with([
-            'message' => '削除しました。',
+            'message' => '廃棄しました。',
             'status' => 'danger'
         ]);
     }
+
+    public function restore($id)
+    {
+        $item = Item::withTrashed()->find($id);
+        if ($item) {
+            $item->restore();
+
+            return to_route('items.index')
+            ->with([
+                'message' => '備品を復元しました。',
+                'status' => 'success'
+            ]);
+        }
+
+        return to_route('items.index')
+        ->with([
+            'message' => '該当の備品が存在しませんでした',
+            'status' => 'danger'
+        ]);
+
+    }
+
 
     public function forceDelete($id)
     {

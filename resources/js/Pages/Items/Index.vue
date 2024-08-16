@@ -125,6 +125,19 @@ watch(() => props.items, (newItems) => {
 //   }
 // }
 
+// 廃棄された備品の復元
+const restoreItem = (id) => {
+  router.post(`/items/${id}/restore`, {
+    onSuccess: () => {
+      console.log('Item restored successfully');
+    },
+    onError: () => {
+      console.log('Failed to restore item');
+    },
+  });
+  showDisposal.value = false;
+};
+
 
 </script>
 
@@ -302,7 +315,7 @@ watch(() => props.items, (newItems) => {
                               <table class="table-fixed min-w-full text-left whitespace-no-wrap">
                                 <thead>
                                   <tr>
-                                    <th class="min-w-16 px-4 py-3 title-font tracking-wider font-medium text-white text-sm bg-sky-700">復元</th>
+                                    <th v-if="showDisposal" class="min-w-16 px-4 py-3 title-font tracking-wider font-medium text-white text-sm bg-sky-700">復元</th>
                                     <th class="min-w-16 px-4 py-3 title-font tracking-wider font-medium text-white text-sm bg-sky-700">履歴</th>
                                     <th class="min-w-32 px-4 py-3 title-font tracking-wider font-medium text-white text-sm bg-sky-700">管理ID</th>
                                     <th class="min-w-36 px-4 py-3 title-font tracking-wider font-medium text-white text-sm bg-sky-700">登録日</th>
@@ -326,13 +339,19 @@ watch(() => props.items, (newItems) => {
                                   </tr>
                                 </thead>
                                 <tbody>
-                                  <tr v-for="item in localItems.data" :key="item.id" class="item">
-                                    <td>
-                                      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M16 12l-4-4-4 4M12 16V9"/></svg>
+                                  <tr v-for="item in localItems.data" :key="item.id" class="">
+                                    <td v-if="showDisposal" class="border-b-2 border-gray-200 px-4 py-3 " :class="showDisposal ? 'bg-red-100' : ''">
+                                      <button type="button" @click="restoreItem(item.id)" class="text-blue-400" >
+                                        復元する
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                                          <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 9V5.25A2.25 2.25 0 0 1 10.5 3h6a2.25 2.25 0 0 1 2.25 2.25v13.5A2.25 2.25 0 0 1 16.5 21h-6a2.25 2.25 0 0 1-2.25-2.25V15m-3 0-3-3m0 0 3-3m-3 3H15" />
+                                        </svg>
+                                      </button>
                                     </td>
+
+                                    <!-- マイクロモーダル -->
                                     <td class="border-b-2 border-gray-200 px-4 py-3" :class="showDisposal ? 'bg-red-100' : ''">
-                                       <!-- マイクロモーダル -->
-                                      <MicroModal v-bind:item="item" />
+                                      <MicroModal v-bind:item="item" :isTableView="isTableView" />
                                     </td>
                                     <td class="border-b-2 border-gray-200 px-4 py-3" :class="showDisposal ? 'bg-red-100' : ''">
                                       <Link class="text-blue-400" :href="route('items.show', { item: item.id })">
@@ -383,13 +402,23 @@ watch(() => props.items, (newItems) => {
                                       <span class="ml-4 text-gray-900 title-font font-medium">{{ item.name }}</span>
                                     </div>
                                     <div class="flex">
-                                      <Link as="button" :href="route('items.create')" class="flex items-center text-white text-sm bg-gray-500 border-0 py-2 px-6 focus:outline-none hover:bg-gray-600 rounded">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                                      <!-- <Link as="button" :href="route('items.create')"
+                                      class="flex items-center text-white text-sm bg-gray-500 border-0 py-2 px-4 mx-auto focus:outline-none hover:bg-gray-600 rounded">
+                                        <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
                                         履歴
-                                      </Link>
-                                      <Link as="button" :href="route('items.show', { item: item.id })" class="flex items-center text-white text-sm bg-blue-800 border-0 py-2 px-6 focus:outline-none hover:bg-blue-900 rounded">
+                                      </Link> -->
+                                      <MicroModal v-bind:item="{item, isTableView}" />
+                                      <Link v-if="!showDisposal"　as="button" :href="route('items.show', { item: item.id })" 
+                                      class="flex items-center text-white text-sm bg-blue-800 border-0 py-2 px-4 focus:outline-none hover:bg-blue-900 rounded">
                                         詳細を見る
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h13M12 5l7 7-7 7"/></svg>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h13M12 5l7 7-7 7"/></svg>
+                                      </Link>
+                                      <Link v-else as="button" :href="route('items.show', { item: item.id })" 
+                                      class="flex items-center text-white text-sm bg-blue-800 border-0 py-2 px-4 focus:outline-none hover:bg-blue-900 rounded">
+                                        復元する
+                                        <svg class="w-6 h-6 size-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                          <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 9V5.25A2.25 2.25 0 0 1 10.5 3h6a2.25 2.25 0 0 1 2.25 2.25v13.5A2.25 2.25 0 0 1 16.5 21h-6a2.25 2.25 0 0 1-2.25-2.25V15m-3 0-3-3m0 0 3-3m-3 3H15" />
+                                        </svg>
                                       </Link>
                                     </div>
                                   </div>

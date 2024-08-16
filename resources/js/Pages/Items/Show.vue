@@ -18,11 +18,21 @@ const inspectItem = id => {
 
 
 const deleteItem = id => {
-    router.visit(route('items.destroy', { item: id }), {
-        method: 'delete',
-        onBefore: visit => confirm('本当に削除しますか？')
-        // onBefore: () => confirm('本当に削除しますか？')
-    })
+    // router.visit(route('items.destroy', { item: id }), {
+    //     method: 'delete',
+    //     onBefore: visit => confirm('本当に削除しますか？')
+    //     // onBefore: () => confirm('本当に削除しますか？')
+    // })
+    if (confirm('本当に削除しますか？')) {
+        router.delete(`/items/${id}`, {
+            onSuccess: () => {
+                // 成功時の処理
+            },
+            onError: () => {
+                // エラー時の処理
+            }
+        });
+    }
 }
 </script>
 

@@ -4,7 +4,13 @@ import { ref, reactive, onMounted, defineProps } from 'vue';
 
 // 親コンポーネントから受け取る
 const props = defineProps({
-  item: Object
+  item: Object,
+  isTableView: Boolean
+})
+
+
+onMounted(() => {
+  console.log(props.isTableView)
 })
 
 // itemだけでなくオブジェクトごと取ってきた方がいい
@@ -81,7 +87,12 @@ const formatDate = (timestamp) => {
     </div>
   </div>
   <!-- item.idを親から子へ渡す、async await axiosの変数として渡される -->
-  <button @click="editHistories" type="button" data-micromodal-trigger="modal-1">
+  <button v-if="props.isTableView" @click="editHistories" type="button" data-micromodal-trigger="modal-1">
     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
   </button>
+  <button v-else @click="editHistories" type="button" data-micromodal-trigger="modal-1"
+  class="flex items-center text-white text-sm bg-gray-500 border-0 py-2 px-4 mx-auto focus:outline-none hover:bg-gray-600 rounded">
+    <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+    履歴
+    </button>
 </template>
