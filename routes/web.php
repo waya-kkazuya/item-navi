@@ -11,7 +11,10 @@ use App\Http\Controllers\AnalysisController;
 use App\Http\Controllers\ConsumableItemsController;
 use App\Http\Controllers\UpdateStockController;
 use App\Http\Controllers\InventoryPlanController;
+use App\Http\Controllers\DisposalController;
+use App\Models\Disposal;
 use App\Models\ImageTest;
+use App\Models\Inspection;
 use App\Models\Item;
 
 /*
@@ -49,6 +52,11 @@ Route::post('/items/{id}/restore', [ItemController::class, 'restore'])->name('it
 
 // });
 
+// 廃棄実施項目保存
+Route::put('/disposals/{item}', [DisposalController::class, 'save'])->name('disposals.save');
+
+Route::put('/inspections/{item}', [InspectionController::class, 'save'])->name('inspections.store');
+
 
 Route::middleware('can:user-higher')->group(function () {
     Route::get('consumable_items', [ConsumableItemsController::class, 'index'])->name('consumable_items');
@@ -57,6 +65,7 @@ Route::middleware('can:user-higher')->group(function () {
 
     Route::get('consumable_items/{id}/history', [ConsumableItemsController::class, 'history'])->name('consumable_items.history');
 });
+
 
 
 
