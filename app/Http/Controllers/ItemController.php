@@ -70,8 +70,6 @@ class ItemController extends Controller
             'date_of_acquisition',
             'manufacturer',
             'product_number',
-            // 'inspection_schedule',
-            // 'disposal_schedule',
             'remarks',
             'qrcode',
             'deleted_at',
@@ -182,9 +180,11 @@ class ItemController extends Controller
 
         // 廃棄済み備品用API情報
         if ($request->has('disposal')) {
-            return $items;
+            return [
+                'items' => $items,
+                'total_count' => $total_count
+            ];
         }
-
         
         return Inertia::render('Items/Index', [
             'items' => $items,

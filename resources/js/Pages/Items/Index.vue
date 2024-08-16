@@ -35,6 +35,7 @@ const categoryId = ref(props.categoryId)
 const locationOfUseId = ref(props.locationOfUseId ?? 0)
 const storageLocationId = ref(props.storageLocationId ?? 0)
 
+const totalCount = ref(props.totalCount)
 
 // すべてのフィルターをまとめる
 const fetchAndFilterItems = () => {
@@ -97,10 +98,10 @@ const toggleItems = async () => {
   console.log(url)
   try {
     const res = await axios.get(url)
-    // 受け取るデータはどんな型か
     
     console.log(res.data)
-    localItems.value = res.data
+    localItems.value = res.data.items
+    totalCount.value = res.data.total_count
     console.log(localItems.value)
   } catch (e) {
     console.log('エラーメッセージです', e.message)
@@ -305,14 +306,14 @@ const restoreItem = (id) => {
                           
                           <div class="mb-4 flex justify-end items-center">
                             <div class="font-medium">備品合計 {{ totalCount }}件</div>
-                            <Pagination class="ml-4" :links="items.links"></Pagination>
+                            <Pagination class="ml-4" :links="localItems.links"></Pagination>
                           </div>
 
                          
                           <!-- 行表示 -->
                           <div v-if="isTableView">
                             <div class="min-w-full overflow-auto">
-                              <table class="table-fixed min-w-full text-left whitespace-no-wrap">
+                              <table v-if="localItems.data.length > 0" class="table-fixed min-w-full text-left whitespace-no-wrap">
                                 <thead>
                                   <tr>
                                     <th v-if="showDisposal" class="min-w-16 px-4 py-3 title-font tracking-wider font-medium text-white text-sm bg-sky-700">復元</th>
@@ -379,13 +380,19 @@ const restoreItem = (id) => {
                                   </tr>
                                 </tbody>
                               </table>
+                              <div v-else>
+                                <div class="flex items-center justify-center">
+                                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+                                  <div class="ml-2 text-center py-4">備品が見つかりません</div>
+                                </div>
+                              </div>
                             </div>
                           </div>
 
 
                           <!-- タイル表示 -->
                           <div v-else>
-                            <div class="flex flex-wrap -mx-4">
+                            <div v-if="localItems.data.length > 0" class="flex flex-wrap -mx-4">
                               <template v-for="item in localItems.data" :key="item.id">
                                 <div class="lg:w-1/5 w-1/2 p-4 border" :class="showDisposal ? 'bg-red-100' : ''">
                                   <div class="" >
@@ -413,22 +420,28 @@ const restoreItem = (id) => {
                                         詳細を見る
                                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h13M12 5l7 7-7 7"/></svg>
                                       </Link>
-                                      <Link v-else as="button" :href="route('items.show', { item: item.id })" 
+                                      <button v-else type="button" @click="restoreItem(item.id)"
                                       class="flex items-center text-white text-sm bg-blue-800 border-0 py-2 px-4 focus:outline-none hover:bg-blue-900 rounded">
                                         復元する
                                         <svg class="w-6 h-6 size-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
                                           <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 9V5.25A2.25 2.25 0 0 1 10.5 3h6a2.25 2.25 0 0 1 2.25 2.25v13.5A2.25 2.25 0 0 1 16.5 21h-6a2.25 2.25 0 0 1-2.25-2.25V15m-3 0-3-3m0 0 3-3m-3 3H15" />
                                         </svg>
-                                      </Link>
+                                      </button>
                                     </div>
                                   </div>
                                 </div>
                               </template>
                             </div>
+                            <div v-else>
+                              <div class="flex items-center justify-center">
+                                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+                                  <div class="ml-2 text-center py-4">備品が見つかりません</div>
+                                </div>
+                            </div>
                           </div>
 
                           <div class="mb-4 flex justify-end">
-                            <Pagination class="mt-6" :links="items.links"></Pagination>
+                            <Pagination class="mt-6" :links="localItems.links"></Pagination>
                           </div>
 
                           <!-- テスト
