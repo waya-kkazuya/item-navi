@@ -264,26 +264,6 @@ const clearDisposalSchedule = () => {
                                                         </div>
                                                     </div>
 
-                                                    <div class="p-4 border bordr-4 mb-8">
-                                                        <div class="p-2 w-full">
-                                                            <label for="inspectionSchedule" class="leading-7 text-sm text-blue-900">点検予定日</label>
-                                                            <div class="relative">
-                                                                <input type="date" id="inspectionSchedule" name="inspectionSchedule" v-model="form.inspectionSchedule" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
-                                                                <button type="button" @click="clearInspectionSchedule" class="absolute right-12 top-1/2 transform -translate-y-1/2 text-gray-500" text-lg>×</button>
-                                                            </div>
-                                                            <div v-if="errors.inspectionSchedule" class="font-medium text-red-600">{{ errors.inspectionSchedule }}</div>
-                                                        </div>
-
-                                                        <div class="p-2 w-full">
-                                                            <label for="disposalSchedule" class="leading-7 text-sm text-blue-900">廃棄予定日</label>
-                                                            <div class="relative">
-                                                                <input type="date" id="disposalSchedule" name="disposalSchedule" v-model="form.disposalSchedule" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
-                                                                <button type="button" @click="clearDisposalSchedule" class="absolute right-12 top-1/2 transform -translate-y-1/2 text-gray-500" text-lg>×</button>
-                                                            </div>
-                                                            <div v-if="errors.disposalSchedule" class="font-medium text-red-600">{{ errors.disposalSchedule }}</div>
-                                                        </div>
-                                                    </div>
-
                                                     <div class="p-4 border bordr-4 mb-4">
                                                         <div class="p-2 w-full">
                                                             <label for="manufacturer" class="leading-7 text-sm text-blue-900">メーカー</label>
@@ -302,6 +282,26 @@ const clearDisposalSchedule = () => {
                                                             <label for="remarks" class="leading-7 text-sm text-blue-900">備考</label>
                                                             <textarea id="remarks" name="remarks" maxlength="500" v-model="form.remarks" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 h-32 text-base outline-none text-gray-700 py-1 px-3 resize-none leading-6 transition-colors duration-200 ease-in-out"></textarea>
                                                             <div v-if="errors.remarks" class="font-medium text-red-600">{{ errors.remarks }}</div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="p-4 border bordr-4 mb-8">
+                                                        <div class="p-2 w-full">
+                                                            <label for="inspectionSchedule" class="leading-7 text-sm text-blue-900">点検予定日</label>
+                                                            <div class="relative">
+                                                                <input type="date" id="inspectionSchedule" name="inspectionSchedule" v-model="form.inspectionSchedule" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
+                                                                <button type="button" @click="clearInspectionSchedule" class="absolute right-12 top-1/2 transform -translate-y-1/2 text-gray-500" text-lg>×</button>
+                                                            </div>
+                                                            <div v-if="errors.inspectionSchedule" class="font-medium text-red-600">{{ errors.inspectionSchedule }}</div>
+                                                        </div>
+
+                                                        <div class="p-2 w-full">
+                                                            <label for="disposalSchedule" class="leading-7 text-sm text-blue-900">廃棄予定日</label>
+                                                            <div class="relative">
+                                                                <input type="date" id="disposalSchedule" name="disposalSchedule" v-model="form.disposalSchedule" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
+                                                                <button type="button" @click="clearDisposalSchedule" class="absolute right-12 top-1/2 transform -translate-y-1/2 text-gray-500" text-lg>×</button>
+                                                            </div>
+                                                            <div v-if="errors.disposalSchedule" class="font-medium text-red-600">{{ errors.disposalSchedule }}</div>
                                                         </div>
                                                     </div>
                                                     <div class="p-2 w-full">
