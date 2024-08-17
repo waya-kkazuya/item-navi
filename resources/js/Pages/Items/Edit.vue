@@ -1,6 +1,7 @@
 <script setup>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head, router, useForm } from '@inertiajs/vue3';
+import axios from 'axios';
 import { reactive, ref } from 'vue';
 
 const props = defineProps({
@@ -57,8 +58,59 @@ const form = useForm({
 // router.visitではuseFormの入力値保持機能は使えない
 // form.postなら入力値保持機能(old関数))が使える
 const updateItem = id => {
+    const formData = new FormData();
+    formData.append('id', form.id);
+    formData.append('imageFile', form.imageFile);
+    formData.append('name', form.name);
+    formData.append('categoryId', form.categoryId);
+    formData.append('stock', form.stock);
+    formData.append('unitId', form.unitId);
+    formData.append('minimumStock', form.minimumStock);
+    formData.append('notification', form.notification);
+    formData.append('usageStatusId', form.usageStatusId);
+    formData.append('endUser', form.endUser);
+    formData.append('locationOfUseId', form.locationOfUseId);
+    formData.append('storageLocationId', form.storageLocationId);
+    formData.append('acquisitionMethodId', form.acquisitionMethodId);
+    formData.append('acquisitionSource', form.acquisitionSource);
+    formData.append('price', form.price);
+    formData.append('dateOfAcquisition', form.dateOfAcquisition);
+    formData.append('manufacturer', form.manufacturer);
+    formData.append('productNumber', form.productNumber);
+    formData.append('inspectionSchedule', form.inspectionSchedule);
+    formData.append('pendingInspection', form.pendingInspection);
+    formData.append('disposalSchedule', form.disposalSchedule);
+    formData.append('remarks', form.remarks);
+    formData.append('editReasonId', form.editReasonId);
+    formData.append('editReasonText', form.editReasonText);
+
+
     form.put(`/items/${id}`);
+    // form.put(`/items/${id}`, formData, {
+    //     headers: {
+    //         'Content-Type': 'multipart/form-data'
+    //     }
+    // }).then(response => {
+    //     console.log('成功')
+    // }).catch(error => {
+    //     console.log('失敗')
+    // });
+    // router.visit(`/items/${id}`, {
+    //     method: 'put',
+    //     data: formData,
+    //     headers: {
+    //         'Content-Type': 'multipart/form-data'
+    //     },
+    //     onSuccess: () => {
+    //         // 成功時の処理
+    //     },
+    //     onError: () => {
+    //         // エラー時の処理
+    //     }
+    // });
 }
+
+
 // const updateItem = id => {
 //     form.put(`/items/${id}`, {
 //         forceFormData: true,
@@ -267,6 +319,26 @@ const handleFileUpload = (event) => {
 
                                                     <div class="p-4 border bordr-4 mb-8">
                                                         <div class="p-2 w-full">
+                                                            <label for="manufacturer" class="leading-7 text-sm text-blue-900">メーカー</label>
+                                                            <input type="text" id="manufacturer" name="manufacturer" v-model="form.manufacturer" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
+                                                            <div v-if="errors.manufacturer" class="font-medium text-red-600">{{ errors.manufacturer }}</div>
+                                                        </div>
+                                                        
+                                                        <div class="p-2 w-full">
+                                                            <label for="productNumber" class="leading-7 text-sm text-blue-900">製品番号</label>
+                                                            <input type="text" id="productNumber" name="productNumber" v-model="form.productNumber" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
+                                                            <div v-if="errors.productNumber" class="font-medium text-red-600">{{ errors.productNumber }}</div>
+                                                        </div>
+
+                                                        <div class="p-2 w-full">
+                                                            <label for="remarks" class="leading-7 text-sm text-blue-900">備考</label>
+                                                            <textarea id="remarks" name="remarks" maxlength="500" v-model="form.remarks" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 h-32 text-base outline-none text-gray-700 py-1 px-3 resize-none leading-6 transition-colors duration-200 ease-in-out"></textarea>
+                                                            <div v-if="errors.remarks" class="font-medium text-red-600">{{ errors.remarks }}</div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="p-4 border bordr-4 mb-8">
+                                                        <div class="p-2 w-full">
                                                             <label for="inspectionSchedule" class="leading-7 text-sm text-blue-900">点検予定日</label>
                                                             <div class="relative">
                                                                 <input type="date" id="inspectionSchedule" name="inspectionSchedule" v-model="form.inspectionSchedule" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
@@ -282,27 +354,6 @@ const handleFileUpload = (event) => {
                                                                 <button type="button" @click="clearDisposalSchedule" class="absolute right-12 top-1/2 transform -translate-y-1/2 text-gray-500" text-lg>×</button>
                                                             </div>
                                                             <div v-if="errors.disposalSchedule" class="font-medium text-red-600">{{ errors.disposalSchedule }}</div>
-                                                        </div>
-                                                    </div>
-
-                                                    <div class="p-4 border bordr-4 mb-8">
-                                                        <div class="p-2 w-full">
-                                                            <label for="manufacturer" class="leading-7 text-sm text-blue-900">メーカー</label>
-                                                            <input type="text" id="manufacturer" name="manufacturer" v-model="form.manufacturer" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
-                                                            <div v-if="errors.manufacturer" class="font-medium text-red-600">{{ errors.manufacturer }}</div>
-                                                        </div>
-                                                        
-                                                        <div class="p-2 w-full">
-                                                            <label for="productNumber" class="leading-7 text-sm text-blue-900">製品番号</label>
-                                                            <input type="text" id="productNumber" name="productNumber" v-model="form.productNumber" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
-                                                            <div v-if="errors.productNumber" class="font-medium text-red-600">{{ errors.productNumber }}</div>
-                                                        </div>
-
-                                                    
-                                                        <div class="p-2 w-full">
-                                                            <label for="remarks" class="leading-7 text-sm text-blue-900">備考</label>
-                                                            <textarea id="remarks" name="remarks" maxlength="500" v-model="form.remarks" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 h-32 text-base outline-none text-gray-700 py-1 px-3 resize-none leading-6 transition-colors duration-200 ease-in-out"></textarea>
-                                                            <div v-if="errors.remarks" class="font-medium text-red-600">{{ errors.remarks }}</div>
                                                         </div>
                                                     </div>
 
