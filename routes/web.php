@@ -8,10 +8,11 @@ use App\Http\Controllers\ItemController;
 use App\Http\Controllers\WishController;
 use App\Http\Controllers\ImageTestController;
 use App\Http\Controllers\AnalysisController;
-use App\Http\Controllers\ConsumableItemsController;
+use App\Http\Controllers\ConsumableItemController;
 use App\Http\Controllers\UpdateStockController;
 use App\Http\Controllers\InventoryPlanController;
 use App\Http\Controllers\DisposalController;
+use App\Http\Controllers\InspectionController;
 use App\Models\Disposal;
 use App\Models\ImageTest;
 use App\Models\Inspection;
@@ -35,9 +36,6 @@ use App\Models\Item;
 // それぞれに適切な権限レベル(admin,staff,user)のmiddlewareをかける
 
 
-
-
-
 Route::resource('items', ItemController::class)
 ->middleware(['auth', 'verified', 'can:staff-higher']);
 
@@ -52,18 +50,18 @@ Route::post('/items/{id}/restore', [ItemController::class, 'restore'])->name('it
 
 // });
 
-// 廃棄実施項目保存
-Route::put('/disposals/{item}', [DisposalController::class, 'save'])->name('disposals.save');
 
-Route::put('/inspections/{item}', [InspectionController::class, 'save'])->name('inspections.store');
 
 
 Route::middleware('can:user-higher')->group(function () {
-    Route::get('consumable_items', [ConsumableItemsController::class, 'index'])->name('consumable_items');
+    Route::put('/dispose_item/{item}', [DisposalController::class, 'disposeItem'])->name('dispose_item.disposeItem');
+    Route::put('/inspect_item/{item}', [InspectionController::class, 'inspectItem'])->name('inspect_item.inspectItem');
 
-    Route::put('updateStock/{id}', [UpdateStockController::class, 'updateStock'])->name('updateStock');
-
+    Route::get('consumable_items', [ConsumableItemController::class, 'index'])->name('consumable_items');
+    
     Route::get('consumable_items/{id}/history', [ConsumableItemsController::class, 'history'])->name('consumable_items.history');
+
+    Route::put('updateStock/{item}', [UpdateStockController::class, 'updateStock'])->name('updateStock');
 });
 
 
