@@ -3,47 +3,43 @@
 namespace App\Services;
 
 use Illuminate\Validation\Rules\ImageFile;
+use Illuminate\Support\Facades\Storage;
 use Intervention\Image\ImageManager;
 use Intervention\Image\Drivers\Gd\Driver;
 
 class ImageService
 {
-  public static function upload($imageFile, $folderName){
+  public static function resizeUpload($imageFile){
     
-    // InventionImageで保存する場合
-    // dd($imageFile);
-    if(is_array($imageFile))
-    {
-      $file = $imageFile['file_name'];
-      // dd($file);
-    } else {
-      $file = $imageFile;
-    }
-
-    $fileName = uniqid(rand().'_');
-    $extension = $file->extension();
+    // Storage::putFile('public/items', $imageFile); //リサイズ無しの場合、名前も付けてくれる
+    $fileName = uniqid(rand().'_'); // ランダムな名前
+    $extension = $imageFile->extension();
     $fileNameToStore = $fileName. '.' . $extension;
 
-    // 希望するドライバーで新しいマネージャー インスタンスを作成する
+    // create image manager with desired driver
     $manager = new ImageManager(new Driver());
-    // 画像ファイルを読み込む
-    $image = $manager->read($file);
 
-    // 画像をリサイズする
-    $image->resize(width: 1920, height: 1080);
+    $image = $manager->read($imageFile->getPathname());
 
-    // リサイズした画像を保存する(Storageいらず)
-    // $image->save(public_path('/'. $folderName . '/' . $fileNameToStore));
-    $image->save(storage_path('app/public/'. $folderName . '/' . $fileNameToStore));
+    // 画像のアスペクト比を取得
+    $aspectRatio = $image->width() / $image->height();
 
-    // ver2.0の書き方
-    // $resizedImage = Image::make($imageFile)->resize(1920, 1080)->encode();
+    // 800:600の比率より縦長ならheightを600にscaleし、横長ならwidthを800にscale
+    if ($aspectRatio >= (800 / 600)) {
+        $image->scale(width: 800);
+    } else {
+        $image->scale(height: 600);
+    }
 
-    // Storageは不要になった
-    // putはパスを作る必要あり
-    // Storage::put('public/images/' . $fileNameToStore, $resizedImage );
-    // putFileは自動でファイル名を生成
-    // Storage::putFile('public/items', $imageFile);
+    // 画像をリサイズ、resizeDonwは元の大きさは超えない
+    // $image->resize(800, 600);
+
+    // 画像をトリミング、縦に長い画像には左右に白地の余白が入る
+    $image->crop(800, 600, 0, 0, 'ffffff', 'center');
+
+    $resizedImage = $image->encode();
+
+    Storage::put('public/items/' . $fileNameToStore, $resizedImage);
 
     return $fileNameToStore;
   }
