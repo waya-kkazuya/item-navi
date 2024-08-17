@@ -24,6 +24,9 @@ class EditReasonSeeder extends Seeder
                 'reason' => '画像の変更'
             ],
             [
+                'reason' => '日付の変更'
+            ],
+            [
                 'reason' => 'その他'
             ],
         ]);
