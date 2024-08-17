@@ -5,7 +5,7 @@ import FlashMessage from '@/Components/FlashMessage.vue';
 import Pagination from '@/Components/Pagination.vue';
 import { ref, onMounted, watch } from 'vue';
 import { stringify } from 'postcss';
-import MicroModal from '@/Components/Micromodal.vue';
+import EditHistoryModal from '@/Components/EditHistoryModal.vue';
 
 
 const props = defineProps({
@@ -23,11 +23,12 @@ const props = defineProps({
 // 読み取り専用のitemsを変更出来るようスプレッド構文でコピーする
 const localItems = ref({...props.items});
 
+// 検索フォーム
+const search = ref(props.search)
+
 // 作成日でソート
 const sortOrder = ref(props.sortOrder ?? 'asc')
 
-// 検索フォーム
-const search = ref(props.search)
 
 // カテゴリプルダウン用(初期値は0)、更新したらその値
 // コントローラーをまたいで
@@ -70,7 +71,6 @@ watch(isTableView, (newValue) => {
 })
 
 // プルダウン、ソートの情報もセッションに保存するかどうか
-
 onMounted(() => {
   console.log(props.items)
   console.log(props.locationOfUseId)
@@ -113,18 +113,6 @@ watch(() => props.items, (newItems) => {
   localItems.value = {...newItems};
 });
 
-// const editHistories = async () => {
-//   try {
-//     await axios.get(`api/edithistory/?item_id=${props.item.id}`)
-//     .then( res => {
-//       console.log(res.data)
-//       editHistoriesData.value = res.data;
-//     })
-//     toggleStatus()
-//   } catch(e) {
-//       console.log(e.message)
-//   }
-// }
 
 // 廃棄された備品の復元
 const restoreItem = (id) => {
@@ -139,6 +127,18 @@ const restoreItem = (id) => {
   showDisposal.value = false;
 };
 
+// const editHistories = async () => {
+//   try {
+//     await axios.get(`api/edithistory/?item_id=${props.item.id}`)
+//     .then( res => {
+//       console.log(res.data)
+//       editHistoriesData.value = res.data;
+//     })
+//     toggleStatus()
+//   } catch(e) {
+//       console.log(e.message)
+//   }
+// }
 
 </script>
 
@@ -295,14 +295,6 @@ const restoreItem = (id) => {
 
                             </div>
                           </div>
-
-
-                          <!-- <div v-if="items.data.length === 0">
-                            <p>該当の備品は見つかりませんでした</p>
-                            ここにイラストを表示
-                          </div> -->
-
-
                           
                           <div class="mb-4 flex justify-end items-center">
                             <div class="font-medium">備品合計 {{ totalCount }}件</div>
@@ -352,7 +344,7 @@ const restoreItem = (id) => {
 
                                     <!-- マイクロモーダル -->
                                     <td class="border-b-2 border-gray-200 px-4 py-3" :class="showDisposal ? 'bg-red-100' : ''">
-                                      <MicroModal v-bind:item="item" :isTableView="isTableView" />
+                                      <EditHistoryModal v-bind:item="item" :isTableView="isTableView" />
                                     </td>
                                     <td class="border-b-2 border-gray-200 px-4 py-3" :class="showDisposal ? 'bg-red-100' : ''">
                                       <Link class="text-blue-400" :href="route('items.show', { item: item.id })">
@@ -414,7 +406,7 @@ const restoreItem = (id) => {
                                         <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
                                         履歴
                                       </Link> -->
-                                      <MicroModal v-bind:item="{item, isTableView}" />
+                                      <EditHistoryModal v-bind:item="item" :isTableView="isTableView" />
                                       <Link v-if="!showDisposal"　as="button" :href="route('items.show', { item: item.id })" 
                                       class="flex items-center text-white text-sm bg-blue-800 border-0 py-2 px-4 focus:outline-none hover:bg-blue-900 rounded">
                                         詳細を見る
@@ -443,22 +435,6 @@ const restoreItem = (id) => {
                           <div class="mb-4 flex justify-end">
                             <Pagination class="mt-6" :links="localItems.links"></Pagination>
                           </div>
-
-                          <!-- テスト
-                          <div>
-                            <table>
-                                <tbody>
-                                    <tr v-for="item in items" :key="item.id">
-                                        <td>{{ item.management_id }}</td>
-                                        <td>{{ item.created_at }}</td>
-                                        <td>{{ item.name }}</td>
-                                        <td><img :src="item.image_path1" alt="Item Image"></td>
-                                        <td>{{ item.category.name }}</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div> -->
-                        
                       </section>
                     </div>
                 </div>
