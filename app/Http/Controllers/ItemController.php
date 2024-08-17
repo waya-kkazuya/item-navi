@@ -81,6 +81,7 @@ class ItemController extends Controller
         Log::info("$request->disposal");
         Log::info($request->disposal);
 
+        // 通常の備品か廃棄済みの備品かの分岐
         // 明示的に厳密にイコールにしたらできた
         if ($request->disposal === 'true') {
             $query = Item::onlyTrashed();
@@ -95,9 +96,6 @@ class ItemController extends Controller
         ->select($selectFields)
         ->orderBy('created_at', $sortOrder);
 
-
-        
-        
 
         // // ブラウザから直接値を入力されることを考慮して事前に対策する
 
@@ -121,12 +119,13 @@ class ItemController extends Controller
             $query->where('storage_location_id', $storage_location_id);
         }
 
+        // 点検予定日のレコードを抽出、1対多のテーブルゆえ
+        // $query->get()->map(function ($item) {
+        //     $item->pending_inspection_date = $item->inspections->where('status', false)->sortBy('scheduled_date')->first()->scheduled_date ?? null;
+        //     return $item;
+        // });
 
-        $query->get()->map(function ($item) {
-            $item->pending_inspection_date = $item->inspections->where('status', false)->sortBy('scheduled_date')->first()->scheduled_date ?? null;
-            return $item;
-        });
-
+        // 備品の合計件数
         $total_count = $query->count();
 
         // paginateじゃなくget()の時のデータ構造解析
@@ -166,6 +165,8 @@ class ItemController extends Controller
         $categories = Category::all();
         $locations = Location::all();
 
+
+        // 未使用
         // itemsテーブルで使用しているidのみ抽出してユーザビリティを上げる
         // locationsを加工し、利用場所用の使用されているloactionsデータ
         // 保管場所の中で使用されているlocationsデータをVueファイルに渡してプルダウンに反映する
@@ -377,6 +378,9 @@ class ItemController extends Controller
 
         // statusがfalseの点検予定日だけを取得し、日付でソートして最も古いものを取得
         $pendingInspection = $item->inspections->where('status', false)->sortBy('scheduled_date')->first();
+        // 最後に行った点検のレコードを取得
+        $previousInspection = $item->inspections->where('status', true)->sortByDesc('inspection_date')->first();
+        // dd($previousInspection);
 
         // image1カラムがnullかチェック
         if (is_null($item->image1)) {
@@ -394,9 +398,13 @@ class ItemController extends Controller
 
         // dd($pendingInspection);
 
+        $user = auth()->user();
+
         return Inertia::render('Items/Show', [
             'item' => $item,
             'pendingInspection' => $pendingInspection,
+            'previousInspection' => $previousInspection,
+            'userName' => $user->name,
         ]);
     }
 
@@ -465,7 +473,7 @@ class ItemController extends Controller
         // DB::beginTransaction();
 
         // try {
-            dd($request->imageFile);
+            // dd($request->imageFile);
 
             // 画像アップロード
             $imageFile = $request->imageFile; // 一時保存
