@@ -1,5 +1,5 @@
 <script setup>
-import { useForm } from '@inertiajs/vue3';
+import { router, useForm } from '@inertiajs/vue3';
 import { ref } from 'vue'
 
 
@@ -7,26 +7,40 @@ const isShow = ref(false)
 const toggleStatus = () => { isShow.value = !isShow.value}
 
 // 親コンポーネントから、itemオブジェクトを受け取る
-defineProps({
+const props = defineProps({
   item: Object,
+  userName: String,
   errors: Object
 })
 
-
 const form = useForm({
     disposalDate: new Date().toISOString().substr(0, 10),
-    disposalPerson: null,
+    disposalPerson: props.userName,
     details: null,
 })
-
 
 
 // disposalsテーブルに保存する関数
 // <form></form>
 const saveDisposal = item => {
-  form.put(`/disposals/${item.id}`)
-  // toggleStatus()
+  if (confirm('本当に削除しますか？')) {
+    form.put(`/dispose_item/${item.id}`)
+    // toggleStatus()
+  }
 }
+
+// const deleteItem = id => {
+//     if (confirm('本当に削除しますか？')) {
+//         router.delete(`/items/${id}`, {
+//             onSuccess: () => {
+//                 // 成功時の処理
+//             },
+//             onError: () => {
+//                 // エラー時の処理
+//             }
+//         });
+//     }
+// }
 
 
 </script>
@@ -66,20 +80,20 @@ const saveDisposal = item => {
                   <div class="relative">
                       <input type="date" id="disposalDate" name="disposalDate" v-model="form.disposalDate" class="w-1/2 bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
                   </div>
-                  <!-- <div v-if="errors.disposalDate" class="font-medium text-red-600">{{ errors.disposalDate }}</div> -->
+                  <div v-if="errors.disposalDate" class="font-medium text-red-600">{{ errors.disposalDate }}</div>
               </div>
               <div class="p-2 w-full">
                 <label for="disposalPerson" class="leading-7 text-sm text-blue-900">廃棄実施者</label>
                 <div>
                   <input type="text" id="disposalPerson" name="disposalPerson" v-model="form.disposalPerson" class="w-1/2 bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
-                  <!-- <div v-if="errors.disposalPerson" class="font-medium text-red-600">{{ errors.disposalPerson }}</div>        -->
+                  <div v-if="errors.disposalPerson" class="font-medium text-red-600">{{ errors.disposalPerson }}</div>       
                 </div>
               </div>
               <div class="p-2 w-full">
-                <label for="details" class="leading-7 text-sm text-blue-900">補足情報</label>
+                <label for="details" class="leading-7 text-sm text-blue-900">詳細情報</label>
                 <div>
                   <textarea id="details" name="details" maxlength="500" v-model="form.details" class="w-2/3 bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 h-32 text-base outline-none text-gray-700 py-1 px-3 resize-none leading-6 transition-colors duration-200 ease-in-out"></textarea>
-                  <!-- <div v-if="errors.details" class="font-medium text-red-600">{{ errors.details }}</div> -->
+                  <div v-if="errors.details" class="font-medium text-red-600">{{ errors.details }}</div>
                 </div>
               </div>
             </div>

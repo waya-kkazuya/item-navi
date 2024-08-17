@@ -7,36 +7,61 @@ use App\Http\Requests\StoreDisposalRequest;
 use App\Models\Disposal;
 use App\Models\Item;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+
+use function PHPUnit\Framework\isNull;
 
 class DisposalController extends Controller
 {
-    public function save(StoreDisposalRequest $request, Item $item)
+    public function disposeItem(StoreDisposalRequest $request, Item $item)
     {
+        // dd($request);
+
         // $validatedData = $request->validate([
-        //     'itemName' => 'required|string|max:255',
-        //     'quantity' => 'required|integer|min:1',
-        //     'reason' => 'required|string|max:255',
+        //     'disposalDate' => ['required', 'date'],
+        //     'disposalPerson' => ['required', 'max:10'],
+        //     'details' => ['required', 'max:200'],
         // ]);
 
-        // dd($disposal);
-        dd($item);
-        dd($item->id);
-        dd($request->disposalDate);
-        $disposal = Disposal::find($item->id);
+        DB::beginTransaction();
 
-        // 対象の備品と関連のあるDisposalのレコードに保存
-        $disposal->disposal_date = $request->disposalDate;
-        $disposal->disposal_person = $request->disposalPerson;
-        $disposal->details = $request->details;
-        $disposal->save();
+        try {
+        
+            $disposal = Disposal::where('item_id', $item->id)->first();
+            // dd($disposal);
 
+            if (is_null($disposal)) {
+                // 新しいレコードを作成
+                $disposal = new Disposal();
+                $disposal->item_id = $item->id;
+            }
 
-        // ソフトデリート
+            // 対象の備品と関連のあるDisposalのレコードに保存
+            $disposal->scheduled_date = null;
+            $disposal->disposal_date = $request->disposalDate;
+            $disposal->disposal_person = $request->disposalPerson;
+            $disposal->details = $request->details;
+            $disposal->save();
 
-        return to_route('items.show')
-        ->with([
-            'message' => '更新しました。',
-            'status' => 'success'
-        ]);
+            // ソフトデリート
+            $item->delete();
+
+            DB::commit();
+
+            return to_route('items.index')
+            ->with([
+                'message' => '廃棄しました。',
+                'status' => 'danger'
+            ]);
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+
+            return redirect()->back()
+            ->with([
+                'message' => '登録中にエラーが発生しました',
+                'status' => 'danger'
+            ]);
+        }
     }
 }

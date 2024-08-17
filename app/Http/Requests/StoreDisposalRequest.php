@@ -24,7 +24,7 @@ class StoreDisposalRequest extends FormRequest
         return [
             // 'item_id' => ['required', 'exists:items,id'],
             'disposalSchedule' => ['nullable', 'date'],
-            'disposalDate' => ['required', 'date'],
+            'disposalDate' => ['required', 'date'], //現実の物理的な廃棄の日付
             'disposalPerson' => ['required', 'max:10'] ,
             'details' => ['required', 'max:200'] ,
         ];
