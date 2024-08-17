@@ -6,10 +6,11 @@ use App\Events\LowStockDetectEvent;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Item;
+use App\Http\Requests\UpdateStockRequest;
 
 class UpdateStockController extends Controller
 {
-    public function updateStock(Request $request, $id)
+    public function updateStock(UpdateStockRequest $request, Item $item)
     {
         // Itemモデルのインスタンスを取得
         // dd($id);
