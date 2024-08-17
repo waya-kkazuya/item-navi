@@ -1,6 +1,9 @@
 <script setup>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head, Link, router } from '@inertiajs/vue3';
+import InspectionModal  from '@/Components/InspectionModal.vue';
+import DisposalModal from '@/Components/DisposalModal.vue';
+import FlashMessage from '@/Components/FlashMessage.vue';
 
 
 defineProps({
@@ -8,7 +11,13 @@ defineProps({
     pendingInspection: {
         type: Object,
         default: null
-    }
+    },
+    previousInspection: {
+        type: Object,
+        default: null
+    },
+    userName: String,
+    errors: Object
 })
 
 
@@ -198,33 +207,6 @@ const deleteItem = id => {
                                                     </div>
                                                 </div>
 
-                                                <div class="p-4 border bordr-4 mb-8">
-                                                    <div class="p-2 w-full">
-                                                        <label for="inspectionSchedule" class="leading-7 text-sm text-blue-900">点検予定日</label>
-                                                        <div class="flex items-center">
-                                                            <div id="inspectionSchedule" name="inspectionSchedule" class="w-1/2 flex-grow min-h-[2em] bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
-                                                                {{ pendingInspection ? pendingInspection.scheduled_date : '' }}
-                                                            </div>
-                                                            <div class="w-1/2">
-                                                                <button @click="inspectItem(item.id)" class="flex mx-auto text-white bg-sky-500 border-0 py-2 px-8 focus:outline-none hover:bg-red-600 rounded">点検する</button>
-                                                            </div>
-                                                        </div>
-                                                        <div class="mt-4">前回の点検日 2023年6月1日</div>
-                                                    </div>
-
-                                                    <div class="p-2 w-full">
-                                                        <label for="disposalSchedule" class="leading-7 text-sm text-blue-900">廃棄予定日</label>
-                                                        <div class="flex items-center">
-                                                            <div type="date" id="disposalSchedule" name="disposalSchedule" class="w-1/2 min-h-[2em] bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
-                                                                {{ item.disposal ? item.disposal.scheduled_date : '' }}
-                                                            </div>
-                                                            <div class="w-full">
-                                                                <button @click="deleteItem(item.id)" class="flex mx-auto text-white bg-red-500 border-0 py-2 px-8 focus:outline-none hover:bg-red-600 rounded">廃棄する</button>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-
                                                 <div class="p-4 border bordr-4 mb-4">
                                                     <div class="p-2 w-full">
                                                         <label for="manufacturer" class="leading-7 text-sm text-blue-900">メーカー</label>
@@ -245,6 +227,36 @@ const deleteItem = id => {
                                                         </div>
                                                     </div>
                                                 </div>
+
+                                                <div class="p-4 border bordr-4 mb-8">
+                                                    <div class="p-2 w-full">
+                                                        <label for="inspectionSchedule" class="leading-7 text-sm text-blue-900">点検予定日</label>
+                                                        <div class="flex items-center">
+                                                            <div id="inspectionSchedule" name="inspectionSchedule" class="w-1/2 min-h-[2em] bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
+                                                                {{ pendingInspection ? pendingInspection.scheduled_date : '' }}
+                                                            </div>
+                                                            <div class="w-full">
+                                                                <InspectionModal :item="item" :userName="userName" :errors="errors" />
+                                                                <!-- <button @click="inspectItem(item.id)" class="flex mx-auto text-white bg-sky-500 border-0 py-2 px-8 focus:outline-none hover:bg-sky-600 rounded">点検する</button> -->
+                                                            </div>
+                                                        </div>
+                                                        <div class="mt-4 leading-7 text-sm">前回の点検日: {{ previousInspection ? previousInspection.inspection_date : 'なし' }}</div>
+                                                    </div>
+
+                                                    <div class="p-2 w-full">
+                                                        <label for="disposalSchedule" class="leading-7 text-sm text-blue-900">廃棄予定日</label>
+                                                        <div class="flex items-center">
+                                                            <div type="date" id="disposalSchedule" name="disposalSchedule" class="w-1/2 min-h-[2em] bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
+                                                                {{ item.disposal ? item.disposal.scheduled_date : '' }}
+                                                            </div>
+                                                            <div class="w-full">
+                                                                <DisposalModal :item="item" :userName="userName" :errors="errors" />
+                                                                <!-- <button @click="deleteItem(item.id)" class="flex mx-auto text-white bg-red-500 border-0 py-2 px-8 focus:outline-none hover:bg-red-600 rounded">廃棄する</button> -->
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
                                                 <div class="p-2 w-full">
                                                     <Link as="button" :href="route('items.edit', { item: item.id })" class="flex mx-auto text-white bg-indigo-500 border-0 py-2 px-8 focus:outline-none hover:bg-indigo-600 rounded text-lg">編集する</Link>
                                                 </div>

@@ -25,7 +25,7 @@ class StoreInspectionRequest extends FormRequest
             // 'item_id' => ['required', 'exists:items,id'],
             'inspectionSchedule' => ['nullable','date'],
             'inspectionDate' => ['required', 'date'], // 消耗品管理で保存する時に使う
-            'status' => ['required', 'boolean'],
+            // 'status' => ['required', 'boolean'],
             'inspectionPerson' => ['required', 'max:10'] ,
             'details' => ['required', 'max:200'] ,
         ];
