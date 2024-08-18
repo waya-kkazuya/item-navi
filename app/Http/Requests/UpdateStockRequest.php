@@ -4,6 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 use App\Rules\StockLimit;
+use Illuminate\Support\Facades\Log;
 
 class UpdateStockRequest extends FormRequest
 {
@@ -22,13 +23,16 @@ class UpdateStockRequest extends FormRequest
      */
     public function rules(): array
     {
-        $itemId = $this->route('item'); // ルートパラメータからアイテムIDを取得
+        $item = $this->route('item'); // ルートパラメータからアイテムIDを取得
+
+        Log::info($item);
 
         return [
             // 'item_id' => ['required', 'exists:items,id'],
+            'transactionType' => ['required', 'in:入庫,出庫'],
             'transactionDate' => ['required', 'date'], // 1ヵ月前まで
-            'operator_name' => ['required', 'max:10'] ,
-            'quantity' => ['required', 'integer',  'min:1', new StockLimit($itemId)], // 出庫数の上限は在庫数まで　
+            'operatorName' => ['required', 'max:10'] ,
+            'quantity' => ['required', 'integer',  'min:1', new StockLimit($item)], // 出庫数の上限は在庫数まで　
         ];
     }
 }

@@ -9,15 +9,21 @@ class StockLimit implements ValidationRule
 {
     protected $itemId;
 
-    public function __construct($itemId)
+    public function __construct($item)
     {
-        $this->itemId = $itemId;
+        \Log::info('Item __construct:');
+        \Log::info($item);
+        $this->item = $item;
     }
 
     public function passes($attribute, $value)
     {
-        $item = Item::find($this->itemId);
-        return $item && $value <= $item->stock;
+        \Log::info('Item:');
+        \Log::info($this->item);
+        \Log::info('Value:');
+        \Log::info($value);
+
+        return $this->item && $value <= $this->item->stock;
     }
 
     public function message()
