@@ -23,11 +23,12 @@ const props = defineProps({
 
 
 // 読み取り専用のitemsを変更出来るようスプレッド構文でコピーする
-const localConsumableItems = ref({...props.consumableItems});
+const localConsumableItems = ref({...props.consumableItems})
+// 合計件数
+const totalCount = ref(props.totalCount)
 
 // 検索フォーム
 const search = ref(props.search)
-
 // 作成日でソート
 const sortOrder = ref(props.sortOrder ?? 'asc')
 
@@ -36,7 +37,7 @@ const sortOrder = ref(props.sortOrder ?? 'asc')
 const locationOfUseId = ref(props.locationOfUseId ?? 0)
 const storageLocationId = ref(props.storageLocationId ?? 0)
 
-const totalCount = ref(props.totalCount)
+
 
 // すべてのフィルターをまとめる
 const fetchAndFilterItems = () => {
@@ -49,6 +50,24 @@ const fetchAndFilterItems = () => {
     method: 'get'
   })
 }
+
+// 
+// 入出庫処理をした後に画面の情報を更新する
+const fetchConsumableItems = async () => {
+  try {
+    console.log('emit通っている')
+    const res = await axios.get('/api/consumable_items?reload=true');
+    // 必要に応じてデータを更新
+    console.log(res.data.items);
+    console.log(res.data.total_count);
+    localConsumableItems.value = res.data.items
+    totalCount.value = res.data.total_count
+    console.log(localConsumableItems.value)
+    console.log(localConsumableItems.length)
+  } catch (e){
+    console.error('データの取得に失敗しました:', e.message);
+  }
+};
 
 
 // const updateStock = (id) => {
@@ -94,7 +113,7 @@ const fetchAndFilterItems = () => {
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
                                       <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
                                     </svg>
-                                    備品コ―ドをダウンロード
+                                    備品QRコ―ドをダウンロード
                                   </Link>
                               </div>
                             </div>
@@ -164,7 +183,7 @@ const fetchAndFilterItems = () => {
 
                               <!-- 条件をすべてリセットするボタン -->
                               <div>
-                                <button @click="resetState" class="flex justify-center items-center w-32 h-9 p-2 ml-4 text-white bg-indigo-500 border-0 p-2 focus:outline-none hover:bg-indigo-600 rounded text-sm">
+                                <button @click="resetState" class="flex justify-center items-center w-32 h-9 p-2 ml-4 text-white bg-indigo-500 border-0 focus:outline-none hover:bg-indigo-600 rounded text-sm">
                                   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99" />
                                   </svg>
@@ -185,28 +204,28 @@ const fetchAndFilterItems = () => {
                           <div>
                             <div v-if="localConsumableItems.data.length > 0" class="flex flex-wrap -mx-4">
                               <template v-for="item in localConsumableItems.data" :key="item.id">
-                                <div class="lg:w-1/5 w-1/2 p-4 border" :class="showDisposal ? 'bg-red-100' : ''">
+                                <div class="lg:w-1/5 w-1/2 p-4 border">
                                   <div class="" >
                                     <a class="mb-2 block relative h-48">
                                       <Link class="text-blue-400" :href="route('items.show', { item: item.id })">
                                         <img alt="ecommerce" class="object-cover object-center w-full h-full block" :src="item.image_path1">
                                       </Link>
                                     </a>
-                                    <div class="flex items-end">
-                                      <h3 class="ml-2 text-gray-500 text-xs tracking-widest title-font mb-1">{{ item.category.name }}</h3>
-                                    </div>
                                     <div class="">
                                       <span class="text-gray-900 title-font font-medium">{{ item.management_id }}</span>
                                       <span class="ml-4 text-gray-900 title-font font-medium">{{ item.name }}</span>
                                     </div>
-                                    <div class="flex">
+                                    <div>
+                                      <div>在庫数 {{ item.stock }} / 通知在庫数 {{ item.minimum_stock }}</div>
+                                    </div>
+                                    <div class="flex max-h-20">
                                       <!-- <Link as="button" :href="route('items.create')"
                                       class="flex items-center text-white text-sm bg-gray-500 border-0 py-2 px-4 mx-auto focus:outline-none hover:bg-gray-600 rounded">
                                         <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
                                         履歴
                                       </Link> -->
                                       <StockHistoryModal :item="item" />
-                                      <UpdateStockModal :item="item" :userName="userName" :errors="errors" />
+                                      <UpdateStockModal :item="item" :userName="userName" :errors="errors" @fetch-consumableItems="fetchConsumableItems" />
                                       <!-- <button  type="button" @click="restoreItem(item.id)"
                                       class="flex items-center text-white text-sm bg-blue-800 border-0 py-2 px-4 focus:outline-none hover:bg-blue-900 rounded">
                                         入出庫する
