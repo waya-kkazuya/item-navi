@@ -44,9 +44,9 @@ class ItemController extends Controller
         $sortOrder = $request->query('sortOrder', 'asc');
 
         // プルダウンの数値、第2引数は初期値で0
-        $category_id = $request->query('category_id', 0);
-        $location_of_use_id = $request->query('location_of_use_id', 0);
-        $storage_location_id = $request->query('storage_location_id', 0);
+        $category_id = $request->query('categoryId', 0);
+        $location_of_use_id = $request->query('locationOfUseId', 0);
+        $storage_location_id = $request->query('storageLocationId', 0);
         // Log::info("location_of_use_id");
 
         $withRelations = ['category', 'unit', 'usageStatus', 'locationOfUse', 'storageLocation', 'acquisitionMethod', 'inspections', 'disposal'];
