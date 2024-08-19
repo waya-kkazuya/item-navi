@@ -114,16 +114,18 @@ const deleteItem = id => {
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    <div v-show="item.categoryId == 1" class="mt-4 pl-2 w-full">
+                                                    <div v-if="item.category_id === 1" class="mt-4 pl-2 w-full">
                                                         <label for="minimumStock" class="leading-7 text-sm text-blue-900">通知在庫数</label><br>
-                                                        <div id="minimumStock" name="minimumStock" class="w-1/4 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
-                                                            {{ item.minimumStock }}
-                                                        </div>
-                                                        <div class="w-1/6 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
-                                                            {{ item.unit.name }}
+                                                        <div class="flex items-center">
+                                                            <div id="minimumStock" name="minimumStock" class="w-1/4 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
+                                                                {{ item.minimum_stock }}
+                                                            </div>
+                                                            <div class="w-1/6 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
+                                                                {{ item.unit.name }}
+                                                            </div>
                                                         </div>
                                                     </div>
-                                                    <div v-show="item.categoryId == 1" class="mt-4 pl-2 w-full">
+                                                    <div v-show="item.category_id === 1" class="mt-4 pl-2 w-full">
                                                         <div class="flex items-center">
                                                             <svg v-if="item.notification" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 11 12 14 22 4"></polyline><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path></svg>
                                                             <svg v-else xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect></svg>
