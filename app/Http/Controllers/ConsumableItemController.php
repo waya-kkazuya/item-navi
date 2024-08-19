@@ -109,6 +109,18 @@ class ConsumableItemController extends Controller
         $user = auth()->user();
         // dd($consumableItems);
 
+
+        
+        // dd('API');
+        // APIのとき
+        if ($request->has('reload')) {
+            return [
+                'items' => $consumableItems,
+                'total_count' => $total_count
+            ];
+        }
+
+        // Inertiaもajax通信なので、$request->ajax()では不十分
         return Inertia::render('ConsumableItems/Index', [
             'consumableItems' => $consumableItems,
             'locations' => $locations,
