@@ -185,7 +185,6 @@ return [
         /*
          * Package Service Providers...
          */
-        // Intervention\Image\ImageServiceProvider::class,
         SimpleSoftwareIO\QrCode\QrCodeServiceProvider::class,
         Jenssegers\Agent\AgentServiceProvider::class,
         /*
@@ -212,7 +211,6 @@ return [
 
     'aliases' => Facade::defaultAliases()->merge([
         // 'ExampleClass' => App\Example\ExampleClass::class,
-        // 'InterventionImage' => \Intervention\Image\Facades\Image::class, // Facadeで使うため
         'QrCode' => SimpleSoftwareIO\QrCode\Facades\QrCode::class,
         'Agent' => Jenssegers\Agent\Facades\Agent::class,
     ])->toArray(),
