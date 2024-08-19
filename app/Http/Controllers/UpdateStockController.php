@@ -6,66 +6,130 @@ use App\Events\LowStockDetectEvent;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Item;
-use App\Http\Requests\UpdateStockRequest;
+use App\Models\StockTransaction;
+use App\Http\Requests\DecreaseStockRequest;
+use App\Http\Requests\IncreaseStockRequest;
+use Illuminate\Support\Facades\DB;
 
 class UpdateStockController extends Controller
 {
-    public function updateStock(UpdateStockRequest $request, Item $item)
+    public function decreaseStock(DecreaseStockRequest $request, Item $item)
     {
-        // Itemモデルのインスタンスを取得
-        // dd($id);
-        $item = Item::find($id);
+        // dd($request);
         // dd($item);
-        $stockValue = $request->input('stockValue');
-        $action = $request->input('action');
+        DB::beginTransaction();
 
-        // dd($stockValue, $action);
+        try {
 
-        // 念のため、サーバーサイドでもstockValue=0対策をする
-        if($stockValue === 0){
+            // バリデーションルールで'min:1'
+            // 念のため、サーバーサイドでもquantitiy=0対策をする
+            // 在庫数より大きいquantityは出庫出来ない
+            if($request->quantity <= 0 || $request->quantity > $item->stock){
+                return to_route('consumable_items')
+                ->with([
+                    'message' => '出庫数に正しい値を入力してください',
+                    'status' => 'danger'
+                ]);
+            }
+            
+            // stock_transactionsテーブルに保存し、Item->stockを更新する
+            // 新しいレコードを作成
+            $stockTransaction = new StockTransaction();
+            $stockTransaction->item_id = $item->id;
+            $stockTransaction->transaction_type = $request->transactionType;
+            $stockTransaction->quantity = $request->quantity;
+            $stockTransaction->operator_name = $request->operatorName;
+            $stockTransaction->transaction_date = $request->transactionDate;
+            $stockTransaction->save();
+
+            // itemsテーブルのstockカラムの値を更新
+            $item->stock -= $request->quantity;
+            $item->save();
+
+
+            // 在庫数が通知在庫数以下になったときにイベントを発火
+            // LowStockDetectEventのイベント発火
+            // event(new LowStockDetectEvent($item));
+            // // event(new LowStockDetectEvent('こんにちは！'));
+            
+            DB::commit();
+
             return to_route('consumable_items')
             ->with([
-                'message' => '入出庫数を入力してください',
+                'message' => '在庫数を更新しました。',
+                'status' => 'success'
+            ]);
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+
+            return redirect()->back()
+            ->with([
+                'message' => '登録中にエラーが発生しました',
                 'status' => 'danger'
             ]);
         }
 
-        // stocksカラムの値を更新
-        // 出庫の場合、$stockValueを引いたあと、0より大きい場合は実行
-        // 0より小さい場合(マイナス)の場合、在庫数が更新できませんでしたのバリデーションエラーか
-        // 入庫の場合は増えるだけなので
+    }
 
-        if ($action === 'out' && $item->stocks < $stockValue) {
-            // return response()->json(['error' => '在庫が足りません'], 400);
+
+
+    // Increase用のRequestファイルが必要
+    public function increaseStock(IncreaseStockRequest $request, Item $item)
+    {
+        // dd($request);
+        // dd($item);
+        DB::beginTransaction();
+
+        try {
+
+            // バリデーションルールで'min:1'
+            // 念のため、サーバーサイドでもquantitiy=0対策をする
+            // 在庫数より大きいquantityは出庫出来ない
+            if($request->quantity <= 0){
+                return to_route('consumable_items')
+                ->with([
+                    'message' => '出庫数に正しい値を入力してください',
+                    'status' => 'danger'
+                ]);
+            }
+            
+            // stock_transactionsテーブルに保存し、Item->stockを更新する
+            // 新しいレコードを作成
+            $stockTransaction = new StockTransaction();
+            $stockTransaction->item_id = $item->id;
+            $stockTransaction->transaction_type = $request->transactionType;
+            $stockTransaction->quantity = $request->quantity;
+            $stockTransaction->operator_name = $request->operatorName;
+            $stockTransaction->transaction_date = $request->transactionDate;
+            $stockTransaction->save();
+
+            // itemsテーブルのstockカラムの値を更新
+            $item->stock += $request->quantity;
+            $item->save();
+
+
+            // 在庫数が通知在庫数以下になったときにイベントを発火
+            // LowStockDetectEventのイベント発火
+            // event(new LowStockDetectEvent($item));
+            // // event(new LowStockDetectEvent('こんにちは！'));
+            DB::commit();
+
             return to_route('consumable_items')
             ->with([
-                'message' => '在庫数が足りません',
+                'message' => '在庫数を更新しました。',
+                'status' => 'success'
+            ]);
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+
+            return redirect()->back()
+            ->with([
+                'message' => '登録中にエラーが発生しました',
                 'status' => 'danger'
             ]);
         }
-    
-        if ($action === 'in') {
-            $item->stocks += $stockValue;
-        } else if ($action === 'out') {
-            $item->stocks -= $stockValue;
-        }
-        
-        // データベースに保存
-        $item->save();
-
-
-        // イベント発火
-        // テスト
-        event(new LowStockDetectEvent($item));
-        // event(new LowStockDetectEvent('こんにちは！'));
-
-
-
-        return to_route('consumable_items')
-        ->with([
-            'message' => '在庫数を更新しました。',
-            'status' => 'success'
-        ]);
-
+   
     }
 }

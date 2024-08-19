@@ -61,7 +61,8 @@ Route::middleware('can:user-higher')->group(function () {
     
     Route::get('consumable_items/{id}/history', [ConsumableItemsController::class, 'history'])->name('consumable_items.history');
 
-    Route::put('updateStock/{item}', [UpdateStockController::class, 'updateStock'])->name('updateStock');
+    Route::put('decreaseStock/{item}', [UpdateStockController::class, 'decreaseStock'])->name('decreaseStock');
+    Route::put('increaseStock/{item}', [UpdateStockController::class, 'increaseStock'])->name('increaseStock');
 });
 
 
