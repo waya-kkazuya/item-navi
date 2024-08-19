@@ -29,8 +29,8 @@ class ConsumableItemController extends Controller
         // プルダウンの数値、第2引数は初期値で0
         // カテゴリのプルダウンは必要ない
         // $category_id = $request->query('category_id', 0);
-        $location_of_use_id = $request->query('location_of_use_id', 0);
-        $storage_location_id = $request->query('storage_location_id', 0);
+        $location_of_use_id = $request->query('locationOfUseId', 0);
+        $storage_location_id = $request->query('storageLocationId', 0);
 
 
         $withRelations = ['category', 'unit', 'usageStatus', 'locationOfUse', 'storageLocation', 'acquisitionMethod', 'inspections', 'disposal'];
