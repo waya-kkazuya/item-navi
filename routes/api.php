@@ -4,7 +4,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AnalysisController;
 use App\Http\Controllers\Api\ConsumableItemsController;
+use App\Http\Controllers\ConsumableItemController;
 use App\Models\Edithistory;
+use App\Models\StockTransaction;
 use App\Http\Controllers\ItemController;
 
 /*
@@ -23,9 +25,13 @@ Route::middleware('auth:sanctum')
   return $request->user();
 });
 
+// 廃棄備品のトグルボタンでの通信用API
 // apiはprefixでURLに付いているはず
 Route::middleware(['auth:sanctum', 'verified', 'can:staff-higher'])
 ->get('/items', [ItemController::class, 'index']);
+
+Route::middleware(['auth:sanctum', 'verified', 'can:staff-higher'])
+->get('/consumable_items', [ConsumableItemController::class, 'index']);
 
 
 Route::middleware('auth:sanctum')
@@ -35,6 +41,15 @@ Route::middleware('auth:sanctum')
   ->take(10)
   ->get();
 });
+
+Route::middleware('auth:sanctum')
+->get('/stock_transactions', function (Request $request) {
+  return StockTransaction::where('item_id', $request->item_id)
+  ->orderBy('created_at', 'desc')
+  ->take(10)
+  ->get();
+});
+
 
 
 

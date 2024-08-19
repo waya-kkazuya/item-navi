@@ -7,6 +7,23 @@ const props = defineProps({
   item: Object
 })
 
+// stockTransactions: Array,
+// API通信で、where(item_id. item->id)でレコードを取ってくる
+// APIのルート、StockTransactionのコントローラー
+
+
+const fetchStockTransactions = async () => {
+  try {
+    const res = await axios.get(`api/stock_transactions/?item_id=${props.item.id}`)
+
+    console.log(res.data)
+    // localItems.value = res.data.items
+    // console.log(localItems.value)
+  } catch (e) {
+    console.log('エラーメッセージです', e.message)
+  }
+};
+
 
 onMounted(() => {
   // console.log(props.isTableView)
@@ -67,7 +84,7 @@ const formatDate = (timestamp) => {
                 </tr>
               </thead>
               <tbody>
-                <tr  v-for="history in stockHistoriesData" :key="history.id">
+                <tr  v-for="stockTransaction in stockTransactions" :key="stockTransaction.id">
                   <td class="border-b-2 border-gray-200 px-4 py-3">{{ formatDate(history.created_at) }}</td>
                   <td class="border-b-2 border-gray-200 px-4 py-3">{{ history.operation_type }}</td>
                   <td class="border-b-2 border-gray-200 px-4 py-3">{{ history.edited_field }}</td>
