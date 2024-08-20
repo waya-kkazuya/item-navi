@@ -26,7 +26,7 @@ const editHistories = async item => {
     await axios.get(`api/edithistory/?item_id=${item.id}`)
     .then( res => {
       console.log(res.data)
-      editHistoriesData.value = res.data;
+      editHistoriesData.value = res.data
     })
     toggleStatus()
   } catch(e) {
