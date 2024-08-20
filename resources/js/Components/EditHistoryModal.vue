@@ -21,9 +21,9 @@ const editHistoriesData = ref([]);
 
 const isShow = ref(false)
 const toggleStatus = () => { isShow.value = !isShow.value}
-const editHistories = async () => {
+const editHistories = async item => {
   try {
-    await axios.get(`api/edithistory/?item_id=${props.item.id}`)
+    await axios.get(`api/edithistory/?item_id=${item.id}`)
     .then( res => {
       console.log(res.data)
       editHistoriesData.value = res.data;
@@ -90,9 +90,9 @@ const formatDate = (timestamp) => {
   <button v-if="props.isTableView" @click="editHistories" type="button" data-micromodal-trigger="modal-1">
     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
   </button>
-  <button v-else @click="editHistories" type="button" data-micromodal-trigger="modal-1"
+  <button v-else @click="editHistories(item)" type="button" data-micromodal-trigger="modal-1"
   class="flex items-center text-white text-sm bg-gray-500 border-0 py-2 px-4 mx-auto focus:outline-none hover:bg-gray-600 rounded">
-    <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+    <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
     履歴
     </button>
 </template>
