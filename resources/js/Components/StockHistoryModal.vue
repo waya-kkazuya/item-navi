@@ -1,52 +1,38 @@
 <script setup>
 import axios from 'axios';
-import { ref, reactive, onMounted, defineProps } from 'vue';
+import { ref, reactive, onMounted } from 'vue';
 
 // 親コンポーネントから受け取る
 const props = defineProps({
   item: Object
 })
 
+const isShow = ref(false)
+const toggleStatus = () => { isShow.value = !isShow.value}
+
 // stockTransactions: Array,
 // API通信で、where(item_id. item->id)でレコードを取ってくる
 // APIのルート、StockTransactionのコントローラー
-
-
-const fetchStockTransactions = async () => {
+const stockTransactions = ref([])
+const fetchStockTransactions = async item => {
+  
   try {
-    const res = await axios.get(`api/stock_transactions/?item_id=${props.item.id}`)
-
-    console.log(res.data)
-    // localItems.value = res.data.items
-    // console.log(localItems.value)
+    // await axios.get('api/stock_transactions', { item })
+    await axios.get(`api/stock_transactions/?item_id=${item.id}`)
+    .then( res => {
+      console.log(res.data)
+      stockTransactions.value = res.data
+      stockTransactions.value = res.data.stockTransactions
+    })
+    toggleStatus()
   } catch (e) {
     console.log('エラーメッセージです', e.message)
   }
 };
 
-
 onMounted(() => {
-  // console.log(props.isTableView)
+  console.log(props.item)
 })
-
-const stockHistoriesData = ref([]);
-
-
-const isShow = ref(false)
-const toggleStatus = () => { isShow.value = !isShow.value}
-const stockHistories = async () => {
-  toggleStatus()
-  // try {
-  //   await axios.get(`api/stock_history/?item_id=${props.item.id}`)
-  //   .then( res => {
-  //     console.log(res.data)
-  //     stockHistoriesData.value = res.data;
-  //   })
-  //   toggleStatus()
-  // } catch(e) {
-  //     console.log(e.message)
-  // }
-}
 
 // 日付フォーマット関数
 const formatDate = (timestamp) => {
@@ -76,21 +62,21 @@ const formatDate = (timestamp) => {
               <thead>
                 <tr>
                   <th class="min-w-16 px-4 py-3 title-font tracking-wider font-medium text-white text-sm bg-sky-700">更新日時</th>
-                  <th class="min-w-16 px-4 py-3 title-font tracking-wider font-medium text-white text-sm bg-sky-700">更新区分</th>
-                  <th class="min-w-24 px-4 py-3 title-font tracking-wider font-medium text-white text-sm bg-sky-700">入庫</th>
-                  <th class="min-w-36 px-4 py-3 title-font tracking-wider font-medium text-white text-sm bg-sky-700">出庫</th>
-                  <th class="min-w-40 px-4 py-3 title-font tracking-wider font-medium text-white text-sm bg-sky-700">在庫数</th>
-                  <th class="min-w-28 px-4 py-3 title-font tracking-wider font-medium text-white text-sm bg-sky-700">記録者</th>
+                  <th class="min-w-12 px-4 py-3 title-font tracking-wider font-medium text-white text-sm bg-sky-700">更新区分</th>
+                  <th class="min-w-8 px-4 py-3 title-font tracking-wider font-medium text-white text-sm bg-sky-700">入庫数</th>
+                  <th class="min-w-8 px-4 py-3 title-font tracking-wider font-medium text-white text-sm bg-sky-700">出庫数</th>
+                  <th class="min-w-24 px-4 py-3 title-font tracking-wider font-medium text-white text-sm bg-sky-700">在庫数</th>
+                  <th class="min-w-24 px-4 py-3 title-font tracking-wider font-medium text-white text-sm bg-sky-700">記録者</th>
                 </tr>
               </thead>
               <tbody>
                 <tr  v-for="stockTransaction in stockTransactions" :key="stockTransaction.id">
-                  <td class="border-b-2 border-gray-200 px-4 py-3">{{ formatDate(history.created_at) }}</td>
-                  <td class="border-b-2 border-gray-200 px-4 py-3">{{ history.operation_type }}</td>
-                  <td class="border-b-2 border-gray-200 px-4 py-3">{{ history.edited_field }}</td>
-                  <td class="border-b-2 border-gray-200 px-4 py-3">{{ history.old_value }}</td>
-                  <td class="border-b-2 border-gray-200 px-4 py-3">{{ history.new_value }}</td>
-                  <td class="border-b-2 border-gray-200 px-4 py-3">{{ history.edit_user }}</td>
+                  <td class="border-b-2 border-gray-200 px-4 py-3">{{ stockTransaction.transaction_date }}</td>
+                  <td class="border-b-2 border-gray-200 px-4 py-3">{{ stockTransaction.transaction_type }}</td>
+                  <td class="border-b-2 border-gray-200 px-4 py-3">{{ stockTransaction.transaction_type === '入庫' ? stockTransaction.quantity : ''}}</td>
+                  <td class="border-b-2 border-gray-200 px-4 py-3">{{ stockTransaction.transaction_type === '出庫' ? stockTransaction.quantity : '' }}</td>
+                  <td class="border-b-2 border-gray-200 px-4 py-3">{{ stockTransaction.current_stock }}</td>
+                  <td class="border-b-2 border-gray-200 px-4 py-3">{{ stockTransaction.operator_name }}</td>
                 </tr>
               </tbody>
             </table>
@@ -103,11 +89,7 @@ const formatDate = (timestamp) => {
     </div>
   </div>
   <!-- item.idを親から子へ渡す、async await axiosの変数として渡される -->
-   <!-- 行表示かタイル表示かでボタンの表示を切り替え -->
-  <button v-if="props.isTableView" @click="editHistories" type="button" data-micromodal-trigger="modal-1">
-    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
-  </button>
-  <button v-else @click="stockHistories" type="button" data-micromodal-trigger="modal-1"
+  <button @click="fetchStockTransactions(props.item)" type="button" data-micromodal-trigger="modal-1"
   class="flex items-center text-white text-sm bg-gray-500 border-0 py-2 px-4 mx-auto focus:outline-none hover:bg-gray-600 rounded">
     <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
     履歴
