@@ -8,6 +8,8 @@ use App\Http\Controllers\ConsumableItemController;
 use App\Models\Edithistory;
 use App\Models\StockTransaction;
 use App\Http\Controllers\ItemController;
+use App\Http\Controllers\StockTransactionController;
+use App\Http\Controllers\NotificationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -30,8 +32,8 @@ Route::middleware('auth:sanctum')
 Route::middleware(['auth:sanctum', 'verified', 'can:staff-higher'])
 ->get('/items', [ItemController::class, 'index']);
 
-Route::middleware(['auth:sanctum', 'verified', 'can:staff-higher'])
-->get('/consumable_items', [ConsumableItemController::class, 'index']);
+// Route::middleware(['auth:sanctum', 'verified', 'can:staff-higher'])
+// ->get('/consumable_items', [ConsumableItemsController::class, 'index']);
 
 
 Route::middleware('auth:sanctum')
@@ -42,28 +44,36 @@ Route::middleware('auth:sanctum')
   ->get();
 });
 
-Route::middleware('auth:sanctum')
-->get('/stock_transactions', function (Request $request) {
-  return StockTransaction::where('item_id', $request->item_id)
-  ->orderBy('created_at', 'desc')
-  ->take(10)
-  ->get();
+// Route::middleware('auth:sanctum')
+// ->get('/stock_transactions', function (Request $request) {
+//   return StockTransaction::where('item_id', $request->item_id)
+//   ->orderBy('created_at', 'desc')
+//   ->take(10)
+//   ->get();
+// });
+Route::middleware('auth:sanctum', 'verified', 'can:staff-higher')
+->get('/stock_transactions', [StockTransactionController::class, 'stockTransaction'])
+->name('stock_transactions');
+
+
+// 通知画面用
+Route::middleware('auth:sanctum', 'verified', 'can:staff-higher')
+->get('/notifications', [NotificationController::class, 'index'])
+->name('notifications.index');
+
+// ベルに表示する新着件数用
+Route::middleware('auth:sanctum', 'verified', 'can:staff-higher')
+->get('/notifications_count', function () {
+  return auth()->user()->unreadNotifications;
 });
-
-
-
 
 
 Route::middleware('auth:sanctum')
 ->get('/analysis', [AnalysisController::class, 'index' ])
 ->name('api.analysis');
 
-Route::middleware('auth:sanctum')
-->get('/history', [ConsumableItemsController::class, 'history' ])
-->name('api.history');
+// Route::middleware('auth:sanctum')
+// ->get('/history', [ConsumableItemsController::class, 'history' ])
+// ->name('api.history');
 
 
-// 通知用
-Route::get('/notifications', function () {
-  return auth()->user()->unreadNotifications;
-});
