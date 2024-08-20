@@ -15,6 +15,8 @@ class LowStockDetectEvent
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
+    public $item;
+
     /**
      * Create a new event instance.
      */
