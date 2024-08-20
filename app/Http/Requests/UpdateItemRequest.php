@@ -28,7 +28,7 @@ class UpdateItemRequest extends FormRequest
             'imageFile' => ['nullable', 'image', 'mimes:jpeg,png,jpg'],
             'name' => ['required', 'min:3' ,'max:20'],
             'categoryId' => ['required', 'exists:categories,id'],
-            'stock' => ['required', 'integer', 'min:0', 'max:100'],
+            'stock' => ['required', 'integer', 'min:0', 'max:200'],
             'unitId' => ['required', 'exists:units,id'] ,
             'minimumStock' =>  ['integer', 'min:0', 'max:50'],
             'notification' => ['required', 'boolean'],
