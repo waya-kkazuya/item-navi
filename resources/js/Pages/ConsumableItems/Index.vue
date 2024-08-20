@@ -31,7 +31,6 @@ const totalCount = ref(props.totalCount)
 const search = ref(props.search)
 // 作成日でソート
 const sortOrder = ref(props.sortOrder ?? 'asc')
-
 // カテゴリプルダウン用(初期値は0)、更新したらその値
 // コントローラーをまたいで
 const locationOfUseId = ref(props.locationOfUseId ?? 0)
@@ -41,7 +40,7 @@ const storageLocationId = ref(props.storageLocationId ?? 0)
 
 // すべてのフィルターをまとめる
 const fetchAndFilterItems = () => {
-  router.visit(route('consumable_items.index', {
+  router.visit(route('consumable_items', {
     search: search.value,
     sortOrder: sortOrder.value,
     locationOfUseId: locationOfUseId.value,
@@ -49,6 +48,23 @@ const fetchAndFilterItems = () => {
   }), {
     method: 'get'
   })
+}
+
+const toggleSortOrder = () => {
+  // 昇順降順の切り替え
+  sortOrder.value = sortOrder.value === 'asc' ? 'desc' : 'asc'
+  fetchAndFilterItems()
+};
+
+
+const resetState = () => {
+  //それぞれのリアクティブな値もデフォルトの値に戻して、プルダウンや検索フォームに反映する 
+  search.value = ''
+  sortOrder.value = 'asc'
+  locationOfUseId.value = 0
+  storageLocationId.value = 0
+
+  fetchAndFilterItems()
 }
 
 // 
@@ -68,23 +84,6 @@ const fetchConsumableItems = async () => {
     console.error('データの取得に失敗しました:', e.message);
   }
 };
-
-
-// const updateStock = (id) => {
-//   router.visit(route('updateStock', { id: id }), {
-//     method: 'put',
-//     data: {
-//       stockValue: stockValue.value,
-//       action: action.value
-//     }
-//   })
-// }
-
-// 消耗品の在庫数更新用
-// const state = reactive({
-//   stockValue: 0,
-//   action: 'out'
-// })
 
 </script>
 
@@ -207,12 +206,14 @@ const fetchConsumableItems = async () => {
                                 <div class="lg:w-1/5 w-1/2 p-4 border">
                                   <div class="" >
                                     <a class="mb-2 block relative h-48">
-                                      <Link class="text-blue-400" :href="route('items.show', { item: item.id })">
+                                      <Link :href="route('items.show', { item: item.id })">
                                         <img alt="ecommerce" class="object-cover object-center w-full h-full block" :src="item.image_path1">
                                       </Link>
                                     </a>
                                     <div class="">
-                                      <span class="text-gray-900 title-font font-medium">{{ item.management_id }}</span>
+                                      <Link :href="route('items.show', { item: item.id })">
+                                        <span class="text-blue-600 title-font font-medium">{{ item.management_id }}</span>
+                                      </Link>
                                       <span class="ml-4 text-gray-900 title-font font-medium">{{ item.name }}</span>
                                     </div>
                                     <div>
