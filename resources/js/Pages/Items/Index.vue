@@ -25,11 +25,8 @@ const localItems = ref({...props.items});
 
 // 検索フォーム
 const search = ref(props.search)
-
 // 作成日でソート
 const sortOrder = ref(props.sortOrder ?? 'asc')
-
-
 // カテゴリプルダウン用(初期値は0)、更新したらその値
 // コントローラーをまたいで
 const categoryId = ref(props.categoryId)
@@ -228,7 +225,7 @@ const restoreItem = (id) => {
                               <!-- 備品カテゴリプルダウン -->
                               <div>
                                 <select v-model="categoryId" @change="fetchAndFilterItems" class="h-9 text-sm">
-                                  <option :value="0">カテゴリ
+                                  <option :value="0">カテゴリすべて
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
                                       <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
                                     </svg>
@@ -389,7 +386,7 @@ const restoreItem = (id) => {
                                 <div class="lg:w-1/5 w-1/2 p-4 border" :class="showDisposal ? 'bg-red-100' : ''">
                                   <div class="" >
                                     <a class="mb-2 block relative h-48">
-                                      <Link class="text-blue-400" :href="route('items.show', { item: item.id })">
+                                      <Link :href="route('items.show', { item: item.id })">
                                         <img alt="ecommerce" class="object-cover object-center w-full h-full block" :src="item.image_path1">
                                       </Link>
                                     </a>
@@ -397,15 +394,12 @@ const restoreItem = (id) => {
                                       <h3 class="ml-2 text-gray-500 text-xs tracking-widest title-font mb-1">{{ item.category.name }}</h3>
                                     </div>
                                     <div class="">
-                                      <span class="text-gray-900 title-font font-medium">{{ item.management_id }}</span>
+                                      <Link :href="route('items.show', { item: item.id })">
+                                        <span class="text-blue-600 title-font font-medium">{{ item.management_id }}</span>
+                                      </Link>
                                       <span class="ml-4 text-gray-900 title-font font-medium">{{ item.name }}</span>
                                     </div>
                                     <div class="flex">
-                                      <!-- <Link as="button" :href="route('items.create')"
-                                      class="flex items-center text-white text-sm bg-gray-500 border-0 py-2 px-4 mx-auto focus:outline-none hover:bg-gray-600 rounded">
-                                        <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
-                                        履歴
-                                      </Link> -->
                                       <EditHistoryModal v-bind:item="item" :isTableView="isTableView" />
                                       <Link v-if="!showDisposal" as="button" :href="route('items.show', { item: item.id })" 
                                       class="flex items-center text-white text-sm bg-blue-800 border-0 py-2 px-4 focus:outline-none hover:bg-blue-900 rounded">
