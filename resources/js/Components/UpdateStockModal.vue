@@ -82,7 +82,6 @@ const decreaseStock = item => {
 }
 
 
-
 const increaseForm = useForm({
     transactionDate: new Date().toISOString().substr(0, 10),
     operatorName: props.userName,

@@ -17,7 +17,7 @@ class ConsumableItemController extends Controller
 {
     const CONSUMABLE_ITEM_CATEGORY_ID = 1;
 
-    public function index(Request $request)
+    public function index(Request $request, $item_id = null)
     {
         Gate::authorize('staff-higher');
 
@@ -109,8 +109,11 @@ class ConsumableItemController extends Controller
         $user = auth()->user();
         // dd($consumableItems);
 
+        // Notification.vueのリンククリックで送られてきたItemのid
+        $linkedItem = Item::find($item_id);
+        // dd($linkedItem);
 
-        
+
         // dd('API');
         // APIのとき
         if ($request->has('reload')) {
@@ -129,9 +132,12 @@ class ConsumableItemController extends Controller
             'locationOfUseId' => $location_of_use_id,
             'storageLocationId' => $storage_location_id,
             'totalCount' => $total_count,
-            'userName' => $user->name
+            'userName' => $user->name,
+            'linkedItem' => $linkedItem
         ]);
     }
+
+
 
 
     // 在庫数遷移画面用メソッド
@@ -180,8 +186,7 @@ class ConsumableItemController extends Controller
         return Inertia::render('ConsumableItems/History', [
             'data' => $data,
             'labels' => $labels,
-            'stocks' => $stocks,
-            'item' => $item
+            'stocks' => $stocks
         ]);
     }
 }

@@ -60,7 +60,8 @@ Route::middleware(['auth', 'verified', 'can:staff-higher'])->group(function () {
     Route::put('/dispose_item/{item}', [DisposalController::class, 'disposeItem'])->name('dispose_item.disposeItem');
     Route::put('/inspect_item/{item}', [InspectionController::class, 'inspectItem'])->name('inspect_item.inspectItem');
 
-    Route::get('consumable_items', [ConsumableItemController::class, 'index'])->name('consumable_items');
+    // 省略可能なオプションのルートパラメータを追加する
+    Route::get('consumable_items/{item_id?}', [ConsumableItemController::class, 'index'])->name('consumable_items');
     // Route::get('consumable_item_lists', [ConsumableItemController::class, 'index'])->name('consumable_item_lists');
     
 
@@ -71,6 +72,9 @@ Route::middleware(['auth', 'verified', 'can:staff-higher'])->group(function () {
 
     Route::get('/notifications', [NotificationController::class, 'index'])
     ->name('notifications.index');
+    
+
+
     // Route::get('/notifications', function () {
     //     return Inertia::render('Notification');
     // });

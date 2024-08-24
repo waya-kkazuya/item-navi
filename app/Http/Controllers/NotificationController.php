@@ -7,17 +7,26 @@ use Illuminate\Http\Request;
 use Illuminate\Notifications\Notification;
 use Inertia\Inertia;
 use App\Models\SystemNotification;
+use Illuminate\Support\Facades\Auth;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
 
 class NotificationController extends Controller
 {
     public function index()
     {   
-        $notifications = SystemNotification::all();
+        $notifications = Auth::user()->notifications;
+        // $notifications = SystemNotification::all();
+
+        // これは1人のユーザーの情報か？？
 
         // dd($notifications);
         // json形式を読み取れる形式に変換する
         $notifications = SystemNotification::all()->map(function ($notification) {
             $notification->data = json_decode($notification->data, true);
+            // diffForHumansで相対的な時間を追加、人間のためのという意味
+            $notification->relative_time = Carbon::parse($notification->created_at)->diffForHumans();
+            
             return $notification;
         });
 
@@ -26,12 +35,8 @@ class NotificationController extends Controller
         // if ($type) {
         //     return Notification::where('type', $type)->get();
         // }
-
-
-        return Inertia::render('Notification', [
-            'notifications' => $notifications
-        ]);
-
+        
+        //typeカラムでフィルターする 
 
         $lowStockNotifications = $notifications->filter(function ($notification) {
             return $notification->type === 'App\Notifications\LowStockNotification';
@@ -49,13 +54,13 @@ class NotificationController extends Controller
             return $notification->type === 'App\Notifications\RequestedItemNotification';
         });
 
-        return view('notifications.index', [
+        return Inertia::render('Notification', [
+            'notifications' => $notifications,
             'lowStockNotifications' => $lowStockNotifications,
             'disposalScheduleNotifications' => $disposalScheduleNotifications,
             'inspectionScheduleNotifications' => $inspectionScheduleNotifications,
             'requestedItemNotifications' => $requestedItemNotifications,
         ]);
-
 
 
         // // API通信

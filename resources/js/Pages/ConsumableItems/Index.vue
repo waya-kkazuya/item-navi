@@ -3,7 +3,7 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head, Link, router } from '@inertiajs/vue3';
 import FlashMessage from '@/Components/FlashMessage.vue';
 import Pagination from '@/Components/Pagination.vue';
-import { ref, reactive } from 'vue';
+import { ref, onMounted } from 'vue';
 import { stringify } from 'postcss';
 import StockHistoryModal from '@/Components/StockHistoryModal.vue';
 import UpdateStockModal from '@/Components/UpdateStockModal.vue';
@@ -18,6 +18,7 @@ const props = defineProps({
   storageLocationId: Number,
   totalCount: Number,
   userName: String,
+  linkedItem: Object, // 指定した備品のモーダルを開くのに使う
   errors: Object
 })
 
@@ -36,6 +37,35 @@ const sortOrder = ref(props.sortOrder ?? 'asc')
 const locationOfUseId = ref(props.locationOfUseId ?? 0)
 const storageLocationId = ref(props.storageLocationId ?? 0)
 
+const notificationItem = ref()
+
+onMounted(() => {
+  console.log(props.linkedItem)
+  // 通知からのリンクで送られてくるitemの可否でモーダルウィンドウを開く
+  // モーダルウィンドウはモーダルのコンポーネントからemitで打ち上げて関数を発火させ閉じる
+  if (props.linkedItem) {
+    console.log('props.linkedItem動いた')
+    console.log(props.linkedItem)
+    // selectedItem.value = props.selectedItem;
+    openModal(props.linkedItem)
+  }
+})
+
+// データとモーダルウィンドウの開閉の役割を分ける
+const isModalOpen = ref(false)
+const selectedItem = ref(null)
+
+const openModal = (item) => {
+  console.log(item)
+  selectedItem.value = item
+  console.log(selectedItem)
+  isModalOpen.value = true
+  console.log(isModalOpen.value)
+}
+
+const closeModal = () => {
+  isModalOpen.value = false;
+}
 
 
 // すべてのフィルターをまとめる
@@ -81,7 +111,7 @@ const fetchConsumableItems = async () => {
     console.log(localConsumableItems.value)
     console.log(localConsumableItems.length)
   } catch (e){
-    console.error('データの取得に失敗しました:', e.message);
+    console.error('データの取得に失敗しました:', e.message)
   }
 };
 
@@ -220,24 +250,19 @@ const fetchConsumableItems = async () => {
                                       <div>在庫数 {{ item.stock }} / 通知在庫数 {{ item.minimum_stock }}</div>
                                     </div>
                                     <div class="flex max-h-20">
-                                      <!-- <Link as="button" :href="route('items.create')"
+                                      <!-- 親コンポーネントからモーダルを開くボタン -->
+                                      <button @click="openModal(item)" type="button" data-micromodal-trigger="modal-1"
                                       class="flex items-center text-white text-sm bg-gray-500 border-0 py-2 px-4 mx-auto focus:outline-none hover:bg-gray-600 rounded">
                                         <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
                                         履歴
-                                      </Link> -->
-                                      <StockHistoryModal :item="item" />
+                                      </button>
+                                      <!-- <StockHistoryModal :item="item" /> -->
                                       <UpdateStockModal :item="item" :userName="userName" :errors="errors" @fetch-consumableItems="fetchConsumableItems" />
-                                      <!-- <button  type="button" @click="restoreItem(item.id)"
-                                      class="flex items-center text-white text-sm bg-blue-800 border-0 py-2 px-4 focus:outline-none hover:bg-blue-900 rounded">
-                                        入出庫する
-                                        <svg class="w-6 h-6 size-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                                          <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 9V5.25A2.25 2.25 0 0 1 10.5 3h6a2.25 2.25 0 0 1 2.25 2.25v13.5A2.25 2.25 0 0 1 16.5 21h-6a2.25 2.25 0 0 1-2.25-2.25V15m-3 0-3-3m0 0 3-3m-3 3H15" />
-                                        </svg>
-                                      </button> -->
                                     </div>
                                   </div>
                                 </div>
                               </template>
+                              <StockHistoryModal v-show="isModalOpen" :item="selectedItem" @close="closeModal" />
                             </div>
                             <div v-else>
                               <div class="flex items-center justify-center">

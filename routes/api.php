@@ -32,8 +32,9 @@ Route::middleware('auth:sanctum')
 Route::middleware(['auth:sanctum', 'verified', 'can:staff-higher'])
 ->get('/items', [ItemController::class, 'index']);
 
-// Route::middleware(['auth:sanctum', 'verified', 'can:staff-higher'])
-// ->get('/consumable_items', [ConsumableItemsController::class, 'index']);
+// 以前作成したConsumableItemsController Itemsの複数形があるので後で処理する
+Route::middleware(['auth:sanctum', 'verified', 'can:staff-higher'])
+->get('/consumable_items', [ConsumableItemController::class, 'index']);
 
 
 Route::middleware('auth:sanctum')
