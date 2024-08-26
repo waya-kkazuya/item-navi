@@ -523,27 +523,33 @@ class ItemController extends Controller
             // 最初から点検フォームに入っている（DBに保存しているパターン）パターン
             // 点検データの更新または作成
             
-            // 点検日が保存しているレコードがあれば、データを取得して保存
-            // 泣ければ新しく作成 
-            if($request->pendingInspection) {
+            // 点検日のレコード、Vue側から値が返ってきたら変更の有無に関わらず保存する→シンプル        
+            if ($request->inspectionSchedule) {
+                // pendingInspectionとは、Inspectionsテーブルでstatusがfalseの一番近い（日付が古い）scheduled_date
+                // nullの可能性もある
                 $pendingInspection = $item->inspections()->where('id', $request->pendingInspection['id'])->first(); //渡ってきたオブジェクトを取得
-                // 既存の点検データを更新
-                $pendingInspection->update(['scheduled_date' => $request->inspectionSchedule]);
-            } else {
-                // 新しい点検データを作成
-                $item->inspections()->create(['scheduled_date' => $request->inspectionSchedule]);
+                
+                if($pendingInspection) {
+                    // 既存の点検データを更新
+                    $pendingInspection->update(['scheduled_date' => $request->inspectionSchedule]);
+                } else {
+                    // 新しい点検データを作成
+                    $item->inspections()->create(['scheduled_date' => $request->inspectionSchedule]);
+                }
             }
-    
+
             // 廃棄フォームの更新または作成
+            // もし廃棄予定日があればテーブルに保存する
             $disposal = $item->disposal()->first();
-            if ($disposal) {
-                // 既存のDisposalデータを更新
-                $disposal->update(['scheduled_date' => $request->disposalSchedule]);
-            } else {
-                // 新しいDisposalデータを作成
-                $item->disposal()->create(['scheduled_date' => $request->disposalSchedule]);
-            }    
-            
+            if ($request->disposalSchedule) {
+                if ($disposal) {
+                    // 既存のDisposalデータを更新
+                    $disposal->update(['scheduled_date' => $request->disposalSchedule]);
+                } else {
+                    // 新しいDisposalデータを作成
+                    $item->disposal()->create(['scheduled_date' => $request->disposalSchedule]);
+                }    
+            }
 
             // DB::commit();
 
