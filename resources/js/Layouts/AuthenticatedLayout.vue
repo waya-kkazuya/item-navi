@@ -39,11 +39,11 @@ const showingNavigationDropdown = ref(false);
                                 <NavLink :href="route('consumable_items')" :active="route().current('consumable_items')">
                                     消耗品管理
                                 </NavLink>
-                                <NavLink :href="route('wishes.index')" :active="route().current('wishes.index')">
-                                    ウィッシュリスト
+                                <NavLink :href="route('inspection_and_disposal_items')" :active="route().current('inspection_and_disposal_items')">
+                                    点検と廃棄
                                 </NavLink>
-                                <NavLink :href="route('inventory_plans.index')" :active="route().current('inventory_plans.index')">
-                                    棚卸計画
+                                <NavLink :href="route('item_requests.index')" :active="route().current('item_requests.index')">
+                                    リクエスト
                                 </NavLink>
                                 
                                 <!-- profile側にまとめるべきか -->
