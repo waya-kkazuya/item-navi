@@ -4,8 +4,8 @@ import { Head, Link, router } from '@inertiajs/vue3';
 import FlashMessage from '@/Components/FlashMessage.vue';
 import Pagination from '@/Components/Pagination.vue';
 import { ref, onMounted, watch } from 'vue';
-import { stringify } from 'postcss';
 import EditHistoryModal from '@/Components/EditHistoryModal.vue';
+import { stringify } from 'postcss';
 
 
 const props = defineProps({
@@ -105,7 +105,7 @@ const toggleItems = async () => {
   }
 };
 
-// props.itemsが新しい値になったら、代入
+// props.itemsが新しい値になったら、localItemsに再代入
 watch(() => props.items, (newItems) => {
   localItems.value = {...newItems};
 });
@@ -115,27 +115,14 @@ watch(() => props.items, (newItems) => {
 const restoreItem = (id) => {
   router.post(`/items/${id}/restore`, {
     onSuccess: () => {
-      console.log('Item restored successfully');
+      console.log('Item restored successfully')
     },
     onError: () => {
-      console.log('Failed to restore item');
+      console.log('Failed to restore item')
     },
-  });
+  })
   showDisposal.value = false;
-};
-
-// const editHistories = async () => {
-//   try {
-//     await axios.get(`api/edithistory/?item_id=${props.item.id}`)
-//     .then( res => {
-//       console.log(res.data)
-//       editHistoriesData.value = res.data;
-//     })
-//     toggleStatus()
-//   } catch(e) {
-//       console.log(e.message)
-//   }
-// }
+}
 
 </script>
 
@@ -302,7 +289,7 @@ const restoreItem = (id) => {
                           <!-- 行表示 -->
                           <div v-if="isTableView">
                             <div class="min-w-full overflow-auto">
-                              <table v-if="localItems.data.length > 0" class="table-fixed min-w-full text-left whitespace-no-wrap">
+                              <table v-if="localItems.data && localItems.data.length > 0" class="table-fixed min-w-full text-left whitespace-no-wrap">
                                 <thead>
                                   <tr>
                                     <th v-if="showDisposal" class="min-w-16 px-4 py-3 title-font tracking-wider font-medium text-white text-sm bg-sky-700">復元</th>
@@ -378,16 +365,15 @@ const restoreItem = (id) => {
                             </div>
                           </div>
 
-
                           <!-- タイル表示 -->
                           <div v-else>
-                            <div v-if="localItems.data.length > 0" class="flex flex-wrap -mx-4">
+                            <div v-if="localItems.data && localItems.data.length > 0" class="flex flex-wrap -mx-4">
                               <template v-for="item in localItems.data" :key="item.id">
                                 <div class="lg:w-1/5 w-1/2 p-4 border" :class="showDisposal ? 'bg-red-100' : ''">
                                   <div class="" >
                                     <a class="mb-2 block relative h-48">
                                       <Link :href="route('items.show', { item: item.id })">
-                                        <img alt="ecommerce" class="object-cover object-center w-full h-full block" :src="item.image_path1">
+                                        <img alt="画像" class="object-cover object-center w-full h-full block" :src="item.image_path1">
                                       </Link>
                                     </a>
                                     <div class="flex items-end">
