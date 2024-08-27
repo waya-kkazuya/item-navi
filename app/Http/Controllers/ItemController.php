@@ -39,7 +39,7 @@ class ItemController extends Controller
         Gate::authorize('staff-higher');
 
         $search = $request->query('search', '');
-
+        
         // 作成日でソートの値、初期値はasc
         $sortOrder = $request->query('sortOrder', 'asc');
 
@@ -527,13 +527,14 @@ class ItemController extends Controller
             if ($request->inspectionSchedule) {
                 // pendingInspectionとは、Inspectionsテーブルでstatusがfalseの一番近い（日付が古い）scheduled_date
                 // nullの可能性もある
-                $pendingInspection = $item->inspections()->where('id', $request->pendingInspection['id'])->first(); //渡ってきたオブジェクトを取得
-                
-                if($pendingInspection) {
-                    // 既存の点検データを更新
+                // pendingInspectionのデータがあれば更新、作成されていなければ作成する
+                // dd($request->pendingInspection);
+                if($request->pendingInspection) {
+                    // データがあるなら、既存の点検データを更新
+                    $pendingInspection = $item->inspections()->where('id', $request->pendingInspection['id'])->first(); //渡ってきたオブジェクトを取得
                     $pendingInspection->update(['scheduled_date' => $request->inspectionSchedule]);
                 } else {
-                    // 新しい点検データを作成
+                    // データがないなら、新しい点検データを作成
                     $item->inspections()->create(['scheduled_date' => $request->inspectionSchedule]);
                 }
             }
