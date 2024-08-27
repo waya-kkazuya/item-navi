@@ -15,26 +15,29 @@ class NotificationController extends Controller
 {
     public function index()
     {   
-        $notifications = Auth::user()->notifications;
+        // ログイン中のユーザーに向けた通知を取得
+        // 情報がない場合、nullではなく空のコレクションとして扱われる
+        // $notifications = Auth::user()->notifications;
         // $notifications = SystemNotification::all();
-
-        // これは1人のユーザーの情報か？？
 
         // dd($notifications);
         // json形式を読み取れる形式に変換する
-        $notifications = SystemNotification::all()->map(function ($notification) {
-            $notification->data = json_decode($notification->data, true);
-            // diffForHumansで相対的な時間を追加、人間のためのという意味
-            $notification->relative_time = Carbon::parse($notification->created_at)->diffForHumans();
-            
+        $notifications = Auth::user()->notifications->map(function ($notification) {
+            $notification->id = (string) $notification->id; // UUIDを文字列として扱う
+            // $notification->data = json_decode($notification->data, true); // json形式を読み取れる形式に変換する
+            $notification->relative_time = Carbon::parse($notification->created_at)->diffForHumans(); // 相対的な時間を追加
+
             return $notification;
         });
+        // $notifications = SystemNotification::all()->map(function ($notification) {
+        //     $notification->data = json_decode($notification->data, true);
+        //     // diffForHumansで相対的な時間を追加、人間のためのという意味
+        //     $notification->relative_time = Carbon::parse($notification->created_at)->diffForHumans();
+            
+        //     return $notification;
+        // });
 
-        // Notificaitonsテーブルのtypeカラムで分ける
-        // $type = $request->query('type');
-        // if ($type) {
-        //     return Notification::where('type', $type)->get();
-        // }
+
         
         //typeカラムでフィルターする 
 
@@ -50,6 +53,9 @@ class NotificationController extends Controller
             return $notification->type === 'App\Notifications\InspectionScheduleNotification';
         });
 
+        // disposalScheduleNotificationsとinspectionScheduleNotificationsを1つの配列にまとめる
+        $disposalAndInspectionNotifications = $disposalScheduleNotifications->merge($inspectionScheduleNotifications);
+
         $requestedItemNotifications = $notifications->filter(function ($notification) {
             return $notification->type === 'App\Notifications\RequestedItemNotification';
         });
@@ -57,15 +63,23 @@ class NotificationController extends Controller
         return Inertia::render('Notification', [
             'notifications' => $notifications,
             'lowStockNotifications' => $lowStockNotifications,
-            'disposalScheduleNotifications' => $disposalScheduleNotifications,
-            'inspectionScheduleNotifications' => $inspectionScheduleNotifications,
+            'disposalAndInspectionNotifications' => $disposalAndInspectionNotifications,
             'requestedItemNotifications' => $requestedItemNotifications,
         ]);
+    }
 
+    // 既読にするためのAPIエンドポイント
+    public function markAsRead($id)
+    {
+        // dd($id);
+        Log::info('コントローラーまで来ました');
+        Log::info($id);
 
-        // // API通信
-        // return [
-        //     'notifications' => SystemNotification::all()
-        // ];
+        $notification = Auth::user()->notifications()->find($id);
+        if ($notification) {
+            $notification->markAsRead();
+            return response()->noContent(); // 204 No Content
+        }
+        return response()->json(['status' => 'error'], 404);
     }
 }

@@ -10,4 +10,7 @@ class SystemNotification extends Model
     use HasFactory;
 
     protected $table = 'notifications';
+
+    protected $keyType = 'string';
+    public $incrementing = false;
 }
