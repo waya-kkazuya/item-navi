@@ -11,12 +11,14 @@ class InspectionScheduleNotification extends Notification
 {
     use Queueable;
 
+    protected $item;
+
     /**
      * Create a new notification instance.
      */
-    public function __construct()
+    public function __construct($item)
     {
-        //
+        $this->item = $item;
     }
 
     /**
@@ -26,7 +28,7 @@ class InspectionScheduleNotification extends Notification
      */
     public function via(object $notifiable): array
     {
-        return ['mail'];
+        return ['database'];
     }
 
     /**
@@ -34,10 +36,10 @@ class InspectionScheduleNotification extends Notification
      */
     public function toMail(object $notifiable): MailMessage
     {
-        return (new MailMessage)
-                    ->line('The introduction to the notification.')
-                    ->action('Notification Action', url('/'))
-                    ->line('Thank you for using our application!');
+        // return (new MailMessage)
+        //             ->line('The introduction to the notification.')
+        //             ->action('Notification Action', url('/'))
+        //             ->line('Thank you for using our application!');
     }
 
     /**
@@ -47,8 +49,19 @@ class InspectionScheduleNotification extends Notification
      */
     public function toArray(object $notifiable): array
     {
+        // 画像パスの設定
+        $imagePath = 'storage/items/' . $this->item->image1;
+        if (!$this->item->image1 || !Storage::exists($imagePath)) {
+            $imagePath = 'storage/items/No_Image.jpg';
+        }
+
+        // ここで表示するのに必要な情報を詰め込む
         return [
-            //
+            'id' => $this->item->id,
+            'management_id' => $this->item->management_id,
+            'image_path1' => asset($imagePath),
+            'item_name' => $this->item->name,
+            'message' => '点検予定日が近付いています'
         ];
     }
 }
