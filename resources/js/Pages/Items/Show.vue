@@ -238,7 +238,7 @@ const deleteItem = id => {
                                                                 {{ pendingInspection ? pendingInspection.scheduled_date : '' }}
                                                             </div>
                                                             <div class="w-full">
-                                                                <InspectionModal :item="item" :userName="userName" :errors="errors" />
+                                                                <InspectionModal :item="item" :userName="userName" :pendingInspection="pendingInspection" :errors="errors" />
                                                                 <!-- <button @click="inspectItem(item.id)" class="flex mx-auto text-white bg-sky-500 border-0 py-2 px-8 focus:outline-none hover:bg-sky-600 rounded">点検する</button> -->
                                                             </div>
                                                         </div>
