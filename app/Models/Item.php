@@ -77,6 +77,10 @@ class Item extends Model
         return $this->hasOne(Disposal::class);
     }
 
+    public function stockTransactions()
+    {
+        return $this->hasMany(StockTransaction::class);
+    }
     
     // 次期バージョンで実装する棚卸用中間テーブルのリレーション
     // public function inventory_plans()
