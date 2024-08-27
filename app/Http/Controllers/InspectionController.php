@@ -7,6 +7,7 @@ use App\Http\Requests\StoreInspectionRequest;
 use App\Models\Inspection;
 use App\Models\Item;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class InspectionController extends Controller
 {
@@ -47,6 +48,7 @@ class InspectionController extends Controller
             // 処理５、Show画面の前回の点検日を表示する
             // statusがtrueで一番新しいものを表示
 
+            DB::commit();
 
             // 点検の場合は、モーダルを閉じて点検画面を再表示
             return to_route('items.show', ['item' => $item->id])
