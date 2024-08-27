@@ -69,6 +69,10 @@ Route::middleware('auth:sanctum', 'verified', 'can:staff-higher')
 });
 
 
+Route::middleware(['auth:sanctum', 'verified', 'can:staff-higher'])->group(function () {
+  Route::patch('/notifications/{id}/read', [NotificationController::class, 'markAsRead']);
+});
+
 Route::middleware('auth:sanctum')
 ->get('/analysis', [AnalysisController::class, 'index' ])
 ->name('api.analysis');
