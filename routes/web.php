@@ -14,6 +14,8 @@ use App\Http\Controllers\InventoryPlanController;
 use App\Http\Controllers\DisposalController;
 use App\Http\Controllers\InspectionController;
 use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\InspectionAndDisposalItemController;
+use App\Http\Controllers\ItemRequestController;
 use App\Models\Disposal;
 use App\Models\ImageTest;
 use App\Models\Inspection;
@@ -45,25 +47,13 @@ Route::resource('items', ItemController::class)
 Route::post('/items/{id}/restore', [ItemController::class, 'restore'])->name('items.restore')
 ->middleware(['auth', 'verified', 'can:staff-higher']);
 
-// 廃棄された備品
-// Route::prefix('disposed-items')
-// ->middleware(['auth', 'verified', 'can:staff-higher'])->group(function(){
-//     Route::get('index', [ItemController::class, 'disposedItemIndex'])
-//     ->name('disposeditems.index');
-
-// });
-
-
-
-
 Route::middleware(['auth', 'verified', 'can:staff-higher'])->group(function () {
     Route::put('/dispose_item/{item}', [DisposalController::class, 'disposeItem'])->name('dispose_item.disposeItem');
     Route::put('/inspect_item/{item}', [InspectionController::class, 'inspectItem'])->name('inspect_item.inspectItem');
 
-    // 省略可能なオプションのルートパラメータを追加する
+    // 省略可能なオプションのルートパラメータ{item_id?}を追加する
     Route::get('consumable_items/{item_id?}', [ConsumableItemController::class, 'index'])->name('consumable_items');
     // Route::get('consumable_item_lists', [ConsumableItemController::class, 'index'])->name('consumable_item_lists');
-    
 
     // Route::get('consumable_items/{id}/history', [ConsumableItemController::class, 'history'])->name('consumable_items.history');
 
@@ -73,14 +63,23 @@ Route::middleware(['auth', 'verified', 'can:staff-higher'])->group(function () {
     Route::get('/notifications', [NotificationController::class, 'index'])
     ->name('notifications.index');
     
+    Route::get('inspection-and-disposal-items', [InspectionAndDisposalItemController::class, 'index'])
+    ->name('inspection_and_disposal_items');
+
+    Route::get('item-requests', [ItemRequestController::class, 'index'])
+    ->name('item_requests.index');
+
+    Route::get('item-requests/create', [ItemRequestController::class, 'create'])
+    ->name('item_requests.create');
 
 
     // Route::get('/notifications', function () {
     //     return Inertia::render('Notification');
     // });
+
+
+
 });
-
-
 
 
 
