@@ -31,7 +31,7 @@ class LowStockDetectListener
         // $user = User::find(1); // 通知を受け取るユーザーを取得
         // $user->notify(new InventoryLowNotification($event->inventoryItem));
         
-        // 全てのユーザーに通知する場合
+        // user権限以外の全てのユーザーに通知する場合
         $users = User::whereIn('role', [1, 5])->get(); // roleが1（admin）または5（staff）のユーザーを取得
         foreach ($users as $user) {
             $user->notify(new LowStockNotification($event->item));

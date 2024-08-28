@@ -17,6 +17,7 @@ onMounted(async () => {
     })
   } catch (e) {
     console.error(e);
+    console.error('BellNotificationAPI通信失敗');
   }
 });
 </script>

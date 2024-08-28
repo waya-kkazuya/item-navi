@@ -26,7 +26,7 @@ class StoreItemRequest extends FormRequest
         return [
             'image1' => ['nullable'], // 正方形画像 画像名の命名規則にしたがって制限をかける、何文字以内
             'imageFile' => ['nullable', 'image', 'mimes:jpeg,png,jpg'],
-            'name' => ['required', 'min:3' ,'max:20'],
+            'name' => ['required', 'min:1' ,'max:20'],
             'categoryId' => ['required', 'exists:categories,id'],
             'stock' => ['required', 'integer', 'min:0', 'max:200'],
             'unitId' => ['required', 'exists:units,id'],

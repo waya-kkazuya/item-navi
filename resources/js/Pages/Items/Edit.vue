@@ -301,7 +301,7 @@ const handleFileUpload = (event) => {
                                                             <label for="price" class="leading-7 text-sm text-blue-900">
                                                                 取得価額 <span class="text-red-600">*</span>
                                                             </label>
-                                                            <input type="number" id="price" name="price" v-model="form.price" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
+                                                            <input type="number" id="price" name="price" v-model="form.price" min="0" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
                                                             <div v-if="errors.price" class="font-medium text-red-600">{{ errors.price }}</div>
                                                         </div>
 

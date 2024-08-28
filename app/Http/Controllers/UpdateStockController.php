@@ -15,6 +15,7 @@ class UpdateStockController extends Controller
 {
     public function decreaseStock(DecreaseStockRequest $request, Item $item)
     {
+        Gate::authorize('user-higher');
         // dd($request);
         // dd($item);
         DB::beginTransaction();
@@ -45,7 +46,6 @@ class UpdateStockController extends Controller
             // itemsテーブルのstockカラムの値を更新
             $item->stock -= $request->quantity;
             $item->save();
-
 
             
             // 在庫数が通知在庫数以下になったときにイベントを発火
@@ -81,6 +81,7 @@ class UpdateStockController extends Controller
     // Increase用のRequestファイルが必要
     public function increaseStock(IncreaseStockRequest $request, Item $item)
     {
+        Gate::authorize('user-higher');
         // dd($request);
         // dd($item);
         DB::beginTransaction();
@@ -117,6 +118,7 @@ class UpdateStockController extends Controller
             // LowStockDetectEventのイベント発火
             // event(new LowStockDetectEvent($item));
             // // event(new LowStockDetectEvent('こんにちは！'));
+            
             DB::commit();
 
             return to_route('consumable_items')

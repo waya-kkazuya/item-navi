@@ -9,6 +9,7 @@ use App\Http\Controllers\WishController;
 use App\Http\Controllers\ImageTestController;
 use App\Http\Controllers\AnalysisController;
 use App\Http\Controllers\ConsumableItemController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\UpdateStockController;
 use App\Http\Controllers\InventoryPlanController;
 use App\Http\Controllers\DisposalController;
@@ -66,21 +67,25 @@ Route::middleware(['auth', 'verified', 'can:staff-higher'])->group(function () {
     Route::get('inspection-and-disposal-items', [InspectionAndDisposalItemController::class, 'index'])
     ->name('inspection_and_disposal_items');
 
+
+    // Route::get('/notifications', function () {
+    //     return Inertia::render('Notification');
+    // });
+
+});
+
+// リクエストはuser権限でもアクセス可能
+// ページのステータスは権限がないと変更できない
+Route::middleware(['auth', 'verified', 'can:user-higher'])->group(function () {
     Route::get('item-requests', [ItemRequestController::class, 'index'])
     ->name('item_requests.index');
 
     Route::get('item-requests/create', [ItemRequestController::class, 'create'])
     ->name('item_requests.create');
 
-
-    // Route::get('/notifications', function () {
-    //     return Inertia::render('Notification');
-    // });
-
-
-
+    Route::post('item-requests', [ItemRequestController::class, 'store'])
+    ->name('item_requests.store');
 });
-
 
 
 // グラフテスト用
@@ -112,9 +117,12 @@ Route::get('/', function () {
 
 
 // ダッシュボード
-Route::get('/dashboard', function () {
-    return Inertia::render('Dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+Route::get('/dashboard', [DashboardController::class, 'index'])
+->middleware(['auth', 'verified', 'can:staff-higher'])->name('dashboard');
+
+Route::get('item-requests', [ItemRequestController::class, 'index'])
+->name('item_requests.index');
+
 
 
 // プロフィール編集用ルート

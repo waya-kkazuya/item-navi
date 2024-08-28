@@ -11,11 +11,18 @@ class Location extends Model
 {
     use HasFactory;
 
-    public function item() {
+    public function item()
+    {
         return $this->hasOne(Item::class);
     }
 
-    public function wish() {
+    public function wish()
+    {
+        return $this->hasOne(Wish::class);
+    }
+
+    public function itemRequest()
+    {
         return $this->hasOne(Wish::class);
     }
 }

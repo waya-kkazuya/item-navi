@@ -8,6 +8,7 @@ use App\Http\Controllers\ConsumableItemController;
 use App\Models\Edithistory;
 use App\Models\StockTransaction;
 use App\Http\Controllers\ItemController;
+use App\Http\Controllers\ItemRequestController;
 use App\Http\Controllers\StockTransactionController;
 use App\Http\Controllers\NotificationController;
 
@@ -72,6 +73,10 @@ Route::middleware('auth:sanctum', 'verified', 'can:staff-higher')
 Route::middleware(['auth:sanctum', 'verified', 'can:staff-higher'])->group(function () {
   Route::patch('/notifications/{id}/read', [NotificationController::class, 'markAsRead']);
 });
+
+Route::middleware(['auth:sanctum', 'verified', 'can:staff-higher'])
+->post('item-requests/{id}/update-status', [ItemRequestController::class, 'updateStatus']);
+
 
 Route::middleware('auth:sanctum')
 ->get('/analysis', [AnalysisController::class, 'index' ])
