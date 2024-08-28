@@ -38,6 +38,7 @@ class DatabaseSeeder extends Seeder
             EditReasonSeeder::class,
             ItemSeeder::class,
             EdithistorySeeder::class,
+            RequestStatusSeeder::class,
             ItemRequestSeeder::class,
             // ImageTestSeeder::class
         ]);

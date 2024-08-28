@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 
 class ItemRequestSeeder extends Seeder
 {
@@ -19,7 +20,7 @@ class ItemRequestSeeder extends Seeder
                 'location_of_use_id' => 4,
                 'requestor' => '田中',
                 'remarks_from_requestor' => 'なくなったため',
-                'request_status' => '検討中',
+                'request_status_id' => 1,
                 'manufacturer' => 'テスト',
                 'reference' => 'Amazon',
                 'price' => 500,
@@ -31,7 +32,7 @@ class ItemRequestSeeder extends Seeder
                 'location_of_use_id' => 4,
                 'requestor' => '田中',
                 'remarks_from_requestor' => 'なくなったため',
-                'request_status' => '検討中',
+                'request_status_id' => 2,
                 'manufacturer' => 'テスト',
                 'reference' => 'Amazon',
                 'price' => 500,

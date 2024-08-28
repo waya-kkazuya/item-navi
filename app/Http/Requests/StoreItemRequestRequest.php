@@ -23,14 +23,14 @@ class StoreItemRequestRequest extends FormRequest
     {
         return [
             'name' => ['required', 'min:3' ,'max:20'],
-            'category_id' => ['required', 'exists:categories,id'],
-            'location_of_use_id' => ['required', 'exists:locations,id'],
-            'requestor' => ['required', 'min:3' ,'max:20'],
-            'remarks_from_requestor' => ['required', 'max:500'],
-            'request_status' => ['nullable'], // admin・staffが変更する、enum型か、テーブルを追加するか
+            'categoryId' => ['required', 'exists:categories,id'],
+            'locationOfUseId' => ['required', 'exists:locations,id'],
+            'requestor' => ['required', 'min:1' ,'max:20'],
+            'remarksFromRequestor' => ['required', 'max:500'],
+            'requestStatusId' => ['nullable'], // admin・staffが変更する、enum型か、テーブルを追加するか
             'manufacturer' => ['nullable', 'max:20'],
             'reference' => ['nullable', 'max:20'],
-            'price' => ['nullable', 'integer', 'max:1000000'],,
+            'price' => ['nullable', 'integer', 'max:1000000'],
         ];
     }
 }
