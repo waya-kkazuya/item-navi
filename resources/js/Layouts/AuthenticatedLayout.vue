@@ -144,11 +144,11 @@ const showingNavigationDropdown = ref(false);
                         <ResponsiveNavLink :href="route('consumable_items')" :active="route().current('consumable_items')">
                             消耗品管理
                         </ResponsiveNavLink>
-                        <ResponsiveNavLink :href="route('wishes.index')" :active="route().current('wishes.index')">
-                            ウィッシュリスト
+                        <ResponsiveNavLink :href="route('inspection_and_disposal_items')" :active="route().current('inspection_and_disposal_items')">
+                            点検と廃棄
                         </ResponsiveNavLink>
-                        <ResponsiveNavLink :href="route('inventory_plans.index')" :active="route().current('inventory_plans.index')">
-                            棚卸計画
+                        <ResponsiveNavLink :href="route('item_requests.index')" :active="route().current('item_requests.index')">
+                            リクエスト
                         </ResponsiveNavLink>
                     </div>
 
