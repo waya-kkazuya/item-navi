@@ -21,6 +21,9 @@ class EventServiceProvider extends ServiceProvider
         'App\Events\LowStockDetectEvent' => [
             'App\Listeners\LowStockDetectListener',
         ],
+        'App\Events\RequestedItemDetectEvent' => [
+            'App\Listeners\RequestedItemDetectListener',
+        ],
         // LowStockDetect::class => [
         //     SendNotification::class,
         // ],

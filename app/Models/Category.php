@@ -18,4 +18,9 @@ class Category extends Model
     public function wish() {
         return $this->hasOne(Wish::class);
     }
+
+    public function itemRequest() 
+    {
+        return $this->hasOne(Item::class);
+    }
 }

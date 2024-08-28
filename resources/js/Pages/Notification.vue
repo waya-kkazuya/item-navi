@@ -148,7 +148,7 @@ const handleClick = async (id, routeName, routeParams) => {
                         <div v-if="activeTab === 'tab3'">
                           <div class="flex justify-around">
                             <div class="mb-4 px-4 font-medium">備品のリクエストが追加されました</div>
-                            <Link :href="route('consumable_items')" class="mb-4 px-4 text-blue-600 title-font font-medium underline">
+                            <Link :href="route('item_requests.index')" class="mb-4 px-4 text-blue-600 title-font font-medium underline">
                               リクエスト一覧へ
                             </Link>
                           </div>
@@ -157,9 +157,10 @@ const handleClick = async (id, routeName, routeParams) => {
                               <div v-for="notification in requestedItemNotifications" :key="notification.id" class="border-b border-gray-300 py-4">
                                 <div class="flex items-center justify-between space-x-8">
                                   <div v-if="!notification.read_at" class="text-orange-500">●</div>
-                                  <div>{{ notification.id }}</div>
+                                  <!-- <div>{{ notification.id }}</div> -->
                                   <div>{{ notification.relative_time }}</div>
                                   <div>{{ notification.data.item_name }}</div>
+                                  <div>{{ notification.data.message }}</div>
                                 </div>
                               </div>
                             </div>
