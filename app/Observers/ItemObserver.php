@@ -18,6 +18,8 @@ class ItemObserver
 
     private function generateManagementId($category_id)
     {
+        // dd('テスト用デバッグ', $category_id);
+
         $prefix = '';
 
         switch ($category_id) {
