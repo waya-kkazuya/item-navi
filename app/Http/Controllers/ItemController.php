@@ -25,12 +25,16 @@ use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Intervention\Image\ImageManager;
-use Intervention\Image\Drivers\Gd\Driver;
+// use Intervention\Image\Drivers\Gd\Driver;
+use Intervention\Image\Drivers\Imagick\Driver;
+use Intervention\Image\Encoders\JpegEncoder;
 use Carbon\Carbon;
 use App\Services\ImageService;
+use Intervention\Image\Typography\FontFactory;
 
 class ItemController extends Controller
 {
+    const CONSUMABLE_ITEM_ID = 1;
 
     public function index(Request $request)
     {  
@@ -233,8 +237,7 @@ class ItemController extends Controller
 
         // try{
 
-
-            // 画像アップロード
+            // 画像アップロード　再代入
             $imageFile = $request->imageFile; // 一時保存
             // ->isValid()は念のため、ちゃんとアップロードできているかチェックしてくれる
             $fileNameToStore = null;
@@ -243,55 +246,16 @@ class ItemController extends Controller
             }
 
 
-            // // QRコード生成、QrCodeServiceに切り分ける
-            // // ※消耗品のときだけcategory_id=1のときだけ生成する
-            // if($item->category_id == 1){
-            //     // QrCode::format('png')->size(200)->generate('Hello Laravel!', storage_path('app/public/qrcode/' . $qrcodeName));
-            //     // png生成にはImagickが必要
-            //     $qrCode = QrCode::format('png')->size(200)->generate('Hello Laravel!');
-            //     $qrManager = new ImageManager(new Driver());
-            //     $qrImage = $qrManager->read($qrCode)->resize(30, 30);
-
-            //     $label = $qrManager->create(91, 55)->fill('fff');
-            //     $label->place(
-            //         $qrImage,
-            //         'top-left', 
-            //         15, 
-            //         15,
-            //     );
-            //     $label->text('管理ID ' . $item->management_id, 50, 15, function($font) {
-            //         $font->size(12);
-            //         $font->color('#000');
-            //     });
-            //     $label->text('備品名 ' . $item->name, 50, 30, function($font) {
-            //         $font->size(12);
-            //         $font->color('#000');
-            //     });
-            //     $label->text('備品カテゴリ ' . $item->category->name, 50, 45, function($font) {
-            //         $font->size(12);
-            //         $font->color('#000');
-            //     });
-
-
-            //     $labelName = $item->id . '_label.jpg';
-            //     Storage::put('labels/' . $labelName, $label->encodeByExtension('jpg'));
-            //     // 画像データをjpegへエンコードする
-
-            //     // 画像をStorage/public/qrcodesに保存する
-            //     // return $qrCodeNameToStore;
-            // }
-
-
-        // もしもカテゴリが消耗品以外で、minimumに数値が入っていたらnullにする
-        // categoriesテーブルで消耗品のidは1、定数に入れる
-        if($request->categoryId == 1){
-            $minimum_stock = $request->minimumStock;
-        } else {
-            $minimum_stock = null;
-        }
 
 
 
+            // もしもカテゴリが消耗品以外で、minimumに数値が入っていたらnullにする
+            // categoriesテーブルで消耗品のidは1、定数に入れる
+            if($request->categoryId == self::CONSUMABLE_ITEM_ID){
+                $minimum_stock = $request->minimumStock;
+            } else {
+                $minimum_stock = null;
+            }
 
             // 保存したオブジェクトを変数に入れてInspectionのcreateに使用する
             $item = Item::create([
@@ -335,6 +299,66 @@ class ItemController extends Controller
             ]);
         
             
+
+            // // QRコード生成、QrCodeServiceに切り分ける
+            // // ※消耗品のときだけcategory_id=1のときだけ生成する
+            if($request->categoryId == self::CONSUMABLE_ITEM_ID){
+                //     // QrCode::format('png')->size(200)->generate('Hello Laravel!', storage_path('app/public/qrcode/' . $qrcodeName));
+                //     // png生成にはImagickが必要
+                    $qrCode = QrCode::format('png')->size(300)->generate('Hello Laravel!');
+                    // $qrCode = QrCode::format('png')->size(200)->generate('Hello Laravel!');
+                    $qrCodeName = 'テストQRコード';
+                    Storage::put('public/qrcode/' . $qrCodeName, $qrCode);
+                    
+                    // 保存したファイルのパスを取得
+                    $qrCodefilePath = Storage::path('public/qrcode/' . $qrCodeName);
+    
+    
+                    $qrManager = new ImageManager(new Driver());
+                    $qrImage = $qrManager->read($qrCodefilePath);
+                    // $qrImage = $qrManager->read($qrCode, 'raw')->resize(30, 30);
+    
+                    $label = $qrManager->create(910, 550)->fill('fff');
+                    $label->place($qrImage, 'top-left', 80, 125);
+    
+                    // 白地に文字を追加
+                    $label->text('管理ID IT-3333', 450, 160, function(FontFactory $font) {
+                        $font->filename(resource_path('fonts/NotoSansJP-Medium.ttf'));
+                        $font->size(30);
+                        $font->color('#000');
+                    });
+                    $label->text('備品名 ペーパータオル', 450, 230, function(FontFactory $font) {
+                        $font->filename(resource_path('fonts/NotoSansJP-Medium.ttf'));
+                        $font->size(30);
+                        $font->color('#000');
+                    });
+                    $label->text('カテゴリ 消耗品', 450, 300, function(FontFactory $font) {
+                        $font->filename(resource_path('fonts/NotoSansJP-Medium.ttf'));
+                        $font->size(30);
+                        $font->color('#000');
+                    });
+    
+                    $labelName = 'QRCodeTest_label.jpg';
+                    // $labelName = $item->id . '_label.jpg';
+                    // JpegEncoderでエンコードする、use分も書く
+                    Storage::put('labels/' . $labelName, $label->encode(new JpegEncoder()));
+                    
+                    // QRコードを生成して保存するだけ
+                    // $labelName = 'QRコードテスト.png';
+                    // Storage::put('labels/' . $labelName, $qrCode);
+                //     // 画像データをjpegへエンコードする
+    
+                //     // 画像をStorage/public/qrcodesに保存する
+                //     // return $qrCodeNameToStore;
+                }
+
+
+
+
+
+
+
+
             // DB::commit(); // ここで確定
 
             Log::info('commitした');
@@ -347,6 +371,12 @@ class ItemController extends Controller
 
         // }catch(ValidationException $e){
         //     DB::rollBack();
+
+
+            // アップロードした画像の削除　引数変更
+            // if (isset($imagePath)) {
+            //     Storage::delete($imagePath);
+            // }
 
         //     return redirect()->back()
         //     ->with([

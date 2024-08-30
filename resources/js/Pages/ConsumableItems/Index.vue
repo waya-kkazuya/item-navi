@@ -134,16 +134,14 @@ const fetchConsumableItems = async () => {
                       <FlashMessage />
                       <section class="text-gray-600 body-font">
                           <div class="container px-5 py-8 mx-auto">
-                            <div class="flex justify-between space-x-4">
-                              
-
+                            <div class="flex justify-center">
                               <div class="">
-                                  <Link as="button" :href="route('items.create')" class="flex items-center text-white text-sm bg-green-500 border-0 py-2 px-6 focus:outline-none hover:bg-green-600 rounded">
+                                  <a :href="route('generate_pdf')" download class="flex items-center text-white text-sm bg-green-500 border-0 py-2 px-6 focus:outline-none hover:bg-green-600 rounded">
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
-                                      <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                                      <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3" />
                                     </svg>
-                                    備品QRコ―ドをダウンロード
-                                  </Link>
+                                    消耗品QRコ―ドをDL
+                                  </a>
                               </div>
                             </div>
 

@@ -17,6 +17,7 @@ use App\Http\Controllers\InspectionController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\InspectionAndDisposalItemController;
 use App\Http\Controllers\ItemRequestController;
+use App\Http\Controllers\PDFController;
 use App\Models\Disposal;
 use App\Models\ImageTest;
 use App\Models\Inspection;
@@ -36,6 +37,12 @@ use Illuminate\Notifications\Notification;
 */
 
 
+// 後で必ず削除
+
+// Route::get('/phpinfo', function () {
+//     phpinfo();
+// })
+// ->middleware(['auth', 'verified', 'can:staff-higher']);
 
 
 
@@ -87,6 +94,9 @@ Route::middleware(['auth', 'verified', 'can:user-higher'])->group(function () {
     ->name('item_requests.store');
 });
 
+
+Route::get('/generate-pdf', [PDFController::class, 'generatePDF'])
+->middleware(['auth', 'verified', 'can:staff-higher'])->name('generate_pdf');
 
 // グラフテスト用
 // Route::get('analysis', [AnalysisController::class, 'index'])->name('analysis');
