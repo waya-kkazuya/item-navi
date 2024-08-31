@@ -26,6 +26,15 @@ class UserFactory extends Factory
         ];
     }
 
+    public function role($role)
+    {
+        return $this->state(function (array $attributes) use ($role) {
+            return [
+                'role' => $role,
+            ];
+        });
+    }
+
     /**
      * Indicate that the model's email address should be unverified.
      *
