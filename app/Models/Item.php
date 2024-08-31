@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use App\Models\Category;
 use App\Models\Location;
 use App\Models\Unit;
+use App\Models\Disposal;
 use App\Models\InventoryPlan;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -64,7 +65,7 @@ class Item extends Model
 
     public function acquisitionMethod()
     {
-        return $this->belongsTo(UsageStatus::class);       
+        return $this->belongsTo(AcquisitionMethod::class);       
     }
 
     public function inspections()
