@@ -209,7 +209,7 @@ class ItemControllerTest extends TestCase
             ->assertOk();
     }
 
- 
+    /** @test */
     function 備品新規登録画面で備品を登録する()
     {
         // データ検証　準備
@@ -226,12 +226,18 @@ class ItemControllerTest extends TestCase
 
         $url = 'items';
 
+        // リファラーでなくともgetでアクセスしておけばそこからpostしたことになる
+        $this->get('items/create');
+
         // リファラーと呼ばれる ->from()部分が大事
-        $response  = $this->from('items/create')->post($url, ['name' => str_repeat('あ', 21)]);
+        $response  = $this->post($url, ['name' => str_repeat('あ', 21)]);
+        // $response  = $this->from('items/create')->post($url, ['name' => str_repeat('あ', 21)]);
         $response->assertRedirect('items/create');
         $response->assertStatus(302); //リダイレクトステータス
         // $response->assertSessionHasErrors(['name' => '指定']); // セッションにエラーメッセージがあることを確認
         // $response->assertInvalid(['name' => '指定']);
+
+
 
         // dump($response->getContent());
 
@@ -261,7 +267,7 @@ class ItemControllerTest extends TestCase
 
         $url = 'items';
         $response = $this->from('items/create')->post($url, ['name' => $name]);
-        $response->assertRedirect('items/create');
+        $response->assertRedirect('items/create'); //URLにリダイレクト
         $response->assertStatus(302);
 
         $response = $this->followRedirects($response);
@@ -293,5 +299,17 @@ class ItemControllerTest extends TestCase
             '空文字の時はエラーメッセージが出る' => ['', '名前は必ず指定してください。'],
         ];
     }
+
+    // category_id用のデータプロバイダ
+    public static function categoryIdValidationProvider()
+    {
+        return [
+            '21文字の時はエラーメッセージが出る' => [str_repeat('あ', 21), '名前は、20文字以下で指定してください。'],
+            '20文字の時はエラーメッセージが出ない' => [str_repeat('あ', 20), null],
+            '空文字の時はエラーメッセージが出る' => ['', '名前は必ず指定してください。'],
+        ];
+    }
+
+
 
 }
