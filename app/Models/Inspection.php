@@ -16,7 +16,6 @@ class Inspection extends Model
         'status',
         'inspection_person',
         'details',
-        'next_scheduled_date',
     ];
 
     public function item()
