@@ -15,6 +15,10 @@ use App\Models\AcquisitionMethod;
 use App\Models\Inspection;
 use Faker\Factory as FakerFactory;
 use Inertia\Testing\AssertableInertia as Assert;
+use Mockery;
+use App\Services\ManagementIdService;
+use Illuminate\Support\Facades\Auth;
+
 
 class ItemControllerTest extends TestCase
 {
@@ -134,6 +138,14 @@ class ItemControllerTest extends TestCase
     }
 
     /** @test */
+    function 廃棄済みの備品データを渡す()
+    {
+        // トグルボタンで切り替えたときに廃棄済みの備品データを渡す
+        // APIのテスト
+    }
+
+
+    /** @test */
     function 備品の詳細画面を開く()
     {
         $categories = Category::factory()->count(11)->create();
@@ -199,15 +211,158 @@ class ItemControllerTest extends TestCase
     }
     
     /** @test */
-    function 備品新規登録画面を開く()
+    function 備品新規登録画面をrole1で開く()
     {
         // adminユーザーを作成
-        // $user = User::factory()->role(1)->create();
-        // $this->actingAs($user);
+        $user = User::factory()->role(1)->create();
+        // $user = User::factory()->role(5)->create();
+        // $user = User::factory()->role(9)->create();
+        // $user = User::factory()->create();
+        // dd('role', $user->role);
+        $this->actingAs($user);
 
         $response = $this->get('items/create')
             ->assertOk();
     }
+
+    /** @test */
+    function 備品新規登録画面を開く()
+    {
+        $roles = [
+            'admin' => 1,
+            'staff' => 5,
+            'user' => 9,
+        ];
+
+        foreach ($roles as $roleName => $role) {
+            $user = User::factory()->role($role)->create();
+            $this->actingAs($user);
+
+            $response = $this->get('items/create');
+
+            if ($role === 9) {
+                $response->assertStatus(403);
+            } else {
+                $response->assertOk();
+            }
+        }
+    }
+
+
+    // /** @test */
+    // function Categoryを取得できる()
+    // {
+    //     $category = Category::factory()->create();
+    //     dump($category->id);
+
+    // }
+
+
+    /** @test */
+    function 備品新規登録画面で備品を登録できる()
+    {
+        // ※注意
+        // 備品が新規作成された裏でItemObserverによってedithistoriesテーブルにもデータが保存される
+
+        //世界の構築が不十分
+        // dump(Category::factory()->create(['id' => 1]));
+        // $category = Category::factory()->create(['id' => 1]);
+        $categories = Category::factory()->count(11)->create();
+        $units = Unit::factory()->count(10)->create();
+        $usage_statuses = UsageStatus::factory()->count(2)->create();
+        $locations = Location::factory()->count(12)->create();
+        $aquisition_methods = AcquisitionMethod::factory()->count(6)->create();
+
+        // adminユーザーを作成
+        $user = User::factory()->role(1)->create();
+        $this->actingAs($user);   
+
+        // モックを作成
+        $mock = Mockery::mock(ManagementIdService::class);
+        $mock->shouldReceive('generate')->once()->with(1)->andReturn('CO-1111');
+        // サービスコンテナで呼び出す
+        $this->instance(ManagementIdService::class, $mock);
+
+
+
+        // ※注意
+        // フロントから送られてくるデータを適切に模倣しないといけいない
+
+        $validData = [
+            // 'management_id' => 'CO-1111',
+            'name' => 'ペーパータオル',
+            'category_id' => $categories->first()->id,
+            'image1' => null,
+            'stock' => 10,
+            'unit_id' => $units->first()->id,
+            'minimum_stock' => 2,
+            'notification' => true,
+            'usage_status_id' => $usage_statuses->first()->id,
+            'end_user' => '山田',
+            'location_of_use_id' => $locations->first()->id,
+            'storage_location_id' => $locations->last()->id,
+            'acquisition_method_id' => $aquisition_methods->first()->id,
+            'acquisition_source' => 'Amazon',
+            'price' => 500,
+            'date_of_acquisition' => '2024-09-03',
+            'manufacturer' => null,
+            'product_number' => null,
+            'remarks' => 'テストコードです',
+            'qrcode' => null,
+            // 'inspection_scheduled_date' => '2024-09-10',
+            // 'disposal_scheduled_date' => '2024-09-20'
+        ];
+
+        // dump(array_merge($validData, $inspectionData, $disposalData));
+
+        // 新規作成時items
+        // $response = $this->post(route('items.store'), $validData);
+        // $response = $this->from('items/create')->post('items', array_merge($validData, $inspectionData, $disposalData));
+        // $response = $this->from('items/create')->post('items', $validData);
+        $response = $this->from('items/create')->post(route('items.store'), $validData);
+
+        $response->assertRedirect('items');
+
+        $this->assertDatabaseHas('items', array_merge($validData, ['management_id' => 'CO-1111']));
+
+        $item = Item::where('management_id', 'CO-1111')->first();
+        dump(Item::where('management_id', 'CO-1111')->first()->id);
+
+        // itemsテーブルだけでなく、inspectionsテーブルとdisposalsテーブルにも保存されているか確認が必要
+        // inspectionsテーブルに保存されているか確認
+        // $inspectionData = [
+        //     'inspection_scheduled_date' => '2024-09-10',
+        // ];
+        // $this->post('inspections', array_merge($inspectionData, ['item_id' => $item->id]));
+        // $this->post('inspections', array_merge($inspectionData, ['item_id' => $item->id]));
+        // $this->assertDatabaseHas('inspections', [
+        //     'item_id' => Item::where('management_id', 'CO-1111')->first()->id,
+        //     'inspection_scheduled_date' =>  $inspectionData['inspection_scheduled_date'],
+        // ]);
+
+        // disposalsテーブルに保存されているか確認
+        // $disposalData = [
+        //     'disposal_scheduled_date' => '2024-09-20',
+        // ];
+        // $this->post('inspections', array_merge($disposalData, ['item_id' => $item->id]));
+        // $this->assertDatabaseHas('disposals', [
+        //     'item_id' => Item::where('management_id', 'CO-1111')->first()->id,
+        //     'disposal_scheduled_date' => $disposalData['disposal_scheduled_date'],
+        // ]);
+
+
+        // その後ItemObserverによるedithistoriesテーブルへの保存をテスト
+        $this->assertDatabaseHas('edithistories', [
+            'edit_mode' => 'normal',
+            'operation_type' => 'store',
+            'item_id' => Item::where('management_id', 'CO-1111')->first()->id,
+            'edited_field' => null,
+            'old_value' => null,
+            'new_value' => null,
+            'edit_user' => Auth::user()->name,     
+        ]);
+    }
+
 
     /** @test */
     function 備品新規登録画面で備品を登録する()
@@ -310,6 +465,94 @@ class ItemControllerTest extends TestCase
         ];
     }
 
+    /** @test */
+    function 備品編集時のバリデーションが表示される()
+    {
+        
+    }
+
+
+    /** @test */
+    function 備品編集画面で備品を編集できる()
+    {
+        // 世界の構築
+        $categories = Category::factory()->count(11)->create();
+        $units = Unit::factory()->count(10)->create();
+        $usage_statuses = UsageStatus::factory()->count(2)->create();
+        $locations = Location::factory()->count(12)->create();
+        $aquisition_methods = AcquisitionMethod::factory()->count(6)->create();      
+
+        // adminユーザーを作成
+        $user = User::factory()->role(1)->create();
+        $this->actingAs($user);
+
+        $item = Item::factory()->create();
+        
+        $validData = [
+            // 'management_id' => 'CO-1111',
+            'name' => 'ペーパータオル',
+            'category_id' => $categories->first()->id,
+            'image1' => null,
+            'stock' => 10,
+            'unit_id' => $units->first()->id,
+            'minimum_stock' => 2,
+            'notification' => true,
+            'usage_status_id' => $usage_statuses->first()->id,
+            'end_user' => '山田',
+            'location_of_use_id' => $locations->first()->id,
+            'storage_location_id' => $locations->last()->id,
+            'acquisition_method_id' => $aquisition_methods->first()->id,
+            'acquisition_source' => 'Amazon',
+            'price' => 500,
+            'date_of_acquisition' => '2024-09-03',
+            'manufacturer' => null,
+            'product_number' => null,
+            'remarks' => 'テストコードです',
+            'qrcode' => null,
+            // 'inspection_scheduled_date' => '2024-09-10',
+            // 'disposal_scheduled_date' => '2024-09-20'
+        ];
+
+
+        // 更新リクエストを送信
+        $response = $this->from('items/edit')
+            ->patch(route('items.update', $item->id), $validData);
+
+        $response->assertRedirect('items');
+
+        // $this->assertDatabaseHas('items', array_merge($validData, ['management_id' => 'CO-1111']));
+
+        // $item = Item::where('management_id', 'CO-1111')->first();
+        // dump(Item::where('management_id', 'CO-1111')->first()->id);
+
+
+
+    }
+
+
+
+
+    /** @test */
+    function Userは備品を管理できない()
+    {
+        
+    }
+
+    
+    /** @test */
+    function ゲストは備品を管理できない()
+    {   
+        $loginUrl = 'login';
+        // $user = User::factory()->role(1)->create();
+        // $this->actingAs($user);
+
+
+        // ゲスト用のリダイレクトのアサ―ト
+        $this->get('items')->assertRedirect($loginUrl);
+        $this->get('items/create')->assertRedirect($loginUrl);
+        $this->from('items/create')->post('items', [])->assertRedirect($loginUrl);
+        $this->get('items/edit')->assertRedirect($loginUrl);
+    }
 
 
 }
