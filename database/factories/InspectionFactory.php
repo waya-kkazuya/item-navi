@@ -19,7 +19,7 @@ class InspectionFactory extends Factory
     {
         return [
             'item_id' => Item::factory(),
-            'scheduled_date' => $this->faker->dateTime(),
+            'inspection_scheduled_date' => $this->faker->dateTime(),
             'inspection_date' => $this->faker->dateTime(),
             'status' => $this->faker->boolean(),
             'inspection_person' => $this->faker->name(),

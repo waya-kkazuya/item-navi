@@ -30,14 +30,13 @@ use Intervention\Image\Drivers\Imagick\Driver;
 use Intervention\Image\Encoders\JpegEncoder;
 use Carbon\Carbon;
 use App\Services\ImageService;
-<<<<<<< Updated upstream
-=======
 use App\Services\ManagementIdService;
 use Intervention\Image\Typography\FontFactory;
->>>>>>> Stashed changes
 
 class ItemController extends Controller
 {
+
+    const CONSUMABLE_ITEM_ID = 1;
 
     protected $managementIdService;
 
@@ -45,7 +44,6 @@ class ItemController extends Controller
     {
         $this->managementIdService = $managementIdService;
     }
-
 
     public function index(Request $request)
     {  
@@ -248,133 +246,79 @@ class ItemController extends Controller
 
         // try{
 
-<<<<<<< Updated upstream
-
-            // 画像アップロード
-=======
             // 画像アップロード　再代入要修正
             // 画像保存処理はデータ保存処理の後に配置
             // image1は部分的に保存する
->>>>>>> Stashed changes
-            $imageFile = $request->imageFile; // 一時保存
+            $image_file = $request->image_file; // 一時保存
             // ->isValid()は念のため、ちゃんとアップロードできているかチェックしてくれる
             $fileNameToStore = null;
-            if(!is_null($imageFile) && $imageFile->isValid() ){
-                $fileNameToStore = ImageService::resizeUpload($imageFile);
+            if(!is_null($image_file) && $image_file->isValid() ){
+                $fileNameToStore = ImageService::resizeUpload($image_file);
             }
 
 
-<<<<<<< Updated upstream
-            // // QRコード生成、QrCodeServiceに切り分ける
-            // // ※消耗品のときだけcategory_id=1のときだけ生成する
-            // if($item->category_id == 1){
-            //     // QrCode::format('png')->size(200)->generate('Hello Laravel!', storage_path('app/public/qrcode/' . $qrcodeName));
-            //     // png生成にはImagickが必要
-            //     $qrCode = QrCode::format('png')->size(200)->generate('Hello Laravel!');
-            //     $qrManager = new ImageManager(new Driver());
-            //     $qrImage = $qrManager->read($qrCode)->resize(30, 30);
-
-            //     $label = $qrManager->create(91, 55)->fill('fff');
-            //     $label->place(
-            //         $qrImage,
-            //         'top-left', 
-            //         15, 
-            //         15,
-            //     );
-            //     $label->text('管理ID ' . $item->management_id, 50, 15, function($font) {
-            //         $font->size(12);
-            //         $font->color('#000');
-            //     });
-            //     $label->text('備品名 ' . $item->name, 50, 30, function($font) {
-            //         $font->size(12);
-            //         $font->color('#000');
-            //     });
-            //     $label->text('備品カテゴリ ' . $item->category->name, 50, 45, function($font) {
-            //         $font->size(12);
-            //         $font->color('#000');
-            //     });
-
-
-            //     $labelName = $item->id . '_label.jpg';
-            //     Storage::put('labels/' . $labelName, $label->encodeByExtension('jpg'));
-            //     // 画像データをjpegへエンコードする
-
-            //     // 画像をStorage/public/qrcodesに保存する
-            //     // return $qrCodeNameToStore;
-            // }
-
-
-        // もしもカテゴリが消耗品以外で、minimumに数値が入っていたらnullにする
-        // categoriesテーブルで消耗品のidは1、定数に入れる
-        if($request->categoryId == 1){
-            $minimum_stock = $request->minimumStock;
-        } else {
-            $minimum_stock = null;
-        }
-
-
-
-=======
             // もしもカテゴリが消耗品以外で、minimumに数値が入っていたらnullにする
             // categoriesテーブルで消耗品のidは1、定数に入れる
-            if($request->categoryId == self::CONSUMABLE_ITEM_ID){
-                $minimum_stock = $request->minimumStock;
+            if($request->category_id == self::CONSUMABLE_ITEM_ID){
+                $minimum_stock = $request->minimum_stock;
             } else {
                 $minimum_stock = null;
             }
->>>>>>> Stashed changes
 
-            $managementId = $this->managementIdService->generate($request->categoryId);
+            $management_id = $this->managementIdService->generate($request->category_id);
 
-            // dd($managementId);
+            // dd($management_id);
 
             // 保存したオブジェクトを変数に入れてInspectionのcreateに使用する
             $item = Item::create([
                 'id' => $request->id,
-                'management_id' => $managementId,
+                'management_id' => $management_id,
                 'name' => $request->name,
-                'category_id' => $request->categoryId ,
+                'category_id' => $request->category_id ,
                 'image1' => $fileNameToStore ?: null,
                 'stock' => $request->stock ?? 0,
-                'unit_id' => $request->unitId,
-                'minimum_stock' => $request->minimumStock,
+                'unit_id' => $request->unit_id,
+                'minimum_stock' => $request->minimum_stock,
                 'notification' => $request->notification,
-                'usage_status_id' => $request->usageStatusId,
-                'end_user' => $request->endUser ?: null,
-                'location_of_use_id' => $request->locationOfUseId,
-                'storage_location_id' => $request->storageLocationId,
-                'acquisition_method_id' => $request->acquisitionMethodId,
-                'acquisition_source' => $request->acquisitionSource ?: null,
+                'usage_status_id' => $request->usage_status_id,
+                'end_user' => $request->end_user ?: null,
+                'location_of_use_id' => $request->location_of_use_id,
+                'storage_location_id' => $request->storage_location_id,
+                'acquisition_method_id' => $request->acquisition_method_id,
+                'acquisition_source' => $request->acquisition_source ?: null,
                 'price' => $request->price,
-                'date_of_acquisition' => $request->dateOfAcquisition,
+                'date_of_acquisition' => $request->date_of_acquisition,
                 'manufacturer' => $request->manufacturer ?: null,
-                'product_number' => $request->productNumber ?: null,
+                'product_number' => $request->product_number ?: null,
                 'remarks' => $request->remarks ?: null,
                 'qrcode' => null,
             ]);
 
-            Inspection::create([
-                'item_id' => $item->id,
-                'scheduled_date' => $request->inspectionSchedule,
-                'inspection_date' => null, // migrationでnullableにする
-                'status' => false, // 未実施がfalse
-                'inspection_person' => null, // 空白は保存できるのか,nullとの違い
-                'details' => null, 
-            ]);
+            if ($request->inspection_scheduled_date !== null) {
+                Inspection::create([
+                    'item_id' => $item->id,
+                    'inspection_scheduled_date' => $request->inspection_scheduled_date,
+                    'inspection_date' => null, // migrationでnullableにする
+                    'status' => false, // 未実施がfalse
+                    'inspection_person' => null, // 空白は保存できるのか,nullとの違い
+                    'details' => null, 
+                ]);
+            }
 
-            Disposal::create([
-                'item_id' => $item->id,
-                'scheduled_date' => $request->disposalSchedule,
-                'disposal_date' => null, // migrationでnullableにする
-                'disposal_person' => '', // 空白は保存できるのか,nullとの違い
-                'details' => null, 
-            ]);
-        
+            if ($request->disposal_scheduled_date !== null) {
+                Disposal::create([
+                    'item_id' => $item->id,
+                    'disposal_scheduled_date' => $request->disposal_scheduled_date,
+                    'disposal_date' => null, // migrationでnullableにする
+                    'disposal_person' => '', // 空白は保存できるのか,nullとの違い
+                    'details' => null, 
+                ]);
+            }
             
 
             // // QRコード生成、QrCodeServiceに切り分ける
             // // ※消耗品のときだけcategory_id=1のときだけ生成する
-            if($request->categoryId == self::CONSUMABLE_ITEM_ID){
+            if($request->category_id == self::CONSUMABLE_ITEM_ID){
                 //     // QrCode::format('png')->size(200)->generate('Hello Laravel!', storage_path('app/public/qrcode/' . $qrcodeName));
                 //     // png生成にはImagickが必要
                     $qrCode = QrCode::format('png')->size(300)->generate('Hello Laravel!');
@@ -414,6 +358,11 @@ class ItemController extends Controller
                     // $labelName = $item->id . '_label.jpg';
                     // JpegEncoderでエンコードする、use分も書く
                     Storage::put('labels/' . $labelName, $label->encode(new JpegEncoder()));
+                    
+                    // ※注意
+                    // 保存したあと、items->update()で部分的にqrcodeの名前を変更する
+                    
+
                     
                     // QRコードを生成して保存するだけ
                     // $labelName = 'QRコードテスト.png';
@@ -575,14 +524,14 @@ class ItemController extends Controller
         // DB::beginTransaction();
 
         // try {
-            // dd($request->imageFile);
+            // dd($request->image_file);
 
             // 画像アップロード
-            $imageFile = $request->imageFile; // 一時保存
+            $image_file = $request->image_file; // 一時保存
             // ->isValid()は念のため、ちゃんとアップロードできているかチェックしてくれる
             $fileNameToStore = null;
-            if(!is_null($imageFile) && $imageFile->isValid() ){
-                $fileNameToStore = ImageService::resizeUpload($imageFile);
+            if(!is_null($image_file) && $image_file->isValid() ){
+                $fileNameToStore = ImageService::resizeUpload($image_file);
             }
 
 
@@ -613,8 +562,8 @@ class ItemController extends Controller
             $item->acquisition_source = $request->acquisitionSource;
             $item->price = $request->price;
             $item->date_of_acquisition = $request->dateOfAcquisition;
-            // $item->inspection_schedule = $request->inspection_schedule;
-            // $item->disposal_schedule = $request->disposal_schedule;
+            // $item->inspection_scheduled_date = $request->inspection_scheduled_date;
+            // $item->disposal_scheduled_date = $request->disposal_scheduled_date;
             $item->manufacturer = $request->manufacturer;
             $item->product_number = $request->productNumber;
             $item->remarks = $request->remarks;

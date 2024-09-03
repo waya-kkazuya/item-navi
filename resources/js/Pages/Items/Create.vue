@@ -16,26 +16,26 @@ const props = defineProps({
 
 const form = useForm({
     id: null, //
-    imageFile: null,
+    image_file: null,
     name: null,
-    categoryId: 0, 
+    category_id: 0, 
     //   image1: null, //保存する際は画像名 
     stock: 1, // 最初から1を入力しておく
-    unitId: 1,
-    minimumStock: 0,
+    unit_id: 1,
+    minimum_stock: 0,
     notification: true,
-    usageStatusId: 0,
-    endUser: null,
-    locationOfUseId: 0, // locationsテーブルで1は「未選択」
-    storageLocationId: 0, // locationsテーブルで1は「未選択」
-    acquisitionMethodId: 0,
-    acquisitionSource: null,
+    usage_status_id: 0,
+    end_user: null,
+    location_of_use_id: 0, // locationsテーブルで1は「未選択」
+    storage_location_id: 0, // locationsテーブルで1は「未選択」
+    acquisition_method_id: 0,
+    acquisition_source: null,
     price: 0,
-    dateOfAcquisition: new Date().toISOString().substr(0, 10),
+    date_of_acquisition: new Date().toISOString().substr(0, 10),
     manufacturer: null,
-    productNumber: null,
-    inspectionSchedule: null, // 初期値はnull
-    disposalSchedule: null, // 初期値はnull
+    product_number: null,
+    inspection_scheduled_date: null, // 初期値はnull
+    disposal_scheduled_date: null, // 初期値はnull
     remarks: null,
     //   qrcode: null,
 })
@@ -43,10 +43,10 @@ const form = useForm({
 const file_preview_src = ref('')
 
 const handleFileUpload = (event) => {
-    form.imageFile = event.target.files[0];
+    form.image_file = event.target.files[0];
     // ブラウザ限定の画像プレビュー用のURL生成
-    if (form.imageFile) {
-        file_preview_src.value = URL.createObjectURL(form.imageFile);
+    if (form.image_file) {
+        file_preview_src.value = URL.createObjectURL(form.image_file);
         console.log(file_preview_src.value)
     }
 };
@@ -75,13 +75,13 @@ const storeItem = () => {
 
 // 「×」ボタンで日付リセット
 const clearDateOfAcquisition = () => {
-    form.dateOfAcquisition = '';
+    form.date_of_acquisition = '';
 };
 const clearInspectionSchedule = () => {
-    form.inspectionSchedule = '';
+    form.inspection_schedule_date = '';
 };
 const clearDisposalSchedule = () => {
-    form.disposalSchedule = '';
+    form.disposal_scheduled_date = '';
 };
 
 </script>
@@ -127,7 +127,7 @@ const clearDisposalSchedule = () => {
                                                             <div v-if="file_preview_src" class="">
                                                                 <img :src=file_preview_src alt="画像プレビュー" class="mr-6 w-48 mt-4">
                                                             </div>
-                                                            <div v-if="errors.imageFile" class="font-medium text-red-600">{{ errors.imageFile }}</div>
+                                                            <div v-if="errors.image_file" class="font-medium text-red-600">{{ errors.image_file }}</div>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -141,14 +141,14 @@ const clearDisposalSchedule = () => {
                                                             <div v-if="errors.name" class="font-medium text-red-600">{{ errors.name }}</div>
                                                         </div>
                                                         <div class="p-2 w-full">
-                                                            <label for="categoryId" class="leading-7 text-sm text-blue-900">
+                                                            <label for="category_id" class="leading-7 text-sm text-blue-900">
                                                                 カテゴリ <span class="text-red-600">*</span>
                                                             </label><br>
-                                                            <select name="categoryId" id="categoryId" v-model="form.categoryId" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
+                                                            <select name="category_id" id="category_id" v-model="form.category_id" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
                                                                 <option :value="0">選択してください</option>  
                                                                 <option v-for="category in categories" :value="category.id" :key="category.id">{{ category.name }}</option>
                                                             </select>
-                                                            <div v-if="errors.categoryId" class="font-medium text-red-600">{{ errors.categoryId }}</div>
+                                                            <div v-if="errors.category_id" class="font-medium text-red-600">{{ errors.category_id }}</div>
                                                         </div>
 
                                                         
@@ -160,23 +160,23 @@ const clearDisposalSchedule = () => {
                                                                 在庫数 <span class="text-red-600">*</span>
                                                             </label><br>
                                                             <input type="number" id="stock" name="stock" v-model="form.stock" class="w-1/4 bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
-                                                            <select name="unit" id="unit" v-model="form.unitId" class="w-1/6 bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
+                                                            <select name="unit" id="unit" v-model="form.unit_id" class="w-1/6 bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
                                                                 <option v-for="unit in units" :value="unit.id" :key="unit.id">{{ unit.name }}</option>
                                                             </select>
                                                             <div v-if="errors.stock" class="font-medium text-red-600">{{ errors.stock }}</div>
                                                             <div v-if="errors.unit" class="font-medium text-red-600">{{ errors.unit }}</div>
                                                         </div>
-                                                        <div v-show="form.categoryId == 1" class="mt-4 pl-2 w-full">
-                                                            <label for="minimumStock" class="leading-7 text-sm text-blue-900">通知在庫数</label><br>
-                                                            <input type="number" id="minimumStock" name="minimumStock" v-model="form.minimumStock"
+                                                        <div v-show="form.category_id == 1" class="mt-4 pl-2 w-full">
+                                                            <label for="minimum_stock" class="leading-7 text-sm text-blue-900">通知在庫数</label><br>
+                                                            <input type="number" id="minimum_stock" name="minimum_stock" v-model="form.minimum_stock"
                                                             class="w-1/4 bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
                                                             <!-- <span class="ml-1 leading-7 text-sm text-blue-900">個</span> -->
-                                                            <select name="unit" id="unit" v-model="form.unitId" class="w-1/6 bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
+                                                            <select name="unit" id="unit" v-model="form.unit_id" class="w-1/6 bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
                                                                 <option v-for="unit in units" :value="unit.id" :key="unit.id">{{ unit.name }}</option>  
                                                             </select>
-                                                            <div v-if="errors.minimumStock" class="font-medium text-red-600">{{ errors.minimumStock }}</div>
+                                                            <div v-if="errors.minimum_stock" class="font-medium text-red-600">{{ errors.minimum_stock }}</div>
                                                         </div>
-                                                        <div v-show="form.categoryId == 1" class="mt-4 pl-2 w-full">
+                                                        <div v-show="form.category_id == 1" class="mt-4 pl-2 w-full">
                                                             <input type="checkbox" id="notification" v-model="form.notification">
                                                             <label for="notification" class="ml-1">在庫数が通知在庫数以下になったら通知する</label>
                                                         </div>
@@ -184,63 +184,63 @@ const clearDisposalSchedule = () => {
 
                                                     <div class="p-4 border bordr-4 mb-8">
                                                         <div class="p-2 w-full">
-                                                            <label for="usageStatusId" class="leading-7 text-sm text-blue-900">
+                                                            <label for="_s" cla_is="leading-7 text-sm text-blue-900">
                                                                 利用状況 <span class="text-red-600">*</span>
                                                             </label>
-                                                            <select name="usageStatusId" id="usageStatusId" v-model="form.usageStatusId" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
+                                                            <select name="usage_status_id" id="usage_status_id" v-model="form.usage_status_id" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
                                                                 <option :value="0">選択してください</option>
                                                                 <option v-for="usageStatus in usageStatuses" :value="usageStatus.id" :key="usageStatus.id">{{ usageStatus.name }}</option>
                                                             </select>
-                                                            <div v-if="errors.usageStatusId" class="font-medium text-red-600">{{ errors.usageStatusId }}</div>
+                                                            <div v-if="errors.usage_status_id" class="font-medium text-red-600">{{ errors.usage_status_id }}</div>
                                                         </div>
 
                                                         <div class="p-2 w-full">
-                                                            <label for="endUser" class="leading-7 text-sm text-blue-900">使用者</label>
-                                                            <input type="text" id="endUser" name="endUser" v-model="form.endUser" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
-                                                            <div v-if="errors.endUser" class="font-medium text-red-600">{{ errors.endUser }}</div>       
+                                                            <label for="end_user" class="leading-7 text-sm text-blue-900">使用者</label>
+                                                            <input type="text" id="end_user" name="end_user" v-model="form.end_user" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
+                                                            <div v-if="errors.end_user" class="font-medium text-red-600">{{ errors.end_user }}</div>       
                                                         </div>
 
                                                         <div class="p-2 w-full">
-                                                            <label for="locationOfUseId" class="leading-7 text-sm text-blue-900">
+                                                            <label for="location_of_use_id" class="leading-7 text-sm text-blue-900">
                                                                 利用場所 <span class="text-red-600">*</span>
                                                             </label>
-                                                            <select name="locationOfUseId" id="locationOfUseId" v-model="form.locationOfUseId" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
+                                                            <select name="location_of_use_id" id="location_of_use_id" v-model="form.location_of_use_id" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
                                                                 <option :value="0">選択してください</option>
                                                                 <option v-for="location in locations" :key="location.id" :value="location.id">{{ location.name }}</option>
                                                             </select>
-                                                            <div v-if="errors.locationOfUseId" class="font-medium text-red-600">{{ errors.locationOfUseId }}</div>
+                                                            <div v-if="errors.location_of_use_id" class="font-medium text-red-600">{{ errors.location_of_use_id }}</div>
                                                         </div>
 
                                                         <div class="p-2 w-full">
-                                                            <label for="storageLocationId" class="leading-7 text-sm text-blue-900">
+                                                            <label for="storage_location_id" class="leading-7 text-sm text-blue-900">
                                                                 保管場所 <span class="text-red-600">*</span>
                                                             </label>
-                                                            <select name="storageLocationId" id="storageLocationId" v-model="form.storageLocationId" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
+                                                            <select name="storage_location_id" id="storage_location_id" v-model="form.storage_location_id" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
                                                                 <option :value="0">選択してください</option>
                                                                 <option v-for="location in locations" :key="location.id" :value="location.id">{{ location.name }}</option>
                                                             </select>
-                                                            <div v-if="errors.storageLocationId" class="font-medium text-red-600">{{ errors.storageLocationId }}</div>
+                                                            <div v-if="errors.storage_location_id" class="font-medium text-red-600">{{ errors.storage_location_id }}</div>
                                                         </div>
                                                     </div>
 
                                                     <div class="p-4 border bordr-4 mb-8">
                                                         <div class="p-2 w-full">
-                                                            <label for="acquisitionMethodId" class="leading-7 text-sm text-blue-900">
+                                                            <label for="acquisition_method_id" class="leading-7 text-sm text-blue-900">
                                                                 取得区分 <span class="text-red-600">*</span>
                                                             </label>
-                                                            <select name="acquisitionMethodId" id="acquisitionMethodId" v-model="form.acquisitionMethodId" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
+                                                            <select name="acquisition_method_id" id="acquisition_method_id" v-model="form.acquisition_method_id" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
                                                                 <option :value="0">選択してください</option>
                                                                 <option v-for="acquisitionMethod in acquisitionMethods" :key="acquisitionMethod.id" :value="acquisitionMethod.id">{{ acquisitionMethod.name }}</option>
                                                             </select>
-                                                            <div v-if="errors.acquisitionMethodId" class="font-medium text-red-600">{{ errors.acquisitionMethodId }}</div>
+                                                            <div v-if="errors.acquisition_method_id" class="font-medium text-red-600">{{ errors.acquisition_method_id }}</div>
                                                         </div>
 
                                                         <div class="p-2 w-full">
-                                                            <label for="acquisitionSource" class="leading-7 text-sm text-blue-900">
+                                                            <label for="acquisition_source" class="leading-7 text-sm text-blue-900">
                                                                 取得先 <span class="text-red-600">*</span>
                                                             </label>
-                                                            <input type="text" id="acquisitionSource" name="acquisitionSource" v-model="form.acquisitionSource" placeholder="例 Amazonなど" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
-                                                            <div v-if="errors.acquisitionSource" class="font-medium text-red-600">{{ errors.acquisitionSource }}</div>
+                                                            <input type="text" id="acquisition_source" name="acquisition_source" v-model="form.acquisition_source" placeholder="例 Amazonなど" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
+                                                            <div v-if="errors.acquisition_source" class="font-medium text-red-600">{{ errors.acquisition_source }}</div>
                                                         </div>
 
 
@@ -253,14 +253,14 @@ const clearDisposalSchedule = () => {
                                                         </div>
 
                                                         <div class="p-2 w-full">
-                                                            <label for="dateOfAcquisition" class="leading-7 text-sm text-blue-900">
+                                                            <label for="date_of_acquisition" class="leading-7 text-sm text-blue-900">
                                                                 取得年月日 <span class="text-red-600">*</span>
                                                             </label>
                                                             <div class="relative">
-                                                                <input type="date" id="dateOfAcquisition" name="dateOfAcquisition" v-model="form.dateOfAcquisition" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
+                                                                <input type="date" id="date_of_acquisition" name="date_of_acquisition" v-model="form.date_of_acquisition" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
                                                                 <button type="button" @click="clearDateOfAcquisition" class="absolute right-12 top-1/2 transform -translate-y-1/2 text-gray-500" text-lg>×</button>
                                                             </div>
-                                                            <div v-if="errors.dateOfAcquisition" class="font-medium text-red-600">{{ errors.dateOfAcquisition }}</div>
+                                                            <div v-if="errors.date_of_acquisition" class="font-medium text-red-600">{{ errors.date_of_acquisition }}</div>
                                                         </div>
                                                     </div>
 
@@ -272,9 +272,9 @@ const clearDisposalSchedule = () => {
                                                         </div>
                                                         
                                                         <div class="p-2 w-full">
-                                                            <label for="productNumber" class="leading-7 text-sm text-blue-900">製品番号</label>
-                                                            <input type="text" id="productNumber" name="productNumber" v-model="form.productNumber" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
-                                                            <div v-if="errors.productNumber" class="font-medium text-red-600">{{ errors.productNumber }}</div>
+                                                            <label for="product_number" class="leading-7 text-sm text-blue-900">製品番号</label>
+                                                            <input type="text" id="product_number" name="product_number" v-model="form.product_number" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
+                                                            <div v-if="errors.product_number" class="font-medium text-red-600">{{ errors.product_number }}</div>
                                                         </div>
 
                                                     
@@ -287,21 +287,21 @@ const clearDisposalSchedule = () => {
 
                                                     <div class="p-4 border bordr-4 mb-8">
                                                         <div class="p-2 w-full">
-                                                            <label for="inspectionSchedule" class="leading-7 text-sm text-blue-900">点検予定日</label>
+                                                            <label for="inspection_schedule_date" class="leading-7 text-sm text-blue-900">点検予定日</label>
                                                             <div class="relative">
-                                                                <input type="date" id="inspectionSchedule" name="inspectionSchedule" v-model="form.inspectionSchedule" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
+                                                                <input type="date" id="inspection_schedule_date" name="inspection_schedule_date" v-model="form.inspection_schedule_date" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
                                                                 <button type="button" @click="clearInspectionSchedule" class="absolute right-12 top-1/2 transform -translate-y-1/2 text-gray-500" text-lg>×</button>
                                                             </div>
-                                                            <div v-if="errors.inspectionSchedule" class="font-medium text-red-600">{{ errors.inspectionSchedule }}</div>
+                                                            <div v-if="errors.inspection_schedule_date" class="font-medium text-red-600">{{ errors.inspection_schedule_date }}</div>
                                                         </div>
 
                                                         <div class="p-2 w-full">
-                                                            <label for="disposalSchedule" class="leading-7 text-sm text-blue-900">廃棄予定日</label>
+                                                            <label for="disposal_scheduled_date" class="leading-7 text-sm text-blue-900">廃棄予定日</label>
                                                             <div class="relative">
-                                                                <input type="date" id="disposalSchedule" name="disposalSchedule" v-model="form.disposalSchedule" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
+                                                                <input type="date" id="disposal_scheduled_date" name="disposal_scheduled_date" v-model="form.disposal_scheduled_date" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
                                                                 <button type="button" @click="clearDisposalSchedule" class="absolute right-12 top-1/2 transform -translate-y-1/2 text-gray-500" text-lg>×</button>
                                                             </div>
-                                                            <div v-if="errors.disposalSchedule" class="font-medium text-red-600">{{ errors.disposalSchedule }}</div>
+                                                            <div v-if="errors.disposal_scheduled_date" class="font-medium text-red-600">{{ errors.disposal_scheduled_date }}</div>
                                                         </div>
                                                     </div>
                                                     <div class="p-2 w-full">

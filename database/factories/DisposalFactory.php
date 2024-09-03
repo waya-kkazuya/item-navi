@@ -19,7 +19,7 @@ class DisposalFactory extends Factory
     {
         return [
             'item_id' => Item::factory(),
-            'scheduled_date' => $this->faker->dateTime(),
+            'disposal_scheduled_date' => $this->faker->dateTime(),
             'disposal_date' => $this->faker->dateTime(),
             'disposal_person' => $this->faker->name(),
             'details' => $this->faker->realText(100),
