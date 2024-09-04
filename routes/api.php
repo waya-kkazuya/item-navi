@@ -33,11 +33,8 @@ Route::middleware('auth:sanctum')
 Route::middleware(['auth:sanctum', 'verified', 'can:staff-higher'])
 ->get('/items', [ItemController::class, 'index']);
 
-// 以前作成したConsumableItemsController Itemsの複数形があるので後で処理する
-Route::middleware(['auth:sanctum', 'verified', 'can:staff-higher'])
-->get('/consumable_items', [ConsumableItemController::class, 'index']);
 
-
+// 対象の備品の編集履歴を取得するためのAPI
 Route::middleware('auth:sanctum')
 ->get('/edithistory', function (Request $request) {
   return Edithistory::where('item_id', $request->item_id)
@@ -46,24 +43,25 @@ Route::middleware('auth:sanctum')
   ->get();
 });
 
-// Route::middleware('auth:sanctum')
-// ->get('/stock_transactions', function (Request $request) {
-//   return StockTransaction::where('item_id', $request->item_id)
-//   ->orderBy('created_at', 'desc')
-//   ->take(10)
-//   ->get();
-// });
+
+// 消耗品の入出庫で更新した際、在庫数を反映するためのAPI
+// 以前作成したConsumableItemsController Itemsの複数形があるので後で処理する
+Route::middleware(['auth:sanctum', 'verified', 'can:staff-higher'])
+->get('/consumable_items', [ConsumableItemController::class, 'index']);
+
+
+// 在庫数の入出庫履歴を取得するためのAPI
 Route::middleware('auth:sanctum', 'verified', 'can:staff-higher')
 ->get('/stock_transactions', [StockTransactionController::class, 'stockTransaction'])
 ->name('stock_transactions');
 
 
-// 通知画面用
+// 通知画面用 Vueコンポーネントを返しているので使用していない
 Route::middleware('auth:sanctum', 'verified', 'can:staff-higher')
 ->get('/notifications', [NotificationController::class, 'index'])
 ->name('notifications.index');
 
-// ベルに表示する新着件数用
+// ベルに未読通知数を表示するためのAPI
 Route::middleware('auth:sanctum', 'verified', 'can:staff-higher')
 ->get('/notifications_count', function () {
   return auth()->user()->unreadNotifications;
@@ -74,16 +72,15 @@ Route::middleware(['auth:sanctum', 'verified', 'can:staff-higher'])->group(funct
   Route::patch('/notifications/{id}/read', [NotificationController::class, 'markAsRead']);
 });
 
+// リクエストのステータスのプルダウンをadmin,staffが変更するためのAPI
 Route::middleware(['auth:sanctum', 'verified', 'can:staff-higher'])
 ->post('item-requests/{id}/update-status', [ItemRequestController::class, 'updateStatus']);
 
 
+// グラフテスト用
 Route::middleware('auth:sanctum')
 ->get('/analysis', [AnalysisController::class, 'index' ])
 ->name('api.analysis');
 
-// Route::middleware('auth:sanctum')
-// ->get('/history', [ConsumableItemsController::class, 'history' ])
-// ->name('api.history');
 
 
