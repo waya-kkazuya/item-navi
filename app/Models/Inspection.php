@@ -11,7 +11,7 @@ class Inspection extends Model
 
     protected $fillable = [
         'item_id',
-        'scheduled_date',
+        'inspection_scheduled_date',
         'inspection_date',
         'status',
         'inspection_person',

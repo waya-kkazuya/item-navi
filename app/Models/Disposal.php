@@ -11,7 +11,7 @@ class Disposal extends Model
 
     protected $fillable = [
         'item_id',
-        'scheduled_date',
+        'disposal_scheduled_date',
         'disposal_date',
         'disposal_person',
         'details',
