@@ -23,6 +23,7 @@ use Illuminate\Support\Facades\Auth;
 class ItemControllerTest extends TestCase
 {
     use RefreshDatabase;
+    // use DatabaseTransactions;
 
     protected function setUp(): void
     {
@@ -287,7 +288,6 @@ class ItemControllerTest extends TestCase
 
         // ※注意
         // フロントから送られてくるデータを適切に模倣しないといけいない
-
         $validData = [
             // 'management_id' => 'CO-1111',
             'name' => 'ペーパータオル',
@@ -309,8 +309,8 @@ class ItemControllerTest extends TestCase
             'product_number' => null,
             'remarks' => 'テストコードです',
             'qrcode' => null,
-            // 'inspection_scheduled_date' => '2024-09-10',
-            // 'disposal_scheduled_date' => '2024-09-20'
+            'inspection_scheduled_date' => '2024-09-10',
+            'disposal_scheduled_date' => '2024-09-20'
         ];
 
         // dump(array_merge($validData, $inspectionData, $disposalData));
@@ -323,7 +323,29 @@ class ItemControllerTest extends TestCase
 
         $response->assertRedirect('items');
 
-        $this->assertDatabaseHas('items', array_merge($validData, ['management_id' => 'CO-1111']));
+        // $this->assertDatabaseHas('items', array_merge($validData, ['management_id' => 'CO-1111']));
+        $this->assertDatabaseHas('items', [
+            'management_id' => 'CO-1111',
+            'name' => 'ペーパータオル',
+            'category_id' => $categories->first()->id,
+            'image1' => null,
+            'stock' => 10,
+            'unit_id' => $units->first()->id,
+            'minimum_stock' => 2,
+            'notification' => true,
+            'usage_status_id' => $usage_statuses->first()->id,
+            'end_user' => '山田',
+            'location_of_use_id' => $locations->first()->id,
+            'storage_location_id' => $locations->last()->id,
+            'acquisition_method_id' => $aquisition_methods->first()->id,
+            'acquisition_source' => 'Amazon',
+            'price' => 500,
+            'date_of_acquisition' => '2024-09-03',
+            'manufacturer' => null,
+            'product_number' => null,
+            'remarks' => 'テストコードです',
+            'qrcode' => null,
+        ]);
 
         $item = Item::where('management_id', 'CO-1111')->first();
         dump(Item::where('management_id', 'CO-1111')->first()->id);
@@ -334,21 +356,20 @@ class ItemControllerTest extends TestCase
         //     'inspection_scheduled_date' => '2024-09-10',
         // ];
         // $this->post('inspections', array_merge($inspectionData, ['item_id' => $item->id]));
-        // $this->post('inspections', array_merge($inspectionData, ['item_id' => $item->id]));
-        // $this->assertDatabaseHas('inspections', [
-        //     'item_id' => Item::where('management_id', 'CO-1111')->first()->id,
-        //     'inspection_scheduled_date' =>  $inspectionData['inspection_scheduled_date'],
-        // ]);
+        $this->assertDatabaseHas('inspections', [
+            'item_id' => Item::where('management_id', 'CO-1111')->first()->id,
+            'inspection_scheduled_date' =>  '2024-09-10',
+        ]);
 
         // disposalsテーブルに保存されているか確認
         // $disposalData = [
         //     'disposal_scheduled_date' => '2024-09-20',
         // ];
         // $this->post('inspections', array_merge($disposalData, ['item_id' => $item->id]));
-        // $this->assertDatabaseHas('disposals', [
-        //     'item_id' => Item::where('management_id', 'CO-1111')->first()->id,
-        //     'disposal_scheduled_date' => $disposalData['disposal_scheduled_date'],
-        // ]);
+        $this->assertDatabaseHas('disposals', [
+            'item_id' => Item::where('management_id', 'CO-1111')->first()->id,
+            'disposal_scheduled_date' => '2024-09-20',
+        ]);
 
 
         // その後ItemObserverによるedithistoriesテーブルへの保存をテスト
@@ -363,9 +384,8 @@ class ItemControllerTest extends TestCase
         ]);
     }
 
-
     /** @test */
-    function 備品新規登録画面で備品を登録する()
+    function 備品新規登録画面でバリデーションエラーメッセージが表示される()
     {
         // データ検証　準備
         // DB保存
@@ -392,8 +412,6 @@ class ItemControllerTest extends TestCase
         // $response->assertSessionHasErrors(['name' => '指定']); // セッションにエラーメッセージがあることを確認
         // $response->assertInvalid(['name' => '指定']);
 
-
-
         // dump($response->getContent());
 
         // // リダイレクト後のレスポンスを取得
@@ -415,18 +433,42 @@ class ItemControllerTest extends TestCase
      * @dataProvider nameValidationProvider
      * @test
      */
-    public function 備品新規登録画面でバリデーションname($name, $expectedError)
+    public function 備品新規登録バリデーションname($data)
     {
         $user = User::factory()->role(1)->create();
         $this->actingAs($user);
 
         $url = 'items';
-        $response = $this->from('items/create')->post($url, ['name' => $name]);
+        $response = $this->from('items/create')->post($url, array_merge($data, [
+            // 'name' => 'ペーパータオル',
+            'category_id' => 1,
+            'image1' => null,
+            'stock' => 10,
+            'unit_id' => 1,
+            'minimum_stock' => 2,
+            'notification' => true,
+            'usage_status_id' => 1,
+            'end_user' => '山田',
+            'location_of_use_id' => 1,
+            'storage_location_id' => 2,
+            'acquisition_method_id' => 1,
+            'acquisition_source' => 'Amazon',
+            'price' => 500,
+            'date_of_acquisition' => '2024-09-03',
+            'manufacturer' => null,
+            'product_number' => null,
+            'remarks' => 'テストコードです',
+            'qrcode' => null,
+            'inspection_scheduled_date' => '2024-09-10',
+            'disposal_scheduled_date' => '2024-09-20'
+        ]));
+        // $response = $this->from('items/create')->post($url, ['name' => $name]);
         $response->assertRedirect('items/create'); //URLにリダイレクト
         $response->assertStatus(302);
 
         $response = $this->followRedirects($response);
 
+        // 基本形
         // $response->assertInertia(fn (Assert $page) => $page
         //     ->component('Items/Create')
         //     ->has('errors.name', $expectedError !== null)
@@ -435,35 +477,368 @@ class ItemControllerTest extends TestCase
 
         $response->assertInertia(fn (Assert $page) => $page
             ->component('Items/Create')
-            ->when($expectedError !== null, fn ($page) => $page
+            ->when($data['expectedError'] !== null, fn ($page) => $page
                 ->has('errors.name')
-                ->where('errors.name', $expectedError)
+                ->where('errors.name', $data['expectedError'])
             )
-            ->when($expectedError === null, fn ($page) => $page
+            ->when($data['expectedError'] === null, fn ($page) => $page
                 ->missing('errors.name')
             )
         );
-
     }
-
+    
     public static function nameValidationProvider()
     {
         return [
-            '21文字の時はエラーメッセージが出る' => [str_repeat('あ', 21), '名前は、20文字以下で指定してください。'],
-            '20文字の時はエラーメッセージが出ない' => [str_repeat('あ', 20), null],
-            '空文字の時はエラーメッセージが出る' => ['', '名前は必ず指定してください。'],
+            'nameが空文字の時はエラーメッセージが出る' => [
+                ['name' => '', 'expectedError' => '名前は必ず指定してください。']
+            ],
+            'nameが21文字の時はエラーメッセージが出る' => [
+                ['name' => str_repeat('あ', 21), 'expectedError' => '名前は、20文字以下で指定してください。']
+            ],
+            'nameが20文字の時はエラーメッセージが出ない' => [
+                ['name' => str_repeat('あ', 20), 'expectedError' => null]
+            ],
         ];
     }
 
-    // category_id用のデータプロバイダ
+
+    /**
+     * @dataProvider categoryIdValidationProvider
+     * @test
+     */
+    public function 備品新規登録バリデーションcategoryId($data)
+    {
+        // 世界を構築
+        $categories = Category::factory()->count(11)->create();
+        $units = Unit::factory()->count(10)->create();
+        $usage_statuses = UsageStatus::factory()->count(2)->create();
+        $locations = Location::factory()->count(12)->create();
+        $aquisition_methods = AcquisitionMethod::factory()->count(6)->create();
+
+        $user = User::factory()->role(1)->create();
+        $this->actingAs($user);
+
+        $url = 'items';
+        $response = $this->from('items/create')->post($url, array_merge($data, [
+            'name' => 'ペーパータオル',
+            'image1' => null,
+            'stock' => 10,
+            'unit_id' => 1,
+            'minimum_stock' => 2,
+            'notification' => true,
+            'usage_status_id' => 1,
+            'end_user' => '山田',
+            'location_of_use_id' => 1,
+            'storage_location_id' => 2,
+            'acquisition_method_id' => 1,
+            'acquisition_source' => 'Amazon',
+            'price' => 500,
+            'date_of_acquisition' => '2024-09-03',
+            'manufacturer' => null,
+            'product_number' => null,
+            'remarks' => 'テストコードです',
+            'qrcode' => null,
+            'inspection_scheduled_date' => '2024-09-10',
+            'disposal_scheduled_date' => '2024-09-20'
+        ]));
+        // $response = $this->from('items/create')->post($url, ['name' => $name]);
+        $response->assertRedirect('items/create'); //URLにリダイレクト
+        $response->assertStatus(302);
+
+        $response = $this->followRedirects($response);
+
+        // dd($response->inertiaPage()['prop']['errors']);
+
+        $response->assertInertia(fn (Assert $page) => $page
+            ->component('Items/Create')
+            ->when($data['expectedError'] !== null, fn ($page) => $page
+                ->has('errors.category_id')
+                ->where('errors.category_id', $data['expectedError'])
+            )
+            ->when($data['expectedError'] === null, fn ($page) => $page
+                ->where('errors.category_id', null)
+            )
+            ->dump()
+        );
+    }
+
     public static function categoryIdValidationProvider()
     {
+        // $maxCategoryId = Category::max('id');
+        // $notExistCategoryId = $maxCategoryId + 1;
+        // // dump($notExistCategoryId);
+
         return [
-            '21文字の時はエラーメッセージが出る' => [str_repeat('あ', 21), '名前は、20文字以下で指定してください。'],
-            '20文字の時はエラーメッセージが出ない' => [str_repeat('あ', 20), null],
-            '空文字の時はエラーメッセージが出る' => ['', '名前は必ず指定してください。'],
+            'category_idが存在しないIDの時はエラーメッセージが出る' => [
+                ['category_id' => 12, 'expectedError' => '選択されたカテゴリは正しくありません。']
+            ],
+            'category_idが正しいIDの時はエラーメッセージが出ない' => [
+                ['category_id' => 1, 'expectedError' => null]
+            ],
         ];
     }
+
+    /** @test */
+    public function 備品新規登録バリデーションcategoryId個別テスト()
+    {
+        // 世界を構築
+        $categories = Category::factory()->count(11)->create();
+        $units = Unit::factory()->count(10)->create();
+        $usage_statuses = UsageStatus::factory()->count(2)->create();
+        $locations = Location::factory()->count(12)->create();
+        $aquisition_methods = AcquisitionMethod::factory()->count(6)->create();
+
+        $user = User::factory()->role(1)->create();
+        $this->actingAs($user);
+
+        $url = 'items';
+        // $response = $this->from('items/create')->post($url, [
+        //     'name' => 'ペーパータオル',
+        //     'category_id' => 1,
+        //     'image1' => null,
+        //     'stock' => 10,
+        //     'unit_id' => 1,
+        //     'minimum_stock' => 2,
+        //     'notification' => true,
+        //     'usage_status_id' => 1,
+        //     'end_user' => '山田',
+        //     'location_of_use_id' => 1,
+        //     'storage_location_id' => 2,
+        //     'acquisition_method_id' => 1,
+        //     'acquisition_source' => 'Amazon',
+        //     'price' => 500,
+        //     'date_of_acquisition' => '2024-09-03',
+        //     'manufacturer' => null,
+        //     'product_number' => null,
+        //     'remarks' => 'テストコードです',
+        //     'qrcode' => null,
+        //     'inspection_scheduled_date' => '2024-09-10',
+        //     'disposal_scheduled_date' => '2024-09-20'
+        // ]);
+        $response = $this->from('items/create')->post($url, ['category_id' => 1]);
+        $response->assertRedirect('items/create'); //URLにリダイレクト
+        $response->assertStatus(302);
+
+        $response = $this->followRedirects($response);
+
+        $response->assertInertia(fn (Assert $page) => $page
+            ->component('Items/Create')
+                ->missing('errors.category_id')
+                // ->where('errors.category_id', null)
+            )
+            ->dump();
+    }
+
+
+
+
+    /**
+     * @dataProvider stockValidationProvider
+     * @test
+     */
+    public function 備品新規登録バリデーションstock($data)
+    {
+        $user = User::factory()->role(1)->create();
+        $this->actingAs($user);
+
+        $url = 'items';
+        $response = $this->from('items/create')->post($url, array_merge($data, [
+            'name' => 'ペーパータオル',
+            'image1' => null,
+            // 'stock' => 10,
+            'unit_id' => 1,
+            'minimum_stock' => 2,
+            'notification' => true,
+            'usage_status_id' => 1,
+            'end_user' => '山田',
+            'location_of_use_id' => 1,
+            'storage_location_id' => 2,
+            'acquisition_method_id' => 1,
+            'acquisition_source' => 'Amazon',
+            'price' => 500,
+            'date_of_acquisition' => '2024-09-03',
+            'manufacturer' => null,
+            'product_number' => null,
+            'remarks' => 'テストコードです',
+            'qrcode' => null,
+            'inspection_scheduled_date' => '2024-09-10',
+            'disposal_scheduled_date' => '2024-09-20'
+        ]));
+        // $response = $this->from('items/create')->post($url, ['name' => $name]);
+        $response->assertRedirect('items/create'); //URLにリダイレクト
+        $response->assertStatus(302);
+
+        $response = $this->followRedirects($response);
+
+        $response->assertInertia(fn (Assert $page) => $page
+            ->component('Items/Create')
+            ->when($data['expectedError'] !== null, fn ($page) => $page
+                ->has('errors.stock')
+                ->where('errors.stock', $data['expectedError'])
+            )
+            ->when($data['expectedError'] === null, fn ($page) => $page
+                ->missing('errors.stock')
+            )
+            ->dump()
+        );
+    }
+
+    public static function stockValidationProvider()
+    {
+        return [
+            'stockが-1の時はエラーメッセージが出る' => [
+                ['stock' => -1, 'expectedError' => '在庫数には、0以上の数字を指定してください。']
+            ],
+            'stockが0の時はエラーメッセージが出ない' => [
+                ['stock' => 0, 'expectedError' => null]
+            ],
+            'stockが200の時はエラーメッセージが出ない' => [
+                ['stock' => 200, 'expectedError' => null]
+            ],
+            'stockが201の時はエラーメッセージが出る' => [
+                ['stock' => 201, 'expectedError' => '在庫数には、200以下の数字を指定してください。']
+            ],
+        ];
+    }
+
+
+    /** @test */
+    public function 備品新規登録バリデーションstock個別に確認()
+    {
+        $user = User::factory()->role(1)->create();
+        $this->actingAs($user);
+
+        // エラー原因はarray_merge()する$dataと配列の両方にcountがあって重複していた
+        $url = 'items';
+        $response = $this->from('items/create')->post($url, [
+            'name' => 'ペーパータオル',
+            'stock' => -1,
+            'image1' => null,
+            // 'stock' => 10,
+            'unit_id' => 1,
+            'minimum_stock' => 2,
+            'notification' => true,
+            'usage_status_id' => 1,
+            'end_user' => '山田',
+            'location_of_use_id' => 1,
+            'storage_location_id' => 2,
+            'acquisition_method_id' => 1,
+            'acquisition_source' => 'Amazon',
+            'price' => 500,
+            'date_of_acquisition' => '2024-09-03',
+            'manufacturer' => null,
+            'product_number' => null,
+            'remarks' => 'テストコードです',
+            'qrcode' => null,
+            'inspection_scheduled_date' => '2024-09-10',
+            'disposal_scheduled_date' => '2024-09-20'
+        ]);
+        // $response = $this->from('items/create')->post($url, ['name' => $name]);
+        $response->assertRedirect('items/create'); //URLにリダイレクト
+        $response->assertStatus(302);
+
+        $response = $this->followRedirects($response);
+
+        // dd($response);
+
+        $response->assertInertia(fn (Assert $page) => $page
+            ->component('Items/Create')
+            ->has('errors.stock')
+            ->where('errors.stock','在庫数には、0以上の数字を指定してください。')
+            ->dump()
+        );
+            // ->when($data['expectedError'] === null, fn ($page) => $page
+            //     ->missing('errors.stock')
+
+    }
+
+
+    /**
+     * @dataProvider unitIdValidationProvider
+     * @test
+     */
+    public function 備品新規登録バリデーションunitId($data)
+    {
+        // 世界を構築
+        $categories = Category::factory()->count(11)->create();
+        $units = Unit::factory()->count(10)->create();
+        $usage_statuses = UsageStatus::factory()->count(2)->create();
+        $locations = Location::factory()->count(12)->create();
+        $aquisition_methods = AcquisitionMethod::factory()->count(6)->create();
+
+        $user = User::factory()->role(1)->create();
+        $this->actingAs($user);
+
+        $url = 'items';
+        $response = $this->from('items/create')->post($url, array_merge($data, [
+            'name' => 'ペーパータオル',
+            'image1' => null,
+            'stock' => 10,
+            // 'unit_id' => 1,
+            'minimum_stock' => 2,
+            'notification' => true,
+            'usage_status_id' => 1,
+            'end_user' => '山田',
+            'location_of_use_id' => 1,
+            'storage_location_id' => 2,
+            'acquisition_method_id' => 1,
+            'acquisition_source' => 'Amazon',
+            'price' => 500,
+            'date_of_acquisition' => '2024-09-03',
+            'manufacturer' => null,
+            'product_number' => null,
+            'remarks' => 'テストコードです',
+            'qrcode' => null,
+            'inspection_scheduled_date' => '2024-09-10',
+            'disposal_scheduled_date' => '2024-09-20'
+        ]));
+        
+        $response->assertRedirect('items/create'); //URLにリダイレクト
+        $response->assertStatus(302);
+
+        $response = $this->followRedirects($response);
+
+        $response->assertInertia(fn (Assert $page) => $page
+            ->component('Items/Create')
+            ->when($data['expectedError'] !== null, fn ($page) => $page
+                ->has('errors.unit_id')
+                ->where('errors.unit_id', $data['expectedError'])
+            )
+            ->when($data['expectedError'] === null, fn ($page) => $page
+                ->where('errors.unit_id', null)
+                ->missing('errors.unit_id')
+            )
+            ->dump()
+        );
+    }
+
+    public static function unitIdValidationProvider()
+    {
+        return [
+            'unit_idが0の時はエラーメッセージが出る' => [
+                ['unit_id' => 0, 'expectedError' => '選択されたunit idは正しくありません。']
+            ],
+            'unit_idが1の時はエラーメッセージが出ない' => [
+                ['unit_id' => 1, 'expectedError' => null]
+            ],
+            'unit_idが10の時はエラーメッセージが出ない' => [
+                ['unit_id' => 10, 'expectedError' => null]
+            ],
+            'unit_idが11の時はエラーメッセージが出る' => [
+                ['unit_id' => 11, 'expectedError' => '選択されたunit idは正しくありません。']
+            ],
+        ];
+    }
+
+
+
+
+
+
+
+
+
 
     /** @test */
     function 備品編集時のバリデーションが表示される()
@@ -518,7 +893,7 @@ class ItemControllerTest extends TestCase
         $response = $this->from('items/edit')
             ->patch(route('items.update', $item->id), $validData);
 
-        $response->assertRedirect('items');
+        $response->assertRedirect('items/edit');
 
         // $this->assertDatabaseHas('items', array_merge($validData, ['management_id' => 'CO-1111']));
 
@@ -529,6 +904,12 @@ class ItemControllerTest extends TestCase
 
     }
 
+
+    /** @test */
+    function 備品詳細画面で備品をソフトデリートできる()
+    {
+        
+    }
 
 
 
@@ -546,12 +927,22 @@ class ItemControllerTest extends TestCase
         // $user = User::factory()->role(1)->create();
         // $this->actingAs($user);
 
+        $item = Item::factory()->create();
 
         // ゲスト用のリダイレクトのアサ―ト
         $this->get('items')->assertRedirect($loginUrl);
         $this->get('items/create')->assertRedirect($loginUrl);
         $this->from('items/create')->post('items', [])->assertRedirect($loginUrl);
         $this->get('items/edit')->assertRedirect($loginUrl);
+        $this->from('items/edit')->patch(route('items.update', $item->id), [])
+            ->assertRedirect($loginUrl);
+            // ->assertForbidden();
+        $this->from('items/show')->delete('items/' . $item->id)
+            ->assertRedirect($loginUrl);
+        
+
+
+
     }
 
 
