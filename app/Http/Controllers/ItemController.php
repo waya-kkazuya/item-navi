@@ -242,9 +242,9 @@ class ItemController extends Controller
         
 
         // 画像保存もトランザクション処理内に入れるかどうか
-        // DB::beginTransaction();
+        DB::beginTransaction();
 
-        // try{
+        try{
 
             // 画像アップロード　再代入要修正
             // 画像保存処理はデータ保存処理の後に配置
@@ -316,6 +316,10 @@ class ItemController extends Controller
             }
             
 
+            // 画像保存とimage1画像名カラムをupdateで部分的に変更
+            // トランザクション処理失敗の時のため、画像削除処理をcatch節に書く
+
+
             // // QRコード生成、QrCodeServiceに切り分ける
             // // ※消耗品のときだけcategory_id=1のときだけ生成する
             if($request->category_id == self::CONSUMABLE_ITEM_ID){
@@ -374,13 +378,7 @@ class ItemController extends Controller
                 }
 
 
-
-
-
-
-
-
-            // DB::commit(); // ここで確定
+            DB::commit(); // ここで確定
 
             Log::info('commitした');
 
@@ -390,20 +388,21 @@ class ItemController extends Controller
                 'status' => 'success'
             ]);
 
-        // }catch(ValidationException $e){
-        //     DB::rollBack();
+        } catch(ValidationException $e) {
+            DB::rollBack();
 
 
             // アップロードした画像の削除　引数変更
-            // if (isset($imagePath)) {
-            //     Storage::delete($imagePath);
-            // }
+            if (isset($imagePath)) {
+                Storage::delete($imagePath);
+            }
 
-        //     return redirect()->back()
-        //     ->with([
-        //         'message' => '登録中にエラーが発生しました',
-        //         'status' => 'danger'
-        //     ]);
+            return redirect()->back()
+            ->with([
+                'message' => '登録中にエラーが発生しました',
+                'status' => 'danger'
+            ]);
+        }
         //     // ->withErrors($e->errors())->withInput();
 
         // }catch(\Exception $e){
