@@ -212,7 +212,7 @@ const handleFileUpload = (event) => {
                                                             <label for="stock" class="leading-7 text-sm text-blue-900">
                                                                 在庫数 <span class="text-red-600">*</span>
                                                             </label><br>
-                                                            <input type="number" id="stock" name="stock" v-model="form.stock" class="w-1/4 bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
+                                                            <input type="number" id="stock" name="stock" v-model="form.stock" min="0" class="w-1/4 bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
                                                             <select name="unit" id="unit" v-model="form.unitId" class="w-1/6 bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
                                                                 <option v-for="unit in units" :value="unit.id" :key="unit.id">{{ unit.name }}</option>
                                                             </select>
@@ -221,7 +221,7 @@ const handleFileUpload = (event) => {
                                                         </div>
                                                         <div v-show="form.categoryId == 1" class="mt-4 pl-2 w-full">
                                                             <label for="minimumStock" class="leading-7 text-sm text-blue-900">通知在庫数</label><br>
-                                                            <input type="number" id="minimumStock" name="minimumStock" v-model="form.minimumStock"
+                                                            <input type="number" id="minimumStock" name="minimumStock" v-model="form.minimumStock" min="0"
                                                             class="w-1/4 bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
                                                             <!-- <span class="ml-1 leading-7 text-sm text-blue-900">個</span> -->
                                                             <select name="unit" id="unit" v-model="form.unitId" class="w-1/6 bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">

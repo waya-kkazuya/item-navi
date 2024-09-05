@@ -278,7 +278,7 @@ class ItemController extends Controller
                 'image1' => $fileNameToStore ?: null,
                 'stock' => $request->stock ?? 0,
                 'unit_id' => $request->unit_id,
-                'minimum_stock' => $request->minimum_stock,
+                'minimum_stock' => $minimum_stock,
                 'notification' => $request->notification,
                 'usage_status_id' => $request->usage_status_id,
                 'end_user' => $request->end_user ?: null,

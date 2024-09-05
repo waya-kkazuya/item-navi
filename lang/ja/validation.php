@@ -168,6 +168,9 @@ return [
         ],
         'terms' => [
             'required' => '登録には規約への同意が必須となります。',
+        ],  
+        'date_of_acquisition' => [
+            'before_or_equal' => '取得年月日には、今日以前の日付をご利用ください。',
         ],
     ],
 
@@ -276,7 +279,9 @@ return [
         'storage_location_id' => '保管場所',
         'acquisition_method_id' => '取得区分',
         'acquisition_source' => '取得先',
+        'minimum_stock' => '通知在庫数',
+        'unit_id' => '単位',
+        'today' => '今日',
 
     ],
-
 ];
