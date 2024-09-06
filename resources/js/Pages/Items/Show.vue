@@ -71,11 +71,10 @@ const deleteItem = id => {
                                             <div class="col-span-2">
                                                 <div class="p-4 border bordr-4 mb-8">
 
-
                                                     <div class="p-2 w-full">
                                                         <label for="fileName" class="leading-7 text-sm text-blue-900">画像</label>    
                                                         <div v-if="item.image_path1" class="flex justify-center">
-                                                            <img :src="item.image_path1" alt="画像" class="mr-6 w-48 mt-4">
+                                                            <img :src="item.image_path1" alt="画像" class="w-68 mt-4">
                                                         </div>
                                                     </div>
                                                 </div>
