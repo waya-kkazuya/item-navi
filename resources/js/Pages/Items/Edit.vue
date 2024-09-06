@@ -18,120 +18,59 @@ const props = defineProps({
 
 const form = useForm({
     id: props.item.id,
-    imageFile: null,
+    image_file: null,
     // image_path1: props.item.image_path1, //画像を更新できるようにするか、まずはCreateの方で「×」ボタンでキャンセル機能を実装
     name: props.item.name,
-    categoryId: props.item.category_id,
+    category_id: props.item.category_id,
     stock: props.item.stock,
-    unitId: props.item.unit_id,
-    minimumStock: props.item.minimum_stock,
+    unit_id: props.item.unit_id,
+    minimum_stock: props.item.minimum_stock,
     notification: props.item.notification,
-    usageStatusId: props.item.usage_status_id,
-    endUser: props.item.end_user,
-    locationOfUseId: props.item.location_of_use_id,
-    storageLocationId: props.item.storage_location_id,
-    acquisitionMethodId: props.item.acquisition_method_id,
-    acquisitionSource: props.item.acquisition_source,
+    usage_status_id: props.item.usage_status_id,
+    end_user: props.item.end_user,
+    location_of_use_id: props.item.location_of_use_id,
+    storage_location_id: props.item.storage_location_id,
+    acquisition_method_id: props.item.acquisition_method_id,
+    acquisition_source: props.item.acquisition_source,
     price: props.item.price,
-    dateOfAcquisition: props.item.date_of_acquisition,
+    date_of_acquisition: props.item.date_of_acquisition,
     manufacturer: props.item.manufacturer,
-    productNumber: props.item.product_number,
-    inspectionSchedule: props.pendingInspection ? props.pendingInspection.scheduled_date : null,
+    product_number: props.item.product_number,
     pendingInspection: props.pendingInspection, // pendingInspectionにオブジェクトを入れる,idが取得できる
-    disposalSchedule: props.item.disposal ? props.item.disposal.scheduled_date : null ,
+    inspectionSchedule: props.pendingInspection ? props.pendingInspection.inspection_scheduled_date : null,
+    disposalSchedule: props.item.disposal ? props.item.disposal.disposal_scheduled_date : null ,
     remarks: props.item.remarks,
-    editReasonId: 0,
-    editReasonText: null
+    edit_reeason_id: 0,
+    edit_reason_text: null,
+    _method: 'PUT'
 })
 
-// const editReasonId = ref(0)
-// const editReasonText = ref('')
-
-// v1.oで書き方が変わった
-// const updateItem = id => {
-//   router.visit(route('items.update', { item: id }), {i
-//     method: 'put',
-//     data: form
-//   })
-// }
 
 // router.visitではuseFormの入力値保持機能は使えない
 // form.postなら入力値保持機能(old関数))が使える
 const updateItem = id => {
-    const formData = new FormData();
-    formData.append('id', form.id);
-    formData.append('imageFile', form.imageFile);
-    formData.append('name', form.name);
-    formData.append('categoryId', form.categoryId);
-    formData.append('stock', form.stock);
-    formData.append('unitId', form.unitId);
-    formData.append('minimumStock', form.minimumStock);
-    formData.append('notification', form.notification);
-    formData.append('usageStatusId', form.usageStatusId);
-    formData.append('endUser', form.endUser);
-    formData.append('locationOfUseId', form.locationOfUseId);
-    formData.append('storageLocationId', form.storageLocationId);
-    formData.append('acquisitionMethodId', form.acquisitionMethodId);
-    formData.append('acquisitionSource', form.acquisitionSource);
-    formData.append('price', form.price);
-    formData.append('dateOfAcquisition', form.dateOfAcquisition);
-    formData.append('manufacturer', form.manufacturer);
-    formData.append('productNumber', form.productNumber);
-    formData.append('inspectionSchedule', form.inspectionSchedule);
-    formData.append('pendingInspection', form.pendingInspection);
-    formData.append('disposalSchedule', form.disposalSchedule);
-    formData.append('remarks', form.remarks);
-    formData.append('editReasonId', form.editReasonId);
-    formData.append('editReasonText', form.editReasonText);
-
-
-    form.put(`/items/${id}`);
-    // form.put(`/items/${id}`, formData, {
-    //     headers: {
-    //         'Content-Type': 'multipart/form-data'
-    //     }
-    // }).then(response => {
-    //     console.log('成功')
-    // }).catch(error => {
-    //     console.log('失敗')
-    // });
-    // router.visit(`/items/${id}`, {
-    //     method: 'put',
-    //     data: formData,
-    //     headers: {
-    //         'Content-Type': 'multipart/form-data'
-    //     },
-    //     onSuccess: () => {
-    //         // 成功時の処理
-    //     },
-    //     onError: () => {
-    //         // エラー時の処理
-    //     }
-    // });
+    // putメソッドは使えない
+    // form.put(`/items/${id}`, {
+    form.post(`/items/${id}`, {
+        onSuccess: () => {
+            // 通信が成功したときの処理
+        },
+        onError: errors => {
+            // エラーハンドリング
+            console.error('Validation Error:', errors);
+        }
+    });
 }
-
-
-// const updateItem = id => {
-//     form.put(`/items/${id}`, {
-//         forceFormData: true,
-//         onSuccess: () => {
-//             // 成功時の処理
-//         },
-//         onError: () => {
-//             // エラー時の処理
-//         }
-//     });
-// }
 
 
 const file_preview_src = ref(props.item.image_path1)
 
 const handleFileUpload = (event) => {
-    form.imageFile = event.target.files[0];
+    form.image_file = event.target.files[0];
     // ブラウザ限定の画像プレビュー用のURL生成
-    if (form.imageFile) {
+    if (form.image_file) {
         console.log(file_preview_src.value)
-        file_preview_src.value = URL.createObjectURL(form.imageFile);
+        file_preview_src.value = URL.createObjectURL(form.image_file);
         console.log(file_preview_src.value)
     }
 };
@@ -180,7 +119,7 @@ const handleFileUpload = (event) => {
                                                             <div v-if="file_preview_src" class="">
                                                                 <img :src="file_preview_src" alt="画像プレビュー" class="mr-6 w-48 mt-4">
                                                             </div>
-                                                            <div v-if="errors.imageFile" class="font-medium text-red-600">{{ errors.imageFile }}</div>
+                                                            <div v-if="errors.image_file" class="font-medium text-red-600">{{ errors.image_file }}</div>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -194,14 +133,14 @@ const handleFileUpload = (event) => {
                                                             <div v-if="errors.name" class="font-medium text-red-600">{{ errors.name }}</div>
                                                         </div>
                                                         <div class="p-2 w-full">
-                                                            <label for="categoryId" class="leading-7 text-sm text-blue-900">
+                                                            <label for="category_id" class="leading-7 text-sm text-blue-900">
                                                                 カテゴリ <span class="text-red-600">*</span>
                                                             </label><br>
-                                                            <select name="categoryId" id="categoryId" v-model="form.categoryId" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
+                                                            <select name="category_id" id="category_id" v-model="form.category_id" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
                                                                 <option :value="0">選択してください</option>  
                                                                 <option v-for="category in categories" :value="category.id" :key="category.id">{{ category.name }}</option>
                                                             </select>
-                                                            <div v-if="errors.categoryId" class="font-medium text-red-600">{{ errors.categoryId }}</div>
+                                                            <div v-if="errors.category_id" class="font-medium text-red-600">{{ errors.category_id }}</div>
                                                         </div>
 
                                                         
@@ -213,23 +152,23 @@ const handleFileUpload = (event) => {
                                                                 在庫数 <span class="text-red-600">*</span>
                                                             </label><br>
                                                             <input type="number" id="stock" name="stock" v-model="form.stock" min="0" class="w-1/4 bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
-                                                            <select name="unit" id="unit" v-model="form.unitId" class="w-1/6 bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
+                                                            <select name="unit" id="unit" v-model="form.unit_id" class="w-1/6 bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
                                                                 <option v-for="unit in units" :value="unit.id" :key="unit.id">{{ unit.name }}</option>
                                                             </select>
                                                             <div v-if="errors.stock" class="font-medium text-red-600">{{ errors.stock }}</div>
                                                             <div v-if="errors.unit" class="font-medium text-red-600">{{ errors.unit }}</div>
                                                         </div>
-                                                        <div v-show="form.categoryId == 1" class="mt-4 pl-2 w-full">
-                                                            <label for="minimumStock" class="leading-7 text-sm text-blue-900">通知在庫数</label><br>
-                                                            <input type="number" id="minimumStock" name="minimumStock" v-model="form.minimumStock" min="0"
+                                                        <div v-show="form.category_id == 1" class="mt-4 pl-2 w-full">
+                                                            <label for="minimum_stock" class="leading-7 text-sm text-blue-900">通知在庫数</label><br>
+                                                            <input type="number" id="minimum_stock" name="minimum_stock" v-model="form.minimum_stock" min="0"
                                                             class="w-1/4 bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
                                                             <!-- <span class="ml-1 leading-7 text-sm text-blue-900">個</span> -->
-                                                            <select name="unit" id="unit" v-model="form.unitId" class="w-1/6 bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
+                                                            <select name="unit" id="unit" v-model="form.unit_id" class="w-1/6 bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
                                                                 <option v-for="unit in units" :value="unit.id" :key="unit.id">{{ unit.name }}</option>  
                                                             </select>
-                                                            <div v-if="errors.minimumStock" class="font-medium text-red-600">{{ errors.minimumStock }}</div>
+                                                            <div v-if="errors.minimum_stock" class="font-medium text-red-600">{{ errors.minimum_stock }}</div>
                                                         </div>
-                                                        <div v-show="form.categoryId == 1" class="mt-4 pl-2 w-full">
+                                                        <div v-show="form.category_id == 1" class="mt-4 pl-2 w-full">
                                                             <input type="checkbox" id="notification" v-model="form.notification">
                                                             <label for="notification" class="ml-1">在庫数が通知在庫数以下になったら通知する</label>
                                                         </div>
@@ -237,63 +176,63 @@ const handleFileUpload = (event) => {
 
                                                     <div class="p-4 border bordr-4 mb-8">
                                                         <div class="p-2 w-full">
-                                                            <label for="usageStatusId" class="leading-7 text-sm text-blue-900">
+                                                            <label for="usage_status_id" class="leading-7 text-sm text-blue-900">
                                                                 利用状況 <span class="text-red-600">*</span>
                                                             </label>
-                                                            <select name="usageStatusId" id="usageStatusId" v-model="form.usageStatusId" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
+                                                            <select name="usage_status_id" id="usage_status_id" v-model="form.usage_status_id" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
                                                                 <option :value="0">選択してください</option>
                                                                 <option v-for="usageStatus in usageStatuses" :value="usageStatus.id" :key="usageStatus.id">{{ usageStatus.name }}</option>
                                                             </select>
-                                                            <div v-if="errors.usageStatusId" class="font-medium text-red-600">{{ errors.usageStatusId }}</div>
+                                                            <div v-if="errors.usage_status_id" class="font-medium text-red-600">{{ errors.usage_status_id }}</div>
                                                         </div>
 
                                                         <div class="p-2 w-full">
-                                                            <label for="endUser" class="leading-7 text-sm text-blue-900">使用者</label>
-                                                            <input type="text" id="endUser" name="endUser" v-model="form.endUser" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
-                                                            <div v-if="errors.endUser" class="font-medium text-red-600">{{ errors.endUser }}</div>       
+                                                            <label for="end_user" class="leading-7 text-sm text-blue-900">使用者</label>
+                                                            <input type="text" id="end_user" name="end_user" v-model="form.end_user" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
+                                                            <div v-if="errors.end_user" class="font-medium text-red-600">{{ errors.end_user }}</div>       
                                                         </div>
 
                                                         <div class="p-2 w-full">
-                                                            <label for="locationOfUseId" class="leading-7 text-sm text-blue-900">
+                                                            <label for="location_of_use_id" class="leading-7 text-sm text-blue-900">
                                                                 利用場所 <span class="text-red-600">*</span>
                                                             </label>
-                                                            <select name="locationOfUseId" id="locationOfUseId" v-model="form.locationOfUseId" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
+                                                            <select name="location_of_use_id" id="location_of_use_id" v-model="form.location_of_use_id" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
                                                                 <option :value="0">選択してください</option>
                                                                 <option v-for="location in locations" :key="location.id" :value="location.id">{{ location.name }}</option>
                                                             </select>
-                                                            <div v-if="errors.locationOfUseId" class="font-medium text-red-600">{{ errors.locationOfUseId }}</div>
+                                                            <div v-if="errors.location_of_use_id" class="font-medium text-red-600">{{ errors.location_of_use_id }}</div>
                                                         </div>
 
                                                         <div class="p-2 w-full">
-                                                            <label for="storageLocationId" class="leading-7 text-sm text-blue-900">
+                                                            <label for="storage_location_id" class="leading-7 text-sm text-blue-900">
                                                                 保管場所 <span class="text-red-600">*</span>
                                                             </label>
-                                                            <select name="storageLocationId" id="storageLocationId" v-model="form.storageLocationId" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
+                                                            <select name="storage_location_id" id="storage_location_id" v-model="form.storage_location_id" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
                                                                 <option :value="0">選択してください</option>
                                                                 <option v-for="location in locations" :key="location.id" :value="location.id">{{ location.name }}</option>
                                                             </select>
-                                                            <div v-if="errors.storageLocationId" class="font-medium text-red-600">{{ errors.storageLocationId }}</div>
+                                                            <div v-if="errors.storage_location_id" class="font-medium text-red-600">{{ errors.storage_location_id }}</div>
                                                         </div>
                                                     </div>
 
                                                     <div class="p-4 border bordr-4 mb-8">
                                                         <div class="p-2 w-full">
-                                                            <label for="acquisitionMethodId" class="leading-7 text-sm text-blue-900">
+                                                            <label for="acquisition_method_id" class="leading-7 text-sm text-blue-900">
                                                                 取得区分 <span class="text-red-600">*</span>
                                                             </label>
-                                                            <select name="acquisitionMethodId" id="acquisitionMethodId" v-model="form.acquisitionMethodId" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
+                                                            <select name="acquisition_method_id" id="acquisition_method_id" v-model="form.acquisition_method_id" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
                                                                 <option :value="0">選択してください</option>
                                                                 <option v-for="acquisitionMethod in acquisitionMethods" :key="acquisitionMethod.id" :value="acquisitionMethod.id">{{ acquisitionMethod.name }}</option>
                                                             </select>
-                                                            <div v-if="errors.acquisitionMethodId" class="font-medium text-red-600">{{ errors.acquisitionMethodId }}</div>
+                                                            <div v-if="errors.acquisition_method_id" class="font-medium text-red-600">{{ errors.acquisition_method_id }}</div>
                                                         </div>
 
                                                         <div class="p-2 w-full">
-                                                            <label for="acquisitionSource" class="leading-7 text-sm text-blue-900">
+                                                            <label for="acquisition_source" class="leading-7 text-sm text-blue-900">
                                                                 取得先 <span class="text-red-600">*</span>
                                                             </label>
-                                                            <input type="text" id="acquisitionSource" name="acquisitionSource" v-model="form.acquisitionSource" placeholder="例 Amazonなど" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
-                                                            <div v-if="errors.acquisitionSource" class="font-medium text-red-600">{{ errors.acquisitionSource }}</div>
+                                                            <input type="text" id="acquisition_source" name="acquisition_source" v-model="form.acquisition_source" placeholder="例 Amazonなど" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
+                                                            <div v-if="errors.acquisition_source" class="font-medium text-red-600">{{ errors.acquisition_source }}</div>
                                                         </div>
 
 
@@ -306,14 +245,14 @@ const handleFileUpload = (event) => {
                                                         </div>
 
                                                         <div class="p-2 w-full">
-                                                            <label for="dateOfAcquisition" class="leading-7 text-sm text-blue-900">
+                                                            <label for="date_of_acquisition" class="leading-7 text-sm text-blue-900">
                                                                 取得年月日 <span class="text-red-600">*</span>
                                                             </label>
                                                             <div class="relative">
-                                                                <input type="date" id="dateOfAcquisition" name="dateOfAcquisition" v-model="form.dateOfAcquisition" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
+                                                                <input type="date" id="date_of_acquisition" name="date_of_acquisition" v-model="form.date_of_acquisition" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
                                                                 <button type="button" @click="clearDateOfAcquisition" class="absolute right-12 top-1/2 transform -translate-y-1/2 text-gray-500" text-lg>×</button>
                                                             </div>
-                                                            <div v-if="errors.dateOfAcquisition" class="font-medium text-red-600">{{ errors.dateOfAcquisition }}</div>
+                                                            <div v-if="errors.date_of_acquisition" class="font-medium text-red-600">{{ errors.date_of_acquisition }}</div>
                                                         </div>
                                                     </div>
 
@@ -325,9 +264,9 @@ const handleFileUpload = (event) => {
                                                         </div>
                                                         
                                                         <div class="p-2 w-full">
-                                                            <label for="productNumber" class="leading-7 text-sm text-blue-900">製品番号</label>
-                                                            <input type="text" id="productNumber" name="productNumber" v-model="form.productNumber" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
-                                                            <div v-if="errors.productNumber" class="font-medium text-red-600">{{ errors.productNumber }}</div>
+                                                            <label for="product_number" class="leading-7 text-sm text-blue-900">製品番号</label>
+                                                            <input type="text" id="product_number" name="product_number" v-model="form.product_number" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
+                                                            <div v-if="errors.product_number" class="font-medium text-red-600">{{ errors.product_number }}</div>
                                                         </div>
 
                                                         <div class="p-2 w-full">
@@ -361,19 +300,19 @@ const handleFileUpload = (event) => {
 
                                                     <div class="p-4 border bordr-4 mt-8">
                                                         <div class="p-2 w-full">
-                                                            <label for="categoryId" class="leading-7 text-sm text-blue-900">
+                                                            <label for="edit_reeason_id" class="leading-7 text-sm text-blue-900">
                                                                 編集理由 <span class="text-red-600">*</span>
                                                             </label><br>
-                                                            <select name="editReasonId" id="editReasonId" v-model="form.editReasonId" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
+                                                            <select name="edit_reeason_id" id="edit_reeason_id" v-model="form.edit_reeason_id" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
                                                                 <option :value="0">選択してください</option>  
                                                                 <option v-for="editReason in editReasons" :value="editReason.id" :key="editReason.id">{{ editReason.reason }}</option>
                                                             </select>
-                                                            <div v-if="errors.editReasonId" class="font-medium text-red-600">{{ errors.editReasonId }}</div>
+                                                            <div v-if="errors.edit_reeason_id" class="font-medium text-red-600">{{ errors.edit_reeason_id }}</div>
                                                         </div>
                                                         <div class="p-2 w-full">
                                                             <label for="remarks" class="leading-7 text-sm text-blue-900">その他の理由</label>
-                                                            <textarea id="remarks" name="remarks" maxlength="500" v-model="form.editReasonText" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 h-32 text-base outline-none text-gray-700 py-1 px-3 resize-none leading-6 transition-colors duration-200 ease-in-out"></textarea>
-                                                            <div v-if="errors.editReasonText" class="font-medium text-red-600">{{ errors.editReasonText }}</div>
+                                                            <textarea id="remarks" name="remarks" maxlength="500" v-model="form.edit_reason_text" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 h-32 text-base outline-none text-gray-700 py-1 px-3 resize-none leading-6 transition-colors duration-200 ease-in-out"></textarea>
+                                                            <div v-if="errors.edit_reason_text" class="font-medium text-red-600">{{ errors.edit_reason_text }}</div>
                                                         </div>
 
                                                     </div>

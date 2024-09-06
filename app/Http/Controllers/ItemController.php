@@ -29,8 +29,9 @@ use Intervention\Image\ImageManager;
 use Intervention\Image\Drivers\Imagick\Driver;
 use Intervention\Image\Encoders\JpegEncoder;
 use Carbon\Carbon;
-use App\Services\ImageService;
 use App\Services\ManagementIdService;
+use App\Services\ImageService;
+use App\Services\QrCodeService;
 use Intervention\Image\Typography\FontFactory;
 
 class ItemController extends Controller
@@ -39,10 +40,14 @@ class ItemController extends Controller
     const CONSUMABLE_ITEM_ID = 1;
 
     protected $managementIdService;
+    protected $imageService;
+    protected $qrCodeService;
 
-    public function __construct(ManagementIdService $managementIdService)
+    public function __construct(ManagementIdService $managementIdService, ImageService $imageService, QrCodeService $qrCodeService)
     {
         $this->managementIdService = $managementIdService;
+        $this->imageService = $imageService;
+        $this->qrCodeService = $qrCodeService;
     }
 
     public function index(Request $request)
@@ -54,7 +59,7 @@ class ItemController extends Controller
         $search = $request->query('search', '');
         
         // 作成日でソートの値、初期値はasc
-        $sortOrder = $request->query('sortOrder', 'asc');
+        $sortOrder = $request->query('sortOrder', 'desc');
 
         // プルダウンの数値、第2引数は初期値で0
         $category_id = $request->query('categoryId', 0);
@@ -138,7 +143,6 @@ class ItemController extends Controller
         //     return $item;
         // });
 
-        // 備品の合計件数
         $total_count = $query->count();
 
         // paginateじゃなくget()の時のデータ構造解析
@@ -245,18 +249,6 @@ class ItemController extends Controller
         DB::beginTransaction();
 
         try{
-
-            // 画像アップロード　再代入要修正
-            // 画像保存処理はデータ保存処理の後に配置
-            // image1は部分的に保存する
-            $image_file = $request->image_file; // 一時保存
-            // ->isValid()は念のため、ちゃんとアップロードできているかチェックしてくれる
-            $fileNameToStore = null;
-            if(!is_null($image_file) && $image_file->isValid() ){
-                $fileNameToStore = ImageService::resizeUpload($image_file);
-            }
-
-
             // もしもカテゴリが消耗品以外で、minimumに数値が入っていたらnullにする
             // categoriesテーブルで消耗品のidは1、定数に入れる
             if($request->category_id == self::CONSUMABLE_ITEM_ID){
@@ -275,7 +267,7 @@ class ItemController extends Controller
                 'management_id' => $management_id,
                 'name' => $request->name,
                 'category_id' => $request->category_id ,
-                'image1' => $fileNameToStore ?: null,
+                // 'image1' => $fileNameToStore ?: null,
                 'stock' => $request->stock ?? 0,
                 'unit_id' => $request->unit_id,
                 'minimum_stock' => $minimum_stock,
@@ -319,64 +311,28 @@ class ItemController extends Controller
             // 画像保存とimage1画像名カラムをupdateで部分的に変更
             // トランザクション処理失敗の時のため、画像削除処理をcatch節に書く
 
+            // 画像保存処理はデータ保存処理の後に配置
+            // image1は部分的に保存する
+            
+            // ->isValid()は念のため、ちゃんとアップロードできているかチェックしてくれる
+            $fileNameToStore = null;
+            if(!is_null($request->image_file) && $request->image_file->isValid() ){
+                $fileNameToStore = $this->imageService::resizeUpload($request->image_file);
+                $item->update(['image1' => $fileNameToStore]);
+                // $pendingInspection->update(['inspection_scheduled_date' => $request->inspectionSchedule]);
+            }
 
             // // QRコード生成、QrCodeServiceに切り分ける
             // // ※消耗品のときだけcategory_id=1のときだけ生成する
-            if($request->category_id == self::CONSUMABLE_ITEM_ID){
-                //     // QrCode::format('png')->size(200)->generate('Hello Laravel!', storage_path('app/public/qrcode/' . $qrcodeName));
-                //     // png生成にはImagickが必要
-                    $qrCode = QrCode::format('png')->size(300)->generate('Hello Laravel!');
-                    // $qrCode = QrCode::format('png')->size(200)->generate('Hello Laravel!');
-                    $qrCodeName = 'テストQRコード';
-                    Storage::put('public/qrcode/' . $qrCodeName, $qrCode);
-                    
-                    // 保存したファイルのパスを取得
-                    $qrCodefilePath = Storage::path('public/qrcode/' . $qrCodeName);
-    
-    
-                    $qrManager = new ImageManager(new Driver());
-                    $qrImage = $qrManager->read($qrCodefilePath);
-                    // $qrImage = $qrManager->read($qrCode, 'raw')->resize(30, 30);
-    
-                    $label = $qrManager->create(910, 550)->fill('fff');
-                    $label->place($qrImage, 'top-left', 80, 125);
-    
-                    // 白地に文字を追加
-                    $label->text('管理ID IT-3333', 450, 160, function(FontFactory $font) {
-                        $font->filename(resource_path('fonts/NotoSansJP-Medium.ttf'));
-                        $font->size(30);
-                        $font->color('#000');
-                    });
-                    $label->text('備品名 ペーパータオル', 450, 230, function(FontFactory $font) {
-                        $font->filename(resource_path('fonts/NotoSansJP-Medium.ttf'));
-                        $font->size(30);
-                        $font->color('#000');
-                    });
-                    $label->text('カテゴリ 消耗品', 450, 300, function(FontFactory $font) {
-                        $font->filename(resource_path('fonts/NotoSansJP-Medium.ttf'));
-                        $font->size(30);
-                        $font->color('#000');
-                    });
-    
-                    $labelName = 'QRCodeTest_label.jpg';
-                    // $labelName = $item->id . '_label.jpg';
-                    // JpegEncoderでエンコードする、use分も書く
-                    Storage::put('labels/' . $labelName, $label->encode(new JpegEncoder()));
-                    
-                    // ※注意
-                    // 保存したあと、items->update()で部分的にqrcodeの名前を変更する
-                    
-
-                    
-                    // QRコードを生成して保存するだけ
-                    // $labelName = 'QRコードテスト.png';
-                    // Storage::put('labels/' . $labelName, $qrCode);
-                //     // 画像データをjpegへエンコードする
-    
-                //     // 画像をStorage/public/qrcodesに保存する
-                //     // return $qrCodeNameToStore;
-                }
-
+            if($request->category_id == self::CONSUMABLE_ITEM_ID){ 
+                // ※注意
+                // 保存したあと、items->update()で部分的にqrcodeの名前を変更する
+                $url = 'https://itemnavi.com/consumable_items';
+                // $itemそのものを渡せるか
+                // $labelNameToStore = $this->qrCodeService::upload($item->management_id, );
+                $labelNameToStore = $this->qrCodeService::upload();
+                $item->update(['qrcode' => $labelNameToStore]);
+            }
 
             DB::commit(); // ここで確定
 
@@ -431,6 +387,7 @@ class ItemController extends Controller
         // 最後に行った点検のレコードを取得
         $previousInspection = $item->inspections->where('status', true)->sortByDesc('inspection_date')->first();
         // dd($previousInspection);
+        // $previousInspectionDate = $previousInspection ? Carbon::parse($previousInspection->inspection_date)->format('Y年m月d日') : '';
 
         // image1カラムがnullかチェック
         if (is_null($item->image1)) {
@@ -510,7 +467,8 @@ class ItemController extends Controller
     public function update(UpdateItemRequest $request, Item $item)
     {
         Gate::authorize('staff-higher');
-
+        // dd($request);
+        // dd($item);
         // dd($request->name, $request->pendingInspection, $item->name);
 
 
@@ -524,68 +482,46 @@ class ItemController extends Controller
 
         // try {
             // dd($request->image_file);
-
-            // 画像アップロード
-            $image_file = $request->image_file; // 一時保存
-            // ->isValid()は念のため、ちゃんとアップロードできているかチェックしてくれる
-            $fileNameToStore = null;
-            if(!is_null($image_file) && $image_file->isValid() ){
-                $fileNameToStore = ImageService::resizeUpload($image_file);
-            }
-
-
-
-
-            // dd($request->editReasonId, $request->editReasonText);
-            // 編集理由はItemObserverのEditedメソッドで保存するので、
-            // Sessionに一旦保存して、Edithistoryの保存する
-             // 編集理由をセッションに保存->ItemObserverのupdatedメソッドで取得
-            Session::put('editReasonId', $request->editReasonId);
-            Session::put('editReasonText', $request->editReasonText);
-
-
-            // Itemの更新
-            // $item->image_path1 = $request->image_path1;
+            
             $item->name = $request->name;
-            $item->category_id = $request->categoryId;
-            $item->image1 = $fileNameToStore ?: null;
+            $item->category_id = $request->category_id;
             $item->stock = $request->stock;
-            $item->unit_id = $request->unitId;
-            $item->minimum_stock = $request->minimumStock;
+            $item->unit_id = $request->unit_id;
+            $item->minimum_stock = $request->minimum_stock;
             $item->notification = $request->notification;
-            $item->usage_status_id = $request->usageStatusId;
-            $item->end_user = $request->endUser;
-            $item->location_of_use_id = $request->locationOfUseId;
-            $item->storage_location_id = $request->storageLocationId;
-            $item->acquisition_method_id = $request->acquisitionMethodId;
-            $item->acquisition_source = $request->acquisitionSource;
+            $item->usage_status_id = $request->usage_status_id;
+            $item->end_user = $request->end_user;
+            $item->location_of_use_id = $request->location_of_use_id;
+            $item->storage_location_id = $request->storage_location_id;
+            $item->acquisition_method_id = $request->acquisition_method_id;
+            $item->acquisition_source = $request->acquisition_source;
             $item->price = $request->price;
-            $item->date_of_acquisition = $request->dateOfAcquisition;
-            // $item->inspection_scheduled_date = $request->inspection_scheduled_date;
-            // $item->disposal_scheduled_date = $request->disposal_scheduled_date;
+            $item->date_of_acquisition = $request->date_of_acquisition;
             $item->manufacturer = $request->manufacturer;
-            $item->product_number = $request->productNumber;
+            $item->product_number = $request->product_number;
             $item->remarks = $request->remarks;
             $item->save();
+
+            // 編集理由はItemObserverのupdatedメソッドでセッションから取得しedithistoriesに保存する
+            Session::put('edit_reeason_id', $request->edit_reeason_id);
+            Session::put('edit_reason_text', $request->edit_reason_text);
 
 
             // 点検フォームが空欄で編集で追加するパターン
             // 最初から点検フォームに入っている（DBに保存しているパターン）パターン
             // 点検データの更新または作成
-            
-            // 点検日のレコード、Vue側から値が返ってきたら変更の有無に関わらず保存する→シンプル        
+
+            // 点検日のレコード、Vue側から値が返ってきたら変更の有無に関わらず保存する→シンプル
+            // pendingInspectionとは、Inspectionsテーブルでstatusがfalseの一番近い（日付が古い）scheduled_date      
             if ($request->inspectionSchedule) {
-                // pendingInspectionとは、Inspectionsテーブルでstatusがfalseの一番近い（日付が古い）scheduled_date
-                // nullの可能性もある
-                // pendingInspectionのデータがあれば更新、作成されていなければ作成する
-                // dd($request->pendingInspection);
+                // nullのチェック
                 if($request->pendingInspection) {
-                    // データがあるなら、既存の点検データを更新
+                    // 既存のレコードがあるなら、既存の点検レコードを更新
                     $pendingInspection = $item->inspections()->where('id', $request->pendingInspection['id'])->first(); //渡ってきたオブジェクトを取得
-                    $pendingInspection->update(['scheduled_date' => $request->inspectionSchedule]);
+                    $pendingInspection->update(['inspection_scheduled_date' => $request->inspectionSchedule]);
                 } else {
-                    // データがないなら、新しい点検データを作成
-                    $item->inspections()->create(['scheduled_date' => $request->inspectionSchedule]);
+                    // 既存のレコードがないなら、新しい点検のレコードを作成
+                    $item->inspections()->create(['inspection_scheduled_date' => $request->inspectionSchedule]);
                 }
             }
 
@@ -594,21 +530,44 @@ class ItemController extends Controller
             $disposal = $item->disposal()->first();
             if ($request->disposalSchedule) {
                 if ($disposal) {
-                    // 既存のDisposalデータを更新
-                    $disposal->update(['scheduled_date' => $request->disposalSchedule]);
+                    // 既存のレコードがあるなら、既存の廃棄レコードを更新
+                    $disposal->update(['disposal_scheduled_date' => $request->disposalSchedule]);
                 } else {
-                    // 新しいDisposalデータを作成
-                    $item->disposal()->create(['scheduled_date' => $request->disposalSchedule]);
+                    // 既存のレコードがないなら、新しい廃棄レコードを作成
+                    $item->disposal()->create(['disposal_scheduled_date' => $request->disposalSchedule]);
                 }    
             }
 
+
+            // 画像アップロード後ろに移動
+            // ->isValid()は念のため、ちゃんとアップロードできているかチェックしてくれる
+            $fileNameToStore = null;
+            if(!is_null($request->image_file) && $request->image_file->isValid() ){
+                // 古い画像があれば削除
+                if ($item->image1) {
+                    // dd('削除の条件分岐の中');
+                    Storage::disk('public')->delete('items/' . $item->image1);
+                }
+
+                // 画像ファイルのアップロードとDBのimage1のファイル名更新
+                $fileNameToStore = ImageService::resizeUpload($request->image_file);
+                $item->update(['image1' => $fileNameToStore]);
+            }
+
+
             // DB::commit();
 
-            return to_route('items.index')
+            // ひとまず、showに画面遷移するように変更
+            return to_route('items.show', $item->id)
             ->with([
                 'message' => '更新しました。',
                 'status' => 'success'
             ]);
+            // return to_route('items.index')
+            // ->with([
+            //     'message' => '更新しました。',
+            //     'status' => 'success'
+            // ]);
 
         
 
