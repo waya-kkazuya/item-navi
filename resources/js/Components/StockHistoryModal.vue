@@ -83,7 +83,7 @@ const formatDate = (timestamp) => {
 <template>
   <div v-if="props.item" class="modal" id="modal-1" aria-hidden="true">
     <div class="modal__overlay" tabindex="-1" data-micromodal-close>
-      <div class="modal__container w-2/3" role="dialog" aria-modal="true" aria-labelledby="modal-1-title">
+      <div class="modal__container min-w-[600px] mx-auto" role="dialog" aria-modal="true" aria-labelledby="modal-1-title">
         <header class="modal__header">
           <h2 class="modal__title" id="modal-1-title">
             【管理ID{{ props.item.management_id }}】{{ props.item.name }}の編集履歴
