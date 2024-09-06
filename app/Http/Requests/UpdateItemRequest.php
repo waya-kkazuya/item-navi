@@ -25,27 +25,26 @@ class UpdateItemRequest extends FormRequest
         // Vue側の命名規則であることに注意
         return [
             // 'image1' => ['nullable'], // 正方形画像 画像名の命名規則にしたがって制限をかける、何文字以内
-            'imageFile' => ['nullable', 'image', 'mimes:jpeg,png,jpg'],
+            'image_file' => ['nullable', 'image', 'mimes:jpeg,png,jpg'],
             'name' => ['required', 'min:1' ,'max:20'],
-            'categoryId' => ['required', 'exists:categories,id'],
+            'category_id' => ['required', 'exists:categories,id'],
             'stock' => ['required', 'integer', 'min:0', 'max:200'],
-            'unitId' => ['required', 'exists:units,id'] ,
-            'minimumStock' =>  ['integer', 'min:0', 'max:50'],
+            'unit_id' => ['required', 'exists:units,id'] ,
+            'minimum_stock' =>  ['nullable','integer', 'min:0', 'max:50'],
             'notification' => ['required', 'boolean'],
-            'usageStatusId' => ['required', 'exists:usage_statuses,id'],
-            'endUser' => ['nullable','max:10'],
-            'locationOfUseId' => ['required', 'exists:locations,id'],
-            'storageLocationId' => ['required', 'exists:locations,id'],
-            'acquisitionMethodId' => ['required', 'exists:acquisition_methods,id'],
-            'acquisitionSource' => ['min:1', 'max:20'],
+            'usage_status_id' => ['required', 'exists:usage_statuses,id'],
+            'end_user' => ['nullable','max:10'],
+            'location_of_use_id' => ['required', 'exists:locations,id'],
+            'storage_location_id' => ['required', 'exists:locations,id'],
+            'acquisition_method_id' => ['required', 'exists:acquisition_methods,id'],
+            'acquisition_source' => ['min:1', 'max:20'],
             'price' => ['required', 'integer', 'min:0', 'max:1000000'],
-            'dateOfAcquisition' => ['required', 'date'],
+            'date_of_acquisition' => ['required', 'date'],
             'manufacturer' => ['nullable', 'max:20'],
-            'productNumber' => ['nullable', 'max:30'],
+            'product_number' => ['nullable', 'max:30'],
             'remarks' => ['nullable', 'max:500'],
             
-            // inspectionScheduleのバリデーション
-            'inspectionSchedule' => [
+            'inspection_scheduled_date' => [
                 'date',
                 'nullable',
                 function ($attribute, $value, $fail) {
@@ -60,8 +59,7 @@ class UpdateItemRequest extends FormRequest
                 },
             ],
             
-            // disposalScheduleのバリデーション
-            'disposalSchedule' => [
+            'disposal_scheduled_date' => [
                 'date',
                 'nullable',
                 function ($attribute, $value, $fail) {
@@ -77,8 +75,8 @@ class UpdateItemRequest extends FormRequest
             ],
 
             // 編集理由のバリデーション
-            'editReasonId' => ['required', 'exists:edit_reasons,id'],
-            'editReasonText' => ['nullable', 'max:200'],
+            'edit_reeason_id' => ['required', 'exists:edit_reasons,id'],
+            'edit_reason_text' => ['nullable', 'max:200'],
         ];
     }
 }

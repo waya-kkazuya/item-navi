@@ -25,12 +25,12 @@ class StoreItemRequest extends FormRequest
         // Vue側の命名規則であることに注意
         return [
             'image1' => ['nullable'], // 正方形画像 画像名の命名規則にしたがって制限をかける、何文字以内
-            'imageFile' => ['nullable', 'image', 'mimes:jpeg,png,jpg'],
+            'image_file' => ['nullable', 'image', 'mimes:jpeg,png,jpg'],
             'name' => ['required', 'min:1' ,'max:20'],
             'category_id' => ['required', 'exists:categories,id'],
             'stock' => ['required', 'integer', 'min:0', 'max:200'],
             'unit_id' => ['required', 'exists:units,id'],
-            'minimum_stock' =>  ['integer', 'min:0', 'max:50'],
+            'minimum_stock' =>  ['nullable','integer', 'min:0', 'max:50'],
             'notification' => ['required', 'boolean'],
             'usage_status_id' => ['required', 'exists:usage_statuses,id'],
             'end_user' => ['nullable','max:10'],

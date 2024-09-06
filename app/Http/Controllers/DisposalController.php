@@ -15,14 +15,6 @@ class DisposalController extends Controller
 {
     public function disposeItem(StoreDisposalRequest $request, Item $item)
     {
-        // dd($request);
-
-        // $validatedData = $request->validate([
-        //     'disposalDate' => ['required', 'date'],
-        //     'disposalPerson' => ['required', 'max:10'],
-        //     'details' => ['required', 'max:200'],
-        // ]);
-
         DB::beginTransaction();
 
         try {
@@ -36,10 +28,10 @@ class DisposalController extends Controller
                 $disposal->item_id = $item->id;
             }
 
-            // 対象の備品と関連のあるDisposalのレコードに保存
-            $disposal->scheduled_date = null;
-            $disposal->disposal_date = $request->disposalDate;
-            $disposal->disposal_person = $request->disposalPerson;
+            // 廃棄が実施されたので、予定日は初期化にする
+            $disposal->disposal_scheduled_date = null;
+            $disposal->disposal_date = $request->disposal_date;
+            $disposal->disposal_person = $request->disposal_person;
             $disposal->details = $request->details;
             $disposal->save();
 

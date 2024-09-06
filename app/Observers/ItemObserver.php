@@ -40,22 +40,19 @@ class ItemObserver
         $changes = $item->getChanges();
 
         unset($changes['updated_at']);
-        // ソフとデリートを除外する必要あるか->なさそう
         // unset($changes['softdeletes']);
 
 
         // セッションから編集理由を取得
-        $editReasonId = Session::get('editReasonId');
-        $editReasonText = Session::get('editReasonText');
+        $edit_reeason_id = Session::get('edit_reeason_id');
+        $edit_reason_text = Session::get('edit_reason_text');
 
-        // dd($editReasonId, $editReasonText);
+        // dd($edit_reeason_id, $edit_reason_text);
 
         // 仮置き
         $edit_mode = 'normal';
 
-        // Edithistoryにedit_reasonカラムを追加
         // 備品編集updateを行った際、セッションに編集理由を保存
-        // ここで取り出し、Edithistoryに保存
         // □UpdateItemRequestのリクエストファイルにバージョンルールを記載する
 
         foreach ($changes as $field => $newValue) {
@@ -69,12 +66,12 @@ class ItemObserver
                 'old_value' => $oldValue,
                 'new_value' => $newValue,
                 'edit_user' => Auth::user()->name ?? '',
-                'edit_reason_id' => $editReasonId, //プルダウン
-                'edit_reason_text' => $editReasonText, //その他テキストエリア
+                'edit_reason_id' => $edit_reeason_id, //プルダウン
+                'edit_reason_text' => $edit_reason_text, //その他テキストエリア
             ]);
         }
 
-                // ココの部分は通常時の分だけでも作ってしまった方が良い
+        // ココの部分は通常時の分だけでも作ってしまった方が良い
         // 棚卸時のURLを作成したら、Request::url()で$edit_typeを分ける
         // $url = Request::url();
         // if (strpos($url, 'normal-edit-url') !== false) {
@@ -82,8 +79,6 @@ class ItemObserver
         // } elseif (strpos($url, 'inventory-edit-url') !== false) {
         //     $model->edithistory()->create(['edit_type' => '棚卸時']);
         // }
-
-
     }
 
 
@@ -95,7 +90,7 @@ class ItemObserver
         // ソフトデリート
         Edithistory::create([
             'edit_mode' => 'normal' ,
-            'operation_type' => 'delete',
+            'operation_type' => 'soft_delete',
             'item_id' => $item->id,
             'edited_field' => null,
             'old_value' => null,

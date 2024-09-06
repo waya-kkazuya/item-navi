@@ -41,7 +41,7 @@ class InspectionAndDisposalItemController extends Controller
         $inspectionSelectFields = [
             'id',
             'item_id',
-            'scheduled_date',
+            'inspection_scheduled_date',
             'inspection_date',
             'status',
             'inspection_person',
@@ -52,8 +52,8 @@ class InspectionAndDisposalItemController extends Controller
         $scheduledInspections = Inspection::with($inspectionWithRelations)
             ->select($inspectionSelectFields)
             ->where('status', false)
-            ->whereNotNull('scheduled_date') 
-            ->orderBy('scheduled_date', 'asc')
+            ->whereNotNull('inspection_scheduled_date') 
+            ->orderBy('inspection_scheduled_date', 'asc')
             ->paginate(10);
 
         \Log::info("scheduledInspections");
@@ -66,7 +66,7 @@ class InspectionAndDisposalItemController extends Controller
         $historyInspections = Inspection::with($inspectionWithRelations)
             ->select($inspectionSelectFields)
             ->where('status', true)
-            ->orderBy('scheduled_date', 'asc')
+            ->orderBy('inspection_scheduled_date', 'asc')
             ->paginate(10);
 
         \Log::info("historyInspections");
@@ -104,7 +104,7 @@ class InspectionAndDisposalItemController extends Controller
         $disposalSelectFields = [
             'id',
             'item_id',
-            'scheduled_date',
+            'disposal_scheduled_date',
             'disposal_date',
             'disposal_person',
             'details',
@@ -115,8 +115,8 @@ class InspectionAndDisposalItemController extends Controller
         // 条件：廃棄されておらず、scheduled_dateが存在するレコード
         $scheduledDisposals = Disposal::with($disposalWithRelations)
             ->select($disposalSelectFields)
-            ->orderBy('scheduled_date', 'asc')
-            ->whereNotNull('scheduled_date') 
+            ->orderBy('disposal_scheduled_date', 'asc')
+            ->whereNotNull('disposal_scheduled_date') 
             ->whereHas('item', function ($query) {
                 $query->whereNull('deleted_at');
             })->paginate(10);
@@ -126,14 +126,13 @@ class InspectionAndDisposalItemController extends Controller
         // 条件：廃棄されている
         $historyDisposals = Disposal::with($disposalWithRelations)
             ->select($disposalSelectFields)
-            ->orderBy('scheduled_date', 'asc')
+            ->orderBy('disposal_scheduled_date', 'asc')
             ->whereHas('item', function ($query) {
                 $query->whereNotNull('deleted_at');
             })->paginate(10);;
         
         $historyDisposals = $historyDisposals->setCollection($this->imageService->setImagePath($historyDisposals->getCollection()));
 
-        
 
         return Inertia::render('InspectionAndDisposalItems/Index', [
             'scheduledInspections' => $scheduledInspections,

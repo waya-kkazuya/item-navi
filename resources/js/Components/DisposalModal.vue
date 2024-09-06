@@ -14,8 +14,8 @@ const props = defineProps({
 })
 
 const form = useForm({
-    disposalDate: new Date().toISOString().substr(0, 10),
-    disposalPerson: props.userName,
+    disposal_date: new Date().toISOString().substr(0, 10),
+    disposal_person: props.userName,
     details: null,
 })
 
@@ -45,9 +45,9 @@ const saveDisposal = item => {
 
 </script>
 <template>
-  <div v-show="isShow" class="modal" id="modal-1" aria-hidden="true">
+  <div v-show="isShow" class="modal" id="modal-1" >
     <div class="modal__overlay" tabindex="-1" data-micromodal-close>
-      <div class="modal__container" role="dialog" aria-modal="true" aria-labelledby="modal-1-title">
+      <div class="modal__container min-w-[600px] mx-auto" role="dialog" aria-modal="true" aria-labelledby="modal-1-title">
         <header class="modal__header">
           <h2 class="flex modal__title" id="modal-1-title">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
@@ -76,17 +76,17 @@ const saveDisposal = item => {
                 </div>
               </div>
               <div class="p-2 w-full">
-                  <label for="disposalDate" class="leading-7 text-sm text-blue-900">廃棄実施日</label>
+                  <label for="disposal_date" class="leading-7 text-sm text-blue-900">廃棄実施日</label>
                   <div class="relative">
-                      <input type="date" id="disposalDate" name="disposalDate" v-model="form.disposalDate" class="w-1/2 bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
+                      <input type="date" id="disposal_date" name="disposal_date" v-model="form.disposal_date" class="w-1/2 bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
                   </div>
-                  <div v-if="errors.disposalDate" class="font-medium text-red-600">{{ errors.disposalDate }}</div>
+                  <div v-if="errors.disposal_date" class="font-medium text-red-600">{{ errors.disposal_date }}</div>
               </div>
               <div class="p-2 w-full">
-                <label for="disposalPerson" class="leading-7 text-sm text-blue-900">廃棄実施者</label>
+                <label for="disposal_person" class="leading-7 text-sm text-blue-900">廃棄実施者</label>
                 <div>
-                  <input type="text" id="disposalPerson" name="disposalPerson" v-model="form.disposalPerson" class="w-1/2 bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
-                  <div v-if="errors.disposalPerson" class="font-medium text-red-600">{{ errors.disposalPerson }}</div>       
+                  <input type="text" id="disposal_person" name="disposal_person" v-model="form.disposal_person" class="w-1/2 bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
+                  <div v-if="errors.disposal_person" class="font-medium text-red-600">{{ errors.disposal_person }}</div>       
                 </div>
               </div>
               <div class="p-2 w-full">
@@ -100,17 +100,11 @@ const saveDisposal = item => {
             <div class="p-2 w-full">
               <button class="flex mx-auto text-white bg-red-500 border-0 py-2 px-8 focus:outline-none hover:bg-red-600 rounded">廃棄を実施する</button>
             </div>
-
-            <p>Try hitting the <code>tab</code> key and notice how the focus stays within the modal itself. Also, <code>esc</code> to close modal.</p>
           </form>
         </main>
-        <!-- <footer class="modal__footer">
-          <button @click="toggleStatus" type="button" class="modal__btn modal__btn-primary">Continue</button>
-          <button @click="toggleStatus" type="button" class="modal__btn" data-micromodal-close aria-label="Close this dialog window">Close</button>
-        </footer> -->
       </div>
     </div>
   </div>
   <button @click="toggleStatus" type="button" data-micromodal-trigger="modal-1" href='javascript:;'
-  class="flex mx-auto text-white bg-red-500 border-0 py-2 px-8 focus:outline-none hover:bg-red-600 rounded">廃棄するモーダル</button>
+  class="flex mx-auto text-white bg-red-500 border-0 py-2 px-8 focus:outline-none hover:bg-red-600 rounded">廃棄する</button>
 </template>
