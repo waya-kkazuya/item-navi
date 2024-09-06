@@ -13,6 +13,7 @@ use App\Models\Location;
 use App\Models\UsageStatus;
 use App\Models\AcquisitionMethod;
 use App\Models\Inspection;
+use App\Models\EditReason;
 use Faker\Factory as FakerFactory;
 use Inertia\Testing\AssertableInertia as Assert;
 use Mockery;
@@ -206,11 +207,11 @@ class ItemControllerTest extends TestCase
         
     }
 
-    /** @test */
-    function 備品編集画面で備品を編集更新する()
-    {
+    // /** @test */
+    // function 備品編集画面で備品を編集更新する()
+    // {
         
-    }
+    // }
     
     /** @test */
     function 備品新規登録画面をrole1で開く()
@@ -351,27 +352,18 @@ class ItemControllerTest extends TestCase
         $item = Item::where('management_id', 'CO-1111')->first();
         dump(Item::where('management_id', 'CO-1111')->first()->id);
 
-        // itemsテーブルだけでなく、inspectionsテーブルとdisposalsテーブルにも保存されているか確認が必要
+
         // inspectionsテーブルに保存されているか確認
-        // $inspectionData = [
-        //     'inspection_scheduled_date' => '2024-09-10',
-        // ];
-        // $this->post('inspections', array_merge($inspectionData, ['item_id' => $item->id]));
         $this->assertDatabaseHas('inspections', [
             'item_id' => Item::where('management_id', 'CO-1111')->first()->id,
             'inspection_scheduled_date' =>  '2024-09-10',
         ]);
 
         // disposalsテーブルに保存されているか確認
-        // $disposalData = [
-        //     'disposal_scheduled_date' => '2024-09-20',
-        // ];
-        // $this->post('inspections', array_merge($disposalData, ['item_id' => $item->id]));
         $this->assertDatabaseHas('disposals', [
             'item_id' => Item::where('management_id', 'CO-1111')->first()->id,
             'disposal_scheduled_date' => '2024-09-20',
         ]);
-
 
         // その後ItemObserverによるedithistoriesテーブルへの保存をテスト
         $this->assertDatabaseHas('edithistories', [
@@ -412,8 +404,6 @@ class ItemControllerTest extends TestCase
         $response->assertStatus(302); //リダイレクトステータス
         // $response->assertSessionHasErrors(['name' => '指定']); // セッションにエラーメッセージがあることを確認
         // $response->assertInvalid(['name' => '指定']);
-
-        // dump($response->getContent());
 
         // // リダイレクト後のレスポンスを取得
         $response = $this->followRedirects($response);
@@ -2257,22 +2247,17 @@ class ItemControllerTest extends TestCase
 
 
 
-    /** @test */
-    function 備品編集時のバリデーションが表示される()
-    {
-        
-    }
-
 
     /** @test */
-    function 備品編集画面で備品を編集できる()
+    function 備品編集画面で備品を編集更新できる()
     {
         // 世界の構築
         $categories = Category::factory()->count(11)->create();
         $units = Unit::factory()->count(10)->create();
         $usage_statuses = UsageStatus::factory()->count(2)->create();
         $locations = Location::factory()->count(12)->create();
-        $aquisition_methods = AcquisitionMethod::factory()->count(6)->create();      
+        $aquisition_methods = AcquisitionMethod::factory()->count(6)->create();
+        $edit_reasons = EditReason::factory()->count(5)->create();
 
         // adminユーザーを作成
         $user = User::factory()->role(1)->create();
@@ -2280,10 +2265,12 @@ class ItemControllerTest extends TestCase
 
         $item = Item::factory()->create();
         
+        // dump($item->management_id);
+        dump($item);
+        
         $validData = [
-            // 'management_id' => 'CO-1111',
             'name' => 'ペーパータオル',
-            'category_id' => $categories->first()->id,
+            'category_id' => 1,
             'image1' => null,
             'stock' => 10,
             'unit_id' => $units->first()->id,
@@ -2300,55 +2287,315 @@ class ItemControllerTest extends TestCase
             'manufacturer' => null,
             'product_number' => null,
             'remarks' => 'テストコードです',
-            'qrcode' => null,
-            // 'inspection_scheduled_date' => '2024-09-10',
-            // 'disposal_scheduled_date' => '2024-09-20'
+            'inspection_scheduled_date' => '2024-09-10',
+            'disposal_scheduled_date' => '2024-09-20',
+            'edit_reeason_id' => $edit_reasons->first()->id,
+            'edit_reason_text' => null,
         ];
 
 
         // 更新リクエストを送信
-        $response = $this->from('items/edit')
-            ->patch(route('items.update', $item->id), $validData);
+        $response = $this->from('items/'.$item->id.'/edit')
+            ->put(route('items.update', $item), $validData);
+        $response->assertRedirect(route('items.show', $item));
+        $response->assertStatus(302);
 
-        $response->assertRedirect('items/edit');
+        $this->assertDatabaseHas('items', [
+            'name' => 'ペーパータオル',
+            'category_id' => 1,
+            'image1' => null,
+            'stock' => 10,
+            'unit_id' => $units->first()->id,
+            'minimum_stock' => 2,
+            'notification' => true,
+            'usage_status_id' => $usage_statuses->first()->id,
+            'end_user' => '山田',
+            'location_of_use_id' => $locations->first()->id,
+            'storage_location_id' => $locations->last()->id,
+            'acquisition_method_id' => $aquisition_methods->first()->id,
+            'acquisition_source' => 'Amazon',
+            'price' => 500,
+            'date_of_acquisition' => '2024-09-03',
+            'manufacturer' => null,
+            'product_number' => null,
+            'remarks' => 'テストコードです',
+        ]);
 
-        // $this->assertDatabaseHas('items', array_merge($validData, ['management_id' => 'CO-1111']));
+        // 更新されたことのチェック
+        $item->refresh();
+        $this->assertSame('ペーパータオル', $item->name);
+        $this->assertSame(1, $item->category_id);
+        $this->assertSame(10, $item->stock);
+        $this->assertSame($units->first()->id, $item->unit_id);
+        $this->assertSame(2, $item->minimum_stock);
+        $this->assertSame(true, (bool) $item->notification);
+        $this->assertSame('山田', $item->end_user);
+        $this->assertSame($locations->first()->id, $item->location_of_use_id);
+        $this->assertSame($locations->last()->id, $item->storage_location_id);
+        $this->assertSame($aquisition_methods->first()->id, $item->acquisition_method_id);
+        $this->assertSame('Amazon', $item->acquisition_source);
+        $this->assertSame(500, $item->price);
+        $this->assertSame(null, $item->manufacturer);
+        $this->assertSame(null, $item->product_number);
+        $this->assertSame('テストコードです', $item->remarks);
+        
+        $this->assertDatabaseCount('items', 1);
 
-        // $item = Item::where('management_id', 'CO-1111')->first();
-        // dump(Item::where('management_id', 'CO-1111')->first()->id);
 
+        // inspectionsテーブルに保存されているか確認
+        $this->assertDatabaseHas('inspections', [
+            'item_id' => $item->id,
+            'inspection_scheduled_date' =>  '2024-09-10',
+        ]);
 
+        // disposalsテーブルに保存されているか確認
+        $this->assertDatabaseHas('disposals', [
+            'item_id' => $item->id,
+            'disposal_scheduled_date' => '2024-09-20',
+        ]);
 
+        // ItemObserverのupdatedメソッドで保存される
+        // 更新されたカラムの分だけforeachを回すべきか
+        $this->assertDatabaseHas('edithistories', [
+            'edit_mode' => 'normal',
+            'operation_type' => 'update',
+            'item_id' => $item->id,
+            // 'edited_field' => $field,
+            // 'old_value' => $oldValue,
+            // 'new_value' => $newValue,
+            'edit_user' =>  $user->name ?? '',
+            'edit_reason_id' => $edit_reasons->first()->id, //プルダウン
+            'edit_reason_text' => null, //その他テキストエリア
+        ]);
+
+        // 作成したデータを19項目の差異が更新がある
+        $this->assertDatabaseCount('edithistories', 19);
     }
+
+
+
+
+
+
+    // 編集更新のnameのバリデーションのテスト
+    /** @test */
+    public function 備品編集更新バリデーションnameが空欄では保存できない()
+    {
+        $user = User::factory()->role(1)->create();
+        $this->actingAs($user);
+
+        $item = Item::factory()->create();
+
+        $response = $this->from('items/'.$item->id.'/edit')->put(route('items.update', $item), ['name' => '']);
+        $response->assertRedirect('items/'.$item->id.'/edit'); //URLにリダイレクト
+        $response->assertStatus(302);
+
+        $response = $this->followRedirects($response);
+
+        $response->assertInertia(fn (Assert $page) => $page
+            ->component('Items/Edit')
+            ->has('errors.name')
+            ->where('errors.name', '名前は必ず指定してください。')
+            // ->dump()
+        );
+    }
+
+    /** @test */
+    public function 備品編集更新バリデーションnameが1文字()
+    {
+        $user = User::factory()->role(1)->create();
+        $this->actingAs($user);
+
+        $item = Item::factory()->create();
+
+        $response = $this->from('items/'.$item->id.'/edit')->put(route('items.update', $item), ['name' => str_repeat('あ', 1)]);
+        $response->assertRedirect('items/'.$item->id.'/edit'); //URLにリダイレクト
+        $response->assertStatus(302);
+
+        $response = $this->followRedirects($response);
+
+        $response->assertInertia(fn (Assert $page) => $page
+            ->component('Items/Edit')
+            ->missing('errors.name')
+            // ->dump()
+        );
+    }
+
+    /** @test */
+    public function 備品編集更新バリデーションnameが20文字()
+    {
+        $user = User::factory()->role(1)->create();
+        $this->actingAs($user);
+
+        $item = Item::factory()->create();
+
+        $response = $this->from('items/'.$item->id.'/edit')->put(route('items.update', $item), ['name' => str_repeat('あ', 20)]);
+        $response->assertRedirect('items/'.$item->id.'/edit'); //URLにリダイレクト
+        $response->assertStatus(302);
+
+        $response = $this->followRedirects($response);
+
+        $response->assertInertia(fn (Assert $page) => $page
+            ->component('Items/Edit')
+            ->missing('errors.name')
+            // ->dump()
+        );
+    }
+
+    /** @test */
+    public function 備品編集更新バリデーションnameが21文字()
+    {
+        $user = User::factory()->role(1)->create();
+        $this->actingAs($user);
+
+        $item = Item::factory()->create();
+
+        $response = $this->from('items/'.$item->id.'/edit')->put(route('items.update', $item), ['name' => str_repeat('あ', 21)]);
+        $response->assertRedirect('items/'.$item->id.'/edit'); //URLにリダイレクト
+        $response->assertStatus(302);
+
+        $response = $this->followRedirects($response);
+
+        $response->assertInertia(fn (Assert $page) => $page
+            ->component('Items/Edit')
+            ->has('errors.name')
+            ->where('errors.name', '名前は、20文字以下で指定してください。')
+            // ->dump()
+        );
+    }
+
+
+
+
+
+
 
 
     /** @test */
-    function 備品詳細画面で廃棄モーダルで廃棄（ソフトデリート）できる()
+    public function 備品詳細画面で廃棄モーダルで廃棄処理できる()
     {
-        
+        $user = User::factory()->role(1)->create();
+        $this->actingAs($user);
+
+        // テスト用の備品を作成
+        $item = Item::factory()->create();
+
+        $validData = [
+            'disposal_date' => '2024-09-03',
+            'disposal_person' => $user->name,
+            'details' => 'あいうえお'
+        ];
+
+        // 備品をソフトデリート
+        $response = $this->put(route('dispose_item.disposeItem', $item->id), $validData);
+        $response->assertStatus(302); // リダイレクトを確認
+        $response->assertRedirect('items');
+
+        $this->assertDatabaseHas('disposals', [
+            'disposal_date' => '2024-09-03',
+            'disposal_person' => $user->name,
+            'details' => 'あいうえお'
+        ]);
+
+        // ソフトデリートされたことを確認
+        $this->assertSoftDeleted('items', ['id' => $item->id]);
+
+        // ソフトデリートされた備品が取得できないことを確認
+        $this->assertNull(Item::find($item->id));
+
+        // ソフトデリートされた備品がwithTrashedで取得できることを確認
+        $this->assertNotNull(Item::withTrashed()->find($item->id));
 
 
+        // 廃棄した後ItemObserverによってeidithistorieテーブルに廃棄履歴が保存される
+        $this->assertDatabaseHas('edithistories', [
+            'edit_mode' => 'normal',
+            'operation_type' => 'soft_delete',
+            'item_id' => $item->id,
+            'edited_field' => null,
+            'old_value' => null,
+            'new_value' => null,
+            'edit_user' => Auth::user()->name,
+        ]);
 
-
-        
     }
+
+    // Authが使える
+    // 備品廃棄モーダルでのバリデーションテスト
+
+
+
+
 
 
     /** @test */
-    function 備品詳細画面で備品を点検・ソフトデリートできる()
+    function 備品詳細画面で点検モーダルで点検処理できる_点検予定日のレコードがない場合()
     {
-        
+        $user = User::factory()->role(1)->create();
+        $this->actingAs($user);
 
+        // テスト用の備品を作成
+        $item = Item::factory()->create();
 
+        $validData = [
+            'inspection_date' => '2024-09-03',
+            'inspection_person' => $user->name,
+            'details' => 'あいうえお'
+        ];
 
+        // 備品をソフトデリート
+        $response = $this->put(route('inspect_item.inspectItem', $item->id), $validData);
+        $response->assertStatus(302); // リダイレクトを確認
 
-
+        $this->assertDatabaseHas('inspections', [
+            'inspection_date' => '2024-09-03',
+            'inspection_person' => $user->name,
+            'details' => 'あいうえお'
+        ]);
     }
 
+    /** @test */
+    function 備品詳細画面で点検モーダルで点検処理できる_点検予定日のレコードがある場合()
+    {
+        $user = User::factory()->role(1)->create();
+        $this->actingAs($user);
 
+        // テスト用の備品を作成
+        $item = Item::factory()->create();
 
+        $validData = [
+            'inspection_date' => '2024-09-03',
+            'inspection_person' => $user->name,
+            'details' => 'あいうえお'
+        ];
 
+        // inspection_scheduled_dateが登録されていてstatusがfalseの場合、
+        // 項目を上書きする
+        $inspection = Inspection::factory()->create([
+            'item_id' => $item->id,
+            'inspection_scheduled_date' => '2024-09-01',
+            'inspection_date' => null,
+            'status' => false,
+            'inspection_person' => null,
+            'details' => null
+        ]);
 
+        // 備品をソフトデリート
+        $response = $this->put(route('inspect_item.inspectItem', $item->id), $validData);
+        $response->assertStatus(302); // リダイレクトを確認
+
+        $this->assertDatabaseHas('inspections', [
+            'inspection_date' => '2024-09-03',
+            'inspection_person' => $user->name,
+            'details' => 'あいうえお'
+        ]);
+
+        // 先にinspectionが存在した場合更新されているかをアサ―ト
+        $inspection->refresh();
+        $this->assertSame('2024-09-03', $inspection->inspection_date);
+        $this->assertSame($user->name, $inspection->inspection_person);
+        $this->assertSame('あいうえお', $inspection->details);
+    }
 
 
     // User権限で出来ないことをテスト
@@ -2381,10 +2628,66 @@ class ItemControllerTest extends TestCase
         $this->from('items/show')->delete('items/' . $item->id)
             ->assertRedirect($loginUrl);
         
-
-
-        
+   
     }
 
+
+    // StockTransactionControllerのテスト
+    // 後でファイルに切り出し
+
+    /** @test */
+    function 入出庫モーダルで出庫処理が出来る()
+    {
+        // 世界を構築
+        $categories = Category::factory()->count(11)->create();
+
+        $user = User::factory()->role(1)->create();
+        $this->actingAs($user);
+
+        // テスト用の備品を作成、消耗品(category_id=1)のみ入出庫できる
+        $item = Item::factory()->create([
+            'category_id' => 1,
+            'stock' => 10,
+            'minimum_stock' => 2
+        ]);
+
+        $validData = [
+            'item_id' => $item->id,
+            'transaction_type' => '出庫',
+            'transaction_date' => '2024-9-3',
+            'operator_name' => $user->name,
+            'quantity' => 3,
+        ];
+
+        // 備品をソフトデリート
+        $response = $this->put(route('decreaseStock', $item->id), $validData);
+        $response->assertStatus(302); // リダイレクトを確認
+
+        $this->assertDatabaseHas('stock_transactions', [
+            'item_id' => $item->id,
+            'transaction_type' => '出庫',
+            'transaction_date' => '2024-9-3',
+            'operator_name' => $user->name,
+            'quantity' => 3,
+        ]);
+    }
+
+
+    // 在庫数以下にはquantityを出来ないバリデーションRulesがStockLimit
+
+
+
+
+    /** @test */
+    function 入出庫モーダルで入庫処理が出来る()
+    {
+        // 世界を構築
+        $categories = Category::factory()->count(11)->create();
+
+        $user = User::factory()->role(1)->create();
+        $this->actingAs($user);
+
+
+    }
 
 }
