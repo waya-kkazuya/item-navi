@@ -15,9 +15,9 @@ class InspectionController extends Controller
     {
         // dd($item);
         // dd($request);
-        // DB::beginTransaction();
+        DB::beginTransaction();
 
-        // try {
+        try {
             // 処理１、Inspectionテーブルのstatusがfalseの登録日が一番古い日付のレコードを取得
             $inspection = Inspection::where('item_id', $item->id)
                 ->where('status', false)
@@ -47,7 +47,7 @@ class InspectionController extends Controller
             // 処理５、Show画面の前回の点検日を表示する
             // statusがtrueで一番新しいものを表示
 
-            // DB::commit();
+            DB::commit();
 
             // 点検の場合は、モーダルを閉じて点検画面を再表示
             return to_route('items.show', ['item' => $item->id])
@@ -55,14 +55,15 @@ class InspectionController extends Controller
                 'message' => '点検を実施しました。',
                 'status' => 'success'
             ]);
-        // } catch (\Exception $e) {
-        //     DB::rollBack();
+            
+        } catch (\Exception $e) {
+            DB::rollBack();
 
-        //     return redirect()->back()
-        //     ->with([
-        //         'message' => '登録中にエラーが発生しました',
-        //         'status' => 'danger'
-        //     ]);
-        // }
+            return redirect()->back()
+            ->with([
+                'message' => '登録中にエラーが発生しました',
+                'status' => 'danger'
+            ]);
+        }
     }
 }
