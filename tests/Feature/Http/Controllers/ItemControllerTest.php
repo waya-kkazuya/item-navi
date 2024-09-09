@@ -12,8 +12,11 @@ use App\Models\Category;
 use App\Models\Location;
 use App\Models\UsageStatus;
 use App\Models\AcquisitionMethod;
+use App\Models\Edithistory;
 use App\Models\Inspection;
 use App\Models\EditReason;
+use App\Models\RequestStatus;
+use App\Models\StockTransaction;
 use Faker\Factory as FakerFactory;
 use Inertia\Testing\AssertableInertia as Assert;
 use Mockery;
@@ -21,6 +24,10 @@ use App\Services\ManagementIdService;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 use Illuminate\Database\Console\DumpCommand;
+use Illuminate\Testing\Fluent\AssertableJson;
+use Inertia\Inertia;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 
 class ItemControllerTest extends TestCase
 {
@@ -34,7 +41,7 @@ class ItemControllerTest extends TestCase
     }
 
     /** @test */
-    function 備品一覧_paginateオブジェクトを渡す()
+    function 備品一覧画面paginateオブジェクトのデータを渡す()
     {
         // リレーションのダミーデータを作成
         // $categories = Category::all(); all()は使えない
@@ -45,7 +52,6 @@ class ItemControllerTest extends TestCase
         $aquisition_methods = AcquisitionMethod::factory()->count(6)->create();
 
 
-
         // 各コレクションの要素数を出力
         echo 'Categories count: ' . $categories->count() . PHP_EOL;
         echo 'Units count: ' . $units->count() . PHP_EOL;
@@ -53,13 +59,11 @@ class ItemControllerTest extends TestCase
         echo 'Locations count: ' . $locations->count() . PHP_EOL;
         echo 'Acquisition Methods count: ' . $aquisition_methods->count() . PHP_EOL;
 
-
         
         // 1件作成
         // Observerでのmanagement_idの生成はやめてServiceに移行
-        // $items = Item::factory(20)->create();
-        // $items = null; // 参照渡し
-        // Item::withoutEvents(function () use (&$items ,$categories, $units, $usage_statuses, $locations, $aquisition_methods) {
+        // $items = null; // モデルオブザーバ対策、既にサービスに移した
+        // Item::withoutEvents(function () use (&$items ,$categories, $units, $usage_statuses, $locations, $aquisition_methods) {});
         $items = Item::factory()->count(20)->create([
             'management_id' => $this->faker->regexify('[A-Za-z0-9]{7}'),
             // 'name' => 'テストアイテム', // nameを上書きできる
@@ -70,7 +74,6 @@ class ItemControllerTest extends TestCase
             'storage_location_id' => $locations->random()->id,
             'acquisition_method_id' => $aquisition_methods->random()->id
         ]);
-        // });
 
         // adminユーザーを作成
         $user = User::factory()->role(1)->create();
@@ -81,7 +84,6 @@ class ItemControllerTest extends TestCase
         $this->actingAs($user);
 
         // $items = Item::all();
-
         // dd($items);
 
         $response = $this->get('/items')
@@ -131,7 +133,6 @@ class ItemControllerTest extends TestCase
                     ])
                 )
             )
-            // ->where('items.0.name', 'テストアイテム') // itemsの最初の要素のnameがテストアイテムであることを確認
         );
 
 
@@ -194,24 +195,13 @@ class ItemControllerTest extends TestCase
                 ->etc()
             )
             ->where('pendingInspection.inspection_date', $pendingInspection->inspection_date->format('Y-m-d')) //日付は文字列の形式に変換、ダミーデータとの整合性
-            ->where('pendingInspection.scheduled_date', $pendingInspection->scheduled_date->format('Y-m-d'))
+            ->where('pendingInspection.inspection_scheduled_date', $pendingInspection->inspection_scheduled_date->format('Y-m-d'))
             ->where('previousInspection.inspection_date', $previousInspection->inspection_date->format('Y-m-d'))
-            ->where('previousInspection.scheduled_date', $previousInspection->scheduled_date->format('Y-m-d'))
+            ->where('previousInspection.inspection_scheduled_date', $previousInspection->inspection_scheduled_date->format('Y-m-d'))
             ->where('userName', $user->name)
         );
     }
     
-    /** @test */
-    function 備品詳細画面から備品編集画面を開く()
-    {
-        
-    }
-
-    // /** @test */
-    // function 備品編集画面で備品を編集更新する()
-    // {
-        
-    // }
     
     /** @test */
     function 備品新規登録画面をrole1で開く()
@@ -251,26 +241,16 @@ class ItemControllerTest extends TestCase
         }
     }
 
-
-    // /** @test */
-    // function Categoryを取得できる()
-    // {
-    //     $category = Category::factory()->create();
-    //     dump($category->id);
-
-    // }
-
-
     /** @test */
-    function 備品新規登録画面で備品を登録できる()
+    function 備品新規登録画面で備品を登録できる、消耗品の時()
     {
         // ※注意
         // 備品が新規作成された裏でItemObserverによってedithistoriesテーブルにもデータが保存される
 
         //世界の構築が不十分
         // dump(Category::factory()->create(['id' => 1]));
-        // $category = Category::factory()->create(['id' => 1]);
-        $categories = Category::factory()->count(11)->create();
+        $category = Category::factory()->create(['id' => 1]);
+        // $categories = Category::factory()->count(11)->create();
         $units = Unit::factory()->count(10)->create();
         $usage_statuses = UsageStatus::factory()->count(2)->create();
         $locations = Location::factory()->count(12)->create();
@@ -282,19 +262,25 @@ class ItemControllerTest extends TestCase
 
         // モックを作成
         $mock = Mockery::mock(ManagementIdService::class);
-        $mock->shouldReceive('generate')->once()->with(1)->andReturn('CO-1111');
+        $mock->shouldReceive('generate')
+                ->once()
+                ->with($category->id)
+                ->andReturn('CO-1111');
         // サービスコンテナで呼び出す
         $this->instance(ManagementIdService::class, $mock);
 
-
+        // テスト用の画像ファイルを準備
+        Storage::fake('public');
+        $image = UploadedFile::fake()->image('test_image.jpg');
 
         // ※注意
         // フロントから送られてくるデータを適切に模倣しないといけいない
         $validData = [
             // 'management_id' => 'CO-1111',
             'name' => 'ペーパータオル',
-            'category_id' => $categories->first()->id,
-            'image1' => null,
+            'category_id' => $category->id,
+            'image_file' => $image,
+            // 'image1' => null,
             'stock' => 10,
             'unit_id' => $units->first()->id,
             'minimum_stock' => 2,
@@ -315,22 +301,26 @@ class ItemControllerTest extends TestCase
             'disposal_scheduled_date' => '2024-09-20'
         ];
 
-        // dump(array_merge($validData, $inspectionData, $disposalData));
-
-        // 新規作成時items
-        // $response = $this->post(route('items.store'), $validData);
-        // $response = $this->from('items/create')->post('items', array_merge($validData, $inspectionData, $disposalData));
         // $response = $this->from('items/create')->post('items', $validData);
         $response = $this->from('items/create')->post(route('items.store'), $validData);
-
         $response->assertRedirect('items');
+
+
+        // 仮のディスクに保存されたすべてのファイルの一覧を取得
+        // $allFiles = Storage::disk('public')->allFiles();
+        // echo "仮のディスクに保存されたファイル一覧:\n";
+        // print_r($allFiles);
+
+        // dd($image->hashName());
+        // データベースに画像ファイルが保存されていることを確認
+        Storage::disk('public')->assertExists('public/items/'.$image->hashName());
 
         // $this->assertDatabaseHas('items', array_merge($validData, ['management_id' => 'CO-1111']));
         $this->assertDatabaseHas('items', [
             'management_id' => 'CO-1111',
             'name' => 'ペーパータオル',
-            'category_id' => $categories->first()->id,
-            'image1' => null,
+            'category_id' => $category->id,
+            'image1' => 'items/'.$image->hashName(),
             'stock' => 10,
             'unit_id' => $units->first()->id,
             'minimum_stock' => 2,
@@ -377,6 +367,127 @@ class ItemControllerTest extends TestCase
         ]);
     }
 
+    /** @test */
+    function 備品新規登録画面で備品を登録できる、消耗品以外の時()
+    {
+        // ※注意
+        // 備品が新規作成された裏でItemObserverによってedithistoriesテーブルにもデータが保存される
+
+        //世界の構築が不十分
+        // dump(Category::factory()->create(['id' => 1]));
+        $category = Category::factory()->create(['id' => 2]);
+        // $categories = Category::factory()->count(11)->create();
+        $units = Unit::factory()->count(10)->create();
+        $usage_statuses = UsageStatus::factory()->count(2)->create();
+        $locations = Location::factory()->count(12)->create();
+        $aquisition_methods = AcquisitionMethod::factory()->count(6)->create();
+
+        // adminユーザーを作成
+        $user = User::factory()->role(1)->create();
+        $this->actingAs($user);   
+
+        // モックを作成
+        $mock = Mockery::mock(ManagementIdService::class);
+        $mock->shouldReceive('generate')
+                ->once()
+                ->with($category->id)
+                ->andReturn('CO-1111');
+        // サービスコンテナで呼び出す
+        $this->instance(ManagementIdService::class, $mock);
+
+
+
+        // ※注意
+        // フロントから送られてくるデータを適切に模倣しないといけいない
+        $validData = [
+            // 'management_id' => 'CO-1111',
+            'name' => 'ペーパータオル',
+            'category_id' => $category->id,
+            'image1' => null,
+            'stock' => 10,
+            'unit_id' => $units->first()->id,
+            'minimum_stock' => 2,
+            'notification' => true,
+            'usage_status_id' => $usage_statuses->first()->id,
+            'end_user' => '山田',
+            'location_of_use_id' => $locations->first()->id,
+            'storage_location_id' => $locations->last()->id,
+            'acquisition_method_id' => $aquisition_methods->first()->id,
+            'acquisition_source' => 'Amazon',
+            'price' => 500,
+            'date_of_acquisition' => '2024-09-03',
+            'manufacturer' => null,
+            'product_number' => null,
+            'remarks' => 'テストコードです',
+            'qrcode' => null,
+            'inspection_scheduled_date' => '2024-09-10',
+            'disposal_scheduled_date' => '2024-09-20'
+        ];
+
+        // dump(array_merge($validData, $inspectionData, $disposalData));
+
+        // 新規作成時items
+        // $response = $this->post(route('items.store'), $validData);
+        // $response = $this->from('items/create')->post('items', array_merge($validData, $inspectionData, $disposalData));
+        // $response = $this->from('items/create')->post('items', $validData);
+        $response = $this->from('items/create')->post(route('items.store'), $validData);
+
+        $response->assertRedirect('items');
+
+        // $this->assertDatabaseHas('items', array_merge($validData, ['management_id' => 'CO-1111']));
+        $this->assertDatabaseHas('items', [
+            'management_id' => 'CO-1111',
+            'name' => 'ペーパータオル',
+            'category_id' => $category->id,
+            'image1' => null,
+            'stock' => 10,
+            'unit_id' => $units->first()->id,
+            'minimum_stock' => null,
+            'notification' => true,
+            'usage_status_id' => $usage_statuses->first()->id,
+            'end_user' => '山田',
+            'location_of_use_id' => $locations->first()->id,
+            'storage_location_id' => $locations->last()->id,
+            'acquisition_method_id' => $aquisition_methods->first()->id,
+            'acquisition_source' => 'Amazon',
+            'price' => 500,
+            'date_of_acquisition' => '2024-09-03',
+            'manufacturer' => null,
+            'product_number' => null,
+            'remarks' => 'テストコードです',
+            'qrcode' => null,
+        ]);
+
+        $item = Item::where('management_id', 'CO-1111')->first();
+        dump(Item::where('management_id', 'CO-1111')->first()->id);
+
+
+        // inspectionsテーブルに保存されているか確認
+        $this->assertDatabaseHas('inspections', [
+            'item_id' => Item::where('management_id', 'CO-1111')->first()->id,
+            'inspection_scheduled_date' =>  '2024-09-10',
+        ]);
+
+        // disposalsテーブルに保存されているか確認
+        $this->assertDatabaseHas('disposals', [
+            'item_id' => Item::where('management_id', 'CO-1111')->first()->id,
+            'disposal_scheduled_date' => '2024-09-20',
+        ]);
+
+        // その後ItemObserverによるedithistoriesテーブルへの保存をテスト
+        $this->assertDatabaseHas('edithistories', [
+            'edit_mode' => 'normal',
+            'operation_type' => 'store',
+            'item_id' => Item::where('management_id', 'CO-1111')->first()->id,
+            'edited_field' => null,
+            'old_value' => null,
+            'new_value' => null,
+            'edit_user' => Auth::user()->name,
+        ]);
+    }
+
+
+    
     /** @test */
     function 備品新規登録画面でバリデーションエラーメッセージが表示される()
     {
@@ -434,29 +545,6 @@ class ItemControllerTest extends TestCase
 
         $url = 'items';
         $response = $this->from('items/create')->post($url, $data);
-        // $response = $this->from('items/create')->post($url, array_merge($data, [
-        //     // 'name' => 'ペーパータオル',
-        //     'category_id' => 1,
-        //     'image1' => null,
-        //     'stock' => 10,
-        //     'unit_id' => 1,
-        //     'minimum_stock' => 2,
-        //     'notification' => true,
-        //     'usage_status_id' => 1,
-        //     'end_user' => '山田',
-        //     'location_of_use_id' => 1,
-        //     'storage_location_id' => 2,
-        //     'acquisition_method_id' => 1,
-        //     'acquisition_source' => 'Amazon',
-        //     'price' => 500,
-        //     'date_of_acquisition' => '2024-09-03',
-        //     'manufacturer' => null,
-        //     'product_number' => null,
-        //     'remarks' => 'テストコードです',
-        //     'qrcode' => null,
-        //     'inspection_scheduled_date' => '2024-09-10',
-        //     'disposal_scheduled_date' => '2024-09-20'
-        // ]));
         $response->assertRedirect('items/create'); //URLにリダイレクト
         $response->assertStatus(302);
 
@@ -491,50 +579,6 @@ class ItemControllerTest extends TestCase
             ],
         ];
     }
-
-
-    /**
-     * @dataProvider categoryIdSuccessCaseValidationProvider
-     * @test
-     */
-    public function 備品新規登録categoryIdバリデーション正常系モデルとして残す($data)
-    {
-        // 世界を構築
-        $categories = Category::factory()->count(11)->create();
-        $units = Unit::factory()->count(10)->create();
-        $usage_statuses = UsageStatus::factory()->count(2)->create();
-        $locations = Location::factory()->count(12)->create();
-        $aquisition_methods = AcquisitionMethod::factory()->count(6)->create();
-
-        $user = User::factory()->role(1)->create();
-        $this->actingAs($user);
-
-        $url = 'items';
-        // $dataのみにした
-        $response = $this->from('items/create')->post($url, $data);
-        $response->assertRedirect('items/create'); //URLにリダイレクト
-        $response->assertStatus(302);
-
-        $response = $this->followRedirects($response);
-
-        $response->assertInertia(fn (Assert $page) => $page
-            ->component('Items/Create')
-            ->missing('errors.category_id')
-            ->dump()
-        );
-    }
-
-    public static function categoryIdSuccessCaseValidationProvider()
-    {
-        return [
-            'category_idが1の時はエラーメッセージが出ない' => [
-                ['category_id' => 1, 'expectedError' => null]
-            ],
-            'category_idが11の時はエラーメッセージが出ない'=> [
-                ['category_id' => 10, 'expectedError' => null]
-            ],
-        ];
-    }
     
 
     // 新規登録のcategory_idのバリデーションのテスト    
@@ -548,7 +592,7 @@ class ItemControllerTest extends TestCase
         $user = User::factory()->role(1)->create();
         $this->actingAs($user);
 
-        $response = $this->from('items/create')->post('items', ['category_id' => 0]);
+        $response = $this->from('items/create')->post('items', ['category_id' => $categories->min('id') - 1]);
         $response->assertRedirect('items/create'); //URLにリダイレクト
         $response->assertStatus(302);
 
@@ -571,7 +615,7 @@ class ItemControllerTest extends TestCase
         $user = User::factory()->role(1)->create();
         $this->actingAs($user);
 
-        $response = $this->from('items/create')->post('items', ['category_id' => 1]);
+        $response = $this->from('items/create')->post('items', ['category_id' => $categories->min('id')]);
         $response->assertRedirect('items/create'); //URLにリダイレクト
         $response->assertStatus(302);
 
@@ -593,7 +637,7 @@ class ItemControllerTest extends TestCase
         $user = User::factory()->role(1)->create();
         $this->actingAs($user);
 
-        $response = $this->from('items/create')->post('items', ['category_id' => 11]);
+        $response = $this->from('items/create')->post('items', ['category_id' => $categories->max('id')]);
         $response->assertRedirect('items/create'); //URLにリダイレクト
         $response->assertStatus(302);
 
@@ -615,7 +659,7 @@ class ItemControllerTest extends TestCase
         $user = User::factory()->role(1)->create();
         $this->actingAs($user);
 
-        $response = $this->from('items/create')->post('items', ['category_id' => 12]);
+        $response = $this->from('items/create')->post('items', ['category_id' => $categories->max('id') + 1]);
         $response->assertRedirect('items/create'); //URLにリダイレクト
         $response->assertStatus(302);
 
@@ -714,7 +758,8 @@ class ItemControllerTest extends TestCase
     public function 備品新規登録バリデーションカテゴリが消耗品の時はminimum_stockの値は保存される()
     {
         // 世界を構築
-        $categories = Category::factory()->count(11)->create();
+        // $categories = Category::factory()->count(11)->create();
+        $category = Category::factory()->create(['id' => 1]);
         $units = Unit::factory()->count(10)->create();
         $usage_statuses = UsageStatus::factory()->count(2)->create();
         $locations = Location::factory()->count(12)->create();
@@ -726,17 +771,17 @@ class ItemControllerTest extends TestCase
         // 適切に保存されるデータでカテゴリが消耗品(catgery_id=1)の時
         $response = $this->from('items/create')->post('items', [
             'name' => 'ペーパータオル',
-            'category_id' => 1,
+            'category_id' => $category->id,
             'image1' => null,
             'stock' => 10,
-            'unit_id' => 1,
+            'unit_id' => $units->first()->id,
             'minimum_stock' => 2,
             'notification' => true,
-            'usage_status_id' => 1,
+            'usage_status_id' => $usage_statuses->first()->id,
             'end_user' => '山田',
-            'location_of_use_id' => 1,
-            'storage_location_id' => 2,
-            'acquisition_method_id' => 1,
+            'location_of_use_id' => $locations->first()->id,
+            'storage_location_id' => $locations->first()->id,
+            'acquisition_method_id' => $aquisition_methods->first()->id,
             'acquisition_source' => 'Amazon',
             'price' => 500,
             'date_of_acquisition' => '2024-09-03',
@@ -745,7 +790,7 @@ class ItemControllerTest extends TestCase
             'remarks' => 'テストコードです',
             'qrcode' => null,
             'inspection_scheduled_date' => '2024-09-10',
-            'disposal_scheduled_date' => '2024-09-20'
+            'disposal_scheduled_date' => '2024-09-20'  
         ]);
         $response->assertRedirect('items'); //URLにリダイレクト
         $response->assertStatus(302);
@@ -760,7 +805,8 @@ class ItemControllerTest extends TestCase
     public function 備品新規登録バリデーションカテゴリが消耗品以外の時は値がminimum_stockはnullで保存される()
     {
         // 世界を構築
-        $categories = Category::factory()->count(11)->create();
+        // $categories = Category::factory()->count(11)->create();
+        $category = Category::factory()->create(['id' => 2]);
         $units = Unit::factory()->count(10)->create();
         $usage_statuses = UsageStatus::factory()->count(2)->create();
         $locations = Location::factory()->count(12)->create();
@@ -771,17 +817,17 @@ class ItemControllerTest extends TestCase
 
         $response = $this->from('items/create')->post('items', [
             'name' => 'ペーパータオル',
-            'category_id' => 2,
+            'category_id' => $category->id,
             'image1' => null,
             'stock' => 10,
-            'unit_id' => 1,
+            'unit_id' => $units->first()->id,
             'minimum_stock' => 2,
             'notification' => true,
-            'usage_status_id' => 1,
+            'usage_status_id' => $usage_statuses->first()->id,
             'end_user' => '山田',
-            'location_of_use_id' => 1,
-            'storage_location_id' => 2,
-            'acquisition_method_id' => 1,
+            'location_of_use_id' => $locations->first()->id,
+            'storage_location_id' => $locations->first()->id,
+            'acquisition_method_id' => $aquisition_methods->first()->id,
             'acquisition_source' => 'Amazon',
             'price' => 500,
             'date_of_acquisition' => '2024-09-03',
@@ -802,7 +848,6 @@ class ItemControllerTest extends TestCase
     }
 
     // 新規登録のminimum_stockのバリデーションのテスト、カテゴリは消耗品(category_id=1)で固定
-
     /** @test */
     public function 備品新規登録バリデーションminimum_stockが最小値より小さい無効値()
     {
@@ -910,7 +955,7 @@ class ItemControllerTest extends TestCase
         $user = User::factory()->role(1)->create();
         $this->actingAs($user);
 
-        $response = $this->from('items/create')->post('items', ['unit_id' => 0]);
+        $response = $this->from('items/create')->post('items', ['unit_id' => $units->min('id') - 1]);
         $response->assertRedirect('items/create'); //URLにリダイレクト
         $response->assertStatus(302);
 
@@ -933,7 +978,7 @@ class ItemControllerTest extends TestCase
         $user = User::factory()->role(1)->create();
         $this->actingAs($user);
 
-        $response = $this->from('items/create')->post('items', ['unit_id' => 1]);
+        $response = $this->from('items/create')->post('items', ['unit_id' => $units->min('id')]);
         $response->assertRedirect('items/create'); //URLにリダイレクト
         $response->assertStatus(302);
 
@@ -955,7 +1000,7 @@ class ItemControllerTest extends TestCase
         $user = User::factory()->role(1)->create();
         $this->actingAs($user);
 
-        $response = $this->from('items/create')->post('items', ['unit_id' => 10]);
+        $response = $this->from('items/create')->post('items', ['unit_id' => $units->max('id')]);
         $response->assertRedirect('items/create'); //URLにリダイレクト
         $response->assertStatus(302);
 
@@ -977,7 +1022,7 @@ class ItemControllerTest extends TestCase
         $user = User::factory()->role(1)->create();
         $this->actingAs($user);
 
-        $response = $this->from('items/create')->post('items', ['unit_id' => 11]);
+        $response = $this->from('items/create')->post('items', ['unit_id' => $units->max('id') + 1]);
         $response->assertRedirect('items/create'); //URLにリダイレクト
         $response->assertStatus(302);
 
@@ -1008,7 +1053,7 @@ class ItemControllerTest extends TestCase
         $user = User::factory()->role(1)->create();
         $this->actingAs($user);
 
-        $response = $this->from('items/create')->post('items', ['usage_status_id' => 0]);
+        $response = $this->from('items/create')->post('items', ['usage_status_id' => $usage_statuses->min('id') - 1]);
         $response->assertRedirect('items/create'); //URLにリダイレクト
         $response->assertStatus(302);
 
@@ -1031,7 +1076,7 @@ class ItemControllerTest extends TestCase
         $user = User::factory()->role(1)->create();
         $this->actingAs($user);
 
-        $response = $this->from('items/create')->post('items', ['usage_status_id' => 1]);
+        $response = $this->from('items/create')->post('items', ['usage_status_id' => $usage_statuses->min('id')]);
         $response->assertRedirect('items/create'); //URLにリダイレクト
         $response->assertStatus(302);
 
@@ -1053,7 +1098,7 @@ class ItemControllerTest extends TestCase
         $user = User::factory()->role(1)->create();
         $this->actingAs($user);
 
-        $response = $this->from('items/create')->post('items', ['usage_status_id' => 2]);
+        $response = $this->from('items/create')->post('items', ['usage_status_id' => $usage_statuses->max('id')]);
         $response->assertRedirect('items/create'); //URLにリダイレクト
         $response->assertStatus(302);
 
@@ -1075,7 +1120,7 @@ class ItemControllerTest extends TestCase
         $user = User::factory()->role(1)->create();
         $this->actingAs($user);
 
-        $response = $this->from('items/create')->post('items', ['usage_status_id' => 3]);
+        $response = $this->from('items/create')->post('items', ['usage_status_id' => $usage_statuses->max('id') + 1]);
         $response->assertRedirect('items/create'); //URLにリダイレクト
         $response->assertStatus(302);
 
@@ -2270,7 +2315,7 @@ class ItemControllerTest extends TestCase
         
         $validData = [
             'name' => 'ペーパータオル',
-            'category_id' => 1,
+            'category_id' => $categories->first()->id,
             'image1' => null,
             'stock' => 10,
             'unit_id' => $units->first()->id,
@@ -2297,12 +2342,12 @@ class ItemControllerTest extends TestCase
         // 更新リクエストを送信
         $response = $this->from('items/'.$item->id.'/edit')
             ->put(route('items.update', $item), $validData);
-        $response->assertRedirect(route('items.show', $item));
+        $response->assertRedirect('items/'.$item->id); // 詳細画面にリダイレクトする
         $response->assertStatus(302);
 
         $this->assertDatabaseHas('items', [
             'name' => 'ペーパータオル',
-            'category_id' => 1,
+            'category_id' => $categories->first()->id,
             'image1' => null,
             'stock' => 10,
             'unit_id' => $units->first()->id,
@@ -2324,7 +2369,7 @@ class ItemControllerTest extends TestCase
         // 更新されたことのチェック
         $item->refresh();
         $this->assertSame('ペーパータオル', $item->name);
-        $this->assertSame(1, $item->category_id);
+        $this->assertSame($categories->first()->id, $item->category_id);
         $this->assertSame(10, $item->stock);
         $this->assertSame($units->first()->id, $item->unit_id);
         $this->assertSame(2, $item->minimum_stock);
@@ -2466,11 +2511,6 @@ class ItemControllerTest extends TestCase
 
 
 
-
-
-
-
-
     /** @test */
     public function 備品詳細画面で廃棄モーダルで廃棄処理できる()
     {
@@ -2486,8 +2526,9 @@ class ItemControllerTest extends TestCase
             'details' => 'あいうえお'
         ];
 
-        // 備品をソフトデリート
-        $response = $this->put(route('dispose_item.disposeItem', $item->id), $validData);
+        // 備品を廃棄処理
+        $response = $this->from('items/'.$item->id)
+            ->put(route('dispose_item.disposeItem', $item->id), $validData);
         $response->assertStatus(302); // リダイレクトを確認
         $response->assertRedirect('items');
 
@@ -2520,8 +2561,279 @@ class ItemControllerTest extends TestCase
 
     }
 
+    /** @test */
+    function 廃棄された備品を復元できる()
+    {
+        // アイテムを作成してソフトデリート
+        $item = Item::factory()->create();
+        $item->delete();
+
+        // アイテムがソフトデリートされていることを確認
+        $this->assertSoftDeleted('items', ['id' => $item->id]);
+
+        // アイテムを復元
+        $item->restore();
+
+        // アイテムが復元されたことを確認
+        $this->assertDatabaseHas('items', ['id' => $item->id, 'deleted_at' => null]);
+
+    }
+
+
+
     // Authが使える
     // 備品廃棄モーダルでのバリデーションテスト
+    /** @test */
+    function 廃棄モーダルバリデーションdisposal_dateがnullで無効値な場合()
+    {
+        $user = User::factory()->role(1)->create();
+        $this->actingAs($user);
+
+        $item = Item::factory()->create();
+
+        $response = $this->from('items/'.$item->id)
+            ->put(route('dispose_item.disposeItem', $item->id), ['disposal_date' => null]);
+        $response->assertRedirect('items/'.$item->id); //URLにリダイレクト
+        $response->assertStatus(302);
+
+        $response = $this->followRedirects($response);
+
+        $response->assertInertia(fn (Assert $page) => $page
+            ->component('Items/Show')
+            ->has('errors.disposal_date')
+            ->where('errors.disposal_date', '廃棄実施日は必ず指定してください。')
+            // ->dump()
+        );
+    }
+
+    /** @test */
+    function 廃棄モーダルバリデーションdisposal_dateが文字列で無効値な場合()
+    {
+        $user = User::factory()->role(1)->create();
+        $this->actingAs($user);
+
+        $item = Item::factory()->create();
+
+        $response = $this->from('items/'.$item->id)
+            ->put(route('dispose_item.disposeItem', $item->id), ['disposal_date' => 'あ']);
+        $response->assertRedirect('items/'.$item->id); //URLにリダイレクト
+        $response->assertStatus(302);
+
+        $response = $this->followRedirects($response);
+
+        $response->assertInertia(fn (Assert $page) => $page
+            ->component('Items/Show')
+            ->has('errors.disposal_date')
+            ->where('errors.disposal_date', '廃棄実施日には有効な日付を指定してください。')
+            // ->dump()
+        );
+    }
+
+    /** @test */
+    function 廃棄モーダルバリデーションdisposal_dateが数字で無効値な場合()
+    {
+        $user = User::factory()->role(1)->create();
+        $this->actingAs($user);
+
+        $item = Item::factory()->create();
+
+        $response = $this->from('items/'.$item->id)
+            ->put(route('dispose_item.disposeItem', $item->id), ['disposal_date' => 1]);
+        $response->assertRedirect('items/'.$item->id); //URLにリダイレクト
+        $response->assertStatus(302);
+
+        $response = $this->followRedirects($response);
+
+        $response->assertInertia(fn (Assert $page) => $page
+            ->component('Items/Show')
+            ->has('errors.disposal_date')
+            ->where('errors.disposal_date', '廃棄実施日には有効な日付を指定してください。')
+            // ->dump()
+        );
+    }
+    
+    /** @test */
+    function 廃棄モーダルバリデーションdisposal_personがnullで無効値な場合()
+    {
+        $user = User::factory()->role(1)->create();
+        $this->actingAs($user);
+
+        $item = Item::factory()->create();
+
+        $response = $this->from('items/'.$item->id)
+            ->put(route('dispose_item.disposeItem', $item->id), ['disposal_person' => null]);
+        $response->assertRedirect('items/'.$item->id); //URLにリダイレクト
+        $response->assertStatus(302);
+
+        $response = $this->followRedirects($response);
+
+        $response->assertInertia(fn (Assert $page) => $page
+            ->component('Items/Show')
+            ->has('errors.disposal_person')
+            ->where('errors.disposal_person', '廃棄実施者は必ず指定してください。')
+            // ->dump()
+        );
+    }
+    
+    /** @test */
+    function 廃棄モーダルバリデーションdisposal_personが1文字で有効値な場合()
+    {
+        $user = User::factory()->role(1)->create();
+        $this->actingAs($user);
+
+        $item = Item::factory()->create();
+
+        $response = $this->from('items/'.$item->id)
+            ->put(route('dispose_item.disposeItem', $item->id), ['disposal_person' => str_repeat('あ', 1)]);
+        $response->assertRedirect('items/'.$item->id); //URLにリダイレクト
+        $response->assertStatus(302);
+
+        $response = $this->followRedirects($response);
+
+        $response->assertInertia(fn (Assert $page) => $page
+            ->component('Items/Show')
+            ->missing('errors.disposal_person')
+            // ->dump()
+        );
+    }
+    
+    /** @test */
+    function 廃棄モーダルバリデーションdisposal_personが10文字で有効境界値の場合()
+    {
+        $user = User::factory()->role(1)->create();
+        $this->actingAs($user);
+
+        $item = Item::factory()->create();
+
+        $response = $this->from('items/'.$item->id)
+            ->put(route('dispose_item.disposeItem', $item->id), ['disposal_person' => str_repeat('あ', 10)]);
+        $response->assertRedirect('items/'.$item->id); //URLにリダイレクト
+        $response->assertStatus(302);
+
+        $response = $this->followRedirects($response);
+
+        $response->assertInertia(fn (Assert $page) => $page
+            ->component('Items/Show')
+            ->missing('errors.disposal_person')
+            // ->dump()
+        );
+    }
+    
+    /** @test */
+    function 廃棄モーダルバリデーションdisposal_personが11文字で無効境界値の場合()
+    {
+        $user = User::factory()->role(1)->create();
+        $this->actingAs($user);
+
+        $item = Item::factory()->create();
+
+        $response = $this->from('items/'.$item->id)
+            ->put(route('dispose_item.disposeItem', $item->id), ['disposal_person' => str_repeat('あ', 11)]);
+        $response->assertRedirect('items/'.$item->id); //URLにリダイレクト
+        $response->assertStatus(302);
+
+        $response = $this->followRedirects($response);
+
+        $response->assertInertia(fn (Assert $page) => $page
+            ->component('Items/Show')
+            ->has('errors.disposal_person')
+            ->where('errors.disposal_person', '廃棄実施者は、10文字以下で指定してください。')
+            // ->dump()
+        );
+    }
+    
+    // 詳細情報のバリデーション
+    /** @test */
+    function 廃棄モーダルバリデーションdetailsが空で無効値の場合()
+    {
+        $user = User::factory()->role(1)->create();
+        $this->actingAs($user);
+
+        $item = Item::factory()->create();
+
+        $response = $this->from('items/'.$item->id)
+            ->put(route('dispose_item.disposeItem', $item->id), ['details' => '']);
+        $response->assertRedirect('items/'.$item->id); //URLにリダイレクト
+        $response->assertStatus(302);
+
+        $response = $this->followRedirects($response);
+
+        $response->assertInertia(fn (Assert $page) => $page
+            ->component('Items/Show')
+            ->has('errors.details')
+            ->where('errors.details', '詳細情報は必ず指定してください。')
+            // ->dump()
+        );
+    }
+
+    /** @test */
+    function 廃棄モーダルバリデーションdetailsが1文字で有効値の場合()
+    {
+        $user = User::factory()->role(1)->create();
+        $this->actingAs($user);
+
+        $item = Item::factory()->create();
+
+        $response = $this->from('items/'.$item->id)
+            ->put(route('dispose_item.disposeItem', $item->id), ['details' => str_repeat('あ', 1)]);
+        $response->assertRedirect('items/'.$item->id); //URLにリダイレクト
+        $response->assertStatus(302);
+
+        $response = $this->followRedirects($response);
+
+        $response->assertInertia(fn (Assert $page) => $page
+            ->component('Items/Show')
+            ->missing('errors.details')
+            // ->dump()
+        );
+    }
+
+    /** @test */
+    function 廃棄モーダルバリデーションdetailsが200文字で有効境界値の場合()
+    {
+        $user = User::factory()->role(1)->create();
+        $this->actingAs($user);
+
+        $item = Item::factory()->create();
+
+        $response = $this->from('items/'.$item->id)
+            ->put(route('dispose_item.disposeItem', $item->id), ['details' => str_repeat('あ', 200)]);
+        $response->assertRedirect('items/'.$item->id); //URLにリダイレクト
+        $response->assertStatus(302);
+
+        $response = $this->followRedirects($response);
+
+        $response->assertInertia(fn (Assert $page) => $page
+            ->component('Items/Show')
+            ->missing('errors.details')
+            // ->dump()
+        );
+    }
+
+    /** @test */
+    function 廃棄モーダルバリデーションdetailsが201文字で無効境界値の場合()
+    {
+        $user = User::factory()->role(1)->create();
+        $this->actingAs($user);
+
+        $item = Item::factory()->create();
+
+        $response = $this->from('items/'.$item->id)
+            ->put(route('dispose_item.disposeItem', $item->id), ['details' => str_repeat('あ', 201)]);
+        $response->assertRedirect('items/'.$item->id); //URLにリダイレクト
+        $response->assertStatus(302);
+
+        $response = $this->followRedirects($response);
+
+        $response->assertInertia(fn (Assert $page) => $page
+            ->component('Items/Show')
+            ->has('errors.details')
+            ->where('errors.details', '詳細情報は、200文字以下で指定してください。')
+            // ->dump()
+        );
+    }
+
+
 
 
 
@@ -2544,7 +2856,8 @@ class ItemControllerTest extends TestCase
         ];
 
         // 備品をソフトデリート
-        $response = $this->put(route('inspect_item.inspectItem', $item->id), $validData);
+        $response = $this->from('items/'.$item->id)
+            ->put(route('inspect_item.inspectItem', $item->id), $validData);
         $response->assertStatus(302); // リダイレクトを確認
 
         $this->assertDatabaseHas('inspections', [
@@ -2581,7 +2894,8 @@ class ItemControllerTest extends TestCase
         ]);
 
         // 備品をソフトデリート
-        $response = $this->put(route('inspect_item.inspectItem', $item->id), $validData);
+        $response = $this->from('items/'.$item->id)
+            ->put(route('inspect_item.inspectItem', $item->id), $validData);
         $response->assertStatus(302); // リダイレクトを確認
 
         $this->assertDatabaseHas('inspections', [
@@ -2598,8 +2912,275 @@ class ItemControllerTest extends TestCase
     }
 
 
+    // 点検予定日のレコードがない場合でテスト
+    /** @test */
+    function 点検モーダルバリデーションinspection_dateがnullで無効値の場合()
+    {
+        $user = User::factory()->role(1)->create();
+        $this->actingAs($user);
+
+        // テスト用の備品を作成
+        $item = Item::factory()->create();
+
+        // 備品をソフトデリート
+        $response = $this->from('items/'.$item->id)
+            ->put(route('inspect_item.inspectItem', $item->id), ['inspection_date' => null]);
+        $response->assertRedirect('items/'.$item->id);
+        $response->assertStatus(302);
+
+        $response = $this->followRedirects($response);
+
+        $response->assertInertia(fn (Assert $page) => $page
+            ->component('Items/Show')
+            ->has('errors.inspection_date')
+            ->where('errors.inspection_date', '点検実施日は必ず指定してください。')
+            // ->dump()
+        );
+    }
+
+    /** @test */
+    function 点検モーダルバリデーションinspection_dateが文字列で無効値の場合()
+    {
+        $user = User::factory()->role(1)->create();
+        $this->actingAs($user);
+
+        // テスト用の備品を作成
+        $item = Item::factory()->create();
+
+        // 備品をソフトデリート
+        $response = $this->from('items/'.$item->id)
+            ->put(route('inspect_item.inspectItem', $item->id), ['inspection_date' => 'あ']);
+        $response->assertRedirect('items/'.$item->id);
+        $response->assertStatus(302);
+
+        $response = $this->followRedirects($response);
+
+        $response->assertInertia(fn (Assert $page) => $page
+            ->component('Items/Show')
+            ->has('errors.inspection_date')
+            ->where('errors.inspection_date', '点検実施日には有効な日付を指定してください。')
+            // ->dump()
+        );
+    }
+
+    /** @test */
+    function 点検モーダルバリデーションinspection_dateが数字で無効値の場合()
+    {
+        $user = User::factory()->role(1)->create();
+        $this->actingAs($user);
+
+        // テスト用の備品を作成
+        $item = Item::factory()->create();
+
+        // 備品をソフトデリート
+        $response = $this->from('items/'.$item->id)
+            ->put(route('inspect_item.inspectItem', $item->id), ['inspection_date' => 1]);
+        $response->assertRedirect('items/'.$item->id);
+        $response->assertStatus(302);
+
+        $response = $this->followRedirects($response);
+
+        $response->assertInertia(fn (Assert $page) => $page
+            ->component('Items/Show')
+            ->has('errors.inspection_date')
+            ->where('errors.inspection_date', '点検実施日には有効な日付を指定してください。')
+            // ->dump()
+        );
+    }
+
+    /** @test */
+    function 点検モーダルバリデーションinspection_personがnullの場合()
+    {
+        $user = User::factory()->role(1)->create();
+        $this->actingAs($user);
+
+        $item = Item::factory()->create();
+
+        $response = $this->from('items/'.$item->id)
+            ->put(route('inspect_item.inspectItem', $item->id), ['inspection_person' => null]);
+        $response->assertRedirect('items/'.$item->id);
+        $response->assertStatus(302);
+
+        $response = $this->followRedirects($response);
+
+        $response->assertInertia(fn (Assert $page) => $page
+            ->component('Items/Show')
+            ->has('errors.inspection_person')
+            ->where('errors.inspection_person', '点検実施者は必ず指定してください。')
+            // ->dump()
+        );
+    }
+    
+    /** @test */
+    function 点検モーダルバリデーションinspection_personが1文字で有効値な場合()
+    {
+        $user = User::factory()->role(1)->create();
+        $this->actingAs($user);
+
+        $item = Item::factory()->create();
+
+        $response = $this->from('items/'.$item->id)
+            ->put(route('inspect_item.inspectItem', $item->id), ['inspection_person' => str_repeat('あ', 1)]);
+        $response->assertRedirect('items/'.$item->id);
+        $response->assertStatus(302);
+
+        $response = $this->followRedirects($response);
+
+        $response->assertInertia(fn (Assert $page) => $page
+            ->component('Items/Show')
+            ->missing('errors.inspection_person')
+            // ->dump()
+        );
+    }
+    
+    /** @test */
+    function 点検モーダルバリデーションinspection_personが10文字で有効境界値の場合()
+    {
+        $user = User::factory()->role(1)->create();
+        $this->actingAs($user);
+
+        $item = Item::factory()->create();
+
+        $response = $this->from('items/'.$item->id)
+            ->put(route('inspect_item.inspectItem', $item->id), ['inspection_person' => str_repeat('あ', 10)]);
+        $response->assertRedirect('items/'.$item->id);
+        $response->assertStatus(302);
+
+        $response = $this->followRedirects($response);
+
+        $response->assertInertia(fn (Assert $page) => $page
+            ->component('Items/Show')
+            ->missing('errors.inspection_person')
+            // ->dump()
+        );
+    }
+    
+    /** @test */
+    function 点検モーダルバリデーションinspection_personが11文字で無効境界値の場合()
+    {
+        $user = User::factory()->role(1)->create();
+        $this->actingAs($user);
+
+        $item = Item::factory()->create();
+
+        $response = $this->from('items/'.$item->id)
+            ->put(route('inspect_item.inspectItem', $item->id), ['inspection_person' => str_repeat('あ', 11)]);
+        $response->assertRedirect('items/'.$item->id);
+        $response->assertStatus(302);
+
+        $response = $this->followRedirects($response);
+
+        $response->assertInertia(fn (Assert $page) => $page
+            ->component('Items/Show')
+            ->has('errors.inspection_person')
+            ->where('errors.inspection_person', '点検実施者は、10文字以下で指定してください。')
+            // ->dump()
+        );
+    }
+    
+    /** @test */
+    function 点検モーダルバリデーションdetailsがnullで無効の場合()
+    {
+        $user = User::factory()->role(1)->create();
+        $this->actingAs($user);
+
+        $item = Item::factory()->create();
+
+        $response = $this->from('items/'.$item->id)
+            ->put(route('inspect_item.inspectItem', $item->id), ['details' => null]);
+        $response->assertRedirect('items/'.$item->id);
+        $response->assertStatus(302);
+
+        $response = $this->followRedirects($response);
+
+        $response->assertInertia(fn (Assert $page) => $page
+            ->component('Items/Show')
+            ->has('errors.details')
+            ->where('errors.details', '詳細情報は必ず指定してください。')
+            // ->dump()
+        );
+    }
+    
+    /** @test */
+    function 点検モーダルバリデーションdetailsが1文字で有効な場合()
+    {
+        $user = User::factory()->role(1)->create();
+        $this->actingAs($user);
+
+        $item = Item::factory()->create();
+
+        $response = $this->from('items/'.$item->id)
+            ->put(route('inspect_item.inspectItem', $item->id), ['details' => str_repeat('あ', 1)]);
+        $response->assertRedirect('items/'.$item->id);
+        $response->assertStatus(302);
+
+        $response = $this->followRedirects($response);
+
+        $response->assertInertia(fn (Assert $page) => $page
+            ->component('Items/Show')
+            ->missing('errors.details')
+            // ->dump()
+        );
+    }
+    
+    /** @test */
+    function 点検モーダルバリデーションdetailsが200文字で有効境界値な場合()
+    {
+        $user = User::factory()->role(1)->create();
+        $this->actingAs($user);
+
+        $item = Item::factory()->create();
+
+        $response = $this->from('items/'.$item->id)
+            ->put(route('inspect_item.inspectItem', $item->id), ['details' => str_repeat('あ', 200)]);
+        $response->assertRedirect('items/'.$item->id);
+        $response->assertStatus(302);
+
+        $response = $this->followRedirects($response);
+
+        $response->assertInertia(fn (Assert $page) => $page
+            ->component('Items/Show')
+            ->missing('errors.details')
+            // ->dump()
+        );
+    }
+    
+    /** @test */
+    function 点検モーダルバリデーションdetailsが201文字で無効境界値な場合()
+    {
+        $user = User::factory()->role(1)->create();
+        $this->actingAs($user);
+
+        $item = Item::factory()->create();
+
+        $response = $this->from('items/'.$item->id)
+            ->put(route('inspect_item.inspectItem', $item->id), ['details' => str_repeat('あ', 201)]);
+        $response->assertRedirect('items/'.$item->id);
+        $response->assertStatus(302);
+
+        $response = $this->followRedirects($response);
+
+        $response->assertInertia(fn (Assert $page) => $page
+            ->component('Items/Show')
+            ->has('errors.details')
+            ->where('errors.details', '詳細情報は、200文字以下で指定してください。')
+            // ->dump()
+        );
+    }
+
+
+    
+
+
+
+
+
+
     // User権限で出来ないことをテスト
     // ページへのアクセス
+    // １，アクセスできるページは消耗費管理の入出庫モーダルの出庫タブのみv-ifで設定
+    // ２、リクエスト一覧画面、
+    // ３，ダッシュボードでは、表示できる情報のみか、消耗品管理画面へリダイレクト
     // 権限のない操作
     /** @test */
     function Userは備品を管理できない()
@@ -2632,6 +3213,8 @@ class ItemControllerTest extends TestCase
     }
 
 
+
+
     // StockTransactionControllerのテスト
     // 後でファイルに切り出し
 
@@ -2639,14 +3222,14 @@ class ItemControllerTest extends TestCase
     function 入出庫モーダルで出庫処理が出来る()
     {
         // 世界を構築
-        $categories = Category::factory()->count(11)->create();
+        $category = Category::factory()->create(['id' => 1]);
 
         $user = User::factory()->role(1)->create();
         $this->actingAs($user);
 
         // テスト用の備品を作成、消耗品(category_id=1)のみ入出庫できる
         $item = Item::factory()->create([
-            'category_id' => 1,
+            'category_id' => $category->id,
             'stock' => 10,
             'minimum_stock' => 2
         ]);
@@ -2659,9 +3242,14 @@ class ItemControllerTest extends TestCase
             'quantity' => 3,
         ];
 
-        // 備品をソフトデリート
+        // 備品を出庫処理
         $response = $this->put(route('decreaseStock', $item->id), $validData);
         $response->assertStatus(302); // リダイレクトを確認
+
+        $this->assertDatabaseHas('items', [
+            'id' => $item->id,
+            'stock' => '7'
+        ]);
 
         $this->assertDatabaseHas('stock_transactions', [
             'item_id' => $item->id,
@@ -2672,8 +3260,392 @@ class ItemControllerTest extends TestCase
         ]);
     }
 
-
+    // DecreaseStockRequestのバリデーションのテスト
     // 在庫数以下にはquantityを出来ないバリデーションRulesがStockLimit
+
+    /** @test */
+    function 入出庫モーダルでの出庫処理バリデーションtransaction_dateがnullで無効値な場合()
+    {
+        // 世界を構築
+        $category = Category::factory()->create(['id' => 1]);
+
+        $user = User::factory()->role(1)->create();
+        $this->actingAs($user);
+
+        // テスト用の備品を作成、消耗品(category_id=1)のみ入出庫できる
+        $item = Item::factory()->create([
+            'category_id' => $category->id
+        ]);
+
+        $response = $this->from('consumable_items')
+            ->put(route('decreaseStock', $item->id), ['transaction_date' => null]);
+        $response->assertStatus(302);
+        $response->assertRedirect('consumable_items');
+
+        $response = $this->followRedirects($response);
+
+        $response->assertInertia(fn (Assert $page) => $page
+            ->component('ConsumableItems/Index')
+            ->has('errors.transaction_date')
+            ->where('errors.transaction_date', '入出庫日は必ず指定してください。')
+            // ->dump()
+        );
+    }
+
+    /** @test */
+    function 入出庫モーダルでの出庫処理バリデーションtransaction_dateが文字列で無効値な場合()
+    {
+        // 世界を構築
+        $category = Category::factory()->create(['id' => 1]);
+
+        $user = User::factory()->role(1)->create();
+        $this->actingAs($user);
+
+        // テスト用の備品を作成、消耗品(category_id=1)のみ入出庫できる
+        $item = Item::factory()->create([
+            'category_id' => $category->id
+        ]);
+
+        $response = $this->from('consumable_items')
+            ->put(route('decreaseStock', $item->id), ['transaction_date' => 'あ']);
+        $response->assertStatus(302);
+        $response->assertRedirect('consumable_items');
+
+        $response = $this->followRedirects($response);
+
+        $response->assertInertia(fn (Assert $page) => $page
+            ->component('ConsumableItems/Index')
+            ->has('errors.transaction_date')
+            ->where('errors.transaction_date', '入出庫日には有効な日付を指定してください。')
+            // ->dump()
+        );
+    }
+
+    /** @test */
+    function 入出庫モーダルでの出庫処理バリデーションtransaction_dateが数字で無効値な場合()
+    {
+        // 世界を構築
+        $category = Category::factory()->create(['id' => 1]);
+
+        $user = User::factory()->role(1)->create();
+        $this->actingAs($user);
+
+        // テスト用の備品を作成、消耗品(category_id=1)のみ入出庫できる
+        $item = Item::factory()->create([
+            'category_id' => $category->id
+        ]);
+
+        $response = $this->from('consumable_items')
+            ->put(route('decreaseStock', $item->id), ['transaction_date' => 1]);
+        $response->assertStatus(302);
+        $response->assertRedirect('consumable_items');
+
+        $response = $this->followRedirects($response);
+
+        $response->assertInertia(fn (Assert $page) => $page
+            ->component('ConsumableItems/Index')
+            ->has('errors.transaction_date')
+            ->where('errors.transaction_date', '入出庫日には有効な日付を指定してください。')
+            // ->dump()
+        );
+    }
+
+    /** @test */
+    function 入出庫モーダルでの出庫処理バリデーションtransaction_dateが日付で有効値な場合()
+    {
+        // 世界を構築
+        $category = Category::factory()->create(['id' => 1]);
+
+        $user = User::factory()->role(1)->create();
+        $this->actingAs($user);
+
+        // テスト用の備品を作成、消耗品(category_id=1)のみ入出庫できる
+        $item = Item::factory()->create([
+            'category_id' => $category->id
+        ]);
+
+        $response = $this->from('consumable_items')
+            ->put(route('decreaseStock', $item->id), ['transaction_date' => '2024-9-3']);
+        $response->assertStatus(302);
+        $response->assertRedirect('consumable_items');
+
+        $response = $this->followRedirects($response);
+
+        $response->assertInertia(fn (Assert $page) => $page
+            ->component('ConsumableItems/Index')
+            ->missing('errors.transaction_date')
+            // ->dump()
+        );
+    }
+
+    /** @test */
+    function 入出庫モーダルでの出庫処理バリデーションoperator_nameがnullで無効値な場合()
+    {
+        // 世界を構築
+        $category = Category::factory()->create(['id' => 1]);
+
+        $user = User::factory()->role(1)->create();
+        $this->actingAs($user);
+
+        // テスト用の備品を作成、消耗品(category_id=1)のみ入出庫できる
+        $item = Item::factory()->create([
+            'category_id' => $category->id
+        ]);
+
+        $response = $this->from('consumable_items')
+            ->put(route('decreaseStock', $item->id), ['operator_name' => null]);
+        $response->assertStatus(302);
+        $response->assertRedirect('consumable_items');
+
+        $response = $this->followRedirects($response);
+
+        $response->assertInertia(fn (Assert $page) => $page
+            ->component('ConsumableItems/Index')
+            ->has('errors.operator_name')
+            ->where('errors.operator_name', '実施者は必ず指定してください。')
+            // ->dump()
+        );
+    }
+
+    /** @test */
+    function 入出庫モーダルでの出庫処理バリデーションoperator_nameが1文字で有効値な場合()
+    {
+        // 世界を構築
+        $category = Category::factory()->create(['id' => 1]);
+
+        $user = User::factory()->role(1)->create();
+        $this->actingAs($user);
+
+        // テスト用の備品を作成、消耗品(category_id=1)のみ入出庫できる
+        $item = Item::factory()->create([
+            'category_id' => $category->id
+        ]);
+
+        $response = $this->from('consumable_items')
+            ->put(route('decreaseStock', $item->id), ['operator_name' => str_repeat('あ', 1)]);
+        $response->assertStatus(302);
+        $response->assertRedirect('consumable_items');
+
+        $response = $this->followRedirects($response);
+
+        $response->assertInertia(fn (Assert $page) => $page
+            ->component('ConsumableItems/Index')
+            ->missing('errors.operator_name')
+            // ->dump()
+        );
+    }
+
+    /** @test */
+    function 入出庫モーダルでの出庫処理バリデーションoperator_nameが10文字で有効境界値な場合()
+    {
+        // 世界を構築
+        $category = Category::factory()->create(['id' => 1]);
+
+        $user = User::factory()->role(1)->create();
+        $this->actingAs($user);
+
+        // テスト用の備品を作成、消耗品(category_id=1)のみ入出庫できる
+        $item = Item::factory()->create([
+            'category_id' => $category->id
+        ]);
+
+        $response = $this->from('consumable_items')
+            ->put(route('decreaseStock', $item->id), ['operator_name' => str_repeat('あ', 10)]);
+        $response->assertStatus(302);
+        $response->assertRedirect('consumable_items');
+
+        $response = $this->followRedirects($response);
+
+        $response->assertInertia(fn (Assert $page) => $page
+            ->component('ConsumableItems/Index')
+            ->missing('errors.operator_name')
+            // ->dump()
+        );
+    }
+
+    /** @test */
+    function 入出庫モーダルでの出庫処理バリデーションoperator_nameが11文字で無効境界値な場合()
+    {
+        // 世界を構築
+        $category = Category::factory()->create(['id' => 1]);
+
+        $user = User::factory()->role(1)->create();
+        $this->actingAs($user);
+
+        // テスト用の備品を作成、消耗品(category_id=1)のみ入出庫できる
+        $item = Item::factory()->create([
+            'category_id' => $category->id
+        ]);
+
+        $response = $this->from('consumable_items')
+            ->put(route('decreaseStock', $item->id), ['operator_name' => str_repeat('あ', 11)]);
+        $response->assertStatus(302);
+        $response->assertRedirect('consumable_items');
+
+        $response = $this->followRedirects($response);
+
+        $response->assertInertia(fn (Assert $page) => $page
+            ->component('ConsumableItems/Index')
+            ->has('errors.operator_name')
+            ->where('errors.operator_name', '実施者は、10文字以下で指定してください。')
+            // ->dump()
+        );
+    }
+
+
+
+    /** @test */
+    function 入出庫モーダルでの出庫処理バリデーションquantityがnullで無効値な場合()
+    {
+        // 世界を構築
+        $category = Category::factory()->create(['id' => 1]);
+
+        $user = User::factory()->role(1)->create();
+        $this->actingAs($user);
+
+        // テスト用の備品を作成、消耗品(category_id=1)のみ入出庫できる
+        $item = Item::factory()->create([
+            'category_id' => $category->id,
+            'stock' => 10,
+            'minimum_stock' => 2
+        ]);
+
+        $response = $this->from('consumable_items')
+            ->put(route('decreaseStock', $item->id), ['quantity' => null]);
+        $response->assertStatus(302);
+        $response->assertRedirect('consumable_items');
+
+        $response = $this->followRedirects($response);
+
+        $response->assertInertia(fn (Assert $page) => $page
+            ->component('ConsumableItems/Index')
+            ->has('errors.quantity')
+            ->where('errors.quantity', '数量は必ず指定してください。')
+            // ->dump()
+        );
+    }
+
+    /** @test */
+    function 入出庫モーダルでの出庫処理バリデーションquantityが0で無効境界値な場合()
+    {
+        // 世界を構築
+        $category = Category::factory()->create(['id' => 1]);
+
+        $user = User::factory()->role(1)->create();
+        $this->actingAs($user);
+
+        // テスト用の備品を作成、消耗品(category_id=1)のみ入出庫できる
+        $item = Item::factory()->create([
+            'category_id' => $category->id,
+            'stock' => 10,
+            'minimum_stock' => 2
+        ]);
+
+        $response = $this->from('consumable_items')
+            ->put(route('decreaseStock', $item->id), ['quantity' => 0]);
+        $response->assertStatus(302);
+        $response->assertRedirect('consumable_items');
+
+        $response = $this->followRedirects($response);
+
+        $response->assertInertia(fn (Assert $page) => $page
+            ->component('ConsumableItems/Index')
+            ->has('errors.quantity')
+            ->where('errors.quantity', '数量には、1以上の数字を指定してください。')
+            // ->dump()
+        );
+    }
+
+    /** @test */
+    function 入出庫モーダルでの出庫処理バリデーションquantityが1で有効境界値な場合()
+    {
+        // 世界を構築
+        $category = Category::factory()->create(['id' => 1]);
+
+        $user = User::factory()->role(1)->create();
+        $this->actingAs($user);
+
+        // テスト用の備品を作成、消耗品(category_id=1)のみ入出庫できる
+        $item = Item::factory()->create([
+            'category_id' => $category->id,
+            'stock' => 10,
+            'minimum_stock' => 2
+        ]);
+
+        $response = $this->from('consumable_items')
+            ->put(route('decreaseStock', $item->id), ['quantity' => 1]);
+        $response->assertStatus(302);
+        $response->assertRedirect('consumable_items');
+
+        $response = $this->followRedirects($response);
+
+        $response->assertInertia(fn (Assert $page) => $page
+            ->component('ConsumableItems/Index')
+            ->missing('errors.quantity')
+            // ->dump()
+        );
+    }
+
+    /** @test */
+    function 入出庫モーダルでの出庫処理バリデーションquantity上限が在庫数で有効境界値な場合()
+    {
+        // 世界を構築
+        $category = Category::factory()->create(['id' => 1]);
+
+        $user = User::factory()->role(1)->create();
+        $this->actingAs($user);
+
+        // テスト用の備品を作成、消耗品(category_id=1)のみ入出庫できる
+        $item = Item::factory()->create([
+            'category_id' => $category->id,
+            'stock' => 10,
+            'minimum_stock' => 2
+        ]);
+
+        $response = $this->from('consumable_items')
+            ->put(route('decreaseStock', $item->id), ['quantity' => 10]);
+        $response->assertStatus(302);
+        $response->assertRedirect('consumable_items');
+
+        $response = $this->followRedirects($response);
+
+        $response->assertInertia(fn (Assert $page) => $page
+            ->component('ConsumableItems/Index')
+            ->missing('errors.quantity')
+            // ->dump()
+        );
+    }
+
+    /** @test */
+    function 入出庫モーダルでの出庫処理バリデーションquantity上限が在庫数で無効境界値な場合()
+    {
+        // 世界を構築
+        $category = Category::factory()->create(['id' => 1]);
+
+        $user = User::factory()->role(1)->create();
+        $this->actingAs($user);
+
+        // テスト用の備品を作成、消耗品(category_id=1)のみ入出庫できる
+        $item = Item::factory()->create([
+            'category_id' => $category->id,
+            'stock' => 10,
+            'minimum_stock' => 2
+        ]);
+
+        $response = $this->from('consumable_items')
+            ->put(route('decreaseStock', $item->id), ['quantity' => 11]);
+        $response->assertStatus(302);
+        $response->assertRedirect('consumable_items');
+
+        $response = $this->followRedirects($response);
+
+        $response->assertInertia(fn (Assert $page) => $page
+            ->component('ConsumableItems/Index')
+            ->has('errors.quantity')
+            ->where('errors.quantity', '在庫数以上の数量は出庫できません')
+            // ->dump()
+        );
+    }
 
 
 
@@ -2682,12 +3654,559 @@ class ItemControllerTest extends TestCase
     function 入出庫モーダルで入庫処理が出来る()
     {
         // 世界を構築
-        $categories = Category::factory()->count(11)->create();
+        $category = Category::factory()->create(['id' => 1]);
 
         $user = User::factory()->role(1)->create();
         $this->actingAs($user);
 
+        // テスト用の備品を作成、消耗品(category_id=1)のみ入出庫できる
+        $item = Item::factory()->create([
+            'category_id' => $category->id,
+            'stock' => 10,
+            'minimum_stock' => 2
+        ]);
 
+        $validData = [
+            'item_id' => $item->id,
+            'transaction_type' => '入庫',
+            'transaction_date' => '2024-9-3',
+            'operator_name' => $user->name,
+            'quantity' => 3,
+        ];
+
+        // 備品を入庫処理
+        $response = $this->from('consumable_items')
+            ->put(route('increaseStock', $item->id), $validData);
+        $response->assertStatus(302); // リダイレクトを確認
+
+        $this->assertDatabaseHas('items', [
+            'id' => $item->id,
+            'stock' => '13'
+        ]);
+
+        $this->assertDatabaseHas('stock_transactions', [
+            'item_id' => $item->id,
+            'transaction_type' => '入庫',
+            'transaction_date' => '2024-9-3',
+            'operator_name' => $user->name,
+            'quantity' => 3,
+        ]);
     }
+
+    //　IncreaseStockRequestのバリデーションのテスト
+
+    /** @test */
+    function 入出庫モーダルでの入庫処理バリデーションtransaction_dateがnullで無効値な場合()
+    {
+        // 世界を構築
+        $category = Category::factory()->create(['id' => 1]);
+
+        $user = User::factory()->role(1)->create();
+        $this->actingAs($user);
+
+        // テスト用の備品を作成、消耗品(category_id=1)のみ入出庫できる
+        $item = Item::factory()->create([
+            'category_id' => $category->id
+        ]);
+
+        $response = $this->from('consumable_items')
+            ->put(route('increaseStock', $item->id), ['transaction_date' => null]);
+        $response->assertStatus(302);
+        $response->assertRedirect('consumable_items');
+
+        $response = $this->followRedirects($response);
+
+        $response->assertInertia(fn (Assert $page) => $page
+            ->component('ConsumableItems/Index')
+            ->has('errors.transaction_date')
+            ->where('errors.transaction_date', '入出庫日は必ず指定してください。')
+            // ->dump()
+        );
+    }
+
+    /** @test */
+    function 入出庫モーダルでの入庫処理バリデーションtransaction_dateが文字列で無効値な場合()
+    {
+        // 世界を構築
+        $category = Category::factory()->create(['id' => 1]);
+
+        $user = User::factory()->role(1)->create();
+        $this->actingAs($user);
+
+        // テスト用の備品を作成、消耗品(category_id=1)のみ入出庫できる
+        $item = Item::factory()->create([
+            'category_id' => $category->id
+        ]);
+
+        $response = $this->from('consumable_items')
+            ->put(route('increaseStock', $item->id), ['transaction_date' => 'あ']);
+        $response->assertStatus(302);
+        $response->assertRedirect('consumable_items');
+
+        $response = $this->followRedirects($response);
+
+        $response->assertInertia(fn (Assert $page) => $page
+            ->component('ConsumableItems/Index')
+            ->has('errors.transaction_date')
+            ->where('errors.transaction_date', '入出庫日には有効な日付を指定してください。')
+            // ->dump()
+        );
+    }
+
+    /** @test */
+    function 入出庫モーダルでの入庫処理バリデーションtransaction_dateが数字で無効値な場合()
+    {
+        // 世界を構築
+        $category = Category::factory()->create(['id' => 1]);
+
+        $user = User::factory()->role(1)->create();
+        $this->actingAs($user);
+
+        // テスト用の備品を作成、消耗品(category_id=1)のみ入出庫できる
+        $item = Item::factory()->create([
+            'category_id' => $category->id
+        ]);
+
+        $response = $this->from('consumable_items')
+            ->put(route('increaseStock', $item->id), ['transaction_date' => 1]);
+        $response->assertStatus(302);
+        $response->assertRedirect('consumable_items');
+
+        $response = $this->followRedirects($response);
+
+        $response->assertInertia(fn (Assert $page) => $page
+            ->component('ConsumableItems/Index')
+            ->has('errors.transaction_date')
+            ->where('errors.transaction_date', '入出庫日には有効な日付を指定してください。')
+            // ->dump()
+        );
+    }
+
+    /** @test */
+    function 入出庫モーダルでの入庫処理バリデーションtransaction_dateが日付で有効値な場合()
+    {
+        // 世界を構築
+        $category = Category::factory()->create(['id' => 1]);
+
+        $user = User::factory()->role(1)->create();
+        $this->actingAs($user);
+
+        // テスト用の備品を作成、消耗品(category_id=1)のみ入出庫できる
+        $item = Item::factory()->create([
+            'category_id' => $category->id
+        ]);
+
+        $response = $this->from('consumable_items')
+            ->put(route('increaseStock', $item->id), ['transaction_date' => '2024-9-3']);
+        $response->assertStatus(302);
+        $response->assertRedirect('consumable_items');
+
+        $response = $this->followRedirects($response);
+
+        $response->assertInertia(fn (Assert $page) => $page
+            ->component('ConsumableItems/Index')
+            ->missing('errors.transaction_date')
+            // ->dump()
+        );
+    }
+
+    /** @test */
+    function 入出庫モーダルでの入庫処理バリデーションoperator_nameがnullで無効値な場合()
+    {
+        // 世界を構築
+        $category = Category::factory()->create(['id' => 1]);
+
+        $user = User::factory()->role(1)->create();
+        $this->actingAs($user);
+
+        // テスト用の備品を作成、消耗品(category_id=1)のみ入出庫できる
+        $item = Item::factory()->create([
+            'category_id' => $category->id
+        ]);
+
+        $response = $this->from('consumable_items')
+            ->put(route('increaseStock', $item->id), ['operator_name' => null]);
+        $response->assertStatus(302);
+        $response->assertRedirect('consumable_items');
+
+        $response = $this->followRedirects($response);
+
+        $response->assertInertia(fn (Assert $page) => $page
+            ->component('ConsumableItems/Index')
+            ->has('errors.operator_name')
+            ->where('errors.operator_name', '実施者は必ず指定してください。')
+            // ->dump()
+        );
+    }
+
+    /** @test */
+    function 入出庫モーダルでの入庫処理バリデーションoperator_nameが1文字で有効値な場合()
+    {
+        // 世界を構築
+        $category = Category::factory()->create(['id' => 1]);
+
+        $user = User::factory()->role(1)->create();
+        $this->actingAs($user);
+
+        // テスト用の備品を作成、消耗品(category_id=1)のみ入出庫できる
+        $item = Item::factory()->create([
+            'category_id' => $category->id
+        ]);
+
+        $response = $this->from('consumable_items')
+            ->put(route('increaseStock', $item->id), ['operator_name' => str_repeat('あ', 1)]);
+        $response->assertStatus(302);
+        $response->assertRedirect('consumable_items');
+
+        $response = $this->followRedirects($response);
+
+        $response->assertInertia(fn (Assert $page) => $page
+            ->component('ConsumableItems/Index')
+            ->missing('errors.operator_name')
+            // ->dump()
+        );
+    }
+
+    /** @test */
+    function 入出庫モーダルでの入庫処理バリデーションoperator_nameが10文字で有効境界値な場合()
+    {
+        // 世界を構築
+        $category = Category::factory()->create(['id' => 1]);
+
+        $user = User::factory()->role(1)->create();
+        $this->actingAs($user);
+
+        // テスト用の備品を作成、消耗品(category_id=1)のみ入出庫できる
+        $item = Item::factory()->create([
+            'category_id' => $category->id
+        ]);
+
+        $response = $this->from('consumable_items')
+            ->put(route('increaseStock', $item->id), ['operator_name' => str_repeat('あ', 10)]);
+        $response->assertStatus(302);
+        $response->assertRedirect('consumable_items');
+
+        $response = $this->followRedirects($response);
+
+        $response->assertInertia(fn (Assert $page) => $page
+            ->component('ConsumableItems/Index')
+            ->missing('errors.operator_name')
+            // ->dump()
+        );
+    }
+
+    /** @test */
+    function 入出庫モーダルでの入庫処理バリデーションoperator_nameが11文字で無効境界値な場合()
+    {
+        // 世界を構築
+        $category = Category::factory()->create(['id' => 1]);
+
+        $user = User::factory()->role(1)->create();
+        $this->actingAs($user);
+
+        // テスト用の備品を作成、消耗品(category_id=1)のみ入出庫できる
+        $item = Item::factory()->create([
+            'category_id' => $category->id
+        ]);
+
+        $response = $this->from('consumable_items')
+            ->put(route('increaseStock', $item->id), ['operator_name' => str_repeat('あ', 11)]);
+        $response->assertStatus(302);
+        $response->assertRedirect('consumable_items');
+
+        $response = $this->followRedirects($response);
+
+        $response->assertInertia(fn (Assert $page) => $page
+            ->component('ConsumableItems/Index')
+            ->has('errors.operator_name')
+            ->where('errors.operator_name', '実施者は、10文字以下で指定してください。')
+            // ->dump()
+        );
+    }
+
+    /** @test */
+    function 入出庫モーダルでの入庫処理バリデーションquantityがnullで無効値な場合()
+    {
+        // 世界を構築
+        $category = Category::factory()->create(['id' => 1]);
+
+        $user = User::factory()->role(1)->create();
+        $this->actingAs($user);
+
+        // テスト用の備品を作成、消耗品(category_id=1)のみ入出庫できる
+        $item = Item::factory()->create([
+            'category_id' => $category->id,
+        ]);
+
+        $response = $this->from('consumable_items')
+            ->put(route('increaseStock', $item->id), ['quantity' => null]);
+        $response->assertStatus(302);
+        $response->assertRedirect('consumable_items');
+
+        $response = $this->followRedirects($response);
+
+        $response->assertInertia(fn (Assert $page) => $page
+            ->component('ConsumableItems/Index')
+            ->has('errors.quantity')
+            ->where('errors.quantity', '数量は必ず指定してください。')
+            // ->dump()
+        );
+    }
+
+    /** @test */
+    function 入出庫モーダルでの入庫処理バリデーションquantityが0で無効境界値な場合()
+    {
+        // 世界を構築
+        $category = Category::factory()->create(['id' => 1]);
+
+        $user = User::factory()->role(1)->create();
+        $this->actingAs($user);
+
+        // テスト用の備品を作成、消耗品(category_id=1)のみ入出庫できる
+        $item = Item::factory()->create([
+            'category_id' => $category->id
+        ]);
+
+        $response = $this->from('consumable_items')
+            ->put(route('increaseStock', $item->id), ['quantity' => 0]);
+        $response->assertStatus(302);
+        $response->assertRedirect('consumable_items');
+
+        $response = $this->followRedirects($response);
+
+        $response->assertInertia(fn (Assert $page) => $page
+            ->component('ConsumableItems/Index')
+            ->has('errors.quantity')
+            ->where('errors.quantity', '数量には、1以上の数字を指定してください。')
+            // ->dump()
+        );
+    }
+
+    /** @test */
+    function 入出庫モーダルでの入庫処理バリデーションquantityが1で有効境界値な場合()
+    {
+        // 世界を構築
+        $category = Category::factory()->create(['id' => 1]);
+
+        $user = User::factory()->role(1)->create();
+        $this->actingAs($user);
+
+        // テスト用の備品を作成、消耗品(category_id=1)のみ入出庫できる
+        $item = Item::factory()->create([
+            'category_id' => $category->id
+        ]);
+
+        $response = $this->from('consumable_items')
+            ->put(route('increaseStock', $item->id), ['quantity' => 1]);
+        $response->assertStatus(302);
+        $response->assertRedirect('consumable_items');
+
+        $response = $this->followRedirects($response);
+
+        $response->assertInertia(fn (Assert $page) => $page
+            ->component('ConsumableItems/Index')
+            ->missing('errors.quantity')
+            // ->dump()
+        );
+    }
+
+    /** @test */
+    function 入出庫モーダルでの入庫処理バリデーションquantityが100で有効境界値な場合()
+    {
+        // 世界を構築
+        $category = Category::factory()->create(['id' => 1]);
+
+        $user = User::factory()->role(1)->create();
+        $this->actingAs($user);
+
+        // テスト用の備品を作成、消耗品(category_id=1)のみ入出庫できる
+        $item = Item::factory()->create([
+            'category_id' => $category->id
+        ]);
+
+        $response = $this->from('consumable_items')
+            ->put(route('increaseStock', $item->id), ['quantity' => 100]);
+        $response->assertStatus(302);
+        $response->assertRedirect('consumable_items');
+
+        $response = $this->followRedirects($response);
+
+        $response->assertInertia(fn (Assert $page) => $page
+            ->component('ConsumableItems/Index')
+            ->missing('errors.quantity')
+            // ->dump()
+        );
+    }
+
+    /** @test */
+    function 入出庫モーダルでの入庫処理バリデーションquantityが101で無効境界値な場合()
+    {
+        // 世界を構築
+        $category = Category::factory()->create(['id' => 1]);
+
+        $user = User::factory()->role(1)->create();
+        $this->actingAs($user);
+
+        // テスト用の備品を作成、消耗品(category_id=1)のみ入出庫できる
+        $item = Item::factory()->create([
+            'category_id' => $category->id
+        ]);
+
+        $response = $this->from('consumable_items')
+            ->put(route('increaseStock', $item->id), ['quantity' => 101]);
+        $response->assertStatus(302);
+        $response->assertRedirect('consumable_items');
+
+        $response = $this->followRedirects($response);
+
+        $response->assertInertia(fn (Assert $page) => $page
+            ->component('ConsumableItems/Index')
+            ->has('errors.quantity')
+            ->where('errors.quantity', '数量には、100以下の数字を指定してください。')
+            // ->dump()
+        );
+    }
+
+
+    // リクエストの登録が出来る
+    /** @test */
+    function リクエストの登録が出来る()
+    {
+        //世界の構築
+        $categories = Category::factory()->count(11)->create();
+        $locations = Location::factory()->count(12)->create();
+        $requet_statuses = RequestStatus::factory(4)->create();
+        
+
+        // adminユーザーを作成
+        $user = User::factory()->role(1)->create();
+        $this->actingAs($user);   
+
+        // ※注意
+        // フロントから送られてくるデータを適切に模倣しないといけいない
+        $validData = [
+            'name' => 'ボールペン',
+            'category_id' => $categories->first()->id,
+            'location_of_use_id' => $locations->first()->id,
+            'requestor' => '山田',
+            'remarks_from_requestor' => '申請理由です',
+            'request_status_id' => $requet_statuses->first()->id,
+            'manufacturer' => 'ボールペン工房',
+            'reference' => '参考サイト',
+            'price' => 100,
+        ];
+    
+        $response = $this->from('item_requests/create')->post(route('item_requests.store'), $validData);
+
+        $response->assertRedirect('item-requests');
+
+        $this->assertDatabaseHas('item_requests', [
+            'name' => 'ボールペン',
+            'category_id' => $categories->first()->id,
+            'location_of_use_id' => $locations->first()->id,
+            'requestor' => '山田',
+            'remarks_from_requestor' => '申請理由です',
+            'request_status_id' => $requet_statuses->first()->id,
+            'manufacturer' => 'ボールペン工房',
+            'reference' => '参考サイト',
+            'price' => 100,
+        ]);
+    }
+
+    // 別ファイルに分割移動して、バリデーションのテストも作成する
+
+
+
+
+    // edithistoriesの編集履歴モーダル用のデータを取得できる
+    /** @test */
+    function 編集履歴モーダル用のデータをAPIで取得できる()
+    {
+        // 世界の構築
+        // adminユーザーを作成
+        $user = User::factory()->role(1)->create();
+        $this->actingAs($user);   
+
+        $item = Item::factory()->create();
+        // $item->idの編集履歴をDBに保存
+        $edithistories = Edithistory::factory()->count(20)->create(['item_id' => $item->id]);
+
+        // dd($edithistories);
+
+
+        // Inertiaリクエストのシミュレーション
+        $response = $this->withHeaders([
+            'X-Inertia' => 'true',
+            'X-Inertia-Version' => Inertia::getVersion(),
+        ])->get('/api/edithistory?item_id=' . $item->id);
+        // $response = $this->get('/api/edithistory?item_id=' . $item->id);
+        // $response = $this->get('/api/edithistory', ['item_id' => $item->id]);
+        $response->assertOk();
+        // dd($response->json());
+
+        $response->assertJson(fn (AssertableJson $json) =>
+            $json->has(10)
+                ->each(fn ($json) =>
+                    $json->where('item_id', $item->id)
+                        ->where('edit_mode', 'normal')
+                        ->where('operation_type', fn($operation_type) => in_array($operation_type, ['store', 'update', 'stock_in', 'stock_out', 'delete', 'restore']))
+                        ->has('edited_field')
+                        ->has('old_value')
+                        ->has('new_value')
+                        ->where('edit_user', fn($edit_user) => !is_null($edit_user) && is_string($edit_user))
+                        ->has('edit_reason_id')
+                        ->has('edit_reason_text')
+                        ->etc()
+                )
+        );
+    }
+
+
+
+    /** @test */
+    function 入出庫履歴モーダル用のデータをAPIで取得できる()
+    {
+        // 世界の構築
+        // adminユーザーを作成
+        $user = User::factory()->role(1)->create();
+        $this->actingAs($user);   
+
+        $item = Item::factory()->create();
+        // $item->idの編集履歴をDBに保存
+        $stockTransactions = StockTransaction::factory()->count(20)->create(['item_id' => $item->id]);
+
+        // Inertiaリクエストのシミュレーション、ヘッダーが追加される
+        $response = $this->withHeaders([
+            'X-Inertia' => 'true',
+            'X-Inertia-Version' => Inertia::getVersion(),
+        ])->get('/api/stock_transactions?item_id=' . $item->id);
+        
+        $response->assertOk();
+
+        // dd($response->json());
+
+        $response->assertJson(fn (AssertableJson $json) =>
+            $json->has('stockTransactions', 10)
+                ->has('stockTransactions', fn ($json) => 
+                    $json->each(fn ($json) => 
+                        $json->where('item_id', $item->id)
+                            ->where('transaction_type', fn($type) => in_array($type, ['入庫', '出庫']))
+                            ->where('quantity', fn($quantity) => is_int($quantity))
+                            ->where('operator_name', fn($name) => is_string($name))
+                            ->where('transaction_date', fn($date) => strtotime($date) !== false)
+                            ->etc()
+                )
+            )
+        );
+    }
+
+
+
+    // 通知のテスト
+    // 在庫数が通知在庫数以下になったとき
+
+    // 点検と廃棄の予定日が近づいたとき
+
+    // リクエストされたとき
 
 }
