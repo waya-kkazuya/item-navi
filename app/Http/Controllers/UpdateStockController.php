@@ -48,15 +48,11 @@ class UpdateStockController extends Controller
             $item->stock -= $request->quantity;
             $item->save();
 
-            
-            // 在庫数が通知在庫数以下になったときにイベントを発火
             // LowStockDetectEventのイベント発火
-            // event(new LowStockDetectEvent($item));
-            // // event(new LowStockDetectEvent('こんにちは！'));
-            if($item->stock <= $item->minimum_stock) {
+            // 通知がオンになっている、かつ、在庫数が通知在庫数を下回ったら通知を送る
+            if($item->notification && $item->stock <= $item->minimum_stock) {
                 event(new LowStockDetectEvent($item));
             }
-            
             
             DB::commit();
 
