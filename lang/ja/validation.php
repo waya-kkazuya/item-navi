@@ -282,6 +282,13 @@ return [
         'minimum_stock' => '通知在庫数',
         'unit_id' => '単位',
         'today' => '今日',
-
+        'disposal_date' => '廃棄実施日',
+        'disposal_person' => '廃棄実施者',
+        'details' => '詳細情報',
+        'inspection_date' => '点検実施日',
+        'inspection_person' => '点検実施者',
+        'transaction_date' => '入出庫日',
+        'operator_name' => '実施者',
+        'quantity' => '数量',
     ],
 ];
