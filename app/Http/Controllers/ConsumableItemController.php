@@ -11,6 +11,7 @@ use App\Models\Edithistory;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Storage;
 
 
 class ConsumableItemController extends Controller
