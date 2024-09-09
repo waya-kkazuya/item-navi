@@ -35,7 +35,7 @@ Route::middleware(['auth:sanctum', 'verified', 'can:staff-higher'])
 
 
 // 対象の備品の編集履歴を取得するためのAPI
-Route::middleware('auth:sanctum')
+Route::middleware(['auth:sanctum', 'verified', 'can:staff-higher'])
 ->get('/edithistory', function (Request $request) {
   return Edithistory::where('item_id', $request->item_id)
   ->orderBy('created_at', 'desc')
@@ -67,7 +67,7 @@ Route::middleware('auth:sanctum', 'verified', 'can:staff-higher')
   return auth()->user()->unreadNotifications;
 });
 
-
+// 通知を既読にする
 Route::middleware(['auth:sanctum', 'verified', 'can:staff-higher'])->group(function () {
   Route::patch('/notifications/{id}/read', [NotificationController::class, 'markAsRead']);
 });
