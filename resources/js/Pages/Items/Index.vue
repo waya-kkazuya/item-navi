@@ -113,15 +113,17 @@ watch(() => props.items, (newItems) => {
 
 // 廃棄された備品の復元
 const restoreItem = (id) => {
-  router.post(`/items/${id}/restore`, {
-    onSuccess: () => {
-      console.log('Item restored successfully')
-    },
-    onError: () => {
-      console.log('Failed to restore item')
-    },
-  })
-  showDisposal.value = false;
+  if (confirm('本当に備品を復元をしますか？')) {
+    router.post(`/items/${id}/restore`, {
+      onSuccess: () => {
+        console.log('Item restored successfully')
+      },
+      onError: () => {
+        console.log('Failed to restore item')
+      },
+    })
+    showDisposal.value = false;
+  }
 }
 
 </script>
