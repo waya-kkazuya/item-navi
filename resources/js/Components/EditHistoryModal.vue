@@ -11,6 +11,11 @@ const props = defineProps({
 
 onMounted(() => {
   console.log(props.isTableView)
+  // MicroModal.init({
+  //   disableScroll: true,
+  //   closeTrigger: 'data-micromodal-close',
+  //   closeOnOutsideClick: true,
+  // });
 })
 
 // itemだけでなくオブジェクトごと取ってきた方がいい
@@ -23,7 +28,7 @@ const isShow = ref(false)
 const toggleStatus = () => { isShow.value = !isShow.value}
 const editHistories = async item => {
   try {
-    await axios.get(`api/edithistory/?item_id=${item.id}`)
+    await axios.get(`api/edithistory?item_id=${item.id}`)
     .then( res => {
       console.log(res.data)
       editHistoriesData.value = res.data
@@ -45,6 +50,7 @@ const formatDate = (timestamp) => {
   return `${year}/${month}/${day} ${hours}:${minutes}`;
 }
 </script>
+
 <template>
   <div v-show="isShow" class="modal" id="modal-1" aria-hidden="true">
     <div class="modal__overlay" tabindex="-1" data-micromodal-close>

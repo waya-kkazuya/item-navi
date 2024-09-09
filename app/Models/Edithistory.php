@@ -14,7 +14,6 @@ class Edithistory extends Model
         'edit_mode',
         'operation_type',
         'item_id',
-        'category_id',
         'edited_field',
         'old_value',
         'new_value',
