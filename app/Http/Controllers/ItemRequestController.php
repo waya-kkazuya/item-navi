@@ -13,6 +13,7 @@ use App\Models\RequestStatus;
 use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
 use App\Events\RequestedItemDetectEvent;
+use Illuminate\Support\Facades\DB;
 
 class ItemRequestController extends Controller
 {
@@ -97,16 +98,16 @@ class ItemRequestController extends Controller
     {
         Gate::authorize('user-higher');
         
-        // DB::beginTransaction();
+        DB::beginTransaction();
 
-        // try {
+        try {
 
             $itemRequest = ItemRequest::create([            
                 'name' => $request->name,
-                'category_id' => $request->categoryId ,
-                'location_of_use_id' => $request->locationOfUseId,
+                'category_id' => $request->category_id ,
+                'location_of_use_id' => $request->location_of_use_id,
                 'requestor' => $request->requestor,
-                'remarks_from_requestor' => $request->remarksFromRequestor,
+                'remarks_from_requestor' => $request->remarks_from_requestor,
                 'request_status_id' => 1,
                 'manufacturer' => $request->manufacturer,
                 'reference' => $request->reference,
@@ -117,7 +118,7 @@ class ItemRequestController extends Controller
             event(new RequestedItemDetectEvent($itemRequest));
 
 
-            // DB::commit();
+            DB::commit();
 
             return to_route('item_requests.index')
             ->with([
@@ -125,14 +126,14 @@ class ItemRequestController extends Controller
                 'status' => 'success'
             ]);
 
-        // } catch (\Exception $e) {
-        //     DB::rollBack();
+        } catch (\Exception $e) {
+            DB::rollBack();
 
-        //     return redirect()->back()
-        //     ->with([
-        //         'message' => '登録中にエラーが発生しました',
-        //         'status' => 'danger'
-        //     ]);
-        // }
+            return redirect()->back()
+            ->with([
+                'message' => '登録中にエラーが発生しました',
+                'status' => 'danger'
+            ]);
+        }
     }
 }
