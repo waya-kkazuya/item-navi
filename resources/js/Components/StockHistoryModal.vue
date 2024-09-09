@@ -19,7 +19,7 @@ const stockTransactions = ref([])
 const fetchStockTransactions = async item => {
   try {
     // await axios.get('api/stock_transactions', { item })
-    const res = await axios.get(`/api/stock_transactions/?item_id=${item.id}`)
+    const res = await axios.get(`/api/stock_transactions?item_id=${item.id}`)
     console.log('res.data')
     console.log(res.data)
     stockTransactions.value = res.data.stockTransactions
