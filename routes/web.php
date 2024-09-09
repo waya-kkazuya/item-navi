@@ -105,8 +105,6 @@ Route::get('/generate-pdf', [PDFController::class, 'generatePDF'])
 
 
 
-
-
 Route::get('/', function () {
     return Inertia::render('Welcome', [
         'canLogin' => Route::has('login'),
@@ -120,8 +118,8 @@ Route::get('/', function () {
 Route::get('/dashboard', [DashboardController::class, 'index'])
 ->middleware(['auth', 'verified', 'can:staff-higher'])->name('dashboard');
 
-Route::get('item-requests', [ItemRequestController::class, 'index'])
-->middleware(['auth', 'verified', 'can:user-higher'])->name('item_requests.index');
+// Route::get('item-requests', [ItemRequestController::class, 'index'])
+// ->middleware(['auth', 'verified', 'can:user-higher'])->name('item_requests.index');
 
 
 
