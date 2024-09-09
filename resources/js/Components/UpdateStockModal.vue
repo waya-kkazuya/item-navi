@@ -253,7 +253,7 @@ const formatDate = (timestamp) => {
                   </div>
                 </div>
                 <div class="flex p-2 w-full">
-                  <div class="w-1/2">
+                  <div class="w-1/3">
                     <label for="name" class="leading-7 text-sm text-blue-900">
                       現在在庫数
                     </label>
@@ -264,12 +264,25 @@ const formatDate = (timestamp) => {
                   <div class="flex items-center mx-4">
                       <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 17l5-5-5-5M6 17l5-5-5-5"/></svg>
                   </div>
-                  <div class="w-1/2">
+                  <div class="w-1/3">
                     <label for="name" class="leading-7 text-sm text-blue-900">
                       入庫後
                     </label>
                     <div id="name" name="name" class="w-full bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
                           {{ stockAfterIncrease  }}
+                    </div>
+                  </div>
+                  <div>
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="m9 20.247 6-16.5" />
+                    </svg>
+                  </div>
+                  <div class="w-1/3">
+                    <label for="name" class="leading-7 text-sm text-blue-900">
+                      通知在庫数
+                    </label>
+                    <div id="name" name="name" class="w-full bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
+                          {{ item.minimum_stock  }}
                     </div>
                   </div>
                 </div>
