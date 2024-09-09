@@ -2,9 +2,16 @@
 
 namespace Database\Factories;
 
+use App\Models\AcquisitionMethod;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use App\Models\User;
 use App\Models\Item;
 use App\Models\Category;
+use App\Models\EditReason;
+use App\Models\Unit;
+use App\Models\Location;
+use App\Models\UsageStatus;
+use Illuminate\Support\Facades\Schema;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Edithistory>
@@ -18,81 +25,62 @@ class EdithistoryFactory extends Factory
      */
     public function definition(): array
     {
-        $location = ['作業室1', '作業室2', '玄関', '廊下', '給湯室', 'トイレ', '事務室'];
-        $user = ['管理者', 'スタッフ', '利用者'];
-        $usageStatus = ['未使用', '使用中'];
-        $itemColumn = ['name', 'category_id', 'image_path1', 'image_path2', 'image_path1',
-                'stocks', 'usage_status', 'end_user', 'location_of_use', 'storage_location',
-                'acquisition_category', 'price', 'date_of_acquisition', 'inspection_schedule',
-                'disposal_schedule', 'manufacturer', 'product_number', 'vendor', 'vendor_website_url',
-                'remarks'];
+        // $user = ['管理者', 'スタッフ', '利用者'];
+        // $usageStatus = ['未使用', '使用中'];
 
 
-        $categoryId = Category::all()->random()->id;
-        $editedField = $this->faker->randomElement($itemColumn);
-        
-        if($editedField === 'stocks') {
-            $oldValue = $this->faker->numberBetween(1, 500);
-            $newValue = $this->faker->numberBetween(1, 500);
-        } elseif($editedField === 'price') {
-            $oldValue = $this->faker->numberBetween(100, 50000);
-            $newValue = $this->faker->numberBetween(100, 50000);        
-        } elseif($editedField === 'date_of_acquisition' || $editedField === 'inspection_schedule' || $editedField === 'disposal_schedule') {
-            $oldValue = $this->faker->dateTime;
-            $newValue = $this->faker->dateTime;
-        } elseif($editedField === 'location_of_use'|| $editedField === 'storage_location') {
-            $oldValue = $this->faker->randomElement($location);
-            $newValue = $this->faker->randomElement($location);
-        } elseif($editedField === 'product_number') {
-            $oldValue = $this->faker->numberBetween(1000, 100000);
-            $newValue = $this->faker->numberBetween(1000, 100000);
-        } elseif($editedField === 'vendor_website_url') {
-            $oldValue = $this->faker->url;
-            $newValue = $this->faker->url;
-        } elseif($editedField === 'remarks') {
-            $oldValue = $this->faker->realText(20);
-            $newValue = $this->faker->realText(20);
-        } elseif($editedField === 'usage_status') {
-            $oldValue = $this->faker->randomElement($usageStatus);
-            $newValue = $this->faker->randomElement($usageStatus);
-        }  else {
-            $oldValue = $this->faker->name;
-            $newValue = $this->faker->name;
-        }
+        $operation_types = ['store', 'update', 'stock_in', 'stock_out', 'delete', 'restore'];
+        $operation_type = $this->faker->randomElement($operation_types);
 
-        $operationTypes = ['新規', '編集'];
-        $editTypes = ['通常', '棚卸'];
-        $actionType = null;
-        
-        $operationType = $this->faker->randomElement($operationTypes);
-      
-        if($operationType === '編集'){
-            $editType = $this->faker->randomElement($editTypes);
-        } else {
-            $editType = '通常';
-        }
+        $editedFields = $this->getEditableFields();
+        $editedField = $this->faker->randomElement($editedFields);
 
-        // edited_fieldがstocks在庫数だった場合、
-        // action_typeに入庫か出庫と記録する
-        if($editedField === 'stocks') {
-            if($newValue > $oldValue) {
-                $actionType = '入庫';
-            } else {
-                $actionType = '出庫';
-            }
-        }
+        // [$oldValue, $newValue] = match ($editedField) {
+        //     'name' => [$this->faker->name(), $this->faker->name()],
+        //     'category_id' => [Category::factory(), Category::factory()],
+        //     'stock' => [$this->faker->numberBetween(1, 50), $this->faker->numberBetween(1, 50)],
+        //     'unit_id' => [Unit::factory(), Unit::factory()],
+        //     'minimum_stock' => [$this->faker->numberBetween(0, 5), $this->faker->numberBetween(0, 5)],
+        //     'notification' => [$this->faker->boolean(), $this->faker->boolean()],
+        //     'usage_status_id' => [UsageStatus::factory(), UsageStatus::factory()],
+        //     'end_user' => [$this->faker->name(), $this->faker->name()],
+        //     'location_of_use_id' => [Location::factory(), Location::factory()],
+        //     'storage_location_id' => [Location::factory(), Location::factory()],
+        //     'acquisition_method_id' => [AcquisitionMethod::factory(), AcquisitionMethod::factory()],
+        //     'acquisition_source' => [$this->faker->name(), $this->faker->name()],
+        //     'price' => [$this->faker->numberBetween(100, 100000), $this->faker->numberBetween(100, 100000)],
+        //     'date_of_acquisition' => [$this->faker->dateTime(), $this->faker->dateTime()],
+        //     'manufacturer' => [$this->faker->name(), $this->faker->name()],
+        //     'product_number' => [$this->faker->name(), $this->faker->name()],
+        //     'remarks' => [$this->faker->realText(20), $this->faker->realText(20)],
+        //     default => [$this->faker->name, $this->faker->name],
+        // };
+
+
+        // 備品の情報の編集更新でstockを変更してもそれは情報の修正であって
+        // 入出庫処理にはならない=>StockTransactionに入出庫処理情報は保存される
+
+        // dd($editedField); //ちゃんと止まる
 
         return [
-            'operation_type' => $operationType,
-            'edit_type' => $editType,
-            'action_type' => $actionType,
-            'item_id' => Item::all()->random()->id,
-            'category_id' => $categoryId,
+            'item_id' => Item::factory(),
+            'edit_mode' => 'normal', // 棚卸し用にnormalとinventoryを想定
+            'operation_type' => $operation_type,
             'edited_field'=> $editedField,
-            'old_value' => $oldValue,
-            'new_value'=> $newValue,
-            'edit_user' => $this->faker->randomElement($user),
-            'edited_at' => $this->faker->dateTimeBetween($startDate = '-2 years', $endDate = 'now')->format('Y-m-d H:i:s')
+            'old_value' => 'after',
+            'new_value'=> 'before',
+            'edit_user' => User::factory(),
+            'edit_reason_id' => EditReason::factory(),
+            'edit_reason_text' => $this->faker->realText(50)
         ];
+    }
+
+    private function getEditableFields()
+    {
+        // 変更されるitemsテーブルのカラムを抽出
+        $columns = Schema::getColumnListing('items');
+        $excludedColumns = ['id', 'management_id', 'image1', 'qrcode','deleted_at', 'created_at', 'updated_at'];
+
+        return array_diff($columns, $excludedColumns);
     }
 }
