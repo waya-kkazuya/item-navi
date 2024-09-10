@@ -101,17 +101,6 @@ Route::get('/generate-pdf', [PDFController::class, 'generatePDF'])
 // グラフテスト用
 // Route::get('analysis', [AnalysisController::class, 'index'])->name('analysis');
 
-// ウィッシュリスト
-Route::resource('wishes', WishController::class)
-->middleware(['auth', 'verified', 'can:user-higher']);
-
-// // 棚卸計画
-Route::resource('inventory_plans', InventoryPlanController::class)
-->middleware(['auth', 'verified', 'can:staff-higher']);
-
-// 画像テスト
-// Route::resource('image_tests', ImageTestController::class)
-// ->middleware(['auth', 'verified', 'can:user-higher']);
 
 
 
@@ -125,21 +114,37 @@ Route::get('/', function () {
     ]);
 });
 
-
 // ダッシュボード
 Route::get('/dashboard', [DashboardController::class, 'index'])
 ->middleware(['auth', 'verified', 'can:staff-higher'])->name('dashboard');
 
-Route::get('item-requests', [ItemRequestController::class, 'index'])
-->name('item_requests.index');
+// Route::get('item-requests', [ItemRequestController::class, 'index'])
+// ->middleware(['auth', 'verified', 'can:user-higher'])->name('item_requests.index');
 
 
 
 // プロフィール編集用ルート
-Route::middleware('auth')->group(function () {
+Route::middleware(['auth', 'verified', 'can:user-higher'])->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
+
+
+
+
+// ウィッシュリスト
+Route::resource('wishes', WishController::class)
+->middleware(['auth', 'verified', 'can:user-higher']);
+
+// 棚卸計画
+Route::resource('inventory_plans', InventoryPlanController::class)
+->middleware(['auth', 'verified', 'can:staff-higher']);
+
+// 画像テスト
+// Route::resource('image_tests', ImageTestController::class)
+// ->middleware(['auth', 'verified', 'can:user-higher']);
+
+
 
 require __DIR__.'/auth.php';

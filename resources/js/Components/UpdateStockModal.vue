@@ -4,8 +4,6 @@ import { router, useForm } from '@inertiajs/vue3';
 import { computed, ref, watch } from 'vue'
 
 
-
-
 // 親コンポーネントから、itemオブジェクトを受け取る
 const props = defineProps({
   item: Object,
@@ -55,10 +53,10 @@ const stockAfterDecrease = computed(() => props.item.stock - decreaseForm.quanti
 const stockAfterIncrease = computed(() => props.item.stock + increaseForm.quantity)
 
 const decreaseForm = useForm({
-    transactionDate: new Date().toISOString().substr(0, 10),
-    operatorName: props.userName,
-    quantity: 1,
-    transactionType: '出庫',　// enum型で入庫か出庫のみ
+  transaction_date: new Date().toISOString().substr(0, 10),
+  operator_name: props.userName,
+  quantity: 1,
+  transaction_type: '出庫',　// enum型で入庫か出庫のみ
 })
 
 // 別な備品で開いたときにバリデーションメッセージを消す処理
@@ -74,8 +72,8 @@ const decreaseStock = item => {
           console.log('バリデーションエラーが発生しました:', errors)
           console.log(props.errors)
           console.log(localErrors.value)
-          console.log(localErrors.value.operatorName)
-          console.log(localErrors.operatorName)
+          console.log(localErrors.value.operator_name)
+          console.log(localErrors.operator_name)
         }
       })
   }
@@ -83,10 +81,10 @@ const decreaseStock = item => {
 
 
 const increaseForm = useForm({
-    transactionDate: new Date().toISOString().substr(0, 10),
-    operatorName: props.userName,
+    transaction_date: new Date().toISOString().substr(0, 10),
+    operator_name: props.userName,
     quantity: 1,
-    transactionType: '入庫',　// enum型で入庫か出庫のみ
+    transaction_type: '入庫',　// enum型で入庫か出庫のみ
 })
 
 const increaseStock = item => {
@@ -100,8 +98,8 @@ const increaseStock = item => {
           console.log('バリデーションエラーが発生しました:', errors)
           console.log(props.errors)
           console.log(localErrors.value)
-          console.log(localErrors.value.operatorName)
-          console.log(localErrors.operatorName)
+          console.log(localErrors.value.operator_name)
+          console.log(localErrors.operator_name)
         }
       })
   }
@@ -124,7 +122,7 @@ const formatDate = (timestamp) => {
 <template>
   <div v-show="isShow" class="modal" id="modal-1" aria-hidden="true">
     <div class="modal__overlay" tabindex="-1" data-micromodal-close>
-      <div class="modal__container" role="dialog" aria-modal="true" aria-labelledby="modal-1-title">
+      <div class="modal__container min-w-[600px] mx-auto" role="dialog" aria-modal="true" aria-labelledby="modal-1-title">
         <header class="modal__header">
           <ul class="flex border-b">
               <li class="mr-1">
@@ -156,21 +154,21 @@ const formatDate = (timestamp) => {
                     </div>
                 </div>
                 <div class="p-2 w-full">
-                    <label for="transactionDate" class="leading-7 text-sm text-blue-900">出庫日</label>
+                    <label for="transaction_date" class="leading-7 text-sm text-blue-900">出庫日</label>
                     <div class="relative">
-                        <input type="date" id="transactionDate" name="transactionDate" v-model="decreaseForm.transactionDate" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
+                        <input type="date" id="transaction_date" name="transaction_date" v-model="decreaseForm.transaction_date" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
                     </div>
-                    <div v-if="localErrors.transactionDate" class="font-medium text-red-600">{{ localErrors.transactionDate }}</div>
+                    <div v-if="localErrors.transaction_date" class="font-medium text-red-600">{{ localErrors.transaction_date }}</div>
                 </div>
                 <div class="p-2 w-full">
-                  <label for="operatorName" class="leading-7 text-sm text-blue-900">実施者</label>
+                  <label for="operator_name" class="leading-7 text-sm text-blue-900">実施者</label>
                   <div>
-                    <input type="text" id="operatorName" name="operatorName" v-model="decreaseForm.operatorName" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
-                    <div v-if="localErrors.operatorName" class="font-medium text-red-600">{{ localErrors.operatorName }}</div>       
+                    <input type="text" id="operator_name" name="operator_name" v-model="decreaseForm.operator_name" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
+                    <div v-if="localErrors.operator_name" class="font-medium text-red-600">{{ localErrors.operator_name }}</div>       
                   </div>
                 </div>
-                <div class="flex p-2 w-full">
-                  <div class="w-1/2">
+                <div class="flex items-center p-2 w-full">
+                  <div class="w-1/3">
                     <label for="name" class="leading-7 text-sm text-blue-900">
                       現在在庫数
                     </label>
@@ -181,12 +179,25 @@ const formatDate = (timestamp) => {
                   <div class="flex items-center mx-4">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 17l5-5-5-5M6 17l5-5-5-5"/></svg>
                   </div>
-                  <div class="w-1/2">
+                  <div class="w-1/3">
                     <label for="name" class="leading-7 text-sm text-blue-900">
                       出庫後
                     </label>
                     <div id="name" name="name" class="w-full bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
                           {{ stockAfterDecrease  }}
+                    </div>
+                  </div>
+                  <div>
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="m9 20.247 6-16.5" />
+                    </svg>
+                  </div>
+                  <div class="w-1/3">
+                    <label for="name" class="leading-7 text-sm text-blue-900">
+                      通知在庫数
+                    </label>
+                    <div id="name" name="name" class="w-full bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
+                          {{ item.minimum_stock  }}
                     </div>
                   </div>
                 </div>
@@ -228,21 +239,21 @@ const formatDate = (timestamp) => {
                   </div>
                 </div>
                 <div class="p-2 w-full">
-                  <label for="transactionDate" class="leading-7 text-sm text-blue-900">入庫日</label>
+                  <label for="transaction_date" class="leading-7 text-sm text-blue-900">入庫日</label>
                   <div class="relative">
-                      <input type="date" id="transactionDate" name="transactionDate" v-model="increaseForm.transactionDate" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
+                      <input type="date" id="transaction_date" name="transaction_date" v-model="increaseForm.transaction_date" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
                   </div>
-                  <div v-if="localErrors.transactionDate" class="font-medium text-red-600">{{ localErrors.transactionDate }}</div>
+                  <div v-if="localErrors.transaction_date" class="font-medium text-red-600">{{ localErrors.transaction_date }}</div>
                 </div>
                 <div class="p-2 w-full">
-                  <label for="operatorName" class="leading-7 text-sm text-blue-900">実施者</label>
+                  <label for="operator_name" class="leading-7 text-sm text-blue-900">実施者</label>
                   <div>
-                    <input type="text" id="operatorName" name="operatorName" v-model="increaseForm.operatorName" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
-                    <div v-if="localErrors.operatorName" class="font-medium text-red-600">{{ localErrors.operatorName }}</div>       
+                    <input type="text" id="operator_name" name="operator_name" v-model="increaseForm.operator_name" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
+                    <div v-if="localErrors.operator_name" class="font-medium text-red-600">{{ localErrors.operator_name }}</div>       
                   </div>
                 </div>
                 <div class="flex p-2 w-full">
-                  <div class="w-1/2">
+                  <div class="w-1/3">
                     <label for="name" class="leading-7 text-sm text-blue-900">
                       現在在庫数
                     </label>
@@ -253,12 +264,25 @@ const formatDate = (timestamp) => {
                   <div class="flex items-center mx-4">
                       <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 17l5-5-5-5M6 17l5-5-5-5"/></svg>
                   </div>
-                  <div class="w-1/2">
+                  <div class="w-1/3">
                     <label for="name" class="leading-7 text-sm text-blue-900">
                       入庫後
                     </label>
                     <div id="name" name="name" class="w-full bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
                           {{ stockAfterIncrease  }}
+                    </div>
+                  </div>
+                  <div>
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="m9 20.247 6-16.5" />
+                    </svg>
+                  </div>
+                  <div class="w-1/3">
+                    <label for="name" class="leading-7 text-sm text-blue-900">
+                      通知在庫数
+                    </label>
+                    <div id="name" name="name" class="w-full bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
+                          {{ item.minimum_stock  }}
                     </div>
                   </div>
                 </div>

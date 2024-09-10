@@ -10,6 +10,7 @@ use App\Models\StockTransaction;
 use App\Http\Requests\DecreaseStockRequest;
 use App\Http\Requests\IncreaseStockRequest;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 
 class UpdateStockController extends Controller
 {
@@ -23,7 +24,7 @@ class UpdateStockController extends Controller
         try {
 
             // バリデーションルールで'min:1'
-            // 念のため、サーバーサイドでもquantitiy=0対策をする
+            // 念のため、サーバーサイドでもquantitiy=0対策をすpる
             // 在庫数より大きいquantityは出庫出来ない
             if($request->quantity <= 0 || $request->quantity > $item->stock){
                 return to_route('consumable_items')
@@ -37,25 +38,21 @@ class UpdateStockController extends Controller
             // 新しいレコードを作成
             $stockTransaction = new StockTransaction();
             $stockTransaction->item_id = $item->id;
-            $stockTransaction->transaction_type = $request->transactionType;
+            $stockTransaction->transaction_type = $request->transaction_type;
             $stockTransaction->quantity = $request->quantity;
-            $stockTransaction->operator_name = $request->operatorName;
-            $stockTransaction->transaction_date = $request->transactionDate;
+            $stockTransaction->operator_name = $request->operator_name;
+            $stockTransaction->transaction_date = $request->transaction_date;
             $stockTransaction->save();
 
             // itemsテーブルのstockカラムの値を更新
             $item->stock -= $request->quantity;
             $item->save();
 
-            
-            // 在庫数が通知在庫数以下になったときにイベントを発火
             // LowStockDetectEventのイベント発火
-            // event(new LowStockDetectEvent($item));
-            // // event(new LowStockDetectEvent('こんにちは！'));
-            if($item->stock <= $item->minimum_stock) {
+            // 通知がオンになっている、かつ、在庫数が通知在庫数を下回ったら通知を送る
+            if($item->notification && $item->stock <= $item->minimum_stock) {
                 event(new LowStockDetectEvent($item));
             }
-            
             
             DB::commit();
 
@@ -103,10 +100,10 @@ class UpdateStockController extends Controller
             // 新しいレコードを作成
             $stockTransaction = new StockTransaction();
             $stockTransaction->item_id = $item->id;
-            $stockTransaction->transaction_type = $request->transactionType;
+            $stockTransaction->transaction_type = $request->transaction_type;
             $stockTransaction->quantity = $request->quantity;
-            $stockTransaction->operator_name = $request->operatorName;
-            $stockTransaction->transaction_date = $request->transactionDate;
+            $stockTransaction->operator_name = $request->operator_name;
+            $stockTransaction->transaction_date = $request->transaction_date;
             $stockTransaction->save();
 
             // itemsテーブルのstockカラムの値を更新

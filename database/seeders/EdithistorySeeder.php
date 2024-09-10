@@ -48,7 +48,7 @@ class EdithistorySeeder extends Seeder
         DB::table('edithistories')->insert([
             [
                 'edit_mode' => 'normal', // 通常か、棚卸
-                'operation_type' => 'create', //store(新規作成),update(編集更新),stock_in(入庫・在庫追加),stock_out(出庫・在庫消費),delete(廃棄),restore(復元)
+                'operation_type' => 'store', //store(新規作成),update(編集更新),stock_in(入庫・在庫追加),stock_out(出庫・在庫消費),delete(廃棄),restore(復元)
                 'item_id' => 1,
                 'edited_field'=> null,
                 'old_value' => null,

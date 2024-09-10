@@ -11,6 +11,11 @@ const props = defineProps({
 
 onMounted(() => {
   console.log(props.isTableView)
+  // MicroModal.init({
+  //   disableScroll: true,
+  //   closeTrigger: 'data-micromodal-close',
+  //   closeOnOutsideClick: true,
+  // });
 })
 
 // itemだけでなくオブジェクトごと取ってきた方がいい
@@ -23,7 +28,7 @@ const isShow = ref(false)
 const toggleStatus = () => { isShow.value = !isShow.value}
 const editHistories = async item => {
   try {
-    await axios.get(`api/edithistory/?item_id=${item.id}`)
+    await axios.get(`api/edithistory?item_id=${item.id}`)
     .then( res => {
       console.log(res.data)
       editHistoriesData.value = res.data
@@ -45,6 +50,7 @@ const formatDate = (timestamp) => {
   return `${year}/${month}/${day} ${hours}:${minutes}`;
 }
 </script>
+
 <template>
   <div v-show="isShow" class="modal" id="modal-1" aria-hidden="true">
     <div class="modal__overlay" tabindex="-1" data-micromodal-close>
@@ -57,7 +63,7 @@ const formatDate = (timestamp) => {
         </header>
         <main class="modal__content" id="modal-1-content">
           <div class="min-w-full overflow-auto">
-            <table class="table-fixed min-w-full text-left whitespace-no-wrap">
+            <table v-if="editHistoriesData.length > 0" class="table-fixed min-w-full text-left whitespace-no-wrap">
               <thead>
                 <tr>
                   <th class="min-w-16 px-4 py-3 title-font tracking-wider font-medium text-white text-sm bg-sky-700">更新日時</th>
@@ -77,6 +83,12 @@ const formatDate = (timestamp) => {
                 </tr>
               </tbody>
             </table>
+            <div v-else>
+              <div class="flex items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+                <div class="ml-2 text-center py-4">編集履歴がありません</div>
+              </div>
+            </div>
           </div>
         </main>
         <footer class="modal__footer">

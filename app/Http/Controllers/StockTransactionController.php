@@ -23,7 +23,7 @@ class StockTransactionController extends Controller
         log::info('current_stock');
         log::info($current_stock);
 
-        // stock_transactionsを取得
+        // stock_transactionsを取得 withを使うとitemの情報すべてが取れてくる
         $stock_transactions = StockTransaction::where('item_id', $item->id)
             ->orderBy('created_at', 'desc')
             ->take(10)
@@ -33,8 +33,7 @@ class StockTransactionController extends Controller
         Log::info($stock_transactions);
 
         // $current_stockはクロージャ―の外で定義されており、&を付けることで参照渡ししている
-        // よって、値を引き継いだままループをする
-        // 1つずつズレる
+        // よって、値を引き継いだままループをする 1つずつズレる
         $stock_transactions->each(function ($transaction) use (&$current_stock) {
             // 現在のレコードの在庫数を設定
             $transaction->current_stock = $current_stock;
@@ -50,30 +49,54 @@ class StockTransactionController extends Controller
         return [
             'stockTransactions' => $stock_transactions
         ];
+    }
 
 
-        // StockTransactionを取得し、関連するItemをロード
-        // $stock_transactions = StockTransaction::with('item')
-        // ->orderBy('transaction_date', 'desc')
-        // ->take(10)
-        // ->get();
+    // 入出庫履歴と同じ日付のグラフタブ用
+    // ConsumableItemConrollerから移してきた、要改修
+    public function history($id)
+    {
+        $item = Item::findOrFail($id);
+        $item->image_path1 = asset('storage/items/' . $item->image_path1);
 
-        // // 在庫数を計算
-        // $stock_transactions->each(function ($transaction) {
-        //     $item = $transaction->item; // リレーション
-        //     $stock = $item->stock;
+        // 今日の日付
+        $endDate = Carbon::today();
+        // 1週間前の日付
+        $startDate = Carbon::today()->subWeek();
 
-        //     if ($transaction->transaction_type === '入庫') {
-        //         $stock += $transaction->quantity;
-        //     } elseif ($transaction->transaction_type === '出庫') {
-        //         $stock -= $transaction->quantity;
-        //     }
+        $subQuery = Edithistory::betweenDate($startDate, $endDate)
+        ->where('category_id', 1)
+        ->where('item_id', $id)
+        ->where('edited_field', 'stock')
+        ->select('action_type', 'old_value', 'new_value','edited_at');
 
-        //     $transaction->current_stock = $stock;
-        // });
 
-        // return [
-        //     'stockTransactions' => $stock_transactions
-        // ];
+        // 入庫と出庫の場合でそれぞれ在庫数の差を取得している
+        $data = DB::table($subQuery)
+        ->select('action_type','old_value', 'new_value',
+            DB::raw('CASE WHEN action_type = "入庫" THEN new_value - old_value ELSE 0 END as input'),
+            DB::raw('CASE WHEN action_type = "出庫" THEN old_value - new_value ELSE 0 END as output'),
+            'edited_at')
+        ->orderBy('edited_at', 'desc')
+        ->get();
+
+        // LineChart用の昇順のデータ
+        // reverse()では機能しないので、orderByで昇順に並べる
+        // 'new_value'はその時に確定した在庫数
+        $forChart = DB::table($subQuery)
+        ->select('new_value','edited_at')
+        ->orderBy('edited_at', 'Asc')
+        ->get();
+
+        $labels = $forChart->pluck('edited_at');
+        $stocks = $forChart->pluck('new_value');
+
+        // dd($data);
+
+        return Inertia::render('ConsumableItems/History', [
+            'data' => $data,
+            'labels' => $labels,
+            'stocks' => $stocks
+        ]);
     }
 }

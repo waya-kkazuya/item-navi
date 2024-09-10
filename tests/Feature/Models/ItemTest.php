@@ -25,6 +25,10 @@ class ItemTest extends TestCase
     {
         $item = Item::factory()->create();
 
+        dump($item);
+        dump($item->category_id);
+
+
         $this->assertInstanceOf(Category::class, $item->category);
     }
 

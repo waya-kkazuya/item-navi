@@ -16,16 +16,24 @@ const props = defineProps({
 })
 
 const form = useForm({
-    inspectionDate: new Date().toISOString().substr(0, 10),
-    inspectionPerson: props.userName,
+    inspection_date: new Date().toISOString().substr(0, 10),
+    inspection_person: props.userName,
     details: null,
 })
 
 
 const saveInspection = item => {
   if (confirm('本当に点検しますか？')) {
-    form.put(`/inspect_item/${item.id}`)
-    // toggleStatus()
+    form.put(`/inspect_item/${item.id}`, {
+      onSuccess: () => {
+        // 通信が成功したときの処理
+        toggleStatus();
+      },
+      onError: errors => {
+        // エラーハンドリング
+        console.error('Validation Error:', errors);
+      }
+    })
   }
 }
 
@@ -45,7 +53,7 @@ const formatDate = (timestamp) => {
 <template>
   <div v-show="isShow" class="modal" id="modal-1" aria-hidden="true">
     <div class="modal__overlay" tabindex="-1" data-micromodal-close>
-      <div class="modal__container" role="dialog" aria-modal="true" aria-labelledby="modal-1-title">
+      <div class="modal__container min-w-[600px] mx-auto" role="dialog" aria-modal="true" aria-labelledby="modal-1-title">
         <header class="modal__header">
           <h2 class="flex modal__title" id="modal-1-title">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
@@ -70,21 +78,21 @@ const formatDate = (timestamp) => {
               <div class="p-2 w-full">
                 <label for="inspectionSchedule" class="leading-7 text-sm text-blue-900">点検予定日</label>
                 <div id="inspectionSchedule" name="inspectionSchedule" class="w-1/2 min-h-[2em] bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
-                  {{ pendingInspection ? pendingInspection.scheduled_date : '予定なし' }}  
+                  {{ pendingInspection ? pendingInspection.inspection_scheduled_date : '予定なし' }}  
                 </div>
               </div>
               <div class="p-2 w-full">
-                  <label for="inspectionDate" class="leading-7 text-sm text-blue-900">点検実施日</label>
+                  <label for="inspection_date" class="leading-7 text-sm text-blue-900">点検実施日</label>
                   <div class="relative">
-                      <input type="date" id="inspectionDate" name="inspectionDate" v-model="form.inspectionDate" class="w-1/2 bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
+                      <input type="date" id="inspection_date" name="inspection_date" v-model="form.inspection_date" class="w-1/2 bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
                   </div>
-                  <div v-if="errors.inspectionDate" class="font-medium text-red-600">{{ errors.inspectionDate }}</div>
+                  <div v-if="errors.inspection_date" class="font-medium text-red-600">{{ errors.inspection_date }}</div>
               </div>
               <div class="p-2 w-full">
-                <label for="inspectionPerson" class="leading-7 text-sm text-blue-900">点検実施者</label>
+                <label for="inspection_person" class="leading-7 text-sm text-blue-900">点検実施者</label>
                 <div>
-                  <input type="text" id="inspectionPerson" name="inspectionPerson" v-model="form.inspectionPerson" class="w-1/2 bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
-                  <div v-if="errors.inspectionPerson" class="font-medium text-red-600">{{ errors.inspectionPerson }}</div>       
+                  <input type="text" id="inspection_person" name="inspection_person" v-model="form.inspection_person" class="w-1/2 bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
+                  <div v-if="errors.inspection_person" class="font-medium text-red-600">{{ errors.inspection_person }}</div>       
                 </div>
               </div>
               <div class="p-2 w-full">
@@ -98,17 +106,11 @@ const formatDate = (timestamp) => {
             <div class="p-2 w-full">
               <button class="flex mx-auto text-white bg-sky-500 border-0 py-2 px-8 focus:outline-none hover:bg-sky-600 rounded">点検を実施する</button>
             </div>
-
-            <p>Try hitting the <code>tab</code> key and notice how the focus stays within the modal itself. Also, <code>esc</code> to close modal.</p>
           </form>
         </main>
-        <!-- <footer class="modal__footer">
-          <button @click="toggleStatus" type="button" class="modal__btn modal__btn-primary">Continue</button>
-          <button @click="toggleStatus" type="button" class="modal__btn" data-micromodal-close aria-label="Close this dialog window">Close</button>
-        </footer> -->
       </div>
     </div>
   </div>
   <button @click="toggleStatus" type="button" data-micromodal-trigger="modal-1" href='javascript:;'
-  class="flex mx-auto text-white bg-sky-500 border-0 py-2 px-8 focus:outline-none hover:bg-sky-600 rounded">点検するモーダル</button>
+  class="flex mx-auto text-white bg-sky-500 border-0 py-2 px-8 focus:outline-none hover:bg-sky-600 rounded">点検する</button>
 </template>

@@ -14,11 +14,11 @@ const props = defineProps({
 const form = useForm({
     id: null,
     name: null,
-    categoryId: 0, 
-    locationOfUseId: 0,
+    category_id: 0, 
+    location_of_use_id: 0,
     requestor: null,
-    remarksFromRequestor: null,
-    requestStatusId: null, // request_statusはindex画面で変更する
+    remarks_from_requestor: null,
+    request_status_id: null, // request_statusはindex画面で変更する
     manufacturer: null,
     reference: null,
     price: 0,
@@ -70,27 +70,27 @@ const storeItemRequest = () => {
                                                     <div v-if="errors.name" class="font-medium text-red-600">{{ errors.name }}</div>
                                                 </div>
                                                 <div class="p-2 w-full">
-                                                    <label for="categoryId" class="leading-7 text-sm text-blue-900">
+                                                    <label for="category_id" class="leading-7 text-sm text-blue-900">
                                                         カテゴリ <span class="text-red-600">*</span>
                                                     </label><br>
-                                                    <select name="categoryId" id="categoryId" v-model="form.categoryId" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
+                                                    <select name="category_id" id="category_id" v-model="form.category_id" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
                                                         <option :value="0">選択してください</option>  
                                                         <option v-for="category in categories" :value="category.id" :key="category.id">{{ category.name }}</option>
                                                     </select>
-                                                    <div v-if="errors.categoryId" class="font-medium text-red-600">{{ errors.categoryId }}</div>
+                                                    <div v-if="errors.category_id" class="font-medium text-red-600">{{ errors.category_id }}</div>
                                                 </div>
                                             </div>
 
                                             <div class="p-4 border bordr-4 mb-8">
                                                 <div class="p-2 w-full">
-                                                    <label for="locationOfUseId" class="leading-7 text-sm text-blue-900">
+                                                    <label for="location_of_use_id" class="leading-7 text-sm text-blue-900">
                                                         利用場所 <span class="text-red-600">*</span>
                                                     </label>
-                                                    <select name="locationOfUseId" id="locationOfUseId" v-model="form.locationOfUseId" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
+                                                    <select name="location_of_use_id" id="location_of_use_id" v-model="form.location_of_use_id" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
                                                         <option :value="0">選択してください</option>
                                                         <option v-for="location in locations" :key="location.id" :value="location.id">{{ location.name }}</option>
                                                     </select>
-                                                    <div v-if="errors.locationOfUseId" class="font-medium text-red-600">{{ errors.locationOfUseId }}</div>
+                                                    <div v-if="errors.location_of_use_id" class="font-medium text-red-600">{{ errors.location_of_use_id }}</div>
                                                 </div>
                                             </div>
 
@@ -131,11 +131,11 @@ const storeItemRequest = () => {
                                                 </div>
                                             
                                                 <div class="p-2 w-full">
-                                                    <label for="remarksFromRequestor" class="leading-7 text-sm text-blue-900">
+                                                    <label for="remarks_from_requestor" class="leading-7 text-sm text-blue-900">
                                                         申請理由 <span class="text-red-600">*</span>
                                                     </label>
-                                                    <textarea id="remarksFromRequestor" name="remarksFromRequestor" maxlength="500" v-model="form.remarksFromRequestor" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 h-32 text-base outline-none text-gray-700 py-1 px-3 resize-none leading-6 transition-colors duration-200 ease-in-out"></textarea>
-                                                    <div v-if="errors.remarksFromRequestor" class="font-medium text-red-600">{{ errors.remarksFromRequestor }}</div>
+                                                    <textarea id="remarks_from_requestor" name="remarks_from_requestor" maxlength="500" v-model="form.remarks_from_requestor" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 h-32 text-base outline-none text-gray-700 py-1 px-3 resize-none leading-6 transition-colors duration-200 ease-in-out"></textarea>
+                                                    <div v-if="errors.remarks_from_requestor" class="font-medium text-red-600">{{ errors.remarks_from_requestor }}</div>
                                                 </div>
                                             </div>
 

@@ -21,10 +21,9 @@ class InspectionController extends Controller
             // 処理１、Inspectionテーブルのstatusがfalseの登録日が一番古い日付のレコードを取得
             $inspection = Inspection::where('item_id', $item->id)
                 ->where('status', false)
-                ->orderBy('scheduled_date', 'asc')
+                ->orderBy('inspection_scheduled_date', 'asc')
                 ->first();
 
-            // dd($inspection);
             // 仕様上は1件しかないはず
             // 処理２，予定日を保存していない場合はレコードが返らずnullとなるので新規作成
             if (is_null($inspection)) {
@@ -36,8 +35,8 @@ class InspectionController extends Controller
 
             // 処理３，Inspectionテーブルのレコードに値を保存
             // $inspection->scheduled_date = null; // 廃棄の時のようにレコードを使いまわさず、記録として残す
-            $inspection->inspection_date = $request->inspectionDate;
-            $inspection->inspection_person = $request->inspectionPerson;
+            $inspection->inspection_date = $request->inspection_date;
+            $inspection->inspection_person = $request->inspection_person;
             $inspection->details = $request->details;
             $inspection->status = true; // 点検実行済みとしてstatusを変更->これでshow画面に表示されないか
             $inspection->save();
@@ -56,6 +55,7 @@ class InspectionController extends Controller
                 'message' => '点検を実施しました。',
                 'status' => 'success'
             ]);
+            
         } catch (\Exception $e) {
             DB::rollBack();
 

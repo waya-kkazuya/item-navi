@@ -13,74 +13,13 @@ class ItemObserver
     // storeメソッドのItem::createの呼び出しが行われる前に保存される
     // public function creating(Item $item)
     // {
-    //     // $item->management_id = $this->generateManagementId($item->category_id);
+    //     
     // }
-
-<<<<<<< Updated upstream
-    private function generateManagementId($category_id)
-    {
-        // dd('テスト用デバッグ', $category_id);
-
-        $prefix = '';
-=======
-    // private function generateManagementId($category_id)
-    // {
-    //     // dd('テスト用デバッグ', $category_id);
-
-    //     $prefix = '';
->>>>>>> Stashed changes
-
-    //     switch ($category_id) {
-    //         case 1: // 消耗品
-    //             $prefix = 'CO';
-    //             break;
-    //         case 2 : // IT機器
-    //             $prefix = 'IT';
-    //             break;
-    //         case 3: // ソフトウェアアカウント
-    //             $prefix = 'SA';
-    //             break;
-    //         case 4: // 電化製品
-    //             $prefix = 'EA';
-    //             break;
-    //         case 5: // 防災用品
-    //             $prefix = 'DP';
-    //             break;
-    //         case 6: // オフィス用品
-    //             $prefix = 'OS';
-    //             break;
-    //         case 7: // オフィス家具
-    //             $prefix = 'OF';
-    //             break;
-    //         case 8: // 作業道具
-    //             $prefix = 'TO';
-    //             break;
-    //         case 9: // 清掃用具
-    //             $prefix = 'CL';
-    //             break;
-    //         case 10: // その他
-    //             $prefix = 'OT';
-    //             break;
-    //         default:
-    //             // カテゴリが無効な場合に例外をスロー
-    //             throw ValidationException::withMessages(['category_id' => 'カテゴリが不正です']);
-    //     }
-
-    //     do {
-    //         $randomNumber = str_pad(rand(0, 9999), 4, '0', STR_PAD_LEFT);
-    //         $managementId = $prefix . '-' . $randomNumber;
-    //     } while (Item::where('management_id', $managementId)->exists());
-
-    //     return $managementId;
-    // }
-
 
     public function created(Item $item): void
     {
         // 注意
         //createdはseederやfactoryでダミーデータを作成した時も動く
-        
-
 
         // 新規作成時はitem_idとedit_user,edited_atがあればいいのでは。
         // category_idはitemにあるし、category_id(カテゴリ)も変化する可能性がある
@@ -101,22 +40,19 @@ class ItemObserver
         $changes = $item->getChanges();
 
         unset($changes['updated_at']);
-        // ソフとデリートを除外する必要あるか->なさそう
         // unset($changes['softdeletes']);
 
 
         // セッションから編集理由を取得
-        $editReasonId = Session::get('editReasonId');
-        $editReasonText = Session::get('editReasonText');
+        $edit_reeason_id = Session::get('edit_reeason_id');
+        $edit_reason_text = Session::get('edit_reason_text');
 
-        // dd($editReasonId, $editReasonText);
+        // dd($edit_reeason_id, $edit_reason_text);
 
         // 仮置き
         $edit_mode = 'normal';
 
-        // Edithistoryにedit_reasonカラムを追加
         // 備品編集updateを行った際、セッションに編集理由を保存
-        // ここで取り出し、Edithistoryに保存
         // □UpdateItemRequestのリクエストファイルにバージョンルールを記載する
 
         foreach ($changes as $field => $newValue) {
@@ -130,12 +66,12 @@ class ItemObserver
                 'old_value' => $oldValue,
                 'new_value' => $newValue,
                 'edit_user' => Auth::user()->name ?? '',
-                'edit_reason_id' => $editReasonId, //プルダウン
-                'edit_reason_text' => $editReasonText, //その他テキストエリア
+                'edit_reason_id' => $edit_reeason_id, //プルダウン
+                'edit_reason_text' => $edit_reason_text, //その他テキストエリア
             ]);
         }
 
-                // ココの部分は通常時の分だけでも作ってしまった方が良い
+        // ココの部分は通常時の分だけでも作ってしまった方が良い
         // 棚卸時のURLを作成したら、Request::url()で$edit_typeを分ける
         // $url = Request::url();
         // if (strpos($url, 'normal-edit-url') !== false) {
@@ -143,8 +79,6 @@ class ItemObserver
         // } elseif (strpos($url, 'inventory-edit-url') !== false) {
         //     $model->edithistory()->create(['edit_type' => '棚卸時']);
         // }
-
-
     }
 
 
@@ -156,7 +90,7 @@ class ItemObserver
         // ソフトデリート
         Edithistory::create([
             'edit_mode' => 'normal' ,
-            'operation_type' => 'delete',
+            'operation_type' => 'soft_delete',
             'item_id' => $item->id,
             'edited_field' => null,
             'old_value' => null,

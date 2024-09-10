@@ -168,6 +168,9 @@ return [
         ],
         'terms' => [
             'required' => '登録には規約への同意が必須となります。',
+        ],  
+        'date_of_acquisition' => [
+            'before_or_equal' => '取得年月日には、今日以前の日付をご利用ください。',
         ],
     ],
 
@@ -256,7 +259,7 @@ return [
         'username' => 'ユーザー名',
         'year' => '年',
         'category' => 'カテゴリ',
-        'stocks' => '在庫数',
+        'stock' => '在庫数',
         'usage_status' => '利用状況',
         'storage_location' => '保管場所',
         'acquisition_category' => '取得区分',
@@ -270,6 +273,22 @@ return [
         'location_of_use' => '設置場所',
         'manufacturer' => 'メーカー',
         'end_user' => '使用者',
+        'category_id' => 'カテゴリ',
+        'usage_status_id' => '利用状況',
+        'location_of_use_id' => '利用場所',
+        'storage_location_id' => '保管場所',
+        'acquisition_method_id' => '取得区分',
+        'acquisition_source' => '取得先',
+        'minimum_stock' => '通知在庫数',
+        'unit_id' => '単位',
+        'today' => '今日',
+        'disposal_date' => '廃棄実施日',
+        'disposal_person' => '廃棄実施者',
+        'details' => '詳細情報',
+        'inspection_date' => '点検実施日',
+        'inspection_person' => '点検実施者',
+        'transaction_date' => '入出庫日',
+        'operator_name' => '実施者',
+        'quantity' => '数量',
     ],
-
 ];

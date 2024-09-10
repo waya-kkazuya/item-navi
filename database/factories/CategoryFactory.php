@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\Category;
 use FontLib\Table\Type\name;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -15,6 +16,9 @@ class CategoryFactory extends Factory
      *
      * @return array<string, mixed>
      */
+
+    protected $model = Category::class;
+
     public function definition(): array
     {
         $categories = ['消耗品', 'IT機器', 'ソフトウェアアカウント', '電化製品', '防災用品', 'オフィス用品',

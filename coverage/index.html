@@ -1,956 +1,426 @@
-
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
+ <head>
+  <meta charset="UTF-8">
+  <title>Code Coverage for C:\xampp\htdocs\laravel\EMS\app</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="_css/bootstrap.min.css?v=10.1.15" rel="stylesheet" type="text/css">
+  <link href="_css/octicons.css?v=10.1.15" rel="stylesheet" type="text/css">
+  <link href="_css/style.css?v=10.1.15" rel="stylesheet" type="text/css">
+  <link href="_css/custom.css" rel="stylesheet" type="text/css">
+ </head>
+ <body>
+  <header>
+   <div class="container-fluid">
+    <div class="row">
+     <div class="col-md-12">
+      <nav aria-label="breadcrumb">
+       <ol class="breadcrumb">
+         <li class="breadcrumb-item active">C:\xampp\htdocs\laravel\EMS\app</li>
+         <li class="breadcrumb-item">(<a href="dashboard.html">Dashboard</a>)</li>
 
-<head>
-    <title>Code coverage report for All files</title>
-    <meta charset="utf-8" />
-    <link rel="stylesheet" href="prettify.css" />
-    <link rel="stylesheet" href="base.css" />
-    <link rel="shortcut icon" type="image/x-icon" href="favicon.png" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <style type='text/css'>
-        .coverage-summary .sorter {
-            background-image: url(sort-arrow-sprite.png);
-        }
-    </style>
-</head>
-    
-<body>
-<div class='wrapper'>
-    <div class='pad1'>
-        <h1>All files</h1>
-        <div class='clearfix'>
-            
-            <div class='fl pad1y space-right2'>
-                <span class="strong">0.01% </span>
-                <span class="quiet">Statements</span>
-                <span class='fraction'>7/45939</span>
-            </div>
-        
-            
-            <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
-                <span class="quiet">Branches</span>
-                <span class='fraction'>0/46954</span>
-            </div>
-        
-            
-            <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
-                <span class="quiet">Functions</span>
-                <span class='fraction'>1/13604</span>
-            </div>
-        
-            
-            <div class='fl pad1y space-right2'>
-                <span class="strong">0.15% </span>
-                <span class="quiet">Lines</span>
-                <span class='fraction'>7/4506</span>
-            </div>
-        
-            
-        </div>
-        <p class="quiet">
-            Press <em>n</em> or <em>j</em> to go to the next uncovered block, <em>b</em>, <em>p</em> or <em>k</em> for the previous block.
-        </p>
-        <template id="filterTemplate">
-            <div class="quiet">
-                Filter:
-                <input type="search" id="fileSearch">
-            </div>
-        </template>
+       </ol>
+      </nav>
+     </div>
     </div>
-    <div class='status-line low'></div>
-    <div class="pad1">
-<table class="coverage-summary">
-<thead>
-<tr>
-   <th data-col="file" data-fmt="html" data-html="true" class="file">File</th>
-   <th data-col="pic" data-type="number" data-fmt="html" data-html="true" class="pic"></th>
-   <th data-col="statements" data-type="number" data-fmt="pct" class="pct">Statements</th>
-   <th data-col="statements_raw" data-type="number" data-fmt="html" class="abs"></th>
-   <th data-col="branches" data-type="number" data-fmt="pct" class="pct">Branches</th>
-   <th data-col="branches_raw" data-type="number" data-fmt="html" class="abs"></th>
-   <th data-col="functions" data-type="number" data-fmt="pct" class="pct">Functions</th>
-   <th data-col="functions_raw" data-type="number" data-fmt="html" class="abs"></th>
-   <th data-col="lines" data-type="number" data-fmt="pct" class="pct">Lines</th>
-   <th data-col="lines_raw" data-type="number" data-fmt="html" class="abs"></th>
-</tr>
-</thead>
-<tbody><tr>
-	<td class="file empty" data-value="EMS"><a href="EMS/index.html">EMS</a></td>
-	<td data-value="0" class="pic empty">
-	<div class="chart"><div class="cover-fill" style="width: 0%"></div><div class="cover-empty" style="width: 100%"></div></div>
-	</td>
-	<td data-value="0" class="pct empty">0%</td>
-	<td data-value="0" class="abs empty">0/0</td>
-	<td data-value="0" class="pct empty">0%</td>
-	<td data-value="0" class="abs empty">0/0</td>
-	<td data-value="0" class="pct empty">0%</td>
-	<td data-value="0" class="abs empty">0/0</td>
-	<td data-value="0" class="pct empty">0%</td>
-	<td data-value="0" class="abs empty">0/0</td>
-	</tr>
+   </div>
+  </header>
+  <div class="container-fluid">
+   <div class="table-responsive">
+    <table class="table table-bordered">
+     <thead>
+      <tr>
+       <td>&nbsp;</td>
+       <td colspan="9"><div align="center"><strong>Code Coverage</strong></div></td>
+      </tr>
+      <tr>
+       <td>&nbsp;</td>
+       <td colspan="3"><div align="center"><strong>Lines</strong></div></td>
+       <td colspan="3"><div align="center"><strong>Functions and Methods</strong></div></td>
+       <td colspan="3"><div align="center"><strong>Classes and Traits</strong></div></td>
+      </tr>
+     </thead>
+     <tbody>
+      <tr>
+       <td class="warning">Total</td>
+       <td class="warning big">       <div class="progress">
+         <div class="progress-bar bg-warning" role="progressbar" aria-valuenow="52.10" aria-valuemin="0" aria-valuemax="100" style="width: 52.10%">
+           <span class="sr-only">52.10% covered (warning)</span>
+         </div>
+       </div>
+</td>
+       <td class="warning small"><div align="right">52.10%</div></td>
+       <td class="warning small"><div align="right">807&nbsp;/&nbsp;1549</div></td>
+       <td class="danger big">       <div class="progress">
+         <div class="progress-bar bg-danger" role="progressbar" aria-valuenow="30.45" aria-valuemin="0" aria-valuemax="100" style="width: 30.45%">
+           <span class="sr-only">30.45% covered (danger)</span>
+         </div>
+       </div>
+</td>
+       <td class="danger small"><div align="right">30.45%</div></td>
+       <td class="danger small"><div align="right">67&nbsp;/&nbsp;220</div></td>
+       <td class="danger big">       <div class="progress">
+         <div class="progress-bar bg-danger" role="progressbar" aria-valuenow="21.84" aria-valuemin="0" aria-valuemax="100" style="width: 21.84%">
+           <span class="sr-only">21.84% covered (danger)</span>
+         </div>
+       </div>
+</td>
+       <td class="danger small"><div align="right">21.84%</div></td>
+       <td class="danger small"><div align="right">19&nbsp;/&nbsp;87</div></td>
+      </tr>
 
-<tr>
-	<td class="file low" data-value="EMS/coverage"><a href="EMS/coverage/index.html">EMS/coverage</a></td>
-	<td data-value="0" class="pic low">
-	<div class="chart"><div class="cover-fill" style="width: 0%"></div><div class="cover-empty" style="width: 100%"></div></div>
-	</td>
-	<td data-value="0" class="pct low">0%</td>
-	<td data-value="656" class="abs low">0/656</td>
-	<td data-value="0" class="pct low">0%</td>
-	<td data-value="329" class="abs low">0/329</td>
-	<td data-value="0" class="pct low">0%</td>
-	<td data-value="54" class="abs low">0/54</td>
-	<td data-value="0" class="pct low">0%</td>
-	<td data-value="120" class="abs low">0/120</td>
-	</tr>
+      <tr>
+       <td class="danger"><img src="_icons/file-directory.svg" class="octicon" /><a href="Console/index.html">Console</a></td>
+       <td class="danger big">       <div class="progress">
+         <div class="progress-bar bg-danger" role="progressbar" aria-valuenow="6.67" aria-valuemin="0" aria-valuemax="100" style="width: 6.67%">
+           <span class="sr-only">6.67% covered (danger)</span>
+         </div>
+       </div>
+</td>
+       <td class="danger small"><div align="right">6.67%</div></td>
+       <td class="danger small"><div align="right">2&nbsp;/&nbsp;30</div></td>
+       <td class="danger big">       <div class="progress">
+         <div class="progress-bar bg-danger" role="progressbar" aria-valuenow="25.00" aria-valuemin="0" aria-valuemax="100" style="width: 25.00%">
+           <span class="sr-only">25.00% covered (danger)</span>
+         </div>
+       </div>
+</td>
+       <td class="danger small"><div align="right">25.00%</div></td>
+       <td class="danger small"><div align="right">1&nbsp;/&nbsp;4</div></td>
+       <td class="danger big">       <div class="progress">
+         <div class="progress-bar bg-danger" role="progressbar" aria-valuenow="0.00" aria-valuemin="0" aria-valuemax="100" style="width: 0.00%">
+           <span class="sr-only">0.00% covered (danger)</span>
+         </div>
+       </div>
+</td>
+       <td class="danger small"><div align="right">0.00%</div></td>
+       <td class="danger small"><div align="right">0&nbsp;/&nbsp;1</div></td>
+      </tr>
 
-<tr>
-	<td class="file low" data-value="EMS/public/build/assets"><a href="EMS/public/build/assets/index.html">EMS/public/build/assets</a></td>
-	<td data-value="0" class="pic low">
-	<div class="chart"><div class="cover-fill" style="width: 0%"></div><div class="cover-empty" style="width: 100%"></div></div>
-	</td>
-	<td data-value="0" class="pct low">0%</td>
-	<td data-value="6119" class="abs low">0/6119</td>
-	<td data-value="0" class="pct low">0%</td>
-	<td data-value="7236" class="abs low">0/7236</td>
-	<td data-value="0" class="pct low">0%</td>
-	<td data-value="1701" class="abs low">0/1701</td>
-	<td data-value="0" class="pct low">0%</td>
-	<td data-value="34" class="abs low">0/34</td>
-	</tr>
+      <tr>
+       <td class="danger"><img src="_icons/file-directory.svg" class="octicon" /><a href="Events/index.html">Events</a></td>
+       <td class="danger big">       <div class="progress">
+         <div class="progress-bar bg-danger" role="progressbar" aria-valuenow="12.50" aria-valuemin="0" aria-valuemax="100" style="width: 12.50%">
+           <span class="sr-only">12.50% covered (danger)</span>
+         </div>
+       </div>
+</td>
+       <td class="danger small"><div align="right">12.50%</div></td>
+       <td class="danger small"><div align="right">1&nbsp;/&nbsp;8</div></td>
+       <td class="danger big">       <div class="progress">
+         <div class="progress-bar bg-danger" role="progressbar" aria-valuenow="25.00" aria-valuemin="0" aria-valuemax="100" style="width: 25.00%">
+           <span class="sr-only">25.00% covered (danger)</span>
+         </div>
+       </div>
+</td>
+       <td class="danger small"><div align="right">25.00%</div></td>
+       <td class="danger small"><div align="right">1&nbsp;/&nbsp;4</div></td>
+       <td class="danger big">       <div class="progress">
+         <div class="progress-bar bg-danger" role="progressbar" aria-valuenow="0.00" aria-valuemin="0" aria-valuemax="100" style="width: 0.00%">
+           <span class="sr-only">0.00% covered (danger)</span>
+         </div>
+       </div>
+</td>
+       <td class="danger small"><div align="right">0.00%</div></td>
+       <td class="danger small"><div align="right">0&nbsp;/&nbsp;2</div></td>
+      </tr>
 
-<tr>
-	<td class="file low" data-value="EMS/resources/js"><a href="EMS/resources/js/index.html">EMS/resources/js</a></td>
-	<td data-value="0" class="pic low">
-	<div class="chart"><div class="cover-fill" style="width: 0%"></div><div class="cover-empty" style="width: 100%"></div></div>
-	</td>
-	<td data-value="0" class="pct low">0%</td>
-	<td data-value="14" class="abs low">0/14</td>
-	<td data-value="0" class="pct low">0%</td>
-	<td data-value="2" class="abs low">0/2</td>
-	<td data-value="0" class="pct low">0%</td>
-	<td data-value="5" class="abs low">0/5</td>
-	<td data-value="0" class="pct low">0%</td>
-	<td data-value="13" class="abs low">0/13</td>
-	</tr>
+      <tr>
+       <td class="success"><img src="_icons/file-directory.svg" class="octicon" /><a href="Exceptions/index.html">Exceptions</a></td>
+       <td class="success big">       <div class="progress">
+         <div class="progress-bar bg-success" role="progressbar" aria-valuenow="100.00" aria-valuemin="0" aria-valuemax="100" style="width: 100.00%">
+           <span class="sr-only">100.00% covered (success)</span>
+         </div>
+       </div>
+</td>
+       <td class="success small"><div align="right">100.00%</div></td>
+       <td class="success small"><div align="right">2&nbsp;/&nbsp;2</div></td>
+       <td class="success big">       <div class="progress">
+         <div class="progress-bar bg-success" role="progressbar" aria-valuenow="100.00" aria-valuemin="0" aria-valuemax="100" style="width: 100.00%">
+           <span class="sr-only">100.00% covered (success)</span>
+         </div>
+       </div>
+</td>
+       <td class="success small"><div align="right">100.00%</div></td>
+       <td class="success small"><div align="right">1&nbsp;/&nbsp;1</div></td>
+       <td class="success big">       <div class="progress">
+         <div class="progress-bar bg-success" role="progressbar" aria-valuenow="100.00" aria-valuemin="0" aria-valuemax="100" style="width: 100.00%">
+           <span class="sr-only">100.00% covered (success)</span>
+         </div>
+       </div>
+</td>
+       <td class="success small"><div align="right">100.00%</div></td>
+       <td class="success small"><div align="right">1&nbsp;/&nbsp;1</div></td>
+      </tr>
 
-<tr>
-	<td class="file low" data-value="EMS/resources/js/Components"><a href="EMS/resources/js/Components/index.html">EMS/resources/js/Components</a></td>
-	<td data-value="3.53" class="pic low">
-	<div class="chart"><div class="cover-fill" style="width: 3%"></div><div class="cover-empty" style="width: 97%"></div></div>
-	</td>
-	<td data-value="3.53" class="pct low">3.53%</td>
-	<td data-value="198" class="abs low">7/198</td>
-	<td data-value="0" class="pct low">0%</td>
-	<td data-value="32" class="abs low">0/32</td>
-	<td data-value="2.5" class="pct low">2.5%</td>
-	<td data-value="40" class="abs low">1/40</td>
-	<td data-value="3.53" class="pct low">3.53%</td>
-	<td data-value="198" class="abs low">7/198</td>
-	</tr>
+      <tr>
+       <td class="warning"><img src="_icons/file-directory.svg" class="octicon" /><a href="Http/index.html">Http</a></td>
+       <td class="warning big">       <div class="progress">
+         <div class="progress-bar bg-warning" role="progressbar" aria-valuenow="55.11" aria-valuemin="0" aria-valuemax="100" style="width: 55.11%">
+           <span class="sr-only">55.11% covered (warning)</span>
+         </div>
+       </div>
+</td>
+       <td class="warning small"><div align="right">55.11%</div></td>
+       <td class="warning small"><div align="right">653&nbsp;/&nbsp;1185</div></td>
+       <td class="danger big">       <div class="progress">
+         <div class="progress-bar bg-danger" role="progressbar" aria-valuenow="33.03" aria-valuemin="0" aria-valuemax="100" style="width: 33.03%">
+           <span class="sr-only">33.03% covered (danger)</span>
+         </div>
+       </div>
+</td>
+       <td class="danger small"><div align="right">33.03%</div></td>
+       <td class="danger small"><div align="right">36&nbsp;/&nbsp;109</div></td>
+       <td class="danger big">       <div class="progress">
+         <div class="progress-bar bg-danger" role="progressbar" aria-valuenow="27.08" aria-valuemin="0" aria-valuemax="100" style="width: 27.08%">
+           <span class="sr-only">27.08% covered (danger)</span>
+         </div>
+       </div>
+</td>
+       <td class="danger small"><div align="right">27.08%</div></td>
+       <td class="danger small"><div align="right">13&nbsp;/&nbsp;48</div></td>
+      </tr>
 
-<tr>
-	<td class="file low" data-value="EMS/resources/js/Layouts"><a href="EMS/resources/js/Layouts/index.html">EMS/resources/js/Layouts</a></td>
-	<td data-value="0" class="pic low">
-	<div class="chart"><div class="cover-fill" style="width: 0%"></div><div class="cover-empty" style="width: 100%"></div></div>
-	</td>
-	<td data-value="0" class="pct low">0%</td>
-	<td data-value="102" class="abs low">0/102</td>
-	<td data-value="0" class="pct low">0%</td>
-	<td data-value="12" class="abs low">0/12</td>
-	<td data-value="0" class="pct low">0%</td>
-	<td data-value="34" class="abs low">0/34</td>
-	<td data-value="0" class="pct low">0%</td>
-	<td data-value="102" class="abs low">0/102</td>
-	</tr>
+      <tr>
+       <td class="danger"><img src="_icons/file-directory.svg" class="octicon" /><a href="Listeners/index.html">Listeners</a></td>
+       <td class="danger big">       <div class="progress">
+         <div class="progress-bar bg-danger" role="progressbar" aria-valuenow="50.00" aria-valuemin="0" aria-valuemax="100" style="width: 50.00%">
+           <span class="sr-only">50.00% covered (danger)</span>
+         </div>
+       </div>
+</td>
+       <td class="danger small"><div align="right">50.00%</div></td>
+       <td class="danger small"><div align="right">4&nbsp;/&nbsp;8</div></td>
+       <td class="danger big">       <div class="progress">
+         <div class="progress-bar bg-danger" role="progressbar" aria-valuenow="50.00" aria-valuemin="0" aria-valuemax="100" style="width: 50.00%">
+           <span class="sr-only">50.00% covered (danger)</span>
+         </div>
+       </div>
+</td>
+       <td class="danger small"><div align="right">50.00%</div></td>
+       <td class="danger small"><div align="right">2&nbsp;/&nbsp;4</div></td>
+       <td class="danger big">       <div class="progress">
+         <div class="progress-bar bg-danger" role="progressbar" aria-valuenow="50.00" aria-valuemin="0" aria-valuemax="100" style="width: 50.00%">
+           <span class="sr-only">50.00% covered (danger)</span>
+         </div>
+       </div>
+</td>
+       <td class="danger small"><div align="right">50.00%</div></td>
+       <td class="danger small"><div align="right">1&nbsp;/&nbsp;2</div></td>
+      </tr>
 
-<tr>
-	<td class="file low" data-value="EMS/resources/js/Pages"><a href="EMS/resources/js/Pages/index.html">EMS/resources/js/Pages</a></td>
-	<td data-value="0" class="pic low">
-	<div class="chart"><div class="cover-fill" style="width: 0%"></div><div class="cover-empty" style="width: 100%"></div></div>
-	</td>
-	<td data-value="0" class="pct low">0%</td>
-	<td data-value="67" class="abs low">0/67</td>
-	<td data-value="0" class="pct low">0%</td>
-	<td data-value="16" class="abs low">0/16</td>
-	<td data-value="0" class="pct low">0%</td>
-	<td data-value="17" class="abs low">0/17</td>
-	<td data-value="0" class="pct low">0%</td>
-	<td data-value="67" class="abs low">0/67</td>
-	</tr>
+      <tr>
+       <td class="danger"><img src="_icons/file-directory.svg" class="octicon" /><a href="Models/index.html">Models</a></td>
+       <td class="danger big">       <div class="progress">
+         <div class="progress-bar bg-danger" role="progressbar" aria-valuenow="25.00" aria-valuemin="0" aria-valuemax="100" style="width: 25.00%">
+           <span class="sr-only">25.00% covered (danger)</span>
+         </div>
+       </div>
+</td>
+       <td class="danger small"><div align="right">25.00%</div></td>
+       <td class="danger small"><div align="right">11&nbsp;/&nbsp;44</div></td>
+       <td class="danger big">       <div class="progress">
+         <div class="progress-bar bg-danger" role="progressbar" aria-valuenow="31.25" aria-valuemin="0" aria-valuemax="100" style="width: 31.25%">
+           <span class="sr-only">31.25% covered (danger)</span>
+         </div>
+       </div>
+</td>
+       <td class="danger small"><div align="right">31.25%</div></td>
+       <td class="danger small"><div align="right">10&nbsp;/&nbsp;32</div></td>
+       <td class="danger big">       <div class="progress">
+         <div class="progress-bar bg-danger" role="progressbar" aria-valuenow="0.00" aria-valuemin="0" aria-valuemax="100" style="width: 0.00%">
+           <span class="sr-only">0.00% covered (danger)</span>
+         </div>
+       </div>
+</td>
+       <td class="danger small"><div align="right">0.00%</div></td>
+       <td class="danger small"><div align="right">0&nbsp;/&nbsp;14</div></td>
+      </tr>
 
-<tr>
-	<td class="file low" data-value="EMS/resources/js/Pages/Auth"><a href="EMS/resources/js/Pages/Auth/index.html">EMS/resources/js/Pages/Auth</a></td>
-	<td data-value="0" class="pic low">
-	<div class="chart"><div class="cover-fill" style="width: 0%"></div><div class="cover-empty" style="width: 100%"></div></div>
-	</td>
-	<td data-value="0" class="pct low">0%</td>
-	<td data-value="96" class="abs low">0/96</td>
-	<td data-value="0" class="pct low">0%</td>
-	<td data-value="32" class="abs low">0/32</td>
-	<td data-value="0" class="pct low">0%</td>
-	<td data-value="33" class="abs low">0/33</td>
-	<td data-value="0" class="pct low">0%</td>
-	<td data-value="96" class="abs low">0/96</td>
-	</tr>
+      <tr>
+       <td class="danger"><img src="_icons/file-directory.svg" class="octicon" /><a href="Notifications/index.html">Notifications</a></td>
+       <td class="danger big">       <div class="progress">
+         <div class="progress-bar bg-danger" role="progressbar" aria-valuenow="15.56" aria-valuemin="0" aria-valuemax="100" style="width: 15.56%">
+           <span class="sr-only">15.56% covered (danger)</span>
+         </div>
+       </div>
+</td>
+       <td class="danger small"><div align="right">15.56%</div></td>
+       <td class="danger small"><div align="right">7&nbsp;/&nbsp;45</div></td>
+       <td class="danger big">       <div class="progress">
+         <div class="progress-bar bg-danger" role="progressbar" aria-valuenow="18.75" aria-valuemin="0" aria-valuemax="100" style="width: 18.75%">
+           <span class="sr-only">18.75% covered (danger)</span>
+         </div>
+       </div>
+</td>
+       <td class="danger small"><div align="right">18.75%</div></td>
+       <td class="danger small"><div align="right">3&nbsp;/&nbsp;16</div></td>
+       <td class="danger big">       <div class="progress">
+         <div class="progress-bar bg-danger" role="progressbar" aria-valuenow="0.00" aria-valuemin="0" aria-valuemax="100" style="width: 0.00%">
+           <span class="sr-only">0.00% covered (danger)</span>
+         </div>
+       </div>
+</td>
+       <td class="danger small"><div align="right">0.00%</div></td>
+       <td class="danger small"><div align="right">0&nbsp;/&nbsp;4</div></td>
+      </tr>
 
-<tr>
-	<td class="file low" data-value="EMS/resources/js/Pages/ConsumableItems"><a href="EMS/resources/js/Pages/ConsumableItems/index.html">EMS/resources/js/Pages/ConsumableItems</a></td>
-	<td data-value="0" class="pic low">
-	<div class="chart"><div class="cover-fill" style="width: 0%"></div><div class="cover-empty" style="width: 100%"></div></div>
-	</td>
-	<td data-value="0" class="pct low">0%</td>
-	<td data-value="99" class="abs low">0/99</td>
-	<td data-value="0" class="pct low">0%</td>
-	<td data-value="26" class="abs low">0/26</td>
-	<td data-value="0" class="pct low">0%</td>
-	<td data-value="21" class="abs low">0/21</td>
-	<td data-value="0" class="pct low">0%</td>
-	<td data-value="99" class="abs low">0/99</td>
-	</tr>
+      <tr>
+       <td class="danger"><img src="_icons/file-directory.svg" class="octicon" /><a href="Observers/index.html">Observers</a></td>
+       <td class="danger big">       <div class="progress">
+         <div class="progress-bar bg-danger" role="progressbar" aria-valuenow="49.38" aria-valuemin="0" aria-valuemax="100" style="width: 49.38%">
+           <span class="sr-only">49.38% covered (danger)</span>
+         </div>
+       </div>
+</td>
+       <td class="danger small"><div align="right">49.38%</div></td>
+       <td class="danger small"><div align="right">40&nbsp;/&nbsp;81</div></td>
+       <td class="danger big">       <div class="progress">
+         <div class="progress-bar bg-danger" role="progressbar" aria-valuenow="33.33" aria-valuemin="0" aria-valuemax="100" style="width: 33.33%">
+           <span class="sr-only">33.33% covered (danger)</span>
+         </div>
+       </div>
+</td>
+       <td class="danger small"><div align="right">33.33%</div></td>
+       <td class="danger small"><div align="right">5&nbsp;/&nbsp;15</div></td>
+       <td class="danger big">       <div class="progress">
+         <div class="progress-bar bg-danger" role="progressbar" aria-valuenow="0.00" aria-valuemin="0" aria-valuemax="100" style="width: 0.00%">
+           <span class="sr-only">0.00% covered (danger)</span>
+         </div>
+       </div>
+</td>
+       <td class="danger small"><div align="right">0.00%</div></td>
+       <td class="danger small"><div align="right">0&nbsp;/&nbsp;3</div></td>
+      </tr>
 
-<tr>
-	<td class="file low" data-value="EMS/resources/js/Pages/ImageTests"><a href="EMS/resources/js/Pages/ImageTests/index.html">EMS/resources/js/Pages/ImageTests</a></td>
-	<td data-value="0" class="pic low">
-	<div class="chart"><div class="cover-fill" style="width: 0%"></div><div class="cover-empty" style="width: 100%"></div></div>
-	</td>
-	<td data-value="0" class="pct low">0%</td>
-	<td data-value="106" class="abs low">0/106</td>
-	<td data-value="0" class="pct low">0%</td>
-	<td data-value="22" class="abs low">0/22</td>
-	<td data-value="0" class="pct low">0%</td>
-	<td data-value="22" class="abs low">0/22</td>
-	<td data-value="0" class="pct low">0%</td>
-	<td data-value="106" class="abs low">0/106</td>
-	</tr>
+      <tr>
+       <td class="danger"><img src="_icons/file-directory.svg" class="octicon" /><a href="Policies/index.html">Policies</a></td>
+       <td class="danger big">       <div class="progress">
+         <div class="progress-bar bg-danger" role="progressbar" aria-valuenow="0.00" aria-valuemin="0" aria-valuemax="100" style="width: 0.00%">
+           <span class="sr-only">0.00% covered (danger)</span>
+         </div>
+       </div>
+</td>
+       <td class="danger small"><div align="right">0.00%</div></td>
+       <td class="danger small"><div align="right">0&nbsp;/&nbsp;21</div></td>
+       <td class="danger big">       <div class="progress">
+         <div class="progress-bar bg-danger" role="progressbar" aria-valuenow="0.00" aria-valuemin="0" aria-valuemax="100" style="width: 0.00%">
+           <span class="sr-only">0.00% covered (danger)</span>
+         </div>
+       </div>
+</td>
+       <td class="danger small"><div align="right">0.00%</div></td>
+       <td class="danger small"><div align="right">0&nbsp;/&nbsp;21</div></td>
+       <td class="danger big">       <div class="progress">
+         <div class="progress-bar bg-danger" role="progressbar" aria-valuenow="0.00" aria-valuemin="0" aria-valuemax="100" style="width: 0.00%">
+           <span class="sr-only">0.00% covered (danger)</span>
+         </div>
+       </div>
+</td>
+       <td class="danger small"><div align="right">0.00%</div></td>
+       <td class="danger small"><div align="right">0&nbsp;/&nbsp;3</div></td>
+      </tr>
 
-<tr>
-	<td class="file empty" data-value="EMS/resources/js/Pages/Inventory"><a href="EMS/resources/js/Pages/Inventory/index.html">EMS/resources/js/Pages/Inventory</a></td>
-	<td data-value="0" class="pic empty">
-	<div class="chart"><div class="cover-fill" style="width: 0%"></div><div class="cover-empty" style="width: 100%"></div></div>
-	</td>
-	<td data-value="0" class="pct empty">0%</td>
-	<td data-value="0" class="abs empty">0/0</td>
-	<td data-value="0" class="pct empty">0%</td>
-	<td data-value="0" class="abs empty">0/0</td>
-	<td data-value="0" class="pct empty">0%</td>
-	<td data-value="0" class="abs empty">0/0</td>
-	<td data-value="0" class="pct empty">0%</td>
-	<td data-value="0" class="abs empty">0/0</td>
-	</tr>
+      <tr>
+       <td class="warning"><img src="_icons/file-directory.svg" class="octicon" /><a href="Providers/index.html">Providers</a></td>
+       <td class="warning big">       <div class="progress">
+         <div class="progress-bar bg-warning" role="progressbar" aria-valuenow="87.50" aria-valuemin="0" aria-valuemax="100" style="width: 87.50%">
+           <span class="sr-only">87.50% covered (warning)</span>
+         </div>
+       </div>
+</td>
+       <td class="warning small"><div align="right">87.50%</div></td>
+       <td class="warning small"><div align="right">28&nbsp;/&nbsp;32</div></td>
+       <td class="warning big">       <div class="progress">
+         <div class="progress-bar bg-warning" role="progressbar" aria-valuenow="62.50" aria-valuemin="0" aria-valuemax="100" style="width: 62.50%">
+           <span class="sr-only">62.50% covered (warning)</span>
+         </div>
+       </div>
+</td>
+       <td class="warning small"><div align="right">62.50%</div></td>
+       <td class="warning small"><div align="right">5&nbsp;/&nbsp;8</div></td>
+       <td class="danger big">       <div class="progress">
+         <div class="progress-bar bg-danger" role="progressbar" aria-valuenow="40.00" aria-valuemin="0" aria-valuemax="100" style="width: 40.00%">
+           <span class="sr-only">40.00% covered (danger)</span>
+         </div>
+       </div>
+</td>
+       <td class="danger small"><div align="right">40.00%</div></td>
+       <td class="danger small"><div align="right">2&nbsp;/&nbsp;5</div></td>
+      </tr>
 
-<tr>
-	<td class="file low" data-value="EMS/resources/js/Pages/InventoryPlans"><a href="EMS/resources/js/Pages/InventoryPlans/index.html">EMS/resources/js/Pages/InventoryPlans</a></td>
-	<td data-value="0" class="pic low">
-	<div class="chart"><div class="cover-fill" style="width: 0%"></div><div class="cover-empty" style="width: 100%"></div></div>
-	</td>
-	<td data-value="0" class="pct low">0%</td>
-	<td data-value="27" class="abs low">0/27</td>
-	<td data-value="0" class="pct low">0%</td>
-	<td data-value="4" class="abs low">0/4</td>
-	<td data-value="0" class="pct low">0%</td>
-	<td data-value="6" class="abs low">0/6</td>
-	<td data-value="0" class="pct low">0%</td>
-	<td data-value="27" class="abs low">0/27</td>
-	</tr>
+      <tr>
+       <td class="success"><img src="_icons/file-directory.svg" class="octicon" /><a href="Rules/index.html">Rules</a></td>
+       <td class="success big">       <div class="progress">
+         <div class="progress-bar bg-success" role="progressbar" aria-valuenow="100.00" aria-valuemin="0" aria-valuemax="100" style="width: 100.00%">
+           <span class="sr-only">100.00% covered (success)</span>
+         </div>
+       </div>
+</td>
+       <td class="success small"><div align="right">100.00%</div></td>
+       <td class="success small"><div align="right">9&nbsp;/&nbsp;9</div></td>
+       <td class="success big">       <div class="progress">
+         <div class="progress-bar bg-success" role="progressbar" aria-valuenow="100.00" aria-valuemin="0" aria-valuemax="100" style="width: 100.00%">
+           <span class="sr-only">100.00% covered (success)</span>
+         </div>
+       </div>
+</td>
+       <td class="success small"><div align="right">100.00%</div></td>
+       <td class="success small"><div align="right">2&nbsp;/&nbsp;2</div></td>
+       <td class="success big">       <div class="progress">
+         <div class="progress-bar bg-success" role="progressbar" aria-valuenow="100.00" aria-valuemin="0" aria-valuemax="100" style="width: 100.00%">
+           <span class="sr-only">100.00% covered (success)</span>
+         </div>
+       </div>
+</td>
+       <td class="success small"><div align="right">100.00%</div></td>
+       <td class="success small"><div align="right">1&nbsp;/&nbsp;1</div></td>
+      </tr>
 
-<tr>
-	<td class="file low" data-value="EMS/resources/js/Pages/Items"><a href="EMS/resources/js/Pages/Items/index.html">EMS/resources/js/Pages/Items</a></td>
-	<td data-value="0" class="pic low">
-	<div class="chart"><div class="cover-fill" style="width: 0%"></div><div class="cover-empty" style="width: 100%"></div></div>
-	</td>
-	<td data-value="0" class="pct low">0%</td>
-	<td data-value="489" class="abs low">0/489</td>
-	<td data-value="0" class="pct low">0%</td>
-	<td data-value="180" class="abs low">0/180</td>
-	<td data-value="0" class="pct low">0%</td>
-	<td data-value="77" class="abs low">0/77</td>
-	<td data-value="0" class="pct low">0%</td>
-	<td data-value="489" class="abs low">0/489</td>
-	</tr>
+      <tr>
+       <td class="warning"><img src="_icons/file-directory.svg" class="octicon" /><a href="Services/index.html">Services</a></td>
+       <td class="warning big">       <div class="progress">
+         <div class="progress-bar bg-warning" role="progressbar" aria-valuenow="59.52" aria-valuemin="0" aria-valuemax="100" style="width: 59.52%">
+           <span class="sr-only">59.52% covered (warning)</span>
+         </div>
+       </div>
+</td>
+       <td class="warning small"><div align="right">59.52%</div></td>
+       <td class="warning small"><div align="right">50&nbsp;/&nbsp;84</div></td>
+       <td class="danger big">       <div class="progress">
+         <div class="progress-bar bg-danger" role="progressbar" aria-valuenow="25.00" aria-valuemin="0" aria-valuemax="100" style="width: 25.00%">
+           <span class="sr-only">25.00% covered (danger)</span>
+         </div>
+       </div>
+</td>
+       <td class="danger small"><div align="right">25.00%</div></td>
+       <td class="danger small"><div align="right">1&nbsp;/&nbsp;4</div></td>
+       <td class="danger big">       <div class="progress">
+         <div class="progress-bar bg-danger" role="progressbar" aria-valuenow="33.33" aria-valuemin="0" aria-valuemax="100" style="width: 33.33%">
+           <span class="sr-only">33.33% covered (danger)</span>
+         </div>
+       </div>
+</td>
+       <td class="danger small"><div align="right">33.33%</div></td>
+       <td class="danger small"><div align="right">1&nbsp;/&nbsp;3</div></td>
+      </tr>
 
-<tr>
-	<td class="file low" data-value="EMS/resources/js/Pages/Profile"><a href="EMS/resources/js/Pages/Profile/index.html">EMS/resources/js/Pages/Profile</a></td>
-	<td data-value="0" class="pic low">
-	<div class="chart"><div class="cover-fill" style="width: 0%"></div><div class="cover-empty" style="width: 100%"></div></div>
-	</td>
-	<td data-value="0" class="pct low">0%</td>
-	<td data-value="16" class="abs low">0/16</td>
-	<td data-value="100" class="pct high">100%</td>
-	<td data-value="0" class="abs high">0/0</td>
-	<td data-value="0" class="pct low">0%</td>
-	<td data-value="3" class="abs low">0/3</td>
-	<td data-value="0" class="pct low">0%</td>
-	<td data-value="16" class="abs low">0/16</td>
-	</tr>
 
-<tr>
-	<td class="file low" data-value="EMS/resources/js/Pages/Profile/Partials"><a href="EMS/resources/js/Pages/Profile/Partials/index.html">EMS/resources/js/Pages/Profile/Partials</a></td>
-	<td data-value="0" class="pic low">
-	<div class="chart"><div class="cover-fill" style="width: 0%"></div><div class="cover-empty" style="width: 100%"></div></div>
-	</td>
-	<td data-value="0" class="pct low">0%</td>
-	<td data-value="56" class="abs low">0/56</td>
-	<td data-value="0" class="pct low">0%</td>
-	<td data-value="22" class="abs low">0/22</td>
-	<td data-value="0" class="pct low">0%</td>
-	<td data-value="19" class="abs low">0/19</td>
-	<td data-value="0" class="pct low">0%</td>
-	<td data-value="56" class="abs low">0/56</td>
-	</tr>
-
-<tr>
-	<td class="file low" data-value="EMS/resources/js/Pages/Wishes"><a href="EMS/resources/js/Pages/Wishes/index.html">EMS/resources/js/Pages/Wishes</a></td>
-	<td data-value="0" class="pic low">
-	<div class="chart"><div class="cover-fill" style="width: 0%"></div><div class="cover-empty" style="width: 100%"></div></div>
-	</td>
-	<td data-value="0" class="pct low">0%</td>
-	<td data-value="36" class="abs low">0/36</td>
-	<td data-value="100" class="pct high">100%</td>
-	<td data-value="0" class="abs high">0/0</td>
-	<td data-value="0" class="pct low">0%</td>
-	<td data-value="6" class="abs low">0/6</td>
-	<td data-value="0" class="pct low">0%</td>
-	<td data-value="36" class="abs low">0/36</td>
-	</tr>
-
-<tr>
-	<td class="file low" data-value="EMS/vendor/barryvdh/laravel-debugbar/src/Resources/cache"><a href="EMS/vendor/barryvdh/laravel-debugbar/src/Resources/cache/index.html">EMS/vendor/barryvdh/laravel-debugbar/src/Resources/cache</a></td>
-	<td data-value="0" class="pic low">
-	<div class="chart"><div class="cover-fill" style="width: 0%"></div><div class="cover-empty" style="width: 100%"></div></div>
-	</td>
-	<td data-value="0" class="pct low">0%</td>
-	<td data-value="19" class="abs low">0/19</td>
-	<td data-value="0" class="pct low">0%</td>
-	<td data-value="10" class="abs low">0/10</td>
-	<td data-value="0" class="pct low">0%</td>
-	<td data-value="6" class="abs low">0/6</td>
-	<td data-value="0" class="pct low">0%</td>
-	<td data-value="18" class="abs low">0/18</td>
-	</tr>
-
-<tr>
-	<td class="file low" data-value="EMS/vendor/filp/whoops/src/Whoops/Resources/js"><a href="EMS/vendor/filp/whoops/src/Whoops/Resources/js/index.html">EMS/vendor/filp/whoops/src/Whoops/Resources/js</a></td>
-	<td data-value="0" class="pic low">
-	<div class="chart"><div class="cover-fill" style="width: 0%"></div><div class="cover-empty" style="width: 100%"></div></div>
-	</td>
-	<td data-value="0" class="pct low">0%</td>
-	<td data-value="1257" class="abs low">0/1257</td>
-	<td data-value="0" class="pct low">0%</td>
-	<td data-value="1344" class="abs low">0/1344</td>
-	<td data-value="0" class="pct low">0%</td>
-	<td data-value="433" class="abs low">0/433</td>
-	<td data-value="0" class="pct low">0%</td>
-	<td data-value="104" class="abs low">0/104</td>
-	</tr>
-
-<tr>
-	<td class="file low" data-value="EMS/vendor/guzzlehttp/guzzle/tests"><a href="EMS/vendor/guzzlehttp/guzzle/tests/index.html">EMS/vendor/guzzlehttp/guzzle/tests</a></td>
-	<td data-value="0" class="pic low">
-	<div class="chart"><div class="cover-fill" style="width: 0%"></div><div class="cover-empty" style="width: 100%"></div></div>
-	</td>
-	<td data-value="0" class="pct low">0%</td>
-	<td data-value="126" class="abs low">0/126</td>
-	<td data-value="0" class="pct low">0%</td>
-	<td data-value="79" class="abs low">0/79</td>
-	<td data-value="0" class="pct low">0%</td>
-	<td data-value="13" class="abs low">0/13</td>
-	<td data-value="0" class="pct low">0%</td>
-	<td data-value="125" class="abs low">0/125</td>
-	</tr>
-
-<tr>
-	<td class="file low" data-value="EMS/vendor/inertiajs/inertia-laravel/tests/Stubs"><a href="EMS/vendor/inertiajs/inertia-laravel/tests/Stubs/index.html">EMS/vendor/inertiajs/inertia-laravel/tests/Stubs</a></td>
-	<td data-value="0" class="pic low">
-	<div class="chart"><div class="cover-fill" style="width: 0%"></div><div class="cover-empty" style="width: 100%"></div></div>
-	</td>
-	<td data-value="0" class="pct low">0%</td>
-	<td data-value="5" class="abs low">0/5</td>
-	<td data-value="100" class="pct high">100%</td>
-	<td data-value="0" class="abs high">0/0</td>
-	<td data-value="0" class="pct low">0%</td>
-	<td data-value="1" class="abs low">0/1</td>
-	<td data-value="0" class="pct low">0%</td>
-	<td data-value="5" class="abs low">0/5</td>
-	</tr>
-
-<tr>
-	<td class="file empty" data-value="EMS/vendor/laravel/breeze/stubs/default"><a href="EMS/vendor/laravel/breeze/stubs/default/index.html">EMS/vendor/laravel/breeze/stubs/default</a></td>
-	<td data-value="0" class="pic empty">
-	<div class="chart"><div class="cover-fill" style="width: 0%"></div><div class="cover-empty" style="width: 100%"></div></div>
-	</td>
-	<td data-value="0" class="pct empty">0%</td>
-	<td data-value="0" class="abs empty">0/0</td>
-	<td data-value="0" class="pct empty">0%</td>
-	<td data-value="0" class="abs empty">0/0</td>
-	<td data-value="0" class="pct empty">0%</td>
-	<td data-value="0" class="abs empty">0/0</td>
-	<td data-value="0" class="pct empty">0%</td>
-	<td data-value="0" class="abs empty">0/0</td>
-	</tr>
-
-<tr>
-	<td class="file low" data-value="EMS/vendor/laravel/breeze/stubs/default/resources/js"><a href="EMS/vendor/laravel/breeze/stubs/default/resources/js/index.html">EMS/vendor/laravel/breeze/stubs/default/resources/js</a></td>
-	<td data-value="0" class="pic low">
-	<div class="chart"><div class="cover-fill" style="width: 0%"></div><div class="cover-empty" style="width: 100%"></div></div>
-	</td>
-	<td data-value="0" class="pct low">0%</td>
-	<td data-value="2" class="abs low">0/2</td>
-	<td data-value="100" class="pct high">100%</td>
-	<td data-value="0" class="abs high">0/0</td>
-	<td data-value="100" class="pct high">100%</td>
-	<td data-value="0" class="abs high">0/0</td>
-	<td data-value="0" class="pct low">0%</td>
-	<td data-value="2" class="abs low">0/2</td>
-	</tr>
-
-<tr>
-	<td class="file empty" data-value="EMS/vendor/laravel/breeze/stubs/inertia-common"><a href="EMS/vendor/laravel/breeze/stubs/inertia-common/index.html">EMS/vendor/laravel/breeze/stubs/inertia-common</a></td>
-	<td data-value="0" class="pic empty">
-	<div class="chart"><div class="cover-fill" style="width: 0%"></div><div class="cover-empty" style="width: 100%"></div></div>
-	</td>
-	<td data-value="0" class="pct empty">0%</td>
-	<td data-value="0" class="abs empty">0/0</td>
-	<td data-value="0" class="pct empty">0%</td>
-	<td data-value="0" class="abs empty">0/0</td>
-	<td data-value="0" class="pct empty">0%</td>
-	<td data-value="0" class="abs empty">0/0</td>
-	<td data-value="0" class="pct empty">0%</td>
-	<td data-value="0" class="abs empty">0/0</td>
-	</tr>
-
-<tr>
-	<td class="file empty" data-value="EMS/vendor/laravel/breeze/stubs/inertia-react"><a href="EMS/vendor/laravel/breeze/stubs/inertia-react/index.html">EMS/vendor/laravel/breeze/stubs/inertia-react</a></td>
-	<td data-value="0" class="pic empty">
-	<div class="chart"><div class="cover-fill" style="width: 0%"></div><div class="cover-empty" style="width: 100%"></div></div>
-	</td>
-	<td data-value="0" class="pct empty">0%</td>
-	<td data-value="0" class="abs empty">0/0</td>
-	<td data-value="0" class="pct empty">0%</td>
-	<td data-value="0" class="abs empty">0/0</td>
-	<td data-value="0" class="pct empty">0%</td>
-	<td data-value="0" class="abs empty">0/0</td>
-	<td data-value="0" class="pct empty">0%</td>
-	<td data-value="0" class="abs empty">0/0</td>
-	</tr>
-
-<tr>
-	<td class="file empty" data-value="EMS/vendor/laravel/breeze/stubs/inertia-vue"><a href="EMS/vendor/laravel/breeze/stubs/inertia-vue/index.html">EMS/vendor/laravel/breeze/stubs/inertia-vue</a></td>
-	<td data-value="0" class="pic empty">
-	<div class="chart"><div class="cover-fill" style="width: 0%"></div><div class="cover-empty" style="width: 100%"></div></div>
-	</td>
-	<td data-value="0" class="pct empty">0%</td>
-	<td data-value="0" class="abs empty">0/0</td>
-	<td data-value="0" class="pct empty">0%</td>
-	<td data-value="0" class="abs empty">0/0</td>
-	<td data-value="0" class="pct empty">0%</td>
-	<td data-value="0" class="abs empty">0/0</td>
-	<td data-value="0" class="pct empty">0%</td>
-	<td data-value="0" class="abs empty">0/0</td>
-	</tr>
-
-<tr>
-	<td class="file low" data-value="EMS/vendor/laravel/breeze/stubs/inertia-vue-ts/resources/js/Components"><a href="EMS/vendor/laravel/breeze/stubs/inertia-vue-ts/resources/js/Components/index.html">EMS/vendor/laravel/breeze/stubs/inertia-vue-ts/resources/js/Components</a></td>
-	<td data-value="0" class="pic low">
-	<div class="chart"><div class="cover-fill" style="width: 0%"></div><div class="cover-empty" style="width: 100%"></div></div>
-	</td>
-	<td data-value="0" class="pct low">0%</td>
-	<td data-value="20" class="abs low">0/20</td>
-	<td data-value="100" class="pct high">100%</td>
-	<td data-value="0" class="abs high">0/0</td>
-	<td data-value="0" class="pct low">0%</td>
-	<td data-value="3" class="abs low">0/3</td>
-	<td data-value="0" class="pct low">0%</td>
-	<td data-value="20" class="abs low">0/20</td>
-	</tr>
-
-<tr>
-	<td class="file low" data-value="EMS/vendor/laravel/breeze/stubs/inertia-vue/resources/js"><a href="EMS/vendor/laravel/breeze/stubs/inertia-vue/resources/js/index.html">EMS/vendor/laravel/breeze/stubs/inertia-vue/resources/js</a></td>
-	<td data-value="0" class="pic low">
-	<div class="chart"><div class="cover-fill" style="width: 0%"></div><div class="cover-empty" style="width: 100%"></div></div>
-	</td>
-	<td data-value="0" class="pct low">0%</td>
-	<td data-value="13" class="abs low">0/13</td>
-	<td data-value="0" class="pct low">0%</td>
-	<td data-value="4" class="abs low">0/4</td>
-	<td data-value="0" class="pct low">0%</td>
-	<td data-value="9" class="abs low">0/9</td>
-	<td data-value="0" class="pct low">0%</td>
-	<td data-value="11" class="abs low">0/11</td>
-	</tr>
-
-<tr>
-	<td class="file low" data-value="EMS/vendor/laravel/breeze/stubs/inertia-vue/resources/js/Components"><a href="EMS/vendor/laravel/breeze/stubs/inertia-vue/resources/js/Components/index.html">EMS/vendor/laravel/breeze/stubs/inertia-vue/resources/js/Components</a></td>
-	<td data-value="0" class="pic low">
-	<div class="chart"><div class="cover-fill" style="width: 0%"></div><div class="cover-empty" style="width: 100%"></div></div>
-	</td>
-	<td data-value="0" class="pct low">0%</td>
-	<td data-value="127" class="abs low">0/127</td>
-	<td data-value="0" class="pct low">0%</td>
-	<td data-value="14" class="abs low">0/14</td>
-	<td data-value="0" class="pct low">0%</td>
-	<td data-value="28" class="abs low">0/28</td>
-	<td data-value="0" class="pct low">0%</td>
-	<td data-value="127" class="abs low">0/127</td>
-	</tr>
-
-<tr>
-	<td class="file low" data-value="EMS/vendor/laravel/breeze/stubs/inertia-vue/resources/js/Layouts"><a href="EMS/vendor/laravel/breeze/stubs/inertia-vue/resources/js/Layouts/index.html">EMS/vendor/laravel/breeze/stubs/inertia-vue/resources/js/Layouts</a></td>
-	<td data-value="0" class="pic low">
-	<div class="chart"><div class="cover-fill" style="width: 0%"></div><div class="cover-empty" style="width: 100%"></div></div>
-	</td>
-	<td data-value="0" class="pct low">0%</td>
-	<td data-value="51" class="abs low">0/51</td>
-	<td data-value="0" class="pct low">0%</td>
-	<td data-value="4" class="abs low">0/4</td>
-	<td data-value="0" class="pct low">0%</td>
-	<td data-value="13" class="abs low">0/13</td>
-	<td data-value="0" class="pct low">0%</td>
-	<td data-value="51" class="abs low">0/51</td>
-	</tr>
-
-<tr>
-	<td class="file low" data-value="EMS/vendor/laravel/breeze/stubs/inertia-vue/resources/js/Pages"><a href="EMS/vendor/laravel/breeze/stubs/inertia-vue/resources/js/Pages/index.html">EMS/vendor/laravel/breeze/stubs/inertia-vue/resources/js/Pages</a></td>
-	<td data-value="0" class="pic low">
-	<div class="chart"><div class="cover-fill" style="width: 0%"></div><div class="cover-empty" style="width: 100%"></div></div>
-	</td>
-	<td data-value="0" class="pct low">0%</td>
-	<td data-value="29" class="abs low">0/29</td>
-	<td data-value="0" class="pct low">0%</td>
-	<td data-value="6" class="abs low">0/6</td>
-	<td data-value="0" class="pct low">0%</td>
-	<td data-value="7" class="abs low">0/7</td>
-	<td data-value="0" class="pct low">0%</td>
-	<td data-value="29" class="abs low">0/29</td>
-	</tr>
-
-<tr>
-	<td class="file low" data-value="EMS/vendor/laravel/breeze/stubs/inertia-vue/resources/js/Pages/Auth"><a href="EMS/vendor/laravel/breeze/stubs/inertia-vue/resources/js/Pages/Auth/index.html">EMS/vendor/laravel/breeze/stubs/inertia-vue/resources/js/Pages/Auth</a></td>
-	<td data-value="0" class="pic low">
-	<div class="chart"><div class="cover-fill" style="width: 0%"></div><div class="cover-empty" style="width: 100%"></div></div>
-	</td>
-	<td data-value="0" class="pct low">0%</td>
-	<td data-value="96" class="abs low">0/96</td>
-	<td data-value="0" class="pct low">0%</td>
-	<td data-value="32" class="abs low">0/32</td>
-	<td data-value="0" class="pct low">0%</td>
-	<td data-value="33" class="abs low">0/33</td>
-	<td data-value="0" class="pct low">0%</td>
-	<td data-value="96" class="abs low">0/96</td>
-	</tr>
-
-<tr>
-	<td class="file low" data-value="EMS/vendor/laravel/breeze/stubs/inertia-vue/resources/js/Pages/Profile"><a href="EMS/vendor/laravel/breeze/stubs/inertia-vue/resources/js/Pages/Profile/index.html">EMS/vendor/laravel/breeze/stubs/inertia-vue/resources/js/Pages/Profile</a></td>
-	<td data-value="0" class="pic low">
-	<div class="chart"><div class="cover-fill" style="width: 0%"></div><div class="cover-empty" style="width: 100%"></div></div>
-	</td>
-	<td data-value="0" class="pct low">0%</td>
-	<td data-value="16" class="abs low">0/16</td>
-	<td data-value="100" class="pct high">100%</td>
-	<td data-value="0" class="abs high">0/0</td>
-	<td data-value="0" class="pct low">0%</td>
-	<td data-value="3" class="abs low">0/3</td>
-	<td data-value="0" class="pct low">0%</td>
-	<td data-value="16" class="abs low">0/16</td>
-	</tr>
-
-<tr>
-	<td class="file low" data-value="EMS/vendor/laravel/breeze/stubs/inertia-vue/resources/js/Pages/Profile/Partials"><a href="EMS/vendor/laravel/breeze/stubs/inertia-vue/resources/js/Pages/Profile/Partials/index.html">EMS/vendor/laravel/breeze/stubs/inertia-vue/resources/js/Pages/Profile/Partials</a></td>
-	<td data-value="0" class="pic low">
-	<div class="chart"><div class="cover-fill" style="width: 0%"></div><div class="cover-empty" style="width: 100%"></div></div>
-	</td>
-	<td data-value="0" class="pct low">0%</td>
-	<td data-value="56" class="abs low">0/56</td>
-	<td data-value="0" class="pct low">0%</td>
-	<td data-value="22" class="abs low">0/22</td>
-	<td data-value="0" class="pct low">0%</td>
-	<td data-value="19" class="abs low">0/19</td>
-	<td data-value="0" class="pct low">0%</td>
-	<td data-value="56" class="abs low">0/56</td>
-	</tr>
-
-<tr>
-	<td class="file low" data-value="EMS/vendor/laravel/dusk/bin"><a href="EMS/vendor/laravel/dusk/bin/index.html">EMS/vendor/laravel/dusk/bin</a></td>
-	<td data-value="0" class="pic low">
-	<div class="chart"><div class="cover-fill" style="width: 0%"></div><div class="cover-empty" style="width: 100%"></div></div>
-	</td>
-	<td data-value="0" class="pct low">0%</td>
-	<td data-value="1895" class="abs low">0/1895</td>
-	<td data-value="0" class="pct low">0%</td>
-	<td data-value="3298" class="abs low">0/3298</td>
-	<td data-value="0" class="pct low">0%</td>
-	<td data-value="596" class="abs low">0/596</td>
-	<td data-value="0" class="pct low">0%</td>
-	<td data-value="1" class="abs low">0/1</td>
-	</tr>
-
-<tr>
-	<td class="file empty" data-value="EMS/vendor/laravel/framework/tests/Integration/Foundation/Fixtures/EventDiscovery/Listeners"><a href="EMS/vendor/laravel/framework/tests/Integration/Foundation/Fixtures/EventDiscovery/Listeners/index.html">EMS/vendor/laravel/framework/tests/Integration/Foundation/Fixtures/EventDiscovery/Listeners</a></td>
-	<td data-value="0" class="pic empty">
-	<div class="chart"><div class="cover-fill" style="width: 0%"></div><div class="cover-empty" style="width: 100%"></div></div>
-	</td>
-	<td data-value="0" class="pct empty">0%</td>
-	<td data-value="0" class="abs empty">0/0</td>
-	<td data-value="0" class="pct empty">0%</td>
-	<td data-value="0" class="abs empty">0/0</td>
-	<td data-value="0" class="pct empty">0%</td>
-	<td data-value="0" class="abs empty">0/0</td>
-	<td data-value="0" class="pct empty">0%</td>
-	<td data-value="0" class="abs empty">0/0</td>
-	</tr>
-
-<tr>
-	<td class="file low" data-value="EMS/vendor/league/commonmark/docs"><a href="EMS/vendor/league/commonmark/docs/index.html">EMS/vendor/league/commonmark/docs</a></td>
-	<td data-value="0" class="pic low">
-	<div class="chart"><div class="cover-fill" style="width: 0%"></div><div class="cover-empty" style="width: 100%"></div></div>
-	</td>
-	<td data-value="0" class="pct low">0%</td>
-	<td data-value="12" class="abs low">0/12</td>
-	<td data-value="100" class="pct high">100%</td>
-	<td data-value="0" class="abs high">0/0</td>
-	<td data-value="0" class="pct low">0%</td>
-	<td data-value="3" class="abs low">0/3</td>
-	<td data-value="0" class="pct low">0%</td>
-	<td data-value="12" class="abs low">0/12</td>
-	</tr>
-
-<tr>
-	<td class="file low" data-value="EMS/vendor/league/config/docs"><a href="EMS/vendor/league/config/docs/index.html">EMS/vendor/league/config/docs</a></td>
-	<td data-value="0" class="pic low">
-	<div class="chart"><div class="cover-fill" style="width: 0%"></div><div class="cover-empty" style="width: 100%"></div></div>
-	</td>
-	<td data-value="0" class="pct low">0%</td>
-	<td data-value="12" class="abs low">0/12</td>
-	<td data-value="100" class="pct high">100%</td>
-	<td data-value="0" class="abs high">0/0</td>
-	<td data-value="0" class="pct low">0%</td>
-	<td data-value="3" class="abs low">0/3</td>
-	<td data-value="0" class="pct low">0%</td>
-	<td data-value="12" class="abs low">0/12</td>
-	</tr>
-
-<tr>
-	<td class="file low" data-value="EMS/vendor/maximebf/debugbar/src/DebugBar/Resources"><a href="EMS/vendor/maximebf/debugbar/src/DebugBar/Resources/index.html">EMS/vendor/maximebf/debugbar/src/DebugBar/Resources</a></td>
-	<td data-value="0" class="pic low">
-	<div class="chart"><div class="cover-fill" style="width: 0%"></div><div class="cover-empty" style="width: 100%"></div></div>
-	</td>
-	<td data-value="0" class="pct low">0%</td>
-	<td data-value="910" class="abs low">0/910</td>
-	<td data-value="0" class="pct low">0%</td>
-	<td data-value="442" class="abs low">0/442</td>
-	<td data-value="0" class="pct low">0%</td>
-	<td data-value="197" class="abs low">0/197</td>
-	<td data-value="0" class="pct low">0%</td>
-	<td data-value="883" class="abs low">0/883</td>
-	</tr>
-
-<tr>
-	<td class="file low" data-value="EMS/vendor/maximebf/debugbar/src/DebugBar/Resources/vendor/highlightjs"><a href="EMS/vendor/maximebf/debugbar/src/DebugBar/Resources/vendor/highlightjs/index.html">EMS/vendor/maximebf/debugbar/src/DebugBar/Resources/vendor/highlightjs</a></td>
-	<td data-value="0" class="pic low">
-	<div class="chart"><div class="cover-fill" style="width: 0%"></div><div class="cover-empty" style="width: 100%"></div></div>
-	</td>
-	<td data-value="0" class="pct low">0%</td>
-	<td data-value="610" class="abs low">0/610</td>
-	<td data-value="0" class="pct low">0%</td>
-	<td data-value="477" class="abs low">0/477</td>
-	<td data-value="0" class="pct low">0%</td>
-	<td data-value="201" class="abs low">0/201</td>
-	<td data-value="0" class="pct low">0%</td>
-	<td data-value="1" class="abs low">0/1</td>
-	</tr>
-
-<tr>
-	<td class="file low" data-value="EMS/vendor/maximebf/debugbar/src/DebugBar/Resources/vendor/jquery/dist"><a href="EMS/vendor/maximebf/debugbar/src/DebugBar/Resources/vendor/jquery/dist/index.html">EMS/vendor/maximebf/debugbar/src/DebugBar/Resources/vendor/jquery/dist</a></td>
-	<td data-value="0" class="pic low">
-	<div class="chart"><div class="cover-fill" style="width: 0%"></div><div class="cover-empty" style="width: 100%"></div></div>
-	</td>
-	<td data-value="0" class="pct low">0%</td>
-	<td data-value="1817" class="abs low">0/1817</td>
-	<td data-value="0" class="pct low">0%</td>
-	<td data-value="3197" class="abs low">0/3197</td>
-	<td data-value="0" class="pct low">0%</td>
-	<td data-value="595" class="abs low">0/595</td>
-	<td data-value="0" class="pct low">0%</td>
-	<td data-value="1" class="abs low">0/1</td>
-	</tr>
-
-<tr>
-	<td class="file low" data-value="EMS/vendor/maximebf/debugbar/src/DebugBar/Resources/widgets/mails"><a href="EMS/vendor/maximebf/debugbar/src/DebugBar/Resources/widgets/mails/index.html">EMS/vendor/maximebf/debugbar/src/DebugBar/Resources/widgets/mails</a></td>
-	<td data-value="0" class="pic low">
-	<div class="chart"><div class="cover-fill" style="width: 0%"></div><div class="cover-empty" style="width: 100%"></div></div>
-	</td>
-	<td data-value="0" class="pct low">0%</td>
-	<td data-value="31" class="abs low">0/31</td>
-	<td data-value="0" class="pct low">0%</td>
-	<td data-value="14" class="abs low">0/14</td>
-	<td data-value="0" class="pct low">0%</td>
-	<td data-value="6" class="abs low">0/6</td>
-	<td data-value="0" class="pct low">0%</td>
-	<td data-value="31" class="abs low">0/31</td>
-	</tr>
-
-<tr>
-	<td class="file low" data-value="EMS/vendor/maximebf/debugbar/src/DebugBar/Resources/widgets/sqlqueries"><a href="EMS/vendor/maximebf/debugbar/src/DebugBar/Resources/widgets/sqlqueries/index.html">EMS/vendor/maximebf/debugbar/src/DebugBar/Resources/widgets/sqlqueries</a></td>
-	<td data-value="0" class="pic low">
-	<div class="chart"><div class="cover-fill" style="width: 0%"></div><div class="cover-empty" style="width: 100%"></div></div>
-	</td>
-	<td data-value="0" class="pct low">0%</td>
-	<td data-value="134" class="abs low">0/134</td>
-	<td data-value="0" class="pct low">0%</td>
-	<td data-value="111" class="abs low">0/111</td>
-	<td data-value="0" class="pct low">0%</td>
-	<td data-value="14" class="abs low">0/14</td>
-	<td data-value="0" class="pct low">0%</td>
-	<td data-value="129" class="abs low">0/129</td>
-	</tr>
-
-<tr>
-	<td class="file low" data-value="EMS/vendor/maximebf/debugbar/src/DebugBar/Resources/widgets/templates"><a href="EMS/vendor/maximebf/debugbar/src/DebugBar/Resources/widgets/templates/index.html">EMS/vendor/maximebf/debugbar/src/DebugBar/Resources/widgets/templates</a></td>
-	<td data-value="0" class="pic low">
-	<div class="chart"><div class="cover-fill" style="width: 0%"></div><div class="cover-empty" style="width: 100%"></div></div>
-	</td>
-	<td data-value="0" class="pct low">0%</td>
-	<td data-value="54" class="abs low">0/54</td>
-	<td data-value="0" class="pct low">0%</td>
-	<td data-value="46" class="abs low">0/46</td>
-	<td data-value="0" class="pct low">0%</td>
-	<td data-value="7" class="abs low">0/7</td>
-	<td data-value="0" class="pct low">0%</td>
-	<td data-value="54" class="abs low">0/54</td>
-	</tr>
-
-<tr>
-	<td class="file empty" data-value="EMS/vendor/nunomaduro/collision/tests/LaravelApp"><a href="EMS/vendor/nunomaduro/collision/tests/LaravelApp/index.html">EMS/vendor/nunomaduro/collision/tests/LaravelApp</a></td>
-	<td data-value="0" class="pic empty">
-	<div class="chart"><div class="cover-fill" style="width: 0%"></div><div class="cover-empty" style="width: 100%"></div></div>
-	</td>
-	<td data-value="0" class="pct empty">0%</td>
-	<td data-value="0" class="abs empty">0/0</td>
-	<td data-value="0" class="pct empty">0%</td>
-	<td data-value="0" class="abs empty">0/0</td>
-	<td data-value="0" class="pct empty">0%</td>
-	<td data-value="0" class="abs empty">0/0</td>
-	<td data-value="0" class="pct empty">0%</td>
-	<td data-value="0" class="abs empty">0/0</td>
-	</tr>
-
-<tr>
-	<td class="file low" data-value="EMS/vendor/nunomaduro/collision/tests/LaravelApp/resources/js"><a href="EMS/vendor/nunomaduro/collision/tests/LaravelApp/resources/js/index.html">EMS/vendor/nunomaduro/collision/tests/LaravelApp/resources/js</a></td>
-	<td data-value="0" class="pic low">
-	<div class="chart"><div class="cover-fill" style="width: 0%"></div><div class="cover-empty" style="width: 100%"></div></div>
-	</td>
-	<td data-value="0" class="pct low">0%</td>
-	<td data-value="3" class="abs low">0/3</td>
-	<td data-value="100" class="pct high">100%</td>
-	<td data-value="0" class="abs high">0/0</td>
-	<td data-value="100" class="pct high">100%</td>
-	<td data-value="0" class="abs high">0/0</td>
-	<td data-value="0" class="pct low">0%</td>
-	<td data-value="3" class="abs low">0/3</td>
-	</tr>
-
-<tr>
-	<td class="file low" data-value="EMS/vendor/php-webdriver/webdriver/lib/scripts"><a href="EMS/vendor/php-webdriver/webdriver/lib/scripts/index.html">EMS/vendor/php-webdriver/webdriver/lib/scripts</a></td>
-	<td data-value="0" class="pic low">
-	<div class="chart"><div class="cover-fill" style="width: 0%"></div><div class="cover-empty" style="width: 100%"></div></div>
-	</td>
-	<td data-value="0" class="pct low">0%</td>
-	<td data-value="91" class="abs low">0/91</td>
-	<td data-value="0" class="pct low">0%</td>
-	<td data-value="85" class="abs low">0/85</td>
-	<td data-value="0" class="pct low">0%</td>
-	<td data-value="15" class="abs low">0/15</td>
-	<td data-value="0" class="pct low">0%</td>
-	<td data-value="88" class="abs low">0/88</td>
-	</tr>
-
-<tr>
-	<td class="file low" data-value="EMS/vendor/phpunit/php-code-coverage/src/Report/Html/Renderer/Template/js"><a href="EMS/vendor/phpunit/php-code-coverage/src/Report/Html/Renderer/Template/js/index.html">EMS/vendor/phpunit/php-code-coverage/src/Report/Html/Renderer/Template/js</a></td>
-	<td data-value="0" class="pic low">
-	<div class="chart"><div class="cover-fill" style="width: 0%"></div><div class="cover-empty" style="width: 100%"></div></div>
-	</td>
-	<td data-value="0" class="pct low">0%</td>
-	<td data-value="12458" class="abs low">0/12458</td>
-	<td data-value="0" class="pct low">0%</td>
-	<td data-value="10918" class="abs low">0/10918</td>
-	<td data-value="0" class="pct low">0%</td>
-	<td data-value="4858" class="abs low">0/4858</td>
-	<td data-value="0" class="pct low">0%</td>
-	<td data-value="43" class="abs low">0/43</td>
-	</tr>
-
-<tr>
-	<td class="file low" data-value="EMS/vendor/spatie/ignition"><a href="EMS/vendor/spatie/ignition/index.html">EMS/vendor/spatie/ignition</a></td>
-	<td data-value="0" class="pic low">
-	<div class="chart"><div class="cover-fill" style="width: 0%"></div><div class="cover-empty" style="width: 100%"></div></div>
-	</td>
-	<td data-value="0" class="pct low">0%</td>
-	<td data-value="3" class="abs low">0/3</td>
-	<td data-value="100" class="pct high">100%</td>
-	<td data-value="0" class="abs high">0/0</td>
-	<td data-value="100" class="pct high">100%</td>
-	<td data-value="0" class="abs high">0/0</td>
-	<td data-value="0" class="pct low">0%</td>
-	<td data-value="3" class="abs low">0/3</td>
-	</tr>
-
-<tr>
-	<td class="file low" data-value="EMS/vendor/spatie/ignition/resources/compiled"><a href="EMS/vendor/spatie/ignition/resources/compiled/index.html">EMS/vendor/spatie/ignition/resources/compiled</a></td>
-	<td data-value="0" class="pic low">
-	<div class="chart"><div class="cover-fill" style="width: 0%"></div><div class="cover-empty" style="width: 100%"></div></div>
-	</td>
-	<td data-value="0" class="pct low">0%</td>
-	<td data-value="15676" class="abs low">0/15676</td>
-	<td data-value="0" class="pct low">0%</td>
-	<td data-value="16885" class="abs low">0/16885</td>
-	<td data-value="0" class="pct low">0%</td>
-	<td data-value="4009" class="abs low">0/4009</td>
-	<td data-value="0" class="pct low">0%</td>
-	<td data-value="6" class="abs low">0/6</td>
-	</tr>
-
-<tr>
-	<td class="file low" data-value="EMS/vendor/spatie/ignition/resources/js/vendor"><a href="EMS/vendor/spatie/ignition/resources/js/vendor/index.html">EMS/vendor/spatie/ignition/resources/js/vendor</a></td>
-	<td data-value="0" class="pic low">
-	<div class="chart"><div class="cover-fill" style="width: 0%"></div><div class="cover-empty" style="width: 100%"></div></div>
-	</td>
-	<td data-value="0" class="pct low">0%</td>
-	<td data-value="285" class="abs low">0/285</td>
-	<td data-value="0" class="pct low">0%</td>
-	<td data-value="177" class="abs low">0/177</td>
-	<td data-value="0" class="pct low">0%</td>
-	<td data-value="38" class="abs low">0/38</td>
-	<td data-value="0" class="pct low">0%</td>
-	<td data-value="281" class="abs low">0/281</td>
-	</tr>
-
-<tr>
-	<td class="file empty" data-value="EMS/vendor/spatie/laravel-package-tools/tests/TestPackage/resources/dist"><a href="EMS/vendor/spatie/laravel-package-tools/tests/TestPackage/resources/dist/index.html">EMS/vendor/spatie/laravel-package-tools/tests/TestPackage/resources/dist</a></td>
-	<td data-value="0" class="pic empty">
-	<div class="chart"><div class="cover-fill" style="width: 0%"></div><div class="cover-empty" style="width: 100%"></div></div>
-	</td>
-	<td data-value="0" class="pct empty">0%</td>
-	<td data-value="0" class="abs empty">0/0</td>
-	<td data-value="0" class="pct empty">0%</td>
-	<td data-value="0" class="abs empty">0/0</td>
-	<td data-value="0" class="pct empty">0%</td>
-	<td data-value="0" class="abs empty">0/0</td>
-	<td data-value="0" class="pct empty">0%</td>
-	<td data-value="0" class="abs empty">0/0</td>
-	</tr>
-
-<tr>
-	<td class="file low" data-value="EMS/vendor/symfony/error-handler/Resources/assets/js"><a href="EMS/vendor/symfony/error-handler/Resources/assets/js/index.html">EMS/vendor/symfony/error-handler/Resources/assets/js</a></td>
-	<td data-value="0" class="pic low">
-	<div class="chart"><div class="cover-fill" style="width: 0%"></div><div class="cover-empty" style="width: 100%"></div></div>
-	</td>
-	<td data-value="0" class="pct low">0%</td>
-	<td data-value="203" class="abs low">0/203</td>
-	<td data-value="0" class="pct low">0%</td>
-	<td data-value="74" class="abs low">0/74</td>
-	<td data-value="0" class="pct low">0%</td>
-	<td data-value="27" class="abs low">0/27</td>
-	<td data-value="0" class="pct low">0%</td>
-	<td data-value="187" class="abs low">0/187</td>
-	</tr>
-
-<tr>
-	<td class="file low" data-value="EMS/vendor/symfony/var-dumper/Resources/js"><a href="EMS/vendor/symfony/var-dumper/Resources/js/index.html">EMS/vendor/symfony/var-dumper/Resources/js</a></td>
-	<td data-value="0" class="pic low">
-	<div class="chart"><div class="cover-fill" style="width: 0%"></div><div class="cover-empty" style="width: 100%"></div></div>
-	</td>
-	<td data-value="0" class="pct low">0%</td>
-	<td data-value="7" class="abs low">0/7</td>
-	<td data-value="0" class="pct low">0%</td>
-	<td data-value="2" class="abs low">0/2</td>
-	<td data-value="0" class="pct low">0%</td>
-	<td data-value="2" class="abs low">0/2</td>
-	<td data-value="0" class="pct low">0%</td>
-	<td data-value="7" class="abs low">0/7</td>
-	</tr>
-
-<tr>
-	<td class="file low" data-value="EMS/vendor/tightenco/ziggy/dist"><a href="EMS/vendor/tightenco/ziggy/dist/index.html">EMS/vendor/tightenco/ziggy/dist</a></td>
-	<td data-value="0" class="pic low">
-	<div class="chart"><div class="cover-fill" style="width: 0%"></div><div class="cover-empty" style="width: 100%"></div></div>
-	</td>
-	<td data-value="0" class="pct low">0%</td>
-	<td data-value="1183" class="abs low">0/1183</td>
-	<td data-value="0" class="pct low">0%</td>
-	<td data-value="1655" class="abs low">0/1655</td>
-	<td data-value="0" class="pct low">0%</td>
-	<td data-value="277" class="abs low">0/277</td>
-	<td data-value="0" class="pct low">0%</td>
-	<td data-value="3" class="abs low">0/3</td>
-	</tr>
-
-<tr>
-	<td class="file low" data-value="EMS/vendor/tightenco/ziggy/src/js"><a href="EMS/vendor/tightenco/ziggy/src/js/index.html">EMS/vendor/tightenco/ziggy/src/js</a></td>
-	<td data-value="0" class="pic low">
-	<div class="chart"><div class="cover-fill" style="width: 0%"></div><div class="cover-empty" style="width: 100%"></div></div>
-	</td>
-	<td data-value="0" class="pct low">0%</td>
-	<td data-value="120" class="abs low">0/120</td>
-	<td data-value="0" class="pct low">0%</td>
-	<td data-value="129" class="abs low">0/129</td>
-	<td data-value="0" class="pct low">0%</td>
-	<td data-value="43" class="abs low">0/43</td>
-	<td data-value="0" class="pct low">0%</td>
-	<td data-value="113" class="abs low">0/113</td>
-	</tr>
-
-<tr>
-	<td class="file low" data-value="EMS/vendor/tightenco/ziggy/tests/fixtures"><a href="EMS/vendor/tightenco/ziggy/tests/fixtures/index.html">EMS/vendor/tightenco/ziggy/tests/fixtures</a></td>
-	<td data-value="0" class="pic low">
-	<div class="chart"><div class="cover-fill" style="width: 0%"></div><div class="cover-empty" style="width: 100%"></div></div>
-	</td>
-	<td data-value="0" class="pct low">0%</td>
-	<td data-value="13" class="abs low">0/13</td>
-	<td data-value="0" class="pct low">0%</td>
-	<td data-value="16" class="abs low">0/16</td>
-	<td data-value="100" class="pct high">100%</td>
-	<td data-value="0" class="abs high">0/0</td>
-	<td data-value="0" class="pct low">0%</td>
-	<td data-value="13" class="abs low">0/13</td>
-	</tr>
-
-<tr>
-	<td class="file low" data-value="EMS/vendor/tightenco/ziggy/tests/js"><a href="EMS/vendor/tightenco/ziggy/tests/js/index.html">EMS/vendor/tightenco/ziggy/tests/js</a></td>
-	<td data-value="0" class="pic low">
-	<div class="chart"><div class="cover-fill" style="width: 0%"></div><div class="cover-empty" style="width: 100%"></div></div>
-	</td>
-	<td data-value="0" class="pct low">0%</td>
-	<td data-value="524" class="abs low">0/524</td>
-	<td data-value="100" class="pct high">100%</td>
-	<td data-value="0" class="abs high">0/0</td>
-	<td data-value="0" class="pct low">0%</td>
-	<td data-value="107" class="abs low">0/107</td>
-	<td data-value="0" class="pct low">0%</td>
-	<td data-value="516" class="abs low">0/516</td>
-	</tr>
-
-</tbody>
-</table>
-</div>
-                <div class='push'></div><!-- for sticky footer -->
-            </div><!-- /wrapper -->
-            <div class='footer quiet pad2 space-top1 center small'>
-                Code coverage generated by
-                <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2024-06-23T09:26:47.492Z
-            </div>
-        <script src="prettify.js"></script>
-        <script>
-            window.onload = function () {
-                prettyPrint();
-            };
-        </script>
-        <script src="sorter.js"></script>
-        <script src="block-navigation.js"></script>
-    </body>
+     </tbody>
+    </table>
+   </div>
+   <footer>
+    <hr/>
+    <h4>Legend</h4>
+    <p>
+     <span class="danger"><strong>Low</strong>: 0% to 50%</span>
+     <span class="warning"><strong>Medium</strong>: 50% to 90%</span>
+     <span class="success"><strong>High</strong>: 90% to 100%</span>
+    </p>
+    <p>
+     <small>Generated by <a href="https://github.com/sebastianbergmann/php-code-coverage" target="_top">php-code-coverage 10.1.15</a> using <a href="https://www.php.net/" target="_top">PHP 8.2.12</a> and <a href="https://phpunit.de/">PHPUnit 10.5.24</a> at Sun Sep 8 22:05:27 JST 2024.</small>
+    </p>
+   </footer>
+  </div>
+ </body>
 </html>
-    
