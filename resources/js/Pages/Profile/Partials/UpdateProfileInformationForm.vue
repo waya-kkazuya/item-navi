@@ -11,8 +11,8 @@ defineProps({
     },
     status: {
         type: String,
-    },
-});
+    }
+})
 
 const user = usePage().props.auth.user;
 
