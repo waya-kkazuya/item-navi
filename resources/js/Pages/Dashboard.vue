@@ -1,6 +1,15 @@
 <script setup>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import { Head } from '@inertiajs/vue3';
+import { Head, Link } from '@inertiajs/vue3';
+
+
+defineProps({
+    allItems: Array,
+    itemsByCategory: Object,
+    edithistories: Array
+})
+
+
 </script>
 
 <template>
@@ -8,15 +17,93 @@ import { Head } from '@inertiajs/vue3';
 
     <AuthenticatedLayout>
         <template #header>
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">Dashboard</h2>
+            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+                ダッシュボード
+            </h2>
         </template>
 
         <div class="py-12">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                 <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                    <div class="p-6 text-gray-900">You're logged in!</div>
+                    <div class="flex w-full p-4">
+                        <div class="w-1/2 border-r border-gray-300 p-4">
+                            <!-- 左側のテーブル -->
+                            <table class="w-full border-separate">
+                                <thead>
+                                    <tr>
+                                        <th class="border-b-2 border-gray-200 px-4 py-3 text-left text-white bg-sky-700" colspan="2">備品の登録件数</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td class="border-b-2 border-gray-200 px-4 py-3">全体</td>
+                                        <td class="border-b-2 border-gray-200 px-4 py-3">{{ allItems.length }}</td>
+                                    </tr>
+                                    <tr v-for="(items, categoryName) in itemsByCategory" :key="categoryName">
+                                        <td class="border-b-2 border-gray-200 px-4 py-3">{{ categoryName }}</td>
+                                        <td class="border-b-2 border-gray-200 px-4 py-3">{{ items.length }}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- 右側のテーブル -->
+                        <div class="w-1/2 p-4">
+                            <table class="w-full border-collapse">
+                            <thead>
+                                <tr>
+                                    <th class="border-b-2 border-gray-200 px-4 py-3 text-left text-white bg-sky-700" colspan="2">備品の編集履歴</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <template  v-for="(histories, date) in edithistories" :key="date">
+                                    <tr>
+                                        <td class="border-b-2 p-2 border-gray-200 text-left bg-gray-200" colspan="2">
+                                            {{ date }} ({{ histories[0].day_of_week }})
+                                        </td>
+                                    </tr>
+                                    <template v-for="history in histories" :key="history.id">
+                                        <tr>
+                                            <td class="border-b-2 p-2">{{ history.time }}</td>
+                                            <td class="border-b-2 p-2">
+                                                <Link as="button" :href="route('items.show', { item: history.item_id })" class="text-blue-500 hover:text-blue-700 underline">
+                                                    【管理ID{{ history.item_management_id }}】{{ history.item_name }}
+                                                </Link>
+                                                を<span class="font-medium">{{ history.operation_description }}</span>
+                                                しました
+                                            </td>
+                                        </tr>
+                                        <tr v-if="history.edit_reason_id">
+                                            <td></td>
+                                            <td class="p-2">
+                                                <div class="relative bg-gray-200 text-gray-700 text-sm p-2 rounded shadow-lg">
+                                                    <div class="arrow-up"></div>
+                                                    {{ history.edit_reason_id }}
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </template>
+                                </template>
+                            </tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
+                    
             </div>
         </div>
     </AuthenticatedLayout>
 </template>
+
+<style>
+.arrow-up {
+  width: 0;
+  height: 0;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-bottom: 5px solid #e2e8f0; /* Tailwind's gray-200 */
+  position: absolute;
+  top: -5px;
+  left: 10px; /* Adjust as needed */
+}
+</style>
