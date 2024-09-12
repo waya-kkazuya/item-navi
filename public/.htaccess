@@ -6,8 +6,8 @@
     RewriteEngine On
 
     # IPアドレスによるアクセス制限
-    RewriteCond %{REMOTE_ADDR} !^193\.186\.4\.153$
-    RewriteRule ^.*$ - [F,L]
+    # RewriteCond %{REMOTE_ADDR} !^193\.186\.4\.153$
+    # RewriteRule ^.*$ - [F,L]
 
     # Handle Authorization Header
     RewriteCond %{HTTP:Authorization} .
