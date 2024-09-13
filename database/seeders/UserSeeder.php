@@ -18,19 +18,19 @@ class UserSeeder extends Seeder
             [
                 'name' => '管理者大川',
                 'email' => 'admin@admin.com',
-                'password' => Hash::make('password123'),
+                'password' => Hash::make('Z%F!8d$5dZhp'),
                 'role' => 1
             ],
             [
                 'name' => 'staff',
                 'email' => 'staff@staff.com',
-                'password' => Hash::make('password123'),
+                'password' => Hash::make('Z%F!8d$5dZhp'),
                 'role' => 5
             ],
             [
                 'name' => 'test',
                 'email' => 'test@test.com',
-                'password' => Hash::make('password123'),
+                'password' => Hash::make('Z%F!8d$5dZhp'),
                 'role' => 9
             ]
         ]);
