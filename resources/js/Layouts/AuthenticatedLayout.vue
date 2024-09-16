@@ -1,14 +1,24 @@
 <script setup>
-import { ref } from 'vue';
+import { onMounted, ref, computed } from 'vue';
 import ApplicationLogo from '@/Components/ApplicationLogo.vue';
 import Dropdown from '@/Components/Dropdown.vue';
 import DropdownLink from '@/Components/DropdownLink.vue';
 import NavLink from '@/Components/NavLink.vue';
 import ResponsiveNavLink from '@/Components/ResponsiveNavLink.vue';
-import { Link } from '@inertiajs/vue3';
+import { Link, usePage } from '@inertiajs/vue3';
 import BellNotification from '@/Components/BellNotification.vue';
 
 const showingNavigationDropdown = ref(false);
+
+
+const page = usePage();
+
+const profileImageUrl = computed(() =>{
+    return page.props.auth.user.profile_image
+    ? `storage/profile/${page.props.auth.user.profile_image}`
+    : null
+})
+
 </script>
 
 <template>
@@ -39,7 +49,7 @@ const showingNavigationDropdown = ref(false);
                                 <NavLink :href="route('consumable_items')" :active="route().current('consumable_items')">
                                     消耗品管理
                                 </NavLink>
-                                <NavLink :href="route('inspection_and_disposal_items')" :active="route().current('inspection_and_disposal_items')">
+                                <NavLink v-if="$page.props.auth.user_role <= 5" :href="route('inspection_and_disposal_items')" :active="route().current('inspection_and_disposal_items')">
                                     点検と廃棄
                                 </NavLink>
                                 <NavLink :href="route('item_requests.index')" :active="route().current('item_requests.index')">
@@ -63,10 +73,8 @@ const showingNavigationDropdown = ref(false);
                                                 type="button"
                                                 class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none transition ease-in-out duration-150"
                                             >
-
-                                                <img src="/storage/profile/icon_capybara.png" alt="image"
-                                                class="mr-4"
-                                                style="width: 35px; height: 35px; border-radius: 50%; border: 1px solid #000;">
+                                                <img :src="profileImageUrl" alt="ProfileImage"
+                                                class="mr-4 w-9 h-9 rounded-full border border-black object-cover">
 
                                                 {{ $page.props.auth.user.name }}
 
@@ -185,3 +193,9 @@ const showingNavigationDropdown = ref(false);
         </div>
     </div>
 </template>
+
+<style scoped>
+.border-black {
+  border-color: #000;
+}
+</style>
