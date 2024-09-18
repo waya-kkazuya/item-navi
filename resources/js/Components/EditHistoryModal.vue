@@ -52,9 +52,9 @@ const formatDate = (timestamp) => {
 </script>
 
 <template>
-  <div v-show="isShow" class="modal" id="modal-1" aria-hidden="true">
+  <div v-show="isShow" class="modal fixed inset-0 bg-gray-600 bg-opacity-50 flex items-end md:items-center md:justify-center z-50" id="modal-1" aria-hidden="true">
     <div class="modal__overlay" tabindex="-1" data-micromodal-close>
-      <div class="modal__container w-2/3" role="dialog" aria-modal="true" aria-labelledby="modal-1-title">
+      <div class="modal__container bg-white w-full md:w-11/12 lg:w-2/3 md:h-auto md:rounded-lg p-4 md:p-8 md:shadow-lg md:transform-none transform md:translate-y-0  transition-transform duration-500 ease-in-out" role="dialog" aria-modal="true" aria-labelledby="modal-1-title">
         <header class="modal__header">
           <h2 class="modal__title" id="modal-1-title">
             【管理ID{{ props.item.management_id }}】{{ props.item.name }}の編集履歴
@@ -99,7 +99,7 @@ const formatDate = (timestamp) => {
   </div>
   <!-- item.idを親から子へ渡す、async await axiosの変数として渡される -->
    <!-- 行表示かタイル表示かでボタンの表示を切り替え -->
-  <button v-if="props.isTableView" @click="editHistories" type="button" data-micromodal-trigger="modal-1">
+  <button v-if="props.isTableView" @click="editHistories" type="button" data-micromodal-trigger="modal-1" class="h-4">
     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
   </button>
   <button v-else @click="editHistories(item)" type="button" data-micromodal-trigger="modal-1"
