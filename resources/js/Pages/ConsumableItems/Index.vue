@@ -140,7 +140,7 @@ const fetchConsumableItems = async () => {
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
                                       <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3" />
                                     </svg>
-                                    消耗品QRコ―ドをDL
+                                    消耗品QRコ―ドをダウンロード
                                   </a>
                               </div>
                             </div>
@@ -229,32 +229,37 @@ const fetchConsumableItems = async () => {
 
                           <!-- タイル表示 -->
                           <div>
-                            <div v-if="localConsumableItems.data.length > 0" class="flex flex-wrap -mx-4">
+                            <div v-if="localConsumableItems.data.length > 0" class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-0">
                               <template v-for="item in localConsumableItems.data" :key="item.id">
-                                <div class="lg:w-1/5 w-1/2 p-4 border">
+                                <div class="w-full p-2 border">
                                   <div class="" >
                                     <a class="mb-2 block relative h-48">
                                       <Link :href="route('items.show', { item: item.id })">
-                                        <img alt="ecommerce" class="object-cover object-center w-full h-full block" :src="item.image_path1">
+                                        <img alt="消耗品の画像" class="object-cover object-center w-full h-full block border border-gray-300" :src="item.image_path1">
                                       </Link>
                                     </a>
-                                    <div class="">
+                                    <div class="ml-4">
+                                      <span class="mr-2 text-base font-medium">備品名</span>
+                                      <span class="text-gray-900 title-font text-base">{{ item.name }}</span>
+                                    </div>
+
+                                    <div class="ml-4">
+                                      <span class="mr-2 text-xs lg:text-sm font-medium">管理ID</span>
                                       <Link :href="route('items.show', { item: item.id })">
-                                        <span class="text-blue-600 title-font font-medium">{{ item.management_id }}</span>
+                                        <span class="text-blue-600 title-font text-xs lg:text-sm">{{ item.management_id }}</span>
                                       </Link>
-                                      <span class="ml-4 text-gray-900 title-font font-medium">{{ item.name }}</span>
                                     </div>
-                                    <div>
-                                      <div>在庫数 {{ item.stock }} / 通知在庫数 {{ item.minimum_stock }}</div>
+                                    <div class="ml-4">
+                                      <span class="text-base">在庫数 {{ item.stock }} / 通知在庫数 {{ item.minimum_stock }} ({{ item.unit.name }})</span>
                                     </div>
-                                    <div class="flex max-h-20">
+                                    <div class="mt-2 flex justify-center space-x-4 md:space-x-1 lg:space-x-2 items-center max-h-20 ">
                                       <!-- 親コンポーネントからモーダルを開くボタン -->
-                                      <button @click="openModal(item)" type="button" data-micromodal-trigger="modal-1"
-                                      class="flex items-center text-white text-sm bg-gray-500 border-0 py-2 px-4 mx-auto focus:outline-none hover:bg-gray-600 rounded">
-                                        <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
-                                        履歴
+                                      <button @click="openModal(item)" type="button" data-micromodal-trigger="modal-1" class="flex items-center text-white text-sm bg-gray-500 border-0 py-2 px-4 focus:outline-none hover:bg-gray-600 rounded">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-5">
+                                          <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 6 9 12.75l4.286-4.286a11.948 11.948 0 0 1 4.306 6.43l.776 2.898m0 0 3.182-5.511m-3.182 5.51-5.511-3.181" />
+                                        </svg>
+                                        在庫履歴
                                       </button>
-                                      <!-- <StockHistoryModal :item="item" /> -->
                                       <UpdateStockModal :item="item" :userName="userName" :errors="errors" @fetch-consumableItems="fetchConsumableItems" />
                                     </div>
                                   </div>
