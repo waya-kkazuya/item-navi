@@ -309,7 +309,7 @@ const restoreItem = (id) => {
                               <table v-if="localItems.data && localItems.data.length > 0" class="table-fixed min-w-full text-left whitespace-no-wrap">
                                 <thead>
                                   <tr>
-                                    <th v-if="showDisposal" class="min-w-16 px-4 py-3 title-font tracking-wider font-medium text-center text-white text-xs md:text-base bg-sky-700">復元</th>
+                                    <th v-if="showDisposal" class="min-w-16 md:min-w-24 px-4 py-3 title-font tracking-wider font-medium text-center text-white text-xs md:text-base bg-sky-700">復元</th>
                                     <th class="min-w-16 md:min-w-20 px-4 py-3 title-font tracking-wider font-medium text-center text-white text-xs md:text-base bg-sky-700">履歴</th>
                                     <th class="min-w-28 md:min-w-32 px-4 py-3 title-font tracking-wider font-medium text-center text-white text-xs md:text-base bg-sky-700">管理ID</th>
                                     <th class="min-w-28 md:min-w-36 px-4 py-3 title-font tracking-wider font-medium text-center text-white text-xs md:text-base bg-sky-700">登録日</th>
@@ -335,17 +335,19 @@ const restoreItem = (id) => {
                                 <tbody>
                                   <tr v-for="item in localItems.data" :key="item.id" class="">
                                     <td v-if="showDisposal" class="border-b-2 border-gray-200 px-4 py-3 " :class="showDisposal ? 'bg-red-100' : ''">
-                                      <button type="button" @click="restoreItem(item.id)" class="text-blue-400" >
-                                        復元する
+                                      <button type="button" @click="restoreItem(item.id)" class="text-blue-400 flex justify-center" >
                                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
                                           <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 9V5.25A2.25 2.25 0 0 1 10.5 3h6a2.25 2.25 0 0 1 2.25 2.25v13.5A2.25 2.25 0 0 1 16.5 21h-6a2.25 2.25 0 0 1-2.25-2.25V15m-3 0-3-3m0 0 3-3m-3 3H15" />
                                         </svg>
+                                        復元
                                       </button>
                                     </td>
 
                                     <!-- マイクロモーダル -->
                                     <td class="border-b-2 border-gray-200 px-4 py-2" :class="showDisposal ? 'bg-red-100' : ''">
-                                      <EditHistoryModal v-bind:item="item" :isTableView="isTableView" />
+                                      <div class="flex justify-center items-center">
+                                        <EditHistoryModal v-bind:item="item" :isTableView="isTableView" />
+                                      </div>
                                     </td>
                                     <td class="border-b-2 border-gray-200 px-4 py-2 text-center text-xs md:text-base" :class="showDisposal ? 'bg-red-100' : ''">
                                       <Link class="text-blue-400" :href="route('items.show', { item: item.id })">
@@ -404,22 +406,22 @@ const restoreItem = (id) => {
                                     
 
                                     <div class="ml-4">
-                                      <span class="mr-2 text-base">備品名</span>
-                                      <span class="text-gray-900 title-font font-medium text-base">{{ item.name }}</span>
+                                      <span class="mr-2 text-base font-medium">備品名</span>
+                                      <span class="text-gray-900 title-font text-base">{{ item.name }}</span>
                                     </div>
                                     <div class="ml-4">
-                                      <span class="mr-2 text-xs">管理ID</span>
+                                      <span class="mr-2 text-xs lg:text-sm font-medium">管理ID</span>
                                       <Link :href="route('items.show', { item: item.id })">
-                                        <span class="text-blue-600 title-font font-medium text-xs">{{ item.management_id }}</span>
+                                        <span class="text-blue-600 title-font text-xs lg:text-sm">{{ item.management_id }}</span>
                                       </Link>
                                     </div>
                                     <div class="ml-4">
-                                      <span class="mr-2 text-xs">利用場所</span>
-                                      <span class="text-gray-900 title-font font-medium text-xs">{{ item.location_of_use.name }}</span>
+                                      <span class="mr-2 text-xs lg:text-sm font-medium">利用場所</span>
+                                      <span class="text-gray-900 title-font text-xs lg:text-sm">{{ item.location_of_use.name }}</span>
                                     </div>
                                     <div class="ml-4">
-                                      <span class="mr-2 text-xs">利用場所</span>
-                                      <span class="text-gray-900 title-font font-medium text-xs">{{ item.location_of_use.name }}</span>
+                                      <span class="mr-2 text-xs lg:text-sm font-medium">保管場所</span>
+                                      <span class="text-gray-900 title-font text-xs lg:text-sm">{{ item.storage_location.name }}</span>
                                     </div>
 
                                     <div class="flex justify-center space-x-4 md:space-x-1 lg:space-x-2 mt-2 w-full">
@@ -465,7 +467,7 @@ const restoreItem = (id) => {
         transform: translateX(100%);
     }
     input:checked ~ .block {
-        background-color: black;
+        background-color: red;
     }
     /* プレースホルダーの文字サイズを調整 */
     .placeholder-text-xs::placeholder {
