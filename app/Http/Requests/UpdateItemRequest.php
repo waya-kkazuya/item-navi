@@ -48,7 +48,7 @@ class UpdateItemRequest extends FormRequest
                 'date',
                 'nullable',
                 function ($attribute, $value, $fail) {
-                    $dateOfAcquisition = Carbon::parse(request()->input('dateOfAcquisition'));
+                    $dateOfAcquisition = Carbon::parse(request()->input('date_of_acquisition'));
                     $inspectionSchedule = Carbon::parse($value);
                     if ($inspectionSchedule->lt($dateOfAcquisition)) {
                         $fail('点検予定日は取得年月日以降の日付を入力してください');
@@ -63,7 +63,7 @@ class UpdateItemRequest extends FormRequest
                 'date',
                 'nullable',
                 function ($attribute, $value, $fail) {
-                    $dateOfAcquisition = Carbon::parse(request()->input('dateOfAcquisition'));
+                    $dateOfAcquisition = Carbon::parse(request()->input('date_of_acquisition'));
                     $disposalSchedule = Carbon::parse($value);
                     if ($disposalSchedule->lt($dateOfAcquisition)) {
                         $fail('廃棄予定日は取得年月日以降の日付を入力してください');
