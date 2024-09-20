@@ -150,7 +150,7 @@ const restoreItem = (id) => {
                         ウィンドウ幅テスト {{ width }}px
                       </div>
                       <section class="text-gray-600 body-font">
-                          <div class="container ,md:px-5 py-8 mx-auto">
+                          <div class="container ,md:px-5 mx-auto">
                             <!-- ボタンはコンテナ直下 -->
                             <div class="flex justify-center">
                                 <Link as="button" :href="route('items.create')" class="flex items-center text-white text-sm bg-green-500 border-0 py-2 px-6 focus:outline-none hover:bg-green-600 rounded">
@@ -278,7 +278,7 @@ const restoreItem = (id) => {
                             </div>
                           </div>
 
-                          <div class="mb-4">
+                          <div class="my-4">
                             <!-- チェックボックスを使用したトグルボタン -->
                             <label for="toggle" class="flex items-center cursor-pointer">
                               <div class="relative">
