@@ -55,6 +55,7 @@ class EdithistorySeeder extends Seeder
                 'new_value'=> null,
                 'edit_user' => 'admin',
                 'edit_reason_id' => null, 
+                'edit_reason_text' => null, 
                 'created_at' => '2024*04-01', //created_atは処理が行われたタイミング
             ],
             [
@@ -65,7 +66,8 @@ class EdithistorySeeder extends Seeder
                 'old_value' => 20,
                 'new_value'=> 18,
                 'edit_user' => 'admin',
-                'edit_reason_id' => null, 
+                'edit_reason_id' => 2, 
+                'edit_reason_text' => null, 
                 'created_at' => '2024*04-02', //created_atは処理が行われたタイミング
             ],
             [
@@ -76,7 +78,8 @@ class EdithistorySeeder extends Seeder
                 'old_value' => 'ペーパータオル1',
                 'new_value'=> 'ペーパータオル',
                 'edit_user' => 'admin',
-                'edit_reason_id' => null, 
+                'edit_reason_id' => 1, 
+                'edit_reason_text' => 'あいうえおかきくけこ', 
                 'created_at' => '2024*04-03', //created_atは処理が行われたタイミング
             ],
             [
@@ -87,7 +90,20 @@ class EdithistorySeeder extends Seeder
                 'old_value' => 1,
                 'new_value'=> 2,
                 'edit_user' => 'admin',
-                'edit_reason_id' => null, 
+                'edit_reason_id' => 1, 
+                'edit_reason_text' => '使用状況のの変更をします', 
+                'created_at' => '2024*04-04', //created_atは処理が行われたタイミング
+            ],
+            [
+                'edit_mode' => 'normal',
+                'operation_type' => 'update', //store(新規作成),update(編集更新),stock_in(入庫・在庫追加),stock_out(出庫・在庫消費),delete(廃棄),restore(復元)
+                'item_id' => 1,
+                'edited_field'=> 'date_of_acquisition',
+                'old_value' => 1,
+                'new_value'=> 2,
+                'edit_user' => 'admin',
+                'edit_reason_id' => 5, 
+                'edit_reason_text' => '取得日が間違っていたので修正しました', 
                 'created_at' => '2024*04-04', //created_atは処理が行われたタイミング
             ],
             [
@@ -99,6 +115,7 @@ class EdithistorySeeder extends Seeder
                 'new_value'=> null,
                 'edit_user' => 'admin',
                 'edit_reason_id' => null, 
+                'edit_reason_text' => null, 
                 'created_at' => '2024*04-05', //created_atは処理が行われたタイミング
             ],
             [
@@ -110,6 +127,7 @@ class EdithistorySeeder extends Seeder
                 'new_value'=> null,
                 'edit_user' => 'admin',
                 'edit_reason_id' => null, 
+                'edit_reason_text' => null, 
                 'created_at' => '2024*04-06', //created_atは処理が行われたタイミング
             ],
         ]);
