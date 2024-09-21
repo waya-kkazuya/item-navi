@@ -61,9 +61,8 @@ const updateStatus = async request => {
                   <div class="p-6 text-gray-900">
                     <FlashMessage />
                     <section class="text-gray-600 body-font">
-                        <div class="container px-5 py-8 mx-auto">
+                        <div class="container md:px-5 mx-auto">
                           <div class="flex items-center justify-around space-x-4">
-
 
                               <Link as="button" :href="route('item_requests.create')" class="flex items-center text-white text-sm bg-green-500 border-0 py-2 px-6 focus:outline-none hover:bg-green-600 rounded">
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
@@ -74,18 +73,18 @@ const updateStatus = async request => {
                           </div>
                         </div>
                         
-                        <div class="flex justify-between items-center mb-4">
-
-                          <div class="ml-4">
-                            <button @click="toggleSortOrder" class="flex w-24">
-                              <div class="text-sm">登録日</div>
+                        <div class="py-4 mb-4">
+                          <div class="md:w-24 ml-4">
+                            <button @click="toggleSortOrder" class="flex w-full text-sm">
                               <div>
-                                <div v-if="sortOrder == 'asc'">
+                                <div v-if="sortOrder == 'asc'" class="w-full flex justify-center">
+                                  登録日昇順
                                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="size-5">
                                     <path fill-rule="evenodd" d="M10 18a.75.75 0 0 1-.75-.75V4.66L7.3 6.76a.75.75 0 0 1-1.1-1.02l3.25-3.5a.75.75 0 0 1 1.1 0l3.25 3.5a.75.75 0 1 1-1.1 1.02l-1.95-2.1v12.59A.75.75 0 0 1 10 18Z" clip-rule="evenodd" />
                                   </svg>
                                 </div>
-                                <div v-else>
+                                <div v-else class="w-full flex justify-center">
+                                  登録日降順
                                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="size-5">
                                     <path fill-rule="evenodd" d="M10 2a.75.75 0 0 1 .75.75v12.59l1.95-2.1a.75.75 0 1 1 1.1 1.02l-3.25 3.5a.75.75 0 0 1-1.1 0l-3.25-3.5a.75.75 0 1 1 1.1-1.02l1.95 2.1V2.75A.75.75 0 0 1 10 2Z" clip-rule="evenodd" />
                                   </svg>
@@ -93,8 +92,9 @@ const updateStatus = async request => {
                               </div>
                             </button>
                           </div>
-                          <div class="">
-                            <div class="font-medium">リクエスト合計 {{ totalCount }}件</div>
+
+                          <div class="flex justify-end items-end space-x-2 mr-4">
+                            <div class="font-medium text-xs md:text-sm">リクエスト合計 {{ totalCount }}件</div>
                             <Pagination class="ml-4" :links="itemRequests.links"></Pagination>
                           </div>
                         </div>
@@ -105,30 +105,26 @@ const updateStatus = async request => {
                           <table v-if="itemRequests.data && itemRequests.data.length > 0" class="table-fixed min-w-full text-left whitespace-no-wrap">
                             <thead>
                               <tr>
-                                <th class="min-w-32 px-4 py-3 title-font tracking-wider font-medium text-white text-sm bg-sky-700">ステータス</th>
-                                <th class="min-w-36 px-4 py-3 title-font tracking-wider font-medium text-white text-sm bg-sky-700">登録日</th>
-                                <th class="min-w-40 px-4 py-3 title-font tracking-wider font-medium text-white text-sm bg-sky-700">商品名</th>
-                                <th class="min-w-40 px-4 py-3 title-font tracking-wider font-medium text-white text-sm bg-sky-700">カテゴリ</th>
-                                <th class="min-w-32 px-4 py-3 title-font tracking-wider font-medium text-white text-sm bg-sky-700">利用場所</th>
-                                <th class="min-w-32 px-4 py-3 title-font tracking-wider font-medium text-white text-sm bg-sky-700">メーカー</th>
-                                <th class="min-w-32 px-4 py-3 title-font tracking-wider font-medium text-white text-sm bg-sky-700">参考サイト</th>
-                                <th class="min-w-32 px-4 py-3 title-font tracking-wider font-medium text-white text-sm bg-sky-700">価格</th>
-                                <th class="min-w-32 px-4 py-3 title-font tracking-wider font-medium text-white text-sm bg-sky-700">申請者</th>
-                                <th class="min-w-32 px-4 py-3 title-font tracking-wider font-medium text-white text-sm bg-sky-700">申請理由</th>
+                                <th class="min-w-32 md:min-w-32 px-4 py-3 title-font tracking-wider font-medium text-center text-white text-xs md:text-base bg-sky-700">ステータス</th>
+                                <th class="min-w-48 md:min-w-36 px-4 py-3 title-font tracking-wider font-medium text-center text-white text-xs md:text-base bg-sky-700">登録日</th>
+                                <th class="min-w-28 md:min-w-40 px-4 py-3 title-font tracking-wider font-medium text-center text-white text-xs md:text-base bg-sky-700">商品名</th>
+                                <th class="min-w-32 md:min-w-40 px-4 py-3 title-font tracking-wider font-medium text-center text-white text-xs md:text-base bg-sky-700">カテゴリ</th>
+                                <th class="min-w-28 md:min-w-32 px-4 py-3 title-font tracking-wider font-medium text-center text-white text-xs md:text-base bg-sky-700">利用場所</th>
+                                <th class="min-w-32 md:min-w-32 px-4 py-3 title-font tracking-wider font-medium text-center text-white text-xs md:text-base bg-sky-700">メーカー</th>
+                                <th class="min-w-28 md:min-w-32 px-4 py-3 title-font tracking-wider font-medium text-center text-white text-xs md:text-base bg-sky-700">参考サイト</th>
+                                <th class="min-w-24 md:min-w-32 px-4 py-3 title-font tracking-wider font-medium text-center text-white text-xs md:text-base bg-sky-700">価格</th>
+                                <th class="min-w-24 md:min-w-32 px-4 py-3 title-font tracking-wider font-medium text-center text-white text-xs md:text-base bg-sky-700">申請者</th>
+                                <th class="min-w-36 md:min-w-36 px-4 py-3 title-font tracking-wider font-medium text-center text-white text-xs md:text-base bg-sky-700">申請理由</th>
                               </tr>
                             </thead>
                             <tbody>
                               <tr v-for="request in itemRequests.data" :key="request.id" class="">
 
-                                <td class="border-b-2 border-gray-200 px-4 py-3">
+                                <td class="border-b-2 border-gray-200 text-center text-xs md:text-base px-4 py-3">
                                   {{ request.request_status.status_name }}
-                                  <select 
-                                  name="reqeustStatusId" 
-                                  id="reqeustStatusId" 
-                                  v-model="request.request_status_id" 
-                                  @change="updateStatus(request)" 
+                                  <select name="reqeustStatusId" id="reqeustStatusId" v-model="request.request_status_id" @change="updateStatus(request)" 
                                   :class="[
-                                    'w-full bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out',
+                                    'w-full bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-xs md:text-base outline-none text-gray-700 py-0 md:py-1 md:px-3 leading-8 transition-colors duration-200 ease-in-out',
                                     {
                                       'bg-gray-200': request.request_status_id == 1,
                                       'bg-yellow-200': request.request_status_id == 2,
@@ -137,18 +133,18 @@ const updateStatus = async request => {
                                     }
                                   ]"
                                   >
-                                      <option v-for="status in requestStatuses" :key="status.id" :value="status.id">{{ status.status_name }}</option>
+                                    <option v-for="status in requestStatuses" :key="status.id" :value="status.id">{{ status.status_name }}</option>
                                   </select>
                                 </td>
-                                <td class="border-b-2 border-gray-200 px-4 py-3">{{ request.formatted_created_at }}</td>
-                                <td class="border-b-2 border-gray-200 px-4 py-3">{{ request.name }}</td>
-                                <td class="border-b-2 border-gray-200 px-4 py-3">{{ request.category.name }}</td>
-                                <td class="border-b-2 border-gray-200 px-4 py-3">{{ request.location_of_use.name }}</td>
-                                <td class="border-b-2 border-gray-200 px-4 py-3">{{ request.manufacturer }}</td>
-                                <td class="border-b-2 border-gray-200 px-4 py-3">{{ request.reference }}</td>
-                                <td class="border-b-2 border-gray-200 px-4 py-3">{{ request.price }}</td>
-                                <td class="border-b-2 border-gray-200 px-4 py-3">{{ request.requestor }}</td>
-                                <td class="border-b-2 border-gray-200 px-4 py-3">{{ request.remarks_from_requestor ?? '' }}</td>
+                                <td class="border-b-2 border-gray-200 text-center text-xs md:text-base px-4 py-2">{{ request.formatted_created_at }}</td>
+                                <td class="border-b-2 border-gray-200 text-center text-xs md:text-base px-4 py-2">{{ request.name }}</td>
+                                <td class="border-b-2 border-gray-200 text-center text-xs md:text-base px-4 py-2">{{ request.category.name }}</td>
+                                <td class="border-b-2 border-gray-200 text-center text-xs md:text-base px-4 py-2">{{ request.location_of_use.name }}</td>
+                                <td class="border-b-2 border-gray-200 text-center text-xs md:text-base px-4 py-2">{{ request.manufacturer }}</td>
+                                <td class="border-b-2 border-gray-200 text-center text-xs md:text-base px-4 py-2">{{ request.reference }}</td>
+                                <td class="border-b-2 border-gray-200 text-center text-xs md:text-base px-4 py-2">{{ request.price }}</td>
+                                <td class="border-b-2 border-gray-200 text-center text-xs md:text-base px-4 py-2">{{ request.requestor }}</td>
+                                <td class="border-b-2 border-gray-200 text-center text-xs md:text-base px-4 py-2">{{ request.remarks_from_requestor ?? '' }}</td>
                               </tr>
                             </tbody>
                           </table>
