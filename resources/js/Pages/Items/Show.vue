@@ -69,7 +69,7 @@ const deleteItem = id => {
                                         <div class="grid grid-cols-1 md:grid-cols-3 md:gap-4">
 
                                             <div class="col-span-1">
-                                                <div class="p-4 border bordr-4 mb-8">
+                                                <div class="p-4 border bordr-4 mb-4">
 
                                                     <div class="p-2 w-full">
                                                         <label for="fileName" class="leading-7 text-xs md:text-base text-blue-900">
@@ -82,7 +82,7 @@ const deleteItem = id => {
                                                 </div>
                                             </div>
                                             <div class="col-span-2">
-                                                <div class="p-4 border bordr-4 mb-8">
+                                                <div class="p-4 border bordr-4 mb-4">
                                                     <div class="p-2 w-full">
                                                         <label for="name" class="leading-7 text-xs md:text-base text-blue-900">
                                                             備品名
@@ -101,7 +101,7 @@ const deleteItem = id => {
                                                     </div>  
                                                 </div>
                                                 
-                                                <div class="p-4 border bordr-4 mb-8">
+                                                <div class="p-4 border bordr-4 mb-4">
                                                     <div class="pl-2 w-full">
                                                         <label for="stock" class="leading-7 text-xs md:text-base text-blue-900">
                                                             在庫数
@@ -137,7 +137,7 @@ const deleteItem = id => {
                                                     </div>
                                                 </div>
 
-                                                <div class="p-4 border bordr-4 mb-8">
+                                                <div class="p-4 border bordr-4 mb-4">
                                                     <div class="p-2 w-full">
                                                         <label for="usageStatusId" class="leading-7 text-xs md:text-base text-blue-900">
                                                             利用状況
@@ -175,12 +175,12 @@ const deleteItem = id => {
                                                     </div>
                                                 </div>
 
-                                                <div class="p-4 border bordr-4 mb-8">
+                                                <div class="p-4 border bordr-4 mb-4">
                                                     <div class="p-2 w-full">
                                                         <label for="acquisitionMethodId" class="leading-7 text-xs md:text-base text-blue-900">
                                                             取得区分
                                                         </label>
-                                                        <div name="acquisitionMethodId" id="acquisitionMethodId" class="w-full bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-xs md:text-basee outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
+                                                        <div name="acquisitionMethodId" id="acquisitionMethodId" class="w-full bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-xs md:text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
                                                             {{ item.acquisition_method.name }}
                                                         </div>
                                                     </div>
