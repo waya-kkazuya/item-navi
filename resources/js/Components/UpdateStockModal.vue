@@ -143,7 +143,7 @@ const formatDate = (timestamp) => {
           <button @click="closeModal" type="button" class="modal__close" aria-label="Close modal" data-micromodal-close></button>
         </header>
         <main class="modal__content" id="modal-1-content">
-          <div v-if="activeTab === '出庫'" class="p-4 md:px-16">
+          <div v-if="activeTab === '出庫'" class="p-4">
             <!-- フォームの開始 -->
             <form @submit.prevent="decreaseStock(item)">
               <div class="">
@@ -232,7 +232,7 @@ const formatDate = (timestamp) => {
 
 
 
-          <div v-if="activeTab === '入庫'" class="p-4 md:px-16">
+          <div v-if="activeTab === '入庫'" class="p-4">
             <!-- フォームの開始 -->
             <form @submit.prevent="increaseStock(item)">
               <div>
@@ -245,14 +245,18 @@ const formatDate = (timestamp) => {
                   </div>
                 </div>
                 <div class="p-2 w-full">
-                  <label for="transaction_date" class="leading-7 text-xs md:text-base text-blue-900">入庫日</label>
+                  <label for="transaction_date" class="leading-7 text-xs md:text-base text-blue-900">
+                    入庫日
+                  </label>
                   <div class="relative">
                       <input type="date" id="transaction_date" name="transaction_date" v-model="increaseForm.transaction_date" class="w-full md:w-1/2 bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-xs md:text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
                   </div>
                   <div v-if="localErrors.transaction_date" class="font-medium text-xs md:text-base text-red-600">{{ localErrors.transaction_date }}</div>
                 </div>
                 <div class="p-2 w-full">
-                  <label for="operator_name" class="leading-7 text-xs md:text-base text-blue-900">実施者</label>
+                  <label for="operator_name" class="leading-7 text-xs md:text-base text-blue-900">
+                    実施者
+                  </label>
                   <div>
                     <input type="text" id="operator_name" name="operator_name" v-model="increaseForm.operator_name" class="w-full md:w-1/2 bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-xs md:text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
                     <div v-if="localErrors.operator_name" class="font-medium text-xs md:text-base text-red-600">{{ localErrors.operator_name }}</div>       
