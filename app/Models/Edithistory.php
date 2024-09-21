@@ -27,8 +27,6 @@ class Edithistory extends Model
         return $this->belongsTo(Item::class);
     }
 
-
-
     public function editReason()
     {
         return $this->belongsTo(EditReason::class);
