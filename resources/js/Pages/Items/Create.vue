@@ -1,7 +1,7 @@
 <script setup>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import { Head, router, useForm } from '@inertiajs/vue3';
-import { reactive, ref } from 'vue';
+import { Head, router, useForm, usePage } from '@inertiajs/vue3';
+import { onMounted, watch, reactive, ref } from 'vue';
 import FlashMessage from '@/Components/FlashMessage.vue';
 
 const props = defineProps({
@@ -10,6 +10,11 @@ const props = defineProps({
     units: Array,
     usageStatuses: Array,
     acquisitionMethods: Array,
+    name: String,
+    category_id: Number,
+    location_of_use_id: Number,
+    manufacturer: String,
+    price: Number,
     errors: Object
 })
 
@@ -17,8 +22,8 @@ const props = defineProps({
 const form = useForm({
     id: null, //
     image_file: null,
-    name: null,
-    category_id: 0, 
+    name: props.name ?? null,
+    category_id: props.category_id ?? 0, 
     //   image1: null, //保存する際は画像名 
     stock: 1, // 最初から1を入力しておく
     unit_id: 1,
@@ -26,18 +31,19 @@ const form = useForm({
     notification: true,
     usage_status_id: 0,
     end_user: null,
-    location_of_use_id: 0, // locationsテーブルで1は「未選択」
+    location_of_use_id: props.location_of_use_id ?? 0, // locationsテーブルで1は「未選択」
     storage_location_id: 0, // locationsテーブルで1は「未選択」
     acquisition_method_id: 0,
     acquisition_source: null,
-    price: 0,
+    price: props.price ?? 0,
     date_of_acquisition: new Date().toISOString().substr(0, 10),
-    manufacturer: null,
+    manufacturer: props.manufacturer ?? null,
     product_number: null,
     inspection_scheduled_date: null, // 初期値はnull
     disposal_scheduled_date: null, // 初期値はnull
     remarks: null,
 })
+
 
 const file_preview_src = ref('')
 
@@ -49,17 +55,6 @@ const handleFileUpload = (event) => {
         console.log(file_preview_src.value)
     }
 };
-
-// 画像が1枚の場合はFormDataは生成しなくて良い
-// const storeItem = () => {
-//     router.visit('/items', {
-//         method: 'post',
-//         data: form,
-//         onError: (errors) => {
-//             form.errors = errors
-//         }
-//     })
-// }
 
 // router.visitではuseFormの入力値保持機能は使えない
 // form.postなら入力値保持機能(old関数))が使える

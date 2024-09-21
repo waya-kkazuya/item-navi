@@ -13,7 +13,7 @@ const props = defineProps({
 })
 
 // 作成日でソート
-const sortOrder = ref(props.sortOrder ?? 'asc')
+const sortOrder = ref(props.sortOrder ?? 'desc')
 // リクエスト合計件数
 const totalCount = ref(props.totalCount)
 
@@ -83,7 +83,7 @@ onMounted(() => {
                         <div class="container md:px-5 mx-auto">
                           <div class="flex items-center justify-around space-x-4">
 
-                              <Link as="button" :href="route('item_requests.create')" class="flex items-center text-white text-sm bg-green-500 border-0 py-2 px-6 focus:outline-none hover:bg-green-600 rounded">
+                              <Link as="button" :href="route('item_requests.create')" class="flex items-center text-white text-sm bg-gray-400 border-0 py-2 px-6 focus:outline-none hover:bg-gray-300 rounded">
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
                                   <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
                                 </svg>
@@ -124,6 +124,7 @@ onMounted(() => {
                           <table v-if="itemRequests.data && itemRequests.data.length > 0" class="table-fixed min-w-full text-left whitespace-no-wrap">
                             <thead>
                               <tr>
+                                <th class="min-w-32 md:min-w-32 px-4 py-3 title-font tracking-wider font-medium text-center text-white text-xs md:text-base bg-sky-700">登録</th>
                                 <th class="min-w-32 md:min-w-32 px-4 py-3 title-font tracking-wider font-medium text-center text-white text-xs md:text-base bg-sky-700">ステータス</th>
                                 <th class="min-w-48 md:min-w-36 px-4 py-3 title-font tracking-wider font-medium text-center text-white text-xs md:text-base bg-sky-700">登録日</th>
                                 <th class="min-w-28 md:min-w-40 px-4 py-3 title-font tracking-wider font-medium text-center text-white text-xs md:text-base bg-sky-700">商品名</th>
@@ -137,8 +138,23 @@ onMounted(() => {
                               </tr>
                             </thead>
                             <tbody>
-                              <tr v-for="request in itemRequests.data" :key="request.id" class="">
-
+                              <tr v-for="request in itemRequests.data" :key="request.id">
+                                <td class="border-b-2 border-gray-200 text-center text-xs md:text-base px-4 py-3">
+                                  <Link as="button" 
+                                    :href="route('items.create', {
+                                      name: request.name, 
+                                      category_id: request.category_id, 
+                                      location_of_use_id: request.location_of_use_id,
+                                      manufacturer: request.manufacturer,
+                                      price: request.price
+                                    })"
+                                    class="w-28 flex justify-center items-center text-white text-xs bg-green-500 border-0 py-1 px-0 focus:outline-none hover:bg-green-600 rounded">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                                      <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                                    </svg>
+                                    新規登録
+                                  </Link>
+                                </td>
                                 <td class="border-b-2 border-gray-200 text-center text-xs md:text-base px-4 py-3">
                                   <template v-if="loginUserRole <= 5">
                                     <select name="reqeustStatusId" id="reqeustStatusId" v-model="request.request_status_id" @change="updateStatus(request)" 
