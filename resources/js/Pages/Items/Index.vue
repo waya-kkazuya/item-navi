@@ -150,7 +150,7 @@ const restoreItem = (id) => {
                         ウィンドウ幅テスト {{ width }}px
                       </div>
                       <section class="text-gray-600 body-font">
-                          <div class="container ,md:px-5 mx-auto">
+                          <div class="container md:px-5 mx-auto">
                             <!-- ボタンはコンテナ直下 -->
                             <div class="flex justify-center">
                                 <Link as="button" :href="route('items.create')" class="flex items-center text-white text-sm bg-green-500 border-0 py-2 px-6 focus:outline-none hover:bg-green-600 rounded">
@@ -181,7 +181,7 @@ const restoreItem = (id) => {
                                   </div>
 
                                   <!-- 作成日でソート -->
-                                  <div class="md:w-24 ml-4 md:ml-0 ">
+                                  <div class="md:w-24 ml-4 md:ml-0">
                                     <button @click="toggleSortOrder" class="flex w-full text-sm">
                                       <div v-if="sortOrder == 'asc'" class="w-full flex justify-center">
                                         作成日昇順
@@ -433,10 +433,10 @@ const restoreItem = (id) => {
                                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h13M12 5l7 7-7 7"/></svg>
                                       </Link>
                                       <button v-else type="button" @click="restoreItem(item.id)" class="flex items-center text-white text-sm bg-blue-800 border-0 py-2 px-4 focus:outline-none hover:bg-blue-900 rounded flex-shrink-0">
-                                        復元する
-                                        <svg class="w-6 h-6 size-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                        <svg class="w-5 h-5 size-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
                                           <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 9V5.25A2.25 2.25 0 0 1 10.5 3h6a2.25 2.25 0 0 1 2.25 2.25v13.5A2.25 2.25 0 0 1 16.5 21h-6a2.25 2.25 0 0 1-2.25-2.25V15m-3 0-3-3m0 0 3-3m-3 3H15" />
                                         </svg>
+                                        復元する
                                       </button>
                                     </div>
 
