@@ -383,11 +383,13 @@ class ItemController extends Controller
         $item = Item::with($withRelations)->find($item->id);  
 
         // statusがfalseの点検予定日だけを取得し、日付でソートして最も古いものを取得
-        $pendingInspection = $item->inspections->where('status', false)->sortBy('scheduled_date')->first();
+        $pendingInspection = $item->inspections->where('status', false)->sortBy('inspection_scheduled_date')->first();
         // 最後に行った点検のレコードを取得
         $previousInspection = $item->inspections->where('status', true)->sortByDesc('inspection_date')->first();
         // dd($previousInspection);
         // $previousInspectionDate = $previousInspection ? Carbon::parse($previousInspection->inspection_date)->format('Y年m月d日') : '';
+
+        // dd($pendingInspection);
 
         // image1カラムがnullかチェック
         if (is_null($item->image1)) {

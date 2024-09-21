@@ -95,11 +95,11 @@ class Item extends Model
     {   
         // $input=検索ワードがemptyの場合はすべての備品一覧を返す
         if(!empty($input)){
-            if(Item::where('name', 'like', "%{$input}%")->exists())
-            {
+            // if(Item::where('name', 'like', "%{$input}%")->exists())
+            // {
                 // return $query->where('name', 'like', $input . '%' );
                 return $query->where('name', 'like', "%{$input}%");
-            }
+            // }
         }
     }
 

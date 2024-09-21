@@ -24,8 +24,8 @@ class ConsumableItemController extends Controller
 
         $search = $request->query('search', '');
 
-        // 作成日でソートの値、初期値はasc
-        $sortOrder = $request->query('sortOrder', 'asc');
+        // 作成日でソートの値、初期値はdesc
+        $sortOrder = $request->query('sortOrder', 'desc');
 
         // プルダウンの数値、第2引数は初期値で0
         // カテゴリのプルダウンは必要ない
