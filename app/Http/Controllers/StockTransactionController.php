@@ -69,7 +69,7 @@ class StockTransactionController extends Controller
         ->where('item_id', $id)
         ->where('edited_field', 'stock')
         ->select('action_type', 'old_value', 'new_value','edited_at');
-
+        
 
         // 入庫と出庫の場合でそれぞれ在庫数の差を取得している
         $data = DB::table($subQuery)
