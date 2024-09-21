@@ -14,7 +14,7 @@ const props = defineProps({
 
 // 作成日でソート
 const sortOrder = ref(props.sortOrder ?? 'asc')
-
+// リクエスト合計件数
 const totalCount = ref(props.totalCount)
 
 // すべてのフィルターをまとめる
@@ -42,6 +42,25 @@ const updateStatus = async request => {
     console.error('Error updating status:', error)
   }
 }
+
+
+const loginUserRole = ref(null);
+// ログインユーザー情報取得
+const getUserRole = async () => {
+  try {
+    const res = await axios.get('/api/user-role');
+    console.log(res.data)
+    loginUserRole.value = res.data;
+    console.log(loginUserRole.value)
+  } catch (error) {
+    console.error('Error fetching user role:', error);
+  }
+};
+
+onMounted(() => {
+  getUserRole()
+  // console.log(loginUserRole.value)
+})
 
 </script>
 
@@ -121,20 +140,24 @@ const updateStatus = async request => {
                               <tr v-for="request in itemRequests.data" :key="request.id" class="">
 
                                 <td class="border-b-2 border-gray-200 text-center text-xs md:text-base px-4 py-3">
-                                  {{ request.request_status.status_name }}
-                                  <select name="reqeustStatusId" id="reqeustStatusId" v-model="request.request_status_id" @change="updateStatus(request)" 
-                                  :class="[
-                                    'w-full bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-xs md:text-base outline-none text-gray-700 py-0 md:py-1 md:px-3 leading-8 transition-colors duration-200 ease-in-out',
-                                    {
-                                      'bg-gray-200': request.request_status_id == 1,
-                                      'bg-yellow-200': request.request_status_id == 2,
-                                      'bg-green-200': request.request_status_id == 3,
-                                      'bg-pink-200': request.request_status_id == 4
-                                    }
-                                  ]"
-                                  >
-                                    <option v-for="status in requestStatuses" :key="status.id" :value="status.id">{{ status.status_name }}</option>
-                                  </select>
+                                  <template v-if="loginUserRole <= 5">
+                                    <select name="reqeustStatusId" id="reqeustStatusId" v-model="request.request_status_id" @change="updateStatus(request)" 
+                                    :class="[
+                                      'w-full bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-xs md:text-base outline-none text-gray-700 py-0 md:py-1 md:px-3 leading-8 transition-colors duration-200 ease-in-out',
+                                      {
+                                        'bg-gray-200': request.request_status_id == 1,
+                                        'bg-yellow-200': request.request_status_id == 2,
+                                        'bg-green-200': request.request_status_id == 3,
+                                        'bg-pink-200': request.request_status_id == 4
+                                      }
+                                    ]"
+                                    >
+                                      <option v-for="status in requestStatuses" :key="status.id" :value="status.id">{{ status.status_name }}</option>
+                                    </select>
+                                  </template>
+                                  <template v-else>
+                                    {{ request.request_status.status_name }}
+                                  </template>
                                 </td>
                                 <td class="border-b-2 border-gray-200 text-center text-xs md:text-base px-4 py-2">{{ request.formatted_created_at }}</td>
                                 <td class="border-b-2 border-gray-200 text-center text-xs md:text-base px-4 py-2">{{ request.name }}</td>

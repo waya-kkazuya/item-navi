@@ -72,10 +72,17 @@ Route::middleware(['auth:sanctum', 'verified', 'can:staff-higher'])->group(funct
   Route::patch('/notifications/{id}/read', [NotificationController::class, 'markAsRead']);
 });
 
+// リクエスト一覧画面でユーザーの権限情報を取得するためのAPI
+
+
 // リクエストのステータスのプルダウンをadmin,staffが変更するためのAPI
 Route::middleware(['auth:sanctum', 'verified', 'can:staff-higher'])
 ->post('item-requests/{id}/update-status', [ItemRequestController::class, 'updateStatus']);
 
+Route::middleware(['auth:sanctum', 'verified', 'can:user-higher'])
+->get('/user-role', function (Request $request) {
+  return auth()->user()->role;
+});
 
 // グラフテスト用
 Route::middleware('auth:sanctum')
