@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AnalysisController;
 use App\Http\Controllers\Api\ConsumableItemsController;
 use App\Http\Controllers\ConsumableItemController;
+use App\Http\Controllers\EdithistoryController;
 use App\Models\Edithistory;
 use App\Models\StockTransaction;
 use App\Http\Controllers\ItemController;
@@ -36,12 +37,15 @@ Route::middleware(['auth:sanctum', 'verified', 'can:staff-higher'])
 
 // 対象の備品の編集履歴を取得するためのAPI
 Route::middleware(['auth:sanctum', 'verified', 'can:staff-higher'])
-->get('/edithistory', function (Request $request) {
-  return Edithistory::where('item_id', $request->item_id)
-  ->orderBy('created_at', 'desc')
-  ->take(10)
-  ->get();
-});
+->get('/edithistory', [EdithistoryController::class, 'index']);
+// Route::middleware(['auth:sanctum', 'verified', 'can:staff-higher'])
+// ->get('/edithistory', function (Request $request) {
+//   return Edithistory::where('item_id', $request->item_id)
+//     ->with('editReason')
+//     ->orderBy('created_at', 'desc')
+//     ->take(10)
+//     ->get();
+// });
 
 
 // 消耗品の入出庫で更新した際、在庫数を反映するためのAPI

@@ -106,18 +106,18 @@ class EdithistorySeeder extends Seeder
                 'edit_reason_text' => '取得日が間違っていたので修正しました', 
                 'created_at' => '2024*04-04', //created_atは処理が行われたタイミング
             ],
-            [
-                'edit_mode' => 'normal',
-                'operation_type' => 'delete', //store(新規作成),update(編集更新),stock_in(入庫・在庫追加),stock_out(出庫・在庫消費),delete(廃棄),restore(復元)
-                'item_id' => 1,
-                'edited_field'=> null,
-                'old_value' => null,
-                'new_value'=> null,
-                'edit_user' => 'admin',
-                'edit_reason_id' => null, 
-                'edit_reason_text' => null, 
-                'created_at' => '2024*04-05', //created_atは処理が行われたタイミング
-            ],
+            // ソフトデリートをダミーデータに含めると矛盾が生じる
+            // [
+            //     'edit_mode' => 'normal',
+            //     'operation_type' => 'soft_delete', //store(新規作成),update(編集更新),stock_in(入庫・在庫追加),stock_out(出庫・在庫消費),delete(廃棄),restore(復元)
+            //     'item_id' => 1,
+            //     'edited_field'=> null,
+            //     'old_value' => null,
+            //     'new_value'=> null,
+            //     'edit_user' => 'admin',
+            //     'edit_reason_id' => null, 
+            //     'created_at' => '2024*04-05', //created_atは処理が行われたタイミング
+            // ],
             [
                 'edit_mode' => 'normal',
                 'operation_type' => 'restore', //store(新規作成),update(編集更新),stock_in(入庫・在庫追加),stock_out(出庫・在庫消費),delete(廃棄),restore(復元)

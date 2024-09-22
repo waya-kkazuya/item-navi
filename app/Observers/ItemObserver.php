@@ -44,10 +44,10 @@ class ItemObserver
 
 
         // セッションから編集理由を取得
-        $edit_reeason_id = Session::get('edit_reeason_id');
+        $edit_reason_id = Session::get('edit_reeason_id');
         $edit_reason_text = Session::get('edit_reason_text');
 
-        // dd($edit_reeason_id, $edit_reason_text);
+        // dd($edit_reason_id, $edit_reason_text);
 
         // 仮置き
         $edit_mode = 'normal';
@@ -66,7 +66,7 @@ class ItemObserver
                 'old_value' => $oldValue,
                 'new_value' => $newValue,
                 'edit_user' => Auth::user()->name ?? '',
-                'edit_reason_id' => $edit_reeason_id, //プルダウン
+                'edit_reason_id' => $edit_reason_id, //プルダウン
                 'edit_reason_text' => $edit_reason_text, //その他テキストエリア
             ]);
         }

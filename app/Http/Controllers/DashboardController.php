@@ -72,7 +72,9 @@ class DashboardController extends Controller
             // ->orderBy('edithistories.created_at', 'desc')
             // ->get()
             // ->groupBy('date');
-        $editHistories = EditHistory::with(['item', 'editReason'])
+        $editHistories = EditHistory::with(['item' => function ($query) {
+                        $query->withTrashed();
+                    }, 'editReason'])
             ->select(
                 DB::raw('DATE(created_at) as date'), 
                 DB::raw('DAYOFWEEK(created_at) as day_of_week'),
@@ -112,7 +114,7 @@ class DashboardController extends Controller
                     case 'stock_in':
                         $history->operation_description = 'の在庫を入庫';
                         break;
-                    case 'delete':
+                    case 'soft_delete':
                         $history->operation_description = '廃棄';
                         break;
                     case 'restore':
@@ -127,6 +129,7 @@ class DashboardController extends Controller
             });
         });
 
+        // dd($editHistories);
 
         // 空でも送れる
         return Inertia::render('Dashboard', [

@@ -75,7 +75,7 @@ class UpdateItemRequest extends FormRequest
             ],
 
             // 編集理由のバリデーション
-            'edit_reeason_id' => ['required', 'exists:edit_reasons,id'],
+            'edit_reason_id' => ['required', 'exists:edit_reasons,id'],
             'edit_reason_text' => ['nullable', 'max:200'],
         ];
     }

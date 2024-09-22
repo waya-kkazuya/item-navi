@@ -5,6 +5,7 @@ namespace App\Observers;
 use App\Models\Inspection;
 use App\Models\Edithistory;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
 
 class InspectionObserver
 {
@@ -29,18 +30,21 @@ class InspectionObserver
         // where('status', false)->first()がnullになる
         $changes = $inspection->getChanges();
 
+        // セッションから編集理由を取得
+        $edit_reason_id = Session::get('edit_reeason_id');
+        $edit_reason_text = Session::get('edit_reason_text');
 
         // dd($changes);
         // dd($changes['scheduled_date']);
 
         // scheduled_dateカラムのみを追跡
-        if (isset($changes['scheduled_date'])) {
+        if (isset($changes['inspection_scheduled_date'])) {
 
             // 仮置き
             $edit_mode = 'normal';
 
-            $oldValue = $inspection->getOriginal('scheduled_date');
-            $newValue = $changes['scheduled_date'];
+            $oldValue = $inspection->getOriginal('inspection_scheduled_date');
+            $newValue = $changes['inspection_scheduled_date'];
             // dd($oldValue, $newValue);
 
             Edithistory::create([
@@ -50,7 +54,9 @@ class InspectionObserver
                 'edited_field' => 'inspection_scheduled_date',
                 'old_value' => $oldValue,
                 'new_value' => $newValue,
-                'edit_user' => Auth::user()->name ?? '',       
+                'edit_user' => Auth::user()->name ?? '',
+                'edit_reason_id' => $edit_reason_id, //プルダウン
+                'edit_reason_text' => $edit_reason_text, //その他テキストエリア  
             ]);
         }
     }
