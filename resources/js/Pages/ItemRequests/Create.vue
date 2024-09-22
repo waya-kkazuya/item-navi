@@ -61,87 +61,97 @@ const storeItemRequest = () => {
                                 <div class="container px-8 py-8 mx-auto">                                    
                                     <div class="md:w-full mx-auto">
                                         <div class="-m-2">
-                                            <div class="p-4 border bordr-4 mb-8">
+                                            <div class="p-4 border bordr-4 mb-4">
                                                 <div class="p-2 w-full">
-                                                    <label for="name" class="leading-7 text-sm text-blue-900">
-                                                        商品名 <span class="text-red-600">*</span>
+                                                    <label for="name" class="leading-7 text-xs md:text-base text-blue-900">
+                                                        商品名
+                                                        <span class="ml-1 mr-2 bg-red-400 text-white text-xs md:text-base lg:text-xs py-1 px-2 rounded-md">必須</span>
                                                     </label>
-                                                    <input type="text" id="name" name="name" v-model="form.name" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
-                                                    <div v-if="errors.name" class="font-medium text-red-600">{{ errors.name }}</div>
+                                                    <input type="text" id="name" name="name" v-model="form.name" class="md:mt-1 w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-xs md:text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
+                                                    <div v-if="errors.name" class="font-medium text-red-600 text-xs md:text-base">{{ errors.name }}</div>
                                                 </div>
                                                 <div class="p-2 w-full">
-                                                    <label for="category_id" class="leading-7 text-sm text-blue-900">
-                                                        カテゴリ <span class="text-red-600">*</span>
+                                                    <label for="category_id" class="leading-7 text-xs md:text-base text-blue-900">
+                                                        カテゴリ
+                                                        <span class="ml-1 mr-2 bg-red-400 text-white text-xs md:text-base lg:text-xs py-1 px-2 rounded-md">必須</span>
                                                     </label><br>
-                                                    <select name="category_id" id="category_id" v-model="form.category_id" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
+                                                    <select name="category_id" id="category_id" v-model="form.category_id" class="md:mt-1 w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-xs md:text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
                                                         <option :value="0">選択してください</option>  
                                                         <option v-for="category in categories" :value="category.id" :key="category.id">{{ category.name }}</option>
                                                     </select>
-                                                    <div v-if="errors.category_id" class="font-medium text-red-600">{{ errors.category_id }}</div>
+                                                    <div v-if="errors.category_id" class="font-medium text-red-600 text-xs md:text-base">{{ errors.category_id }}</div>
                                                 </div>
                                             </div>
 
-                                            <div class="p-4 border bordr-4 mb-8">
+                                            <div class="p-4 border bordr-4 mb-4">
                                                 <div class="p-2 w-full">
-                                                    <label for="location_of_use_id" class="leading-7 text-sm text-blue-900">
-                                                        利用場所 <span class="text-red-600">*</span>
+                                                    <label for="location_of_use_id" class="leading-7 text-xs md:text-base text-blue-900">
+                                                        利用場所
+                                                        <span class="ml-1 mr-2 bg-red-400 text-white text-xs md:text-base lg:text-xs py-1 px-2 rounded-md">必須</span>
                                                     </label>
-                                                    <select name="location_of_use_id" id="location_of_use_id" v-model="form.location_of_use_id" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
+                                                    <select name="location_of_use_id" id="location_of_use_id" v-model="form.location_of_use_id" class="md:mt-1 w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-xs md:text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
                                                         <option :value="0">選択してください</option>
                                                         <option v-for="location in locations" :key="location.id" :value="location.id">{{ location.name }}</option>
                                                     </select>
-                                                    <div v-if="errors.location_of_use_id" class="font-medium text-red-600">{{ errors.location_of_use_id }}</div>
+                                                    <div v-if="errors.location_of_use_id" class="font-medium text-red-600 text-xs md:text-base">{{ errors.location_of_use_id }}</div>
                                                 </div>
                                             </div>
 
-                                            <div class="p-4 border bordr-4 mb-8">
+                                            <div class="p-4 border bordr-4 mb-4">
                                                 <div class="p-2 w-full">
-                                                    <label for="manufacturer" class="leading-7 text-sm text-blue-900">
+                                                    <label for="manufacturer" class="leading-7 text-xs md:text-base text-blue-900">
                                                         メーカー
+                                                        <span class="ml-1 mr-2 bg-gray-400 text-white text-xs md:text-base lg:text-xs py-1 px-2 rounded-md">任意</span>
                                                     </label>
-                                                    <input type="text" id="manufacturer" name="manufacturer" v-model="form.manufacturer" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
-                                                    <div v-if="errors.manufacturer" class="font-medium text-red-600">{{ errors.manufacturer }}</div>
+                                                    <input type="text" id="manufacturer" name="manufacturer" v-model="form.manufacturer" class="md:mt-1 w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-xs md:text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
+                                                    <div v-if="errors.manufacturer" class="font-medium text-red-600　text-xs md:text-base">{{ errors.manufacturer }}</div>
                                                 </div>  
 
                                                 <div class="p-2 w-full">
-                                                    <label for="reference" class="leading-7 text-sm text-blue-900">
+                                                    <label for="reference" class="leading-7 text-xs md:text-base text-blue-900">
                                                         参考サイト
+                                                        <span class="ml-1 mr-2 bg-gray-400 text-white text-xs md:text-base lg:text-xs py-1 px-2 rounded-md">任意</span>
                                                     </label>
-                                                    <input type="text" id="reference" name="reference" v-model="form.reference" placeholder="例 Amazonなど" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
-                                                    <div v-if="errors.reference" class="font-medium text-red-600">{{ errors.reference }}</div>
+                                                    <input type="text" id="reference" name="reference" v-model="form.reference" placeholder="例 Amazonなど" class="md:mt-1 w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-xs md:text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
+                                                    <div v-if="errors.reference" class="font-medium text-red-600 text-xs md:text-base">{{ errors.reference }}</div>
                                                 </div>
 
                                                 <div class="p-2 w-full">
-                                                    <label for="price" class="leading-7 text-sm text-blue-900">
+                                                    <label for="price" class="leading-7 text-xs md:text-base text-blue-900">
                                                         価格
+                                                        <span class="ml-1 mr-2 bg-gray-400 text-white text-xs md:text-base lg:text-xs py-1 px-2 rounded-md">任意</span>
                                                     </label>
-                                                    <input type="number" id="price" name="price" v-model="form.price" min="0" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
-                                                    <div v-if="errors.price" class="font-medium text-red-600">{{ errors.price }}</div>
+                                                    <input type="number" id="price" name="price" v-model="form.price" min="0" class="md:mt-1 w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-xs md:text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
+                                                    <div v-if="errors.price" class="font-medium text-red-600 text-xs md:text-base">{{ errors.price }}</div>
                                                 </div>
 
                                             </div>
 
                                             <div class="p-4 border bordr-4 mb-4">
                                                 <div class="p-2 w-full">
-                                                    <label for="requestor" class="leading-7 text-sm text-blue-900">
-                                                        申請者 <span class="text-red-600">*</span>
+                                                    <label for="requestor" class="leading-7 text-xs md:text-base text-blue-900">
+                                                        申請者
+                                                        <span class="ml-1 mr-2 bg-red-400 text-white text-xs md:text-base lg:text-xs py-1 px-2 rounded-md">必須</span>
                                                     </label>
-                                                    <input type="text" id="requestor" name="requestor" v-model="form.requestor" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
-                                                    <div v-if="errors.requestor" class="font-medium text-red-600">{{ errors.requestor }}</div>
+                                                    <input type="text" id="requestor" name="requestor" v-model="form.requestor" class="md:mt-1 w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-xs md:text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
+                                                    <div v-if="errors.requestor" class="font-medium text-red-600 text-xs md:text-base">{{ errors.requestor }}</div>
                                                 </div>
                                             
                                                 <div class="p-2 w-full">
-                                                    <label for="remarks_from_requestor" class="leading-7 text-sm text-blue-900">
-                                                        申請理由 <span class="text-red-600">*</span>
+                                                    <label for="remarks_from_requestor" class="leading-7 text-xs md:text-base text-blue-900">
+                                                        申請理由
+                                                        <span class="ml-1 mr-2 bg-red-400 text-white text-xs md:text-base lg:text-xs py-1 px-2 rounded-md">必須</span>
                                                     </label>
-                                                    <textarea id="remarks_from_requestor" name="remarks_from_requestor" maxlength="500" v-model="form.remarks_from_requestor" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 h-32 text-base outline-none text-gray-700 py-1 px-3 resize-none leading-6 transition-colors duration-200 ease-in-out"></textarea>
-                                                    <div v-if="errors.remarks_from_requestor" class="font-medium text-red-600">{{ errors.remarks_from_requestor }}</div>
+                                                    <textarea id="remarks_from_requestor" name="remarks_from_requestor" maxlength="500" v-model="form.remarks_from_requestor" class="md:mt-1 w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 h-32 text-xs md:text-base outline-none text-gray-700 py-1 px-3 resize-none leading-6 transition-colors duration-200 ease-in-out"></textarea>
+                                                    <div v-if="errors.remarks_from_requestor" class="font-medium text-red-600 text-xs md:text-base">{{ errors.remarks_from_requestor }}</div>
                                                 </div>
                                             </div>
 
                                             <div class="p-2 w-full">
                                                 <!-- <Link>タグでキャンセルボタン -->
-                                                <button class="flex mx-auto text-white bg-indigo-500 border-0 py-2 px-8 focus:outline-none hover:bg-indigo-600 rounded text-lg">登録する</button>
+                                                <button class="flex mx-auto text-white text-xs md:text-base bg-indigo-500 border-0 py-2 px-8 focus:outline-none hover:bg-indigo-600 rounded">
+                                                    リクエストする
+                                                </button>
                                             </div>
                                         </div>
                                     </div>
