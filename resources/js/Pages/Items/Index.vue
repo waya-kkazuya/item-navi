@@ -342,7 +342,6 @@ const restoreItem = (id) => {
                                         復元
                                       </button>
                                     </td>
-
                                     <!-- マイクロモーダル -->
                                     <td class="border-b-2 border-gray-200 px-4 py-2" :class="showDisposal ? 'bg-red-100' : ''">
                                       <div class="flex justify-center items-center">
@@ -350,9 +349,14 @@ const restoreItem = (id) => {
                                       </div>
                                     </td>
                                     <td class="border-b-2 border-gray-200 px-4 py-2 text-center text-xs md:text-base" :class="showDisposal ? 'bg-red-100' : ''">
-                                      <Link class="text-blue-400" :href="route('items.show', { item: item.id })">
+                                      <template v-if="!showDisposal">
+                                        <Link class="text-blue-400" :href="route('items.show', { item: item.id })">
+                                          {{ item.management_id }}
+                                        </Link>
+                                      </template>
+                                      <template v-else>
                                         {{ item.management_id }}
-                                      </Link>
+                                      </template>
                                     </td>
                                     <td class="border-b-2 border-gray-200 px-4 py-2 text-center text-xs md:text-base" :class="showDisposal ? 'bg-red-100' : ''">{{ item.created_at }}</td>
                                     <td class="border-b-2 border-gray-200 px-4 py-2 text-center text-xs md:text-base" :class="showDisposal ? 'bg-red-100' : ''">{{ item.name }}</td>
