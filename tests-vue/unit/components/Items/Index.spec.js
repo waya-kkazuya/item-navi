@@ -1,5 +1,5 @@
 import { shallowMount, mount } from '@vue/test-utils';
-import Index from '@/Pages/Items/Index.vue';
+import Index from '@/Pages/Items/IndexPrepare.vuetopTablet.vue';
 // import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 // import FlashMessage from '@/Components/FlashMessage.vue';
 // import Pagination from '@/Components/Pagination.vue';
