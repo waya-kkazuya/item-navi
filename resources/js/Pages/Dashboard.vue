@@ -40,10 +40,18 @@ const switchViewMode = () => {
                 <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                     <div class="md:flex w-full p-4">
                         <div class="md:w-2/5 md:border-r border-gray-300 p-4">
+                    <div class="md:flex w-full p-4">
+                        <div class="md:w-2/5 md:border-r border-gray-300 p-4">
                             <!-- 左側のテーブル -->
+                            <table class="w-full border border-gray-200 text-xs md:text-base">
                             <table class="w-full border border-gray-200 text-xs md:text-base">
                                 <thead>
                                     <tr>
+                                        <th class="w-2/3 border-b-2 border-gray-200 px-4 py-3 text-left text-white bg-sky-700">
+                                            備品の登録件数
+                                        </th>
+                                        <th class="w-1/3 border-b-2 border-gray-200 px-4 py-3 text-right bg-sky-700">
+                                            <select v-model="type" @change="switchViewMode" class="h-9 text-xs md:text-base">
                                         <th class="w-2/3 border-b-2 border-gray-200 px-4 py-3 text-left text-white bg-sky-700">
                                             備品の登録件数
                                         </th>
@@ -74,11 +82,25 @@ const switchViewMode = () => {
                                             <td class="border-b-2 border-gray-200 px-4 py-3 text-center">
                                                 <Link :href="route('items.index')" class="text-blue-500 hover:text-blue-700 underline block">
                                                     {{ allItems.length }}件
+                                                <Link :href="route('items.index')" class="text-blue-500 hover:text-blue-700 underline block">
+                                                    全体
+                                                </Link>
+                                            </td>
+                                            <td class="border-b-2 border-gray-200 px-4 py-3 text-center">
+                                                <Link :href="route('items.index')" class="text-blue-500 hover:text-blue-700 underline block">
+                                                    {{ allItems.length }}件
                                                 </Link>
                                             </td>
                                         </tr>
                                         <tr v-for="(group, categoryName) in itemsByType" :key="categoryName">
                                             <td class="border-b-2 border-gray-200 px-4 py-3">
+                                                <Link :href="route('items.index', { categoryId: group.category_id})" class="text-blue-500 hover:text-blue-700 underline block">
+                                                {{ categoryName }}
+                                                </Link>
+                                            </td>
+                                            <td class="border-b-2 border-gray-200 px-4 py-3 text-center">
+                                                <Link :href="route('items.index', { categoryId: group.category_id})" class="text-blue-500 hover:text-blue-700 underline block">
+                                                    {{ group.items.length }}件
                                                 <Link :href="route('items.index', { categoryId: group.category_id})" class="text-blue-500 hover:text-blue-700 underline block">
                                                 {{ categoryName }}
                                                 </Link>
@@ -100,11 +122,25 @@ const switchViewMode = () => {
                                             <td class="border-b-2 border-gray-200 px-4 py-3 text-center">
                                                 <Link :href="route('items.index')" class="text-blue-500 hover:text-blue-700 underline block">
                                                     {{ allItems.length }}件
+                                                <Link :href="route('items.index')" class="text-blue-500 hover:text-blue-700 underline block">
+                                                    全体
+                                                </Link>
+                                            </td>
+                                            <td class="border-b-2 border-gray-200 px-4 py-3 text-center">
+                                                <Link :href="route('items.index')" class="text-blue-500 hover:text-blue-700 underline block">
+                                                    {{ allItems.length }}件
                                                 </Link>
                                             </td>
                                         </tr>
                                         <tr v-for="(group, locationOfUseName) in itemsByType" :key="locationOfUseName">
                                             <td class="border-b-2 border-gray-200 px-4 py-3">
+                                                <Link :href="route('items.index', { locationOfUseId: group.location_of_use_id})" class="text-blue-500 hover:text-blue-700 underline block">
+                                                    {{ locationOfUseName }}
+                                                </Link>
+                                            </td>
+                                            <td class="border-b-2 border-gray-200 px-4 py-3 text-center">
+                                                <Link :href="route('items.index', { locationOfUseId: group.location_of_use_id})" class="text-blue-500 hover:text-blue-700 underline block">
+                                                    {{ group.items.length }}件
                                                 <Link :href="route('items.index', { locationOfUseId: group.location_of_use_id})" class="text-blue-500 hover:text-blue-700 underline block">
                                                     {{ locationOfUseName }}
                                                 </Link>
@@ -122,6 +158,8 @@ const switchViewMode = () => {
 
 
                         <!-- 右側のテーブル -->
+                        <div class="w-full md:w-3/5 p-4">
+                            <table class="w-full border border-gray-200 text-xs md:text-base">
                         <div class="w-full md:w-3/5 p-4">
                             <table class="w-full border border-gray-200 text-xs md:text-base">
                             <thead>
@@ -155,6 +193,7 @@ const switchViewMode = () => {
                                             <td></td>
                                             <td class="p-2">
                                                 <div class="relative bg-indigo-50 md:text-base p-2 rounded">
+                                                <div class="relative bg-indigo-50 md:text-base p-2 rounded">
                                                     <div class="arrow-up"></div>
                                                     <span>{{ history.edit_reason.reason }}</span>
                                                     <span v-if="history.edit_reason_text" class="ml-3">
@@ -182,6 +221,7 @@ const switchViewMode = () => {
   height: 0;
   border-left: 5px solid transparent;
   border-right: 5px solid transparent;
+  border-bottom: 5px solid #eef2ff; /* Tailwind's indigo-50 */
   border-bottom: 5px solid #eef2ff; /* Tailwind's indigo-50 */
   position: absolute;
   top: -5px;
