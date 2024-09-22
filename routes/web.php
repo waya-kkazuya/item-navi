@@ -59,11 +59,6 @@ Route::middleware(['auth', 'verified', 'can:staff-higher'])->group(function () {
     Route::put('/dispose_item/{item}', [DisposalController::class, 'disposeItem'])->name('dispose_item.disposeItem');
     Route::put('/inspect_item/{item}', [InspectionController::class, 'inspectItem'])->name('inspect_item.inspectItem');
 
-    // 省略可能なオプションのルートパラメータ{item_id?}を追加する
-    Route::get('consumable_items/{item_id?}', [ConsumableItemController::class, 'index'])->name('consumable_items');
-    // Route::get('consumable_item_lists', [ConsumableItemController::class, 'index'])->name('consumable_item_lists');
-
-    // Route::get('consumable_items/{id}/history', [ConsumableItemController::class, 'history'])->name('consumable_items.history');
 
     Route::put('decreaseStock/{item}', [UpdateStockController::class, 'decreaseStock'])->name('decreaseStock');
     Route::put('increaseStock/{item}', [UpdateStockController::class, 'increaseStock'])->name('increaseStock');
@@ -84,6 +79,11 @@ Route::middleware(['auth', 'verified', 'can:staff-higher'])->group(function () {
 // リクエストはuser権限でもアクセス可能
 // ページのステータスは権限がないと変更できない
 Route::middleware(['auth', 'verified', 'can:user-higher'])->group(function () {
+
+    // 省略可能なオプションのルートパラメータ{item_id?}を追加する
+    Route::get('consumable_items/{item_id?}', [ConsumableItemController::class, 'index'])->name('consumable_items');
+    // Route::get('consumable_items/{id}/history', [ConsumableItemController::class, 'history'])->name('consumable_items.history');
+
     Route::get('item-requests', [ItemRequestController::class, 'index'])
     ->name('item_requests.index');
 
