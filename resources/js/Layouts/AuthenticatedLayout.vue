@@ -11,7 +11,7 @@ import BellNotification from '@/Components/BellNotification.vue';
 const showingNavigationDropdown = ref(false);
 
 
-const page = usePage();
+const page = usePage()
 
 const profileImageUrl = computed(() =>{
     return page.props.auth.user.profile_image
@@ -57,7 +57,7 @@ const profileImageUrl = computed(() =>{
                                 </NavLink>
                                 
                                 <!-- profile側にまとめるべきか -->
-                                <BellNotification />
+                                <BellNotification :isLink="true" v-if="$page.props.auth.user_role <= 5" />
                             </div>
                         </div>
 
@@ -146,27 +146,39 @@ const profileImageUrl = computed(() =>{
                         <!-- <ResponsiveNavLink :href="route('dashboard')" :active="route().current('dashboard')">
                             Dashboard
                         </ResponsiveNavLink> -->
-                        <ResponsiveNavLink :href="route('items.index')" :active="route().current('items.index')">
+                        <ResponsiveNavLink v-if="$page.props.auth.user_role <= 5" :href="route('items.index')" :active="route().current('items.index')">
                             備品管理
                         </ResponsiveNavLink>
                         <ResponsiveNavLink :href="route('consumable_items')" :active="route().current('consumable_items')">
                             消耗品管理
                         </ResponsiveNavLink>
-                        <ResponsiveNavLink :href="route('inspection_and_disposal_items')" :active="route().current('inspection_and_disposal_items')">
+                        <ResponsiveNavLink v-if="$page.props.auth.user_role <= 5" :href="route('inspection_and_disposal_items')" :active="route().current('inspection_and_disposal_items')">
                             点検と廃棄
                         </ResponsiveNavLink>
                         <ResponsiveNavLink :href="route('item_requests.index')" :active="route().current('item_requests.index')">
                             リクエスト
                         </ResponsiveNavLink>
+                        <ResponsiveNavLink :href="route('notifications.index')" :active="route().current('notifications.index')">
+                            <div class="flex">
+                                <div class="mr-2">通知</div>
+                                <BellNotification :isLink="false" v-if="$page.props.auth.user_role <= 5" class="flex" />
+                            </div>
+                        </ResponsiveNavLink>
                     </div>
 
                     <!-- Responsive Settings Options -->
                     <div class="pt-4 pb-1 border-t border-gray-200 bg-white">
-                        <div class="px-4">
-                            <div class="font-medium text-base text-gray-800">
-                                {{ $page.props.auth.user.name }}
+                        <div class="px-4 flex">
+                            <div>
+                                <img :src="profileImageUrl" alt="ProfileImage" class="mr-4 w-9 h-9 rounded-full border border-black object-cover">
                             </div>
-                            <div class="font-medium text-sm text-gray-500">{{ $page.props.auth.user.email }}</div>
+                            <div>
+                                <div class="font-medium text-base text-gray-800">
+                                    {{ $page.props.auth.user.name }}
+                                </div>
+                                <div class="font-medium text-sm text-gray-500">{{ $page.props.auth.user.email }}</div>
+                            </div>
+                            
                         </div>
 
                         <div class="mt-3 space-y-1">
