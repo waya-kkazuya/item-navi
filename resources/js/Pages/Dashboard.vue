@@ -140,11 +140,15 @@ const switchViewMode = () => {
                                         <tr>
                                             <td class="border-b-2 p-2">{{ history.time }}</td>
                                             <td class="border-b-2 p-2">
-                                                <Link as="button" :href="route('items.show', { item: history.item_id })" class="text-blue-500 hover:text-blue-700 underline md:text-base">
+                                                <template v-if="history.operation_type === 'soft_delete'">
                                                     【管理ID{{ history.item.management_id }}】{{ history.item.name }}
-                                                </Link>
-                                                を<span class="font-medium">{{ history.operation_description }}</span>
-                                                しました
+                                                </template>
+                                                <template v-else>
+                                                    <Link as="button" :href="route('items.show', { item: history.item_id })" class="text-blue-500 hover:text-blue-700 underline md:text-base">
+                                                        【管理ID{{ history.item.management_id }}】{{ history.item.name }}
+                                                    </Link>
+                                                </template>
+                                                を<span class="font-medium">{{ history.operation_description }}</span>しました
                                             </td>
                                         </tr>
                                         <tr v-if="history.edit_reason_id">
@@ -152,7 +156,7 @@ const switchViewMode = () => {
                                             <td class="p-2">
                                                 <div class="relative bg-indigo-50 md:text-base p-2 rounded">
                                                     <div class="arrow-up"></div>
-                                                    <span>{{ history.edit_reason.reason }}：</span>
+                                                    <span>{{ history.edit_reason.reason }}</span>
                                                     <span v-if="history.edit_reason_text" class="ml-3">
                                                         {{ history.edit_reason_text }}
                                                     </span>
