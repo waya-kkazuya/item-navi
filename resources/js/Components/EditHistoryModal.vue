@@ -31,7 +31,7 @@ const editHistories = async item => {
     await axios.get(`api/edithistory?item_id=${item.id}`)
     .then( res => {
       console.log(res.data)
-      editHistoriesData.value = res.data
+      editHistoriesData.value = res.data.edithistories
     })
     toggleStatus()
   } catch(e) {
@@ -67,19 +67,25 @@ const formatDate = (timestamp) => {
               <thead>
                 <tr>
                   <th class="min-w-16 px-4 py-3 title-font tracking-wider font-medium text-white text-xs md:text-sm text-center bg-sky-700">更新日時</th>
-                  <th class="min-w-24 px-4 py-3 title-font tracking-wider font-medium text-white text-xs md:text-sm text-center bg-sky-700">編集者</th>
+                  <th class="min-w-28 px-4 py-3 title-font tracking-wider font-medium text-white text-xs md:text-sm text-center bg-sky-700">更新種類</th>
+                  <th class="min-w-28 px-4 py-3 title-font tracking-wider font-medium text-white text-xs md:text-sm text-center bg-sky-700">編集者</th>
                   <th class="min-w-36 px-4 py-3 title-font tracking-wider font-medium text-white text-xs md:text-sm text-center bg-sky-700">更新フィールド</th>
                   <th class="min-w-40 px-4 py-3 title-font tracking-wider font-medium text-white text-xs md:text-sm text-center bg-sky-700">更新前</th>
                   <th class="min-w-28 px-4 py-3 title-font tracking-wider font-medium text-white text-xs md:text-sm text-center bg-sky-700">更新後</th>
+                  <th class="min-w-28 px-4 py-3 title-font tracking-wider font-medium text-white text-xs md:text-sm text-center bg-sky-700">編集理由</th>
+                  <th class="min-w-28 px-4 py-3 title-font tracking-wider font-medium text-white text-xs md:text-sm text-center bg-sky-700">理由詳細</th>
                 </tr>
               </thead>
               <tbody>
                 <tr  v-for="history in editHistoriesData" :key="history.id">
-                  <td class="border-b-2 border-gray-200 px-4 py-3 text-xs md:text-sm lg:text-base text-center">{{ formatDate(history.created_at) }}</td>
-                  <td class="border-b-2 border-gray-200 px-4 py-3 text-xs md:text-sm lg:text-base text-center">{{ history.edit_user }}</td>
-                  <td class="border-b-2 border-gray-200 px-4 py-3 text-xs md:text-sm lg:text-base text-center">{{ history.edited_field }}</td>
-                  <td class="border-b-2 border-gray-200 px-4 py-3 text-xs md:text-sm lg:text-base text-center">{{ history.old_value }}</td>
-                  <td class="border-b-2 border-gray-200 px-4 py-3 text-xs md:text-sm lg:text-base text-center">{{ history.new_value }}</td>
+                  <td class="border-b-2 border-gray-200 px-4 py-3 text-xs md:text-sm text-center">{{ formatDate(history.created_at) }}</td>
+                  <td class="border-b-2 border-gray-200 px-4 py-3 text-xs md:text-sm text-center">{{ history.operation_type_for_display }}</td>
+                  <td class="border-b-2 border-gray-200 px-4 py-3 text-xs md:text-sm text-center">{{ history.edit_user }}</td>
+                  <td class="border-b-2 border-gray-200 px-4 py-3 text-xs md:text-sm text-center">{{ history.edited_field_for_display }}</td>
+                  <td class="border-b-2 border-gray-200 px-4 py-3 text-xs md:text-sm text-center">{{ history.old_value }}</td>
+                  <td class="border-b-2 border-gray-200 px-4 py-3 text-xs md:text-sm text-center">{{ history.new_value }}</td>
+                  <td class="border-b-2 border-gray-200 px-4 py-3 text-xs md:text-sm text-center">{{ history.edit_reason ? history.edit_reason.reason : null }}</td>
+                  <td class="border-b-2 border-gray-200 px-4 py-3 text-xs md:text-sm text-center">{{ history.edit_reason_text ?? 'なし' }}</td>
                 </tr>
               </tbody>
             </table>

@@ -20,15 +20,14 @@ class ConsumableItemController extends Controller
 
     public function index(Request $request, $item_id = null)
     {
-        Gate::authorize('staff-higher');
+        Gate::authorize('user-higher');
 
         $search = $request->query('search', '');
 
-        // 作成日でソートの値、初期値はasc
-        $sortOrder = $request->query('sortOrder', 'asc');
+        // 作成日でソートの値、初期値はdesc
+        $sortOrder = $request->query('sortOrder', 'desc');
 
         // プルダウンの数値、第2引数は初期値で0
-        // カテゴリのプルダウンは必要ない
         // $category_id = $request->query('category_id', 0);
         $location_of_use_id = $request->query('locationOfUseId', 0);
         $storage_location_id = $request->query('storageLocationId', 0);

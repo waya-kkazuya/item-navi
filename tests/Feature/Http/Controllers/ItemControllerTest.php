@@ -2308,6 +2308,10 @@ class ItemControllerTest extends TestCase
         $user = User::factory()->role(1)->create();
         $this->actingAs($user);
 
+        // itemの段階でinspectionsテーブルにレコードがあるか設定する＝世界構築
+        // Inspection::factory()->create()をやらない限りデータは保存されていない
+        // １、inspectionsにレコードがある場合
+        // ２，inspectionsにレコードがない場合
         $item = Item::factory()->create();
         
         // dump($item->management_id);
@@ -2316,7 +2320,8 @@ class ItemControllerTest extends TestCase
         $validData = [
             'name' => 'ペーパータオル',
             'category_id' => $categories->first()->id,
-            'image1' => null,
+            'image_file' => null,
+            // 'image1' => null,
             'stock' => 10,
             'unit_id' => $units->first()->id,
             'minimum_stock' => 2,
@@ -2335,7 +2340,7 @@ class ItemControllerTest extends TestCase
             'inspection_scheduled_date' => '2024-09-10',
             'disposal_scheduled_date' => '2024-09-20',
             'edit_reeason_id' => $edit_reasons->first()->id,
-            'edit_reason_text' => null,
+            'edit_reason_text' => 'あいうえおかきくけこ',
         ];
 
 
@@ -2348,7 +2353,7 @@ class ItemControllerTest extends TestCase
         $this->assertDatabaseHas('items', [
             'name' => 'ペーパータオル',
             'category_id' => $categories->first()->id,
-            'image1' => null,
+            // 'image1' => null,
             'stock' => 10,
             'unit_id' => $units->first()->id,
             'minimum_stock' => 2,
@@ -2410,7 +2415,7 @@ class ItemControllerTest extends TestCase
             // 'new_value' => $newValue,
             'edit_user' =>  $user->name ?? '',
             'edit_reason_id' => $edit_reasons->first()->id, //プルダウン
-            'edit_reason_text' => null, //その他テキストエリア
+            'edit_reason_text' => 'あいうえおかきくけこ', //その他テキストエリア
         ]);
 
         // 作成したデータを19項目の差異が更新がある
@@ -4116,6 +4121,8 @@ class ItemControllerTest extends TestCase
     // 別ファイルに分割移動して、バリデーションのテストも作成する
 
 
+
+    
 
 
     // edithistoriesの編集履歴モーダル用のデータを取得できる

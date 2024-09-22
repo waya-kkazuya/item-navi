@@ -7,8 +7,11 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Item;
 use App\Models\StockTransaction;
+use App\Models\Edithistory;
 use App\Http\Requests\DecreaseStockRequest;
 use App\Http\Requests\IncreaseStockRequest;
+use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 
@@ -47,6 +50,19 @@ class UpdateStockController extends Controller
             // itemsテーブルのstockカラムの値を更新
             $item->stock -= $request->quantity;
             $item->save();
+
+            // 編集履歴Edithistoryにも保存
+            // Edithistory::create([
+            //     'edit_mode' => 'normal' ,
+            //     'operation_type' => 'stock_out',
+            //     'item_id' => $item->id,
+            //     'edited_field' => null,
+            //     'old_value' => null,
+            //     'new_value' => null,
+            //     'edit_user' => Auth()->user,
+            //     'edit_reason_id' => null,
+            //     'edit_reason_text' => null
+            // ]);
 
             // LowStockDetectEventのイベント発火
             // 通知がオンになっている、かつ、在庫数が通知在庫数を下回ったら通知を送る

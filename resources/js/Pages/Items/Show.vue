@@ -241,7 +241,7 @@ const deleteItem = id => {
                                                             点検予定日
                                                             </label>
                                                         <div class="flex items-center">
-                                                            <div id="inspectionSchedule" name="inspectionSchedule" class="w-1/2 min-h-[2em] bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-xs md:text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
+                                                            <div id="inspectionSchedule" name="inspectionSchedule" class="w-full bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-xs md:text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
                                                                 {{ pendingInspection ? pendingInspection.inspection_scheduled_date : 'なし' }}
                                                             </div>
                                                             <div class="w-full">
@@ -256,8 +256,8 @@ const deleteItem = id => {
                                                             廃棄予定日
                                                         </label>
                                                         <div class="flex items-center">
-                                                            <div type="date" id="disposalSchedule" name="disposalSchedule" class="w-1/2 min-h-[2em] bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-xs md:text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
-                                                                {{ item.disposal ? item.disposal.scheduled_date : 'なし' }}
+                                                            <div type="date" id="disposalSchedule" name="disposalSchedule" class="w-full bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-xs md:text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
+                                                                {{ item.disposal ? item.disposal.disposal_scheduled_date : 'なし' }}
                                                             </div>
                                                             <div class="w-full">
                                                                 <DisposalModal :item="item" :userName="userName" :errors="errors" />
