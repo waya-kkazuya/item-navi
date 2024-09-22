@@ -40,7 +40,7 @@ const form = useForm({
     inspectionSchedule: props.pendingInspection ? props.pendingInspection.inspection_scheduled_date : null,
     disposalSchedule: props.item.disposal ? props.item.disposal.disposal_scheduled_date : null ,
     remarks: props.item.remarks,
-    edit_reeason_id: 0,
+    edit_reason_id: 0,
     edit_reason_text: null,
     _method: 'PUT'
 })
@@ -334,19 +334,19 @@ const handleFileUpload = (event) => {
 
                                                     <div class="p-4 border mt-4 bg-red">
                                                         <div class="p-2 w-full">
-                                                            <label for="edit_reeason_id" class="leading-7 text-xs md:text-base text-blue-900">
+                                                            <label for="edit_reason_id" class="leading-7 text-xs md:text-base text-blue-900">
                                                                 編集理由
                                                                 <span class="ml-1 mr-2 bg-red-400 text-white text-xs md:text-base lg:text-xs py-1 px-2 rounded-md">必須</span>
                                                             </label><br>
-                                                            <select name="edit_reeason_id" id="edit_reeason_id" v-model="form.edit_reeason_id" class="md:mt-1 w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-xs md:text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
+                                                            <select name="edit_reason_id" id="edit_reason_id" v-model="form.edit_reason_id" class="md:mt-1 w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-xs md:text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
                                                                 <option :value="0">選択してください</option>  
                                                                 <option v-for="editReason in editReasons" :value="editReason.id" :key="editReason.id">{{ editReason.reason }}</option>
                                                             </select>
-                                                            <div v-if="errors.edit_reeason_id" class="font-medium text-red-600 text-xs md:text-base">{{ errors.edit_reeason_id }}</div>
+                                                            <div v-if="errors.edit_reason_id" class="font-medium text-red-600 text-xs md:text-base">{{ errors.edit_reason_id }}</div>
                                                         </div>
                                                         <div class="p-2 w-full">
                                                             <label for="remarks" class="leading-7 text-xs md:text-base text-blue-900">
-                                                                その他の理由
+                                                                理由詳細
                                                                 <span class="ml-1 mr-2 bg-gray-400 text-white text-xs md:text-base lg:text-xs py-1 px-2 rounded-md">任意</span>
                                                             </label>
                                                             <textarea id="remarks" name="remarks" maxlength="500" v-model="form.edit_reason_text" class="md:mt-1 w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 h-32 text-xs md:text-base outline-none text-gray-700 py-1 px-3 resize-none leading-6 transition-colors duration-200 ease-in-out"></textarea>
