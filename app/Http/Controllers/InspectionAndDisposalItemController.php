@@ -87,6 +87,9 @@ class InspectionAndDisposalItemController extends Controller
 
 
 
+
+        
+
         // ここからDisposal
         $disposalWithRelations = [
             'item' => function ($query) {

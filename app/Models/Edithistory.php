@@ -22,6 +22,16 @@ class Edithistory extends Model
         'edit_reason_text'
     ];
 
+    public function item()
+    {
+        return $this->belongsTo(Item::class);
+    }
+
+    public function editReason()
+    {
+        return $this->belongsTo(EditReason::class);
+    }
+
     public function scopeItemHistory()
     {
         
