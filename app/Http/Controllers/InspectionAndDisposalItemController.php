@@ -49,15 +49,21 @@ class InspectionAndDisposalItemController extends Controller
             'created_at'
         ];
         
+        // 廃棄された備品の点検と廃棄の予定日は必要ない
         $scheduledInspections = Inspection::with($inspectionWithRelations)
             ->select($inspectionSelectFields)
             ->where('status', false)
-            ->whereNotNull('inspection_scheduled_date') 
+            ->whereNotNull('inspection_scheduled_date')
+            ->whereHas('item', function ($query) {
+                $query->whereNull('deleted_at');
+            })
             ->orderBy('inspection_scheduled_date', 'asc')
             ->paginate(10);
 
         \Log::info("scheduledInspections");
         \Log::info($scheduledInspections->toArray());
+
+        // dd('ここまでエラーなし');
 
         $scheduledInspections = $scheduledInspections->setCollection($this->imageService->setImagePath($scheduledInspections->getCollection()));
 
@@ -85,11 +91,8 @@ class InspectionAndDisposalItemController extends Controller
         $historyInspections = $historyInspections->setCollection($this->imageService->setImagePath($historyInspections->getCollection()));
 
 
-
-
-
         
-
+        // ユースケースに分ける
         // ここからDisposal
         $disposalWithRelations = [
             'item' => function ($query) {
