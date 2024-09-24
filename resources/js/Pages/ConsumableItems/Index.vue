@@ -144,13 +144,12 @@ const fetchConsumableItems = async () => {
                               </a>
                               <div>
                                 <!-- QRコード読み取りボタン -->
-                                <QrCodeReader " />
+                                <QrCodeReader />
                                 <!-- <QrCodeReader @qrDetected="handleQrDetected" /> -->
                               </div>
                             </div>
                             
 
-                            
                             <div class="flex flex-col md:space-x-4 lg:space-x-12 lg:flex-row justify-center items-center pl-4 mt-4 lg:mt-6 w-full">
                               <!-- 作成日とプルダウンをdivタグで囲む -->
                               <div class="flex justify-center items-center space-x-4">
