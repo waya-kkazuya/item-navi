@@ -49,6 +49,8 @@ class RequestedItemNotification extends Notification
         return [
             'id' => $this->itemRequest->id,
             'item_name' => $this->itemRequest->name,
+            'requestor' => $this->itemRequest->requestor,
+            'remarks_from_requestor' => $this->itemRequest->remarks_from_requestor,
             'message' => '備品のリクエストが追加されました'
         ];
     }
