@@ -337,7 +337,8 @@ class ItemController extends Controller
                 $url = 'https://itemnavi.com/consumable_items';
                 // $itemそのものを渡せるか
                 // $labelNameToStore = $this->qrCodeService::upload($item->management_id, );
-                $labelNameToStore = $this->qrCodeService::upload();
+                // $labelNameToStore = $this->qrCodeService::upload($item);
+                $labelNameToStore = $this->qrCodeService::upload($item);
                 $item->update(['qrcode' => $labelNameToStore]);
             }
 
