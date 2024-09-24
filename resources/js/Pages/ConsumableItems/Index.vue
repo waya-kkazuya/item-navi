@@ -7,7 +7,7 @@ import { ref, onMounted } from 'vue';
 import { stringify } from 'postcss';
 import StockHistoryModal from '@/Components/StockHistoryModal.vue';
 import UpdateStockModal from '@/Components/UpdateStockModal.vue';
-
+import QrCodeReader from '@/Components/QrCodeReader.vue';
 
 const props = defineProps({
   consumableItems: Object,
@@ -142,7 +142,13 @@ const fetchConsumableItems = async () => {
                                 </svg>
                                 消耗品QRコ―ドをダウンロード
                               </a>
+                              <div>
+                                <!-- QRコード読み取りボタン -->
+                                <QrCodeReader " />
+                                <!-- <QrCodeReader @qrDetected="handleQrDetected" /> -->
+                              </div>
                             </div>
+                            
 
                             
                             <div class="flex flex-col md:space-x-4 lg:space-x-12 lg:flex-row justify-center items-center pl-4 mt-4 lg:mt-6 w-full">
