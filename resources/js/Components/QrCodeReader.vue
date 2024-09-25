@@ -9,7 +9,9 @@ const emits = defineEmits(['qrDetected'])
 const scannerActive = ref(false)
 
 const startScan = () => {
-  scannerActive.value = true
+  if (confirm('QRコードのスキャンを開始しますか？')) {
+    scannerActive.value = true
+  }
 }
 
 const onDetect = (content) => {
