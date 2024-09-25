@@ -124,7 +124,7 @@ const formatDate = (timestamp) => {
 <template>
   <div v-show="isShow" class="modal" id="modal-1" aria-hidden="true">
     <div class="modal__overlay" tabindex="-1" data-micromodal-close>
-      <div class="modal__container bg-white w-full md:w-11/12 lg:w-2/3 md:h-auto md:rounded-lg p-4 md:p-8 md:shadow-lg md:transform-none transform md:translate-y-0  transition-transform duration-500 ease-in-out" role="dialog" aria-modal="true" aria-labelledby="modal-1-title">
+      <div class="modal__container bg-white w-full md:w-2/3 lg:w-1/3 md:h-auto md:rounded-lg p-4 md:p-8 md:shadow-lg md:transform-none transform md:translate-y-0  transition-transform duration-500 ease-in-out" role="dialog" aria-modal="true" aria-labelledby="modal-1-title">
         <header class="modal__header">
           <ul class="flex border-b">
               <li class="mr-1">
@@ -151,7 +151,7 @@ const formatDate = (timestamp) => {
                     <label for="name" class="leading-7 text-xs md:text-base text-blue-900">
                         備品名
                     </label>
-                    <div id="name" name="name" class="w-full md:w-1/2 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-xs md:text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
+                    <div id="name" name="name" class="w-full md:w-full lg:full bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-xs md:text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
                         {{ item.name }}
                     </div>
                 </div>
@@ -160,19 +160,19 @@ const formatDate = (timestamp) => {
                       出庫日
                     </label>
                     <div class="relative">
-                        <input type="date" id="transaction_date" name="transaction_date" v-model="decreaseForm.transaction_date" class="w-full md:w-1/2 bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-xs md:text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
+                        <input type="date" id="transaction_date" name="transaction_date" v-model="decreaseForm.transaction_date" class="w-full md:w-full lg:w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-xs md:text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
                     </div>
                     <div v-if="localErrors.transaction_date" class="font-medium text-xs md:text-base text-red-600">{{ localErrors.transaction_date }}</div>
                 </div>
                 <div class="p-2 w-full">
                   <label for="operator_name" class="leading-7 text-xs md:text-base text-blue-900">実施者</label>
                   <div>
-                    <input type="text" id="operator_name" name="operator_name" v-model="decreaseForm.operator_name" class="w-full md:w-1/2 bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-xs md:text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
+                    <input type="text" id="operator_name" name="operator_name" v-model="decreaseForm.operator_name" class="w-full md:w-full lg:w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-xs md:text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
                     <div v-if="localErrors.operator_name" class="font-medium text-xs md:text-base text-red-600">{{ localErrors.operator_name }}</div>       
                   </div>
                 </div>
-                <div class="flex items-end md:justify-start p-2 w-full md:w-1/2">
-                  <div class="w-1/3 md:w-5/12">
+                <div class="flex items-end md:justify-start space-x-2 md:items-end p-2 w-full md:w-full lg:w-full">
+                  <div class="w-1/4 md:w-1/4 lg:w-1/4">
                     <label for="name" class="leading-7 text-xs md:text-base text-blue-900">
                       現在在庫数
                     </label>
@@ -180,12 +180,12 @@ const formatDate = (timestamp) => {
                         {{ item.stock }}
                     </div>
                   </div>
-                  <div class="w-1/3 md:w-2/12 flex items-center justify-center mx-4 mb-3">
+                  <div class="w-1/8 md:w-1/8 lg:w-1/8 mb-2 flex items-center justify-center">
                     <div>
                       <svg class="w-4 md:w-6" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 17l5-5-5-5M6 17l5-5-5-5"/></svg>
                     </div>
                   </div>
-                  <div class="w-1/3 md:w-5/12">
+                  <div class="w-1/4 md:w-1/4 lg:w-1/4">
                     <label for="name" class="leading-7 text-xs md:text-base text-blue-900">
                       出庫後
                     </label>
@@ -193,25 +193,26 @@ const formatDate = (timestamp) => {
                           {{ stockAfterDecrease  }}
                     </div>
                   </div>
-                  <!-- <div>
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-5">
+                  <div class="w-1/8 md:w-1/8 lg:w-1/8">
+                    <svg class="mb-2 size-5 w-4 md:w-8" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
                       <path stroke-linecap="round" stroke-linejoin="round" d="m9 20.247 6-16.5" />
                     </svg>
                   </div>
-                  <div class="w-1/3">
+                  <div class="w-1/4 md:w-1/4 lg:w-1/4">
                     <label for="name" class="leading-7 text-xs md:text-base text-blue-900">
                       通知在庫数
                     </label>
                     <div id="name" name="name" class="w-full bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-xs md:text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
-                          {{ item.minimum_stock  }}
+                        {{ item.minimum_stock  }}
                     </div>
-                  </div> -->
+                  </div>
+
                 </div>
               </div>
               <div class="p-2 w-full">
                   <label for="quantity" class="leading-7 text-xs md:text-base text-blue-900">出庫数</label>
                   <div class="flex items-center">
-                    <input type="number" id="quantity" name="quantity" v-model="decreaseForm.quantity" min="1" :max="item.stock" step="1" class="w-1/2 bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-xs md:text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
+                    <input type="number" id="quantity" name="quantity" v-model="decreaseForm.quantity" min="1" :max="item.stock" step="1" class="w-1/3 bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-xs md:text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
                     <div id="unit" name="unit" class="w-1/2 text-xs md:text-base outline-none text-gray-700 py-1 px-3 leading-7">
                       {{ item.unit.name }}
                     </div>                        
@@ -240,7 +241,7 @@ const formatDate = (timestamp) => {
                   <label for="name" class="leading-7 text-xs md:text-base text-blue-900">
                       備品名
                   </label>
-                  <div id="name" name="name" class="w-full md:w-1/2 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-xs md:text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
+                  <div id="name" name="name" class="w-full md:w-full lg:w-full bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-xs md:text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
                       {{ item.name }}
                   </div>
                 </div>
@@ -249,7 +250,7 @@ const formatDate = (timestamp) => {
                     入庫日
                   </label>
                   <div class="relative">
-                      <input type="date" id="transaction_date" name="transaction_date" v-model="increaseForm.transaction_date" class="w-full md:w-1/2 bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-xs md:text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
+                      <input type="date" id="transaction_date" name="transaction_date" v-model="increaseForm.transaction_date" class="w-full md:w-full lg:w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-xs md:text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
                   </div>
                   <div v-if="localErrors.transaction_date" class="font-medium text-xs md:text-base text-red-600">{{ localErrors.transaction_date }}</div>
                 </div>
@@ -258,12 +259,12 @@ const formatDate = (timestamp) => {
                     実施者
                   </label>
                   <div>
-                    <input type="text" id="operator_name" name="operator_name" v-model="increaseForm.operator_name" class="w-full md:w-1/2 bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-xs md:text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
+                    <input type="text" id="operator_name" name="operator_name" v-model="increaseForm.operator_name" class="w-full md:w-full lg:w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-xs md:text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
                     <div v-if="localErrors.operator_name" class="font-medium text-xs md:text-base text-red-600">{{ localErrors.operator_name }}</div>       
                   </div>
                 </div>
-                <div class="flex items-end md:justify-start p-2 w-full md:w-1/2">
-                  <div class="w-full md:w-5/12">
+                <div class="flex items-end md:justify-start space-x-2 md:items-end p-2 w-full md:w-full lg:w-full">
+                  <div class="w-1/4 md:w-1/4 lg:w-1/4">
                     <label for="name" class="leading-7 text-xs md:text-base text-blue-900">
                       現在在庫数
                     </label>
@@ -271,12 +272,12 @@ const formatDate = (timestamp) => {
                         {{ item.stock }}
                     </div>
                   </div>
-                  <div class="w-1/3 md:w-2/12 flex items-center justify-center mx-4 mb-3">
+                  <div class="w-1/8 md:w-1/8 lg:w-1/8 mb-2 flex items-center justify-center">
                     <div>  
                       <svg class="w-4 md:w-6" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 17l5-5-5-5M6 17l5-5-5-5"/></svg>
                     </div>
                   </div>
-                  <div class="w-1/3 md:w-5/12">
+                  <div class="w-1/4 md:w-1/4 lg:w-1/4">
                     <label for="name" class="leading-7 text-xs md:text-base text-blue-900">
                       入庫後
                     </label>
@@ -284,25 +285,25 @@ const formatDate = (timestamp) => {
                           {{ stockAfterIncrease  }}
                     </div>
                   </div>
-                  <!-- <div>
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-5">
+                  <div class="w-1/8 md:w-1/8 lg:w-1/8">
+                    <svg class="mb-2 size-5 w-4 md:w-8" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
                       <path stroke-linecap="round" stroke-linejoin="round" d="m9 20.247 6-16.5" />
                     </svg>
                   </div>
-                  <div class="w-1/3">
+                  <div class="w-1/4 md:w-1/4 lg:w-1/4">
                     <label for="name" class="leading-7 text-xs md:text-base text-blue-900">
                       通知在庫数
                     </label>
                     <div id="name" name="name" class="w-full bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-xs md:text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
                           {{ item.minimum_stock  }}
                     </div>
-                  </div> -->
+                  </div>
                 </div>
               </div>
               <div class="p-2 w-full">
                   <label for="quantity" class="leading-7 text-xs md:text-base text-blue-900">入庫数</label>
                   <div class="flex items-centers">
-                    <input type="number" id="quantity" name="quantity" v-model="increaseForm.quantity" min="1" max="100" step="1" class="w-1/2 bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-xs md:text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
+                    <input type="number" id="quantity" name="quantity" v-model="increaseForm.quantity" min="1" max="100" step="1" class="w-1/3 bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-xs md:text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
                     <div id="unit" name="unit" class="w-1/2  text-xs md:text-base outline-none text-gray-700 py-1 px-3 leading-7">
                       {{ item.unit.name }}
                     </div>    
