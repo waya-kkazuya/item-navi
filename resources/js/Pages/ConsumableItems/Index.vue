@@ -207,8 +207,11 @@ const fetchConsumableItems = async () => {
                               <!-- 検索フォームとリセットボタンをdivタグで囲む -->
                               <div class="w-full mt-4 lg:mt-0 md:w-1/2 flex justify-center lg:justify-start space-x-4 md:space-x-0 self-center">
                                 <!-- 検索フォーム -->
-                                <div class="flex items-center">
+                                <div class="flex items-center relative">
                                   <input type="text" name="search" v-model="search" placeholder="備品名で検索" @keyup.enter="fetchAndFilterItems" class="h-9 md:w-60 text-sm md:text-base placeholder-text-xs md:placeholder-text-base">
+                                  <div class="absolute right-10 md:right-11">
+                                    <QrCodeReader />
+                                  </div>
                                   <button class="h-9 w-9 md:w-10 bg-blue-300 text-white py-2 px-2 flex justify-center items-center border border-gray-300" @click="fetchAndFilterItems">
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
                                       <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
