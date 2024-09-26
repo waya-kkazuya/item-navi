@@ -345,7 +345,7 @@ const restoreItem = (id) => {
                                     <!-- マイクロモーダル -->
                                     <td class="border-b-2 border-gray-200 px-4 py-2" :class="showDisposal ? 'bg-red-100' : ''">
                                       <div class="flex justify-center items-center">
-                                        <EditHistoryModal v-bind:item="item" :isTableView="isTableView" />
+                                        <EditHistoryModal :item="item" :isTableView="isTableView" />
                                       </div>
                                     </td>
                                     <td class="border-b-2 border-gray-200 px-4 py-2 text-center text-xs md:text-base" :class="showDisposal ? 'bg-red-100' : ''">
@@ -406,10 +406,10 @@ const restoreItem = (id) => {
 
                                     <!-- <hr class="w-1/2 mx-auto my-2 border-t border-gray-300"> -->
 
-                                    <span class="ml-4 text-gray-400 text-sm tracking-widest title-font mb-1">{{ item.category.name }}</span>
-                                    
+                                    <!-- <span class="ml-4 mb-1 text-gray-400 text-sm tracking-widest title-font">{{ item.category.name }}</span> -->
+                                    <span class="ml-4 bg-gray-300 text-white text-sm tracking-widest title-font py-1 px-2 rounded-md">{{ item.category.name }}</span>
 
-                                    <div class="ml-4">
+                                    <div class="ml-4 mt-1">
                                       <span class="mr-2 text-base font-medium">備品名</span>
                                       <span class="text-gray-900 title-font text-base">{{ item.name }}</span>
                                     </div>
