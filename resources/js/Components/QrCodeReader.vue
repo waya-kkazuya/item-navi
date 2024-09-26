@@ -35,6 +35,14 @@ const onDetect = (content) => {
         <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 6.75h.75v.75h-.75v-.75ZM6.75 16.5h.75v.75h-.75v-.75ZM16.5 6.75h.75v.75h-.75v-.75ZM13.5 13.5h.75v.75h-.75v-.75ZM13.5 19.5h.75v.75h-.75v-.75ZM19.5 13.5h.75v.75h-.75v-.75ZM19.5 19.5h.75v.75h-.75v-.75ZM16.5 16.5h.75v.75h-.75v-.75Z" />
       </svg>
     </button>
-    <qrcode-stream v-if="scannerActive" @detect="onDetect"></qrcode-stream>
+    <qrcode-stream v-if="scannerActive" @detect="onDetect" class="scanner"></qrcode-stream>
   </div>
 </template>
+
+<style scoped>
+.scanner {
+  width: 100vw; /* ビューポートの幅いっぱいに */
+  height: 100vh; /* ビューポートの高さいっぱいに */
+  object-fit: cover; /* カメラ映像を全体に表示 */
+}
+</style>
