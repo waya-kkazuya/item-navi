@@ -158,11 +158,14 @@ class ItemController extends Controller
                 $item->image_path1 = asset('storage/items/No_Image.jpg');
             } else {
                 // image1の画像名のファイルが存在するかチェックする
-                if(Storage::exists('public/items/' . $item->image1)) {
+                // if(Storage::exists('public/items/' . $item->image1)) {
+                if(Storage::disk('public')->exists('items/' . $item->image1)) {
                     // 画像ファイルが存在する場合
+                    \Log::info(' 画像ファイルが存在する場合');
                     $item->image_path1 = asset('storage/items/' . $item->image1);
                 } else {
                     // 画像ファイルが存在しない場合
+                    \Log::info(' 画像ファイルが存在しない場合');
                     $item->image_path1 = asset('storage/items/No_Image.jpg');
                 }
             }
