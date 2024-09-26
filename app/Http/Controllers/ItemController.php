@@ -219,9 +219,11 @@ class ItemController extends Controller
 
 
 
-    public function create()
+    public function create(Request $request)
     {   
         Gate::authorize('staff-higher');
+
+        // dd($request);
 
         $categories = Category::all();
         $locations = Location::all();
@@ -235,6 +237,11 @@ class ItemController extends Controller
             'units' => $units,
             'usageStatuses' => $usage_statuses,
             'acquisitionMethods' => $acquisition_methods,
+            'name' => $request->query('name'),
+            'category_id' => $request->query('category_id'),
+            'location_of_use_id' => $request->query('location_of_use_id'),
+            'manufacturer' => $request->query('manufacturer'),
+            'price' => $request->query('price'),
         ]);
     }
 
@@ -330,7 +337,8 @@ class ItemController extends Controller
                 $url = 'https://itemnavi.com/consumable_items';
                 // $itemそのものを渡せるか
                 // $labelNameToStore = $this->qrCodeService::upload($item->management_id, );
-                $labelNameToStore = $this->qrCodeService::upload();
+                // $labelNameToStore = $this->qrCodeService::upload($item);
+                $labelNameToStore = $this->qrCodeService::upload($item);
                 $item->update(['qrcode' => $labelNameToStore]);
             }
 

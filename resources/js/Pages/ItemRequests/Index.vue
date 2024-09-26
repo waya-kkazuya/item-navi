@@ -13,8 +13,8 @@ const props = defineProps({
 })
 
 // 作成日でソート
-const sortOrder = ref(props.sortOrder ?? 'asc')
-
+const sortOrder = ref(props.sortOrder ?? 'desc')
+// リクエスト合計件数
 const totalCount = ref(props.totalCount)
 
 // すべてのフィルターをまとめる
@@ -43,6 +43,25 @@ const updateStatus = async request => {
   }
 }
 
+
+const loginUserRole = ref(null);
+// ログインユーザー情報取得
+const getUserRole = async () => {
+  try {
+    const res = await axios.get('/api/user-role');
+    console.log(res.data)
+    loginUserRole.value = res.data;
+    console.log(loginUserRole.value)
+  } catch (error) {
+    console.error('Error fetching user role:', error);
+  }
+};
+
+onMounted(() => {
+  getUserRole()
+  // console.log(loginUserRole.value)
+})
+
 </script>
 
 <template>
@@ -64,7 +83,7 @@ const updateStatus = async request => {
                         <div class="container md:px-5 mx-auto">
                           <div class="flex items-center justify-around space-x-4">
 
-                              <Link as="button" :href="route('item_requests.create')" class="flex items-center text-white text-sm bg-green-500 border-0 py-2 px-6 focus:outline-none hover:bg-green-600 rounded">
+                              <Link as="button" :href="route('item_requests.create')" class="flex items-center text-white text-sm bg-gray-400 border-0 py-2 px-6 focus:outline-none hover:bg-gray-300 rounded">
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
                                   <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
                                 </svg>
@@ -105,6 +124,7 @@ const updateStatus = async request => {
                           <table v-if="itemRequests.data && itemRequests.data.length > 0" class="table-fixed min-w-full text-left whitespace-no-wrap">
                             <thead>
                               <tr>
+                                <th class="min-w-32 md:min-w-32 px-4 py-3 title-font tracking-wider font-medium text-center text-white text-xs md:text-base bg-sky-700">登録</th>
                                 <th class="min-w-32 md:min-w-32 px-4 py-3 title-font tracking-wider font-medium text-center text-white text-xs md:text-base bg-sky-700">ステータス</th>
                                 <th class="min-w-48 md:min-w-36 px-4 py-3 title-font tracking-wider font-medium text-center text-white text-xs md:text-base bg-sky-700">登録日</th>
                                 <th class="min-w-28 md:min-w-40 px-4 py-3 title-font tracking-wider font-medium text-center text-white text-xs md:text-base bg-sky-700">商品名</th>
@@ -118,23 +138,42 @@ const updateStatus = async request => {
                               </tr>
                             </thead>
                             <tbody>
-                              <tr v-for="request in itemRequests.data" :key="request.id" class="">
-
+                              <tr v-for="request in itemRequests.data" :key="request.id">
                                 <td class="border-b-2 border-gray-200 text-center text-xs md:text-base px-4 py-3">
-                                  {{ request.request_status.status_name }}
-                                  <select name="reqeustStatusId" id="reqeustStatusId" v-model="request.request_status_id" @change="updateStatus(request)" 
-                                  :class="[
-                                    'w-full bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-xs md:text-base outline-none text-gray-700 py-0 md:py-1 md:px-3 leading-8 transition-colors duration-200 ease-in-out',
-                                    {
-                                      'bg-gray-200': request.request_status_id == 1,
-                                      'bg-yellow-200': request.request_status_id == 2,
-                                      'bg-green-200': request.request_status_id == 3,
-                                      'bg-pink-200': request.request_status_id == 4
-                                    }
-                                  ]"
-                                  >
-                                    <option v-for="status in requestStatuses" :key="status.id" :value="status.id">{{ status.status_name }}</option>
-                                  </select>
+                                  <Link as="button" 
+                                    :href="route('items.create', {
+                                      name: request.name, 
+                                      category_id: request.category_id, 
+                                      location_of_use_id: request.location_of_use_id,
+                                      manufacturer: request.manufacturer,
+                                      price: request.price
+                                    })"
+                                    class="w-28 flex justify-center items-center text-white text-xs bg-green-500 border-0 py-1 px-0 focus:outline-none hover:bg-green-600 rounded">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                                      <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                                    </svg>
+                                    新規登録
+                                  </Link>
+                                </td>
+                                <td class="border-b-2 border-gray-200 text-center text-xs md:text-base px-4 py-3">
+                                  <template v-if="loginUserRole <= 5">
+                                    <select name="reqeustStatusId" id="reqeustStatusId" v-model="request.request_status_id" @change="updateStatus(request)" 
+                                    :class="[
+                                      'w-full bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-xs md:text-base outline-none text-gray-700 py-0 md:py-1 md:px-3 leading-8 transition-colors duration-200 ease-in-out',
+                                      {
+                                        'bg-gray-200': request.request_status_id == 1,
+                                        'bg-yellow-200': request.request_status_id == 2,
+                                        'bg-green-200': request.request_status_id == 3,
+                                        'bg-pink-200': request.request_status_id == 4
+                                      }
+                                    ]"
+                                    >
+                                      <option v-for="status in requestStatuses" :key="status.id" :value="status.id">{{ status.status_name }}</option>
+                                    </select>
+                                  </template>
+                                  <template v-else>
+                                    {{ request.request_status.status_name }}
+                                  </template>
                                 </td>
                                 <td class="border-b-2 border-gray-200 text-center text-xs md:text-base px-4 py-2">{{ request.formatted_created_at }}</td>
                                 <td class="border-b-2 border-gray-200 text-center text-xs md:text-base px-4 py-2">{{ request.name }}</td>

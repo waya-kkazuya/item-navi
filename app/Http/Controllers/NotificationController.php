@@ -39,26 +39,35 @@ class NotificationController extends Controller
 
 
         
-        //typeカラムでフィルターする 
-
+        // typeカラムでフィルターする 
+        // 在庫数が少なくなっている通知
         $lowStockNotifications = $notifications->filter(function ($notification) {
             return $notification->type === 'App\Notifications\LowStockNotification';
         });
-
+        // 廃棄の予定日が近づいている通知
         $disposalScheduleNotifications = $notifications->filter(function ($notification) {
             return $notification->type === 'App\Notifications\DisposalScheduleNotification';
         });
-
+        // 点検の予定日が近づいている通知
         $inspectionScheduleNotifications = $notifications->filter(function ($notification) {
             return $notification->type === 'App\Notifications\InspectionScheduleNotification';
         });
-
+        // 廃棄予定日と点検予定日の通知のデータを一つにまとめる
         // disposalScheduleNotificationsとinspectionScheduleNotificationsを1つの配列にまとめる
         $disposalAndInspectionNotifications = $disposalScheduleNotifications->merge($inspectionScheduleNotifications);
 
         $requestedItemNotifications = $notifications->filter(function ($notification) {
             return $notification->type === 'App\Notifications\RequestedItemNotification';
         });
+
+        // dd($requestedItemNotifications);
+
+        // 配列に変換する
+        // $notificationsArray = $notifications->toArray();
+        // $lowStockNotificationsArray = $lowStockNotifications->toArray();
+        // $disposalAndInspectionNotificationsArray = $disposalAndInspectionNotifications->toArray();
+        // $requestedItemNotificationsArray = $requestedItemNotifications->toArray();
+
 
         return Inertia::render('Notification', [
             'notifications' => $notifications,

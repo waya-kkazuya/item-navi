@@ -12,17 +12,23 @@ use Intervention\Image\Typography\FontFactory;
 
 class QrCodeService
 {
-  public static function upload(){
+  public static function upload($item) {
+    
+
     // QRコード画像の名前をUUIDか、管理IDに依存するかで引数が変わる
     // png生成にはImagickが必要
-    $url = 'https://itemnavi.com';
-    $qrCode = QrCode::format('png')->size(300)->generate($url);
+    
+    // $item->id
+    // QRコードに備品情報のidを込める
+    $item_id = 1;
+    // $item->idでQRコードを生成する
+    $qrCode = QrCode::format('png')->size(300)->generate($item->id);
+    // QRコードの名前はQR-とランダムな文字列
     $qrCodeName = 'QR-' . uniqid(rand().'_') . 'png';
     Storage::put('public/qrcode/' . $qrCodeName, $qrCode);
     
     // 保存したファイルのパスを取得
     $qrCodefilePath = Storage::path('public/qrcode/' . $qrCodeName);
-
 
     $qrManager = new ImageManager(new Driver());
     $qrImage = $qrManager->read($qrCodefilePath);
@@ -32,17 +38,19 @@ class QrCodeService
     $label->place($qrImage, 'top-left', 80, 125);
 
     // 白地に文字を追加
-    $label->text('管理ID IT-3333', 450, 160, function(FontFactory $font) {
+    $label->text('管理ID '.$item->management_id, 450, 160, function(FontFactory $font) {
         $font->filename(resource_path('fonts/NotoSansJP-Medium.ttf'));
         $font->size(30);
         $font->color('#000');
     });
-    $label->text('備品名 ペーパータオル', 450, 230, function(FontFactory $font) {
+
+    $label->text('備品名 '.$item->name, 450, 230, function(FontFactory $font) {
         $font->filename(resource_path('fonts/NotoSansJP-Medium.ttf'));
         $font->size(30);
         $font->color('#000');
     });
-    $label->text('カテゴリ 消耗品', 450, 300, function(FontFactory $font) {
+    // リレーションは使えるか
+    $label->text('カテゴリ '.$item->category->name, 450, 300, function(FontFactory $font) {
         $font->filename(resource_path('fonts/NotoSansJP-Medium.ttf'));
         $font->size(30);
         $font->color('#000');

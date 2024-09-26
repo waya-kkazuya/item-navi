@@ -4,6 +4,7 @@ import { Head, Link, router } from '@inertiajs/vue3';
 import InspectionModal  from '@/Components/InspectionModal.vue';
 import DisposalModal from '@/Components/DisposalModal.vue';
 import FlashMessage from '@/Components/FlashMessage.vue';
+import EditHistoryModal from '@/Components/EditHistoryModal.vue';
 
 
 defineProps({
@@ -66,11 +67,12 @@ const deleteItem = id => {
                             <div class="container px-5 py-8 mx-auto">                                    
                                 <div class="md:w-full mx-auto">
                                     <div class="-m-2">
+                                        <div class="mb-2 flex justify-end">
+                                            <EditHistoryModal :item="item" :isTableView="false" />
+                                        </div>
                                         <div class="grid grid-cols-1 md:grid-cols-3 md:gap-4">
-
                                             <div class="col-span-1">
                                                 <div class="p-4 border bordr-4 mb-4">
-
                                                     <div class="p-2 w-full">
                                                         <label for="fileName" class="leading-7 text-xs md:text-base text-blue-900">
                                                             画像
@@ -265,11 +267,9 @@ const deleteItem = id => {
                                                         </div>
                                                     </div>
                                                 </div>
-
                                                 <div class="p-2 w-full">
                                                     <Link as="button" :href="route('items.edit', { item: item.id })" class="flex mx-auto text-white bg-indigo-500 border-0 py-2 px-8 focus:outline-none hover:bg-indigo-600 rounded text-xs md:text-base">編集する</Link>
                                                 </div>
-
                                             </div>
                                         </div>                      
                                     </div>

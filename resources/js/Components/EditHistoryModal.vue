@@ -1,6 +1,7 @@
 <script setup>
 import axios from 'axios';
 import { ref, reactive, onMounted, defineProps } from 'vue';
+import apiClient from '@/apiClient';
 
 // 親コンポーネントから受け取る
 const props = defineProps({
@@ -18,17 +19,15 @@ onMounted(() => {
   // });
 })
 
-// itemだけでなくオブジェクトごと取ってきた方がいい
 
-// const itemId = 1
 const editHistoriesData = ref([]);
-
 
 const isShow = ref(false)
 const toggleStatus = () => { isShow.value = !isShow.value}
 const editHistories = async item => {
   try {
-    await axios.get(`api/edithistory?item_id=${item.id}`)
+    console.log(item.id)
+    await apiClient.get(`api/edithistory?item_id=${item.id}`)
     .then( res => {
       console.log(res.data)
       editHistoriesData.value = res.data.edithistories
@@ -107,11 +106,13 @@ const formatDate = (timestamp) => {
   </div>
   <!-- item.idを親から子へ渡す、async await axiosの変数として渡される -->
    <!-- 行表示かタイル表示かでボタンの表示を切り替え -->
-  <button v-if="props.isTableView" @click="editHistories(item)" type="button" data-micromodal-trigger="modal-1" class="h-4">
-    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
-  </button>
-  <button v-else @click="editHistories(item)" type="button" data-micromodal-trigger="modal-1" class="flex items-center text-white text-sm bg-gray-500 border-0 py-2 px-4 mx-auto focus:outline-none hover:bg-gray-600 rounded">
-    <svg class="w-4 h-4 mr-1" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
-    履歴
-  </button>
+  <div>
+    <button v-if="props.isTableView" @click="editHistories(item)" type="button" data-micromodal-trigger="modal-1" class="h-4">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+    </button>
+    <button v-else @click="editHistories(item)" type="button" data-micromodal-trigger="modal-1" class="flex items-center text-white text-sm bg-gray-500 border-0 py-2 px-4 mx-auto focus:outline-none hover:bg-gray-600 rounded">
+      <svg class="w-4 h-4 mr-1" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+      履歴
+    </button>
+  </div>
 </template>

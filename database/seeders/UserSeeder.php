@@ -28,8 +28,8 @@ class UserSeeder extends Seeder
                 'role' => 5
             ],
             [
-                'name' => 'test',
-                'email' => 'test@test.com',
+                'name' => 'user',
+                'email' => 'user@user.com',
                 'password' => Hash::make('Z%F!8d$5dZhp'),
                 'role' => 9
             ]

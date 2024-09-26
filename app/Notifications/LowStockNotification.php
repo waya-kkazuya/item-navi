@@ -53,7 +53,6 @@ class LowStockNotification extends Notification
             $imagePath = 'storage/items/No_Image.jpg';
         }
 
-
         // ここで表示するのに必要な情報を詰め込む
         return [
             'id' => $this->item->id,
