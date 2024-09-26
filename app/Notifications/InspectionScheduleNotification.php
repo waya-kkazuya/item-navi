@@ -51,7 +51,7 @@ class InspectionScheduleNotification extends Notification
     {
         // 画像パスの設定
         $imagePath = 'storage/items/' . $this->item->image1;
-        if (!$this->item->image1 || !Storage::exists($imagePath)) {
+        if (!$this->item->image1 || !Storage::disk('public')->exists('items/' . $this->item->image1)) {
             $imagePath = 'storage/items/No_Image.jpg';
         }
 

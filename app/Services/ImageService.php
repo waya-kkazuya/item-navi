@@ -92,7 +92,7 @@ class ImageService
       if (is_null($inspection->item->image1)) {
         $inspection->item->image_path1 = asset('storage/items/No_Image.jpg');
       } else {
-          if (Storage::exists('public/items/' . $inspection->item->image1)) {
+          if (Storage::disk('public')->exists('items/' . $inspection->item->image1)) {
               $inspection->item->image_path1 = asset('storage/items/' . $inspection->item->image1);
           } else {
               $inspection->item->image_path1 = asset('storage/items/No_Image.jpg');

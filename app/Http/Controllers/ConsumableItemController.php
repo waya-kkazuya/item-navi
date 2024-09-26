@@ -92,7 +92,7 @@ class ConsumableItemController extends Controller
                 $consumableItem->image_path1 = asset('storage/items/No_Image.jpg');
             } else {
                 // image1の画像名のファイルが存在するかチェックする
-                if(Storage::exists('public/items/' . $consumableItem->image1)) {
+                if(Storage::disk('public')->exists('items/' . $consumableItem->image1)) {
                     // 画像ファイルが存在する場合
                     $consumableItem->image_path1 = asset('storage/items/' . $consumableItem->image1);
                 } else {
