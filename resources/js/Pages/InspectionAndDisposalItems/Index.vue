@@ -42,12 +42,12 @@ onMounted(() => {
                       <div class="flex justify-center">
                         <ul class="flex space-x-2 md:space-x-6 max-w-md">
                           <li class="flex-grow">
-                            <a :class="['block text-center px-4 py-2 rounded-full font-bold text-sm md:text-md lg:text-lg', activeTab === 'tab1' ? 'bg-blue-500 text-white' : 'bg-white text-black border']" @click="activeTab = 'tab1'">
+                            <a :class="['block text-center px-4 py-2 rounded-full font-bold text-xs md:text-md lg:text-lg', activeTab === 'tab1' ? 'bg-blue-500 text-white' : 'bg-white text-black border']" @click="activeTab = 'tab1'">
                               予定
                             </a>
                           </li>
                           <li class="flex-grow">
-                            <a :class="['block text-center px-4 py-2 rounded-full font-bold text-sm md:text-md lg:text-lg', activeTab === 'tab2' ? 'bg-blue-500 text-white' : 'bg-white text-black border']" @click="activeTab = 'tab2'">
+                            <a :class="['block text-center px-4 py-2 rounded-full font-bold text-xs md:text-md lg:text-lg', activeTab === 'tab2' ? 'bg-blue-500 text-white' : 'bg-white text-black border']" @click="activeTab = 'tab2'">
                               履歴
                             </a>
                           </li>
@@ -82,7 +82,7 @@ onMounted(() => {
                                 </tr>
                               </thead>
                               <tbody>
-                                <tr v-for="inspection in scheduledInspections.data" :key="inspection.id" class="">
+                                <tr v-for="inspection in scheduledInspections.data" :key="inspection.id">
                                   <td class="border-b-2 border-gray-200 px-4 py-3 text-center text-xs md:text-base">
                                     <Link class="text-blue-400" :href="route('items.show', { item: inspection.item.id })">
                                       {{ inspection.item.management_id }}
