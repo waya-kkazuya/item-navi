@@ -79,7 +79,7 @@ onMounted(() => {
               <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                   <div class="p-6 text-gray-900">
                     <FlashMessage />
-                    <section class="text-gray-600 body-font">
+                    <section class="mt-2 text-gray-600 body-font">
                         <div class="container md:px-5 mx-auto">
                           <div class="flex items-center justify-around space-x-4">
 
