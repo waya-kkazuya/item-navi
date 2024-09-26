@@ -32,7 +32,8 @@ class ProfileController extends Controller
         if (is_null($profile_image)) {
             $profile_image_path = null;
         } else {
-            if (Storage::exists('public/profile/' . $profile_image)) {
+            // if (Storage::exists('public/profile/' . $profile_image)) {
+            if (Storage::disk('public')->exists('profile/' . $profile_image)) {
                 $profile_image_path = asset('storage/profile/' . $profile_image);
             } else {
                 $profile_image_path = null;
