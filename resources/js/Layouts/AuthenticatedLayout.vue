@@ -168,21 +168,21 @@ const profileImageUrl = computed(() =>{
 
                     <!-- Responsive Settings Options -->
                     <div class="pt-4 pb-1 border-t border-gray-200 bg-white">
-                        <div class="px-4 flex">
-                            <div>
-                                <img :src="profileImageUrl" alt="ProfileImage" class="mr-4 w-9 h-9 rounded-full border border-black object-cover">
-                            </div>
-                            <div>
-                                <div class="font-medium text-base text-gray-800">
-                                    {{ $page.props.auth.user.name }}
+                        <div class="space-y-1">
+                            <ResponsiveNavLink :href="route('profile.edit')">
+                                <div class="flex">
+                                    <div>
+                                        <img :src="profileImageUrl" alt="ProfileImage" class="mr-4 w-9 h-9 rounded-full border border-black object-cover">
+                                    </div>
+                                    <div>
+                                        <div class="font-medium text-base text-gray-800">
+                                            {{ $page.props.auth.user.name }}
+                                        </div>
+                                        <div class="font-medium text-sm text-gray-500">{{ $page.props.auth.user.email }}</div>
+                                    </div>
                                 </div>
-                                <div class="font-medium text-sm text-gray-500">{{ $page.props.auth.user.email }}</div>
-                            </div>
-                            
-                        </div>
-
-                        <div class="mt-3 space-y-1">
-                            <ResponsiveNavLink :href="route('profile.edit')"> Profile </ResponsiveNavLink>
+                                 <!-- Profile  -->
+                            </ResponsiveNavLink>
                             <ResponsiveNavLink :href="route('logout')" method="post" as="button">
                                 Log Out
                             </ResponsiveNavLink>
