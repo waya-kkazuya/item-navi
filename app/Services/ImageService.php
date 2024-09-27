@@ -45,7 +45,9 @@ class ImageService
 
     $resizedImage = $image->encode();
 
-    Storage::put('public/items/' . $fileNameToStore, $resizedImage);
+    Storage::disk('public')->put('items/' . $fileNameToStore, $resizedImage);
+    // Storage::put('public/items/' . $fileNameToStore, $resizedImage);
+
 
     return $fileNameToStore;
   }
