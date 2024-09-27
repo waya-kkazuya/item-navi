@@ -81,8 +81,8 @@ class ImageService
 
     $resizedImage = $image->encode();
 
-    Storage::put('public/profile/' . $fileNameToStore, $resizedImage);
-    // Storage::disk('public')->put('profile/' . $fileNameToStore, $resizedImage);
+    // Storage::put('public/profile/' . $fileNameToStore, $resizedImage);
+    Storage::disk('public')->put('profile/' . $fileNameToStore, $resizedImage);
 
     return $fileNameToStore;
   }
