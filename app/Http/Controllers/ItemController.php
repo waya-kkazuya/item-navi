@@ -334,6 +334,8 @@ class ItemController extends Controller
 
             // // QRコード生成、QrCodeServiceに切り分ける
             // // ※消耗品のときだけcategory_id=1のときだけ生成する
+            $labelNameToStore = null;
+            $qrCodeNameToStore = null;
             if($request->category_id == self::CONSUMABLE_ITEM_ID){ 
                 // ※注意
                 // 保存したあと、items->update()で部分的にqrcodeの名前を変更する
@@ -341,11 +343,14 @@ class ItemController extends Controller
                 // $itemそのものを渡せるか
                 // $labelNameToStore = $this->qrCodeService::upload($item->management_id, );
                 // $labelNameToStore = $this->qrCodeService::upload($item);
-                $labelNameToStore = $this->qrCodeService::upload($item);
+                $result = $this->qrCodeService::upload($item);
+                $labelNameToStore = $result['labelNameToStore'];
+                $qrCodeNameToStore = $result['qrCodeNameToStore'];
+                // dd($labelNameToStore, $qrCodeNameToStore);
                 $item->update(['qrcode' => $labelNameToStore]);
             }
 
-            DB::commit(); // ここで確定
+            DB::commit();
 
             Log::info('commitした');
 
@@ -358,10 +363,22 @@ class ItemController extends Controller
         } catch(ValidationException $e) {
             DB::rollBack();
 
+            // アップロードした備品の画像の削除
+            $imagePath = 'items/' . $fileNameToStore;
+            if (Storage::disk('public')->exists($imagePath)) {
+                Storage::disk('public')->delete($imagePath);
+            }
 
-            // アップロードした画像の削除　引数変更
-            if (isset($imagePath)) {
-                Storage::delete($imagePath);
+            // qrCodeService内で保存したQRコードを削除
+            $qrImagePath = 'qrcode/' . $qrCodeNameToStore;
+            if (Storage::disk('public')->exists($qrImagePath)) {
+                Storage::disk('public')->delete($qrImagePath);            
+            }
+
+            // 保存したQRコードラベルを削除
+            $labelImagePath = 'labels/' . $labelNameToStore;
+            if (Storage::disk('public')->exists($labelImagePath)) {
+                Storage::disk('public')->delete($labelImagePath);            
             }
 
             return redirect()->back()
