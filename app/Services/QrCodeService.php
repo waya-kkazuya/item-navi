@@ -25,7 +25,8 @@ class QrCodeService
     $qrCode = QrCode::format('png')->size(300)->generate($item->id);
     // QRコードの名前はQR-とランダムな文字列
     $qrCodeName = 'QR-' . uniqid(rand().'_') . 'png';
-    Storage::put('public/qrcode/' . $qrCodeName, $qrCode);
+    // Storage::put('public/qrcode/' . $qrCodeName, $qrCode);
+    Storage::disk('public')->put('qrcode/' . $qrCodeName, $qrCode);
     
     // 保存したファイルのパスを取得
     $qrCodefilePath = Storage::path('public/qrcode/' . $qrCodeName);
@@ -60,7 +61,9 @@ class QrCodeService
     // $labelName = $item->id . '_label.jpg';
     // JpegEncoderでエンコードする、use分も書く
     // 画像をStorage/public/qrcodesに保存する
-    Storage::put('labels/' . $labelNameToStore, $label->encode(new JpegEncoder()));
+    Storage::disk('public')->put('labels/' . $labelNameToStore, $label->encode(new JpegEncoder()));
+    // Storage::put('public/labels/' . $labelNameToStore, $label->encode(new JpegEncoder()));
+    // Storage::put('labels/' . $labelNameToStore, $label->encode(new JpegEncoder()));
     
     // ※注意
     // 保存したあと、items->update()で部分的にqrcodeの名前を変更する
