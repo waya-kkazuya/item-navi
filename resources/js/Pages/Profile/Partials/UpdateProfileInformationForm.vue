@@ -83,8 +83,8 @@ const handleFileUpload = (event) => {
                 <div class="flex justify-center items-center relative">
                     <input type="file" id="profile_image_file" @change="handleFileUpload" class="hidden">
                     <label for="profile_image_file" class="cursor-pointer">
-                        <img v-if="profileImagePreview" :src="profileImagePreview" alt="プロフィール画像" class="profile-image">
-                        <div v-else class="text-4xl text-gray-300">+</div>
+                        <img v-if="profileImagePreview" :src="profileImagePreview" alt="プロフィール画像" class="w-48 h-48 rounded-full object-cover border border-black">
+                        <div v-else class="flex items-center justify-center text-4xl text-gray-300 w-48 h-48 rounded-full object-cover border border-gray-300">+</div>
                         <div v-if="profileImagePreview" class="absolute inset-0 flex justify-center items-center text-4xl text-white">+</div>
                     </label>
                     <InputError class="mt-2" :message="form.errors.profile_image_file" />
@@ -149,7 +149,7 @@ const handleFileUpload = (event) => {
     </section>
 </template>
 
-<style scoped>
+<!-- <style scoped>
 .profile-image {
   width: 200px;
   height: 200px;
@@ -157,4 +157,4 @@ const handleFileUpload = (event) => {
   object-fit: cover;
   border: 1px solid #000;
 }
-</style>
+</style> -->
