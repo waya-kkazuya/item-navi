@@ -96,7 +96,14 @@ Route::middleware(['auth', 'verified', 'can:user-higher'])->group(function () {
 
 
 Route::get('/generate-pdf', [PDFController::class, 'generatePDF'])
-->middleware(['auth', 'verified', 'can:staff-higher'])->name('generate_pdf');
+->middleware(['auth', 'verified', 'can:user-higher'])->name('generate_pdf');
+
+// PDFファイルCSS確認用
+Route::get('/preview-pdf', [PDFController::class, 'designPDF'])
+->middleware(['auth', 'verified', 'can:user-higher'])->name('preview_pdf');
+
+
+
 
 // グラフテスト用
 // Route::get('analysis', [AnalysisController::class, 'index'])->name('analysis');
