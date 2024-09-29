@@ -181,12 +181,14 @@ return [
         Illuminate\Translation\TranslationServiceProvider::class,
         Illuminate\Validation\ValidationServiceProvider::class,
         Illuminate\View\ViewServiceProvider::class,
-
+        Barryvdh\Snappy\ServiceProvider::class,
         /*
          * Package Service Providers...
          */
         SimpleSoftwareIO\QrCode\QrCodeServiceProvider::class,
         Jenssegers\Agent\AgentServiceProvider::class,
+        Barryvdh\Snappy\ServiceProvider::class,
+
         /*
          * Application Service Providers...
          */
@@ -213,6 +215,8 @@ return [
         // 'ExampleClass' => App\Example\ExampleClass::class,
         'QrCode' => SimpleSoftwareIO\QrCode\Facades\QrCode::class,
         'Agent' => Jenssegers\Agent\Facades\Agent::class,
+        'PDF' => Barryvdh\Snappy\Facades\SnappyPdf::class,
+        'SnappyImage' => Barryvdh\Snappy\Facades\SnappyImage::class,
     ])->toArray(),
 
 ];
