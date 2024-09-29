@@ -16,8 +16,9 @@
             align-items: center;
             width: 210mm;
             height: 297mm;
-            margin: 1mm 14mm;
-            page-break-after: avoid; /* テーブルの後で改ページしない */
+            /* margin: 11mm 14mm; */
+            margin: auto;
+            page-break-after: always; /* ページの後で改ページ */
         }
         table {
             width: calc(91mm * 2); /* 2列分の幅 */
@@ -40,21 +41,23 @@
     </style>
 </head>
 <body>
-    <div class="page">
-        <table>
-            @foreach ($qrCodePairs as $pair)
-                <tr>
-                    @foreach ($pair as $qrCode)
-                        <td>
-                            <img src="{{ $qrCode }}" alt="QRコード">
-                        </td>
-                    @endforeach
-                    @if (count($pair) < 2)
-                        <td></td> <!-- 奇数の場合の空セル -->
-                    @endif
-                </tr>
-            @endforeach
-        </table>
-    </div>
+    @foreach (array_chunk($qrCodes, 10) as $chunk)
+        <div class="page">
+            <table>
+                @foreach (array_chunk($chunk, 2) as $pair)
+                    <tr>
+                        @foreach ($pair as $qrCode)
+                            <td>
+                                <img src="{{ $qrCode }}" alt="QRコード">
+                            </td>
+                        @endforeach
+                        @if (count($pair) < 2)
+                            <td></td> <!-- 奇数の場合の空セル -->
+                        @endif
+                    </tr>
+                @endforeach
+            </table>
+        </div>
+    @endforeach
 </body>
 </html>
