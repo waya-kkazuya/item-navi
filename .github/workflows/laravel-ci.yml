@@ -82,3 +82,17 @@ jobs:
 
     - name: Run tests
       run: php artisan test
+
+    - name: Comment coverage report
+      uses: actions/github-script@v6
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        script: |
+          const { execSync } = require('child_process');
+          const coverage = execSync('php -d xdebug.mode=coverage vendor/bin/phpunit --coverage-text').toString();
+          github.issues.createComment({
+            issue_number: context.issue.number,
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            body: `## Coverage Report\n\n\`\`\`\n${coverage}\n\`\`\``
+          });
