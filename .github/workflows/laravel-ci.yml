@@ -37,14 +37,13 @@ jobs:
     - name: Cache dependencies
       uses: actions/cache@v4
       with:
-        path: EMS/vendor
+        path: vendor
         key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
         restore-keys: |
           ${{ runner.os }}-composer-
 
     - name: Install PHP dependencies
       run: composer install --prefer-dist --no-progress --no-suggest
-      working-directory: ./EMS
       
     - name: Setup Node.js
       uses: actions/setup-node@v3
