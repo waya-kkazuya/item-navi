@@ -96,3 +96,21 @@ jobs:
             repo: context.repo.repo,
             body: `## Coverage Report\n\n\`\`\`\n${coverage}\n\`\`\``
           });
+
+    - name: Run static analysis with Insider
+      run: insider --target . --output ./insider-report --format text
+        
+    - name: Comment static analysis report
+      uses: actions/github-script@v6
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        script: |
+          const fs = require('fs');
+          const path = './insider-report/report.txt';
+          const content = fs.readFileSync(path, 'utf8');
+          github.issues.createComment({
+            issue_number: context.issue.number,
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            body: `## Static Analysis Report\n\n\`\`\`\n${content}\n\`\`\``
+          });
