@@ -1,4 +1,5 @@
-name: laravel CI
+name: Laravel CI
+
 on:
   pull_request:
     branches:
