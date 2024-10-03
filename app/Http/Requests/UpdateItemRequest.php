@@ -39,7 +39,7 @@ class UpdateItemRequest extends FormRequest
             'acquisition_method_id' => ['required', 'exists:acquisition_methods,id'],
             'acquisition_source' => ['min:1', 'max:20'],
             'price' => ['required', 'integer', 'min:0', 'max:1000000'],
-            'date_of_acquisition' => ['required', 'date'],
+            'date_of_acquisition' => ['required', 'date', 'before_or_equal:today'],
             'manufacturer' => ['nullable', 'max:20'],
             'product_number' => ['nullable', 'max:30'],
             'remarks' => ['nullable', 'max:500'],
