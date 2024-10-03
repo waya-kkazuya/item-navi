@@ -68,21 +68,13 @@ Route::middleware(['auth', 'verified', 'can:staff-higher'])->group(function () {
     
     Route::get('inspection-and-disposal-items', [InspectionAndDisposalItemController::class, 'index'])
     ->name('inspection_and_disposal_items');
-
-
-    // Route::get('/notifications', function () {
-    //     return Inertia::render('Notification');
-    // });
-
 });
 
 // リクエストはuser権限でもアクセス可能
 // ページのステータスは権限がないと変更できない
 Route::middleware(['auth', 'verified', 'can:user-higher'])->group(function () {
-
     // 省略可能なオプションのルートパラメータ{item_id?}を追加する
     Route::get('consumable_items/{item_id?}', [ConsumableItemController::class, 'index'])->name('consumable_items');
-    // Route::get('consumable_items/{id}/history', [ConsumableItemController::class, 'history'])->name('consumable_items.history');
 
     Route::get('item-requests', [ItemRequestController::class, 'index'])
     ->name('item_requests.index');
@@ -103,10 +95,10 @@ Route::get('/preview-pdf', [PDFController::class, 'designPDF'])
 ->middleware(['auth', 'verified', 'can:user-higher'])->name('preview_pdf');
 
 // snappy pdf
-Route::middleware(['auth', 'verified', 'can:user-higher'])->group(function () {
-    Route::get('/dango', 'DangoController@dango')->name('dango');
-    Route::get('/pdf', 'DangoController@pdf')->name('pdf');
-});
+// Route::middleware(['auth', 'verified', 'can:user-higher'])->group(function () {
+//     Route::get('/dango', 'DangoController@dango')->name('dango');
+//     Route::get('/pdf', 'DangoController@pdf')->name('pdf');
+// });
 
 // グラフテスト用
 // Route::get('analysis', [AnalysisController::class, 'index'])->name('analysis');
