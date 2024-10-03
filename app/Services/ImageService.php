@@ -10,19 +10,15 @@ use Intervention\Image\Drivers\Imagick\Driver;
 
 class ImageService
 {
-  public static function resizeUpload($imageFile){
-    
-    // Storage::putFile('public/items', $imageFile); //リサイズ無しの場合、名前も付けてくれる
-    $fileName = uniqid(rand().'_'); // ランダムな名前
+  public static function resizeUpload($imageFile)
+  {  
+    $fileName = uniqid(rand().'_');
     $extension = $imageFile->extension();
     $fileNameToStore = $fileName. '.' . $extension;
 
-    // create image manager with desired driver
     $manager = new ImageManager(new Driver());
 
     $image = $manager->read($imageFile->getPathname());
-
-    // dd($image);
 
     // 画像のアスペクト比を取得
     $aspectRatio = $image->width() / $image->height();
@@ -34,37 +30,26 @@ class ImageService
         $image->scale(height: 600);
     }
 
-    // 画像をリサイズ、resizeDonwは元の大きさは超えない
-    // $image->resize(800, 600);
-
     // 画像をトリミング、縦に長い画像には左右に白地の余白が入る
     $image->crop(800, 600, 0, 0, 'ffffff', 'center');
-    // ->crop()の代わりに->resize()を使用する
     // $image->resizeCanvas(800, 600, 'center', false, [0, 0, 0, 0]);
-    // $image->pad(800, 600, [0, 0, 0, 0]);
 
     $resizedImage = $image->encode();
 
     Storage::disk('public')->put('items/' . $fileNameToStore, $resizedImage);
-    // Storage::put('public/items/' . $fileNameToStore, $resizedImage);
-
 
     return $fileNameToStore;
   }
 
-  public static function profileImageResizeUpload($imageFile){
-    
-    // Storage::putFile('public/items', $imageFile); //リサイズ無しの場合、名前も付けてくれる
-    $fileName = uniqid(rand().'_'); // ランダムな名前
+  public static function profileImageResizeUpload($imageFile)
+  {
+    $fileName = uniqid(rand().'_');
     $extension = $imageFile->extension();
     $fileNameToStore = $fileName. '.' . $extension;
 
-    // create image manager with desired driver
     $manager = new ImageManager(new Driver());
 
     $image = $manager->read($imageFile->getPathname());
-
-    // dd($image);
 
     // 画像のアスペクト比を取得
     $aspectRatio = $image->width() / $image->height();
@@ -81,7 +66,6 @@ class ImageService
 
     $resizedImage = $image->encode();
 
-    // Storage::put('public/profile/' . $fileNameToStore, $resizedImage);
     Storage::disk('public')->put('profile/' . $fileNameToStore, $resizedImage);
 
     return $fileNameToStore;
