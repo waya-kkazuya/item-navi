@@ -46,7 +46,7 @@ class increaseStockMethodTest extends TestCase
     }
 
     /** @test */
-    function 入出庫モーダルで入庫処理が出来る()
+    function 入庫モーダルで入庫処理が出来る()
     {
         // 世界を構築
         $category = Category::factory()->create(['id' => 1]);
