@@ -33,6 +33,7 @@ use Intervention\Image\ImageManager;
 // use Intervention\Image\Drivers\Gd\Driver;
 use Intervention\Image\Drivers\Imagick\Driver;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 class UpdateValidationTest extends TestCase
 {
@@ -49,7 +50,7 @@ class UpdateValidationTest extends TestCase
 
     // 編集更新のnameのバリデーションのテスト
     /** @test */
-    public function 備品編集更新バリデーションnameが空欄では保存できない()
+    public function 備品編集更新バリデーションnameが空欄で無効値()
     {
         $user = User::factory()->role(1)->create();
         $this->actingAs($user);
@@ -72,7 +73,7 @@ class UpdateValidationTest extends TestCase
     }
 
     /** @test */
-    public function 備品編集更新バリデーションnameが1文字()
+    public function 備品編集更新バリデーションnameが1文字で有効値()
     {
         $user = User::factory()->role(1)->create();
         $this->actingAs($user);
@@ -94,7 +95,7 @@ class UpdateValidationTest extends TestCase
     }
 
     /** @test */
-    public function 備品編集更新バリデーションnameが20文字()
+    public function 備品編集更新バリデーションnameが20文字で有効値()
     {
         $user = User::factory()->role(1)->create();
         $this->actingAs($user);
@@ -116,7 +117,7 @@ class UpdateValidationTest extends TestCase
     }
 
     /** @test */
-    public function 備品編集更新バリデーションnameが21文字()
+    public function 備品編集更新バリデーションnameが21文字で無効値()
     {
         $user = User::factory()->role(1)->create();
         $this->actingAs($user);
@@ -712,8 +713,9 @@ class UpdateValidationTest extends TestCase
         $this->actingAs($user);
 
         // $itemはunit_idを指定しないと、自動的に$units->max('id') + 1にインクリメントしてしまう
+        // $units->first()->id、明確にDBに存在するidを指定しないと、クラス単位のテストでエラーになる
         $item = Item::factory()->create([
-            'unit_id' => 1
+            'unit_id' => $units->first()->id
         ]);
 
         $response = $this->from('items/'.$item->id.'/edit')
@@ -825,8 +827,9 @@ class UpdateValidationTest extends TestCase
         $this->actingAs($user);
 
         // usage_status_idが$usage_statuses->max('id') + 1に自動でインクリメントされてしまうので指定する
+        // $usage_statuses->first()->id、明確にDBに存在するidを指定しないと、クラス単位のテストでエラーになる
         $item = Item::factory()->create([
-            'usage_status_id' => 1
+            'usage_status_id' => $usage_statuses->first()->id
         ]);
 
         $response = $this->from('items/'.$item->id.'/edit')
@@ -2096,7 +2099,7 @@ class UpdateValidationTest extends TestCase
     }
 
     /** @test */
-    public function 備品編集更新バリデーション備品新規登録バリデーションdisposal_scheduled_dateがdate_of_acquisitionから3年と1日後で無効値()
+    public function 備品編集更新バリデーションdisposal_scheduled_dateがdate_of_acquisitionから3年と1日後で無効値()
     {   
         $user = User::factory()->role(1)->create();
         $this->actingAs($user);
@@ -2128,4 +2131,207 @@ class UpdateValidationTest extends TestCase
     }
 
 
+
+    // edit_reason_idのバリデーションのテスト
+    /** @test */
+    public function 備品編集更新バリデーションedit_reason_idが最小値より小さい無効値()
+    {   
+        // 世界を構築
+        $edit_reasons = EditReason::factory()->count(5)->create();
+
+        $user = User::factory()->role(1)->create();
+        $this->actingAs($user);
+
+        $item = Item::factory()->create();
+
+        $response = $this->from('items/'.$item->id.'/edit')
+            ->put(route('items.update', $item), ['edit_reason_id' => 0]);
+
+        $response->assertRedirect(route('items.edit', ['item' => $item->id])); //URLにリダイレクト
+        $response->assertStatus(302);
+
+        $response = $this->followRedirects($response);
+
+        $response->assertInertia(fn (Assert $page) => $page
+            ->component('Items/Edit')
+            ->has('errors.edit_reason_id')
+            ->where('errors.edit_reason_id', '選択された編集理由は正しくありません。')
+            // ->dump()
+        );
+    }
+
+    /** @test */
+    public function 備品編集更新バリデーションedit_reason_idが最小値の有効値()
+    {   
+        // 世界を構築
+        $edit_reasons = EditReason::factory()->count(5)->create();
+
+        $user = User::factory()->role(1)->create();
+        $this->actingAs($user);
+
+        $item = Item::factory()->create();
+
+        $response = $this->from('items/'.$item->id.'/edit')
+            ->put(route('items.update', $item), ['edit_reason_id' => $edit_reasons->min('id')]);
+
+        $response->assertRedirect(route('items.edit', ['item' => $item->id])); //URLにリダイレクト
+        $response->assertStatus(302);
+
+        $response = $this->followRedirects($response);
+
+        $response->assertInertia(fn (Assert $page) => $page
+            ->component('Items/Edit')
+            ->missing('errors.edit_reason_id')
+            // ->dump()
+        );
+    }
+
+    /** @test */
+    public function 備品編集更新バリデーションedit_reason_idが最大値の有効値()
+    {   
+        // 世界を構築
+        $edit_reasons = EditReason::factory()->count(5)->create();
+
+        $user = User::factory()->role(1)->create();
+        $this->actingAs($user);
+
+        $item = Item::factory()->create();
+
+        $response = $this->from('items/'.$item->id.'/edit')
+            ->put(route('items.update', $item), ['edit_reason_id' => $edit_reasons->max('id')]);
+
+        $response->assertRedirect(route('items.edit', ['item' => $item->id])); //URLにリダイレクト
+        $response->assertStatus(302);
+
+        $response = $this->followRedirects($response);
+
+        $response->assertInertia(fn (Assert $page) => $page
+            ->component('Items/Edit')
+            ->missing('errors.edit_reason_id')
+            // ->dump()
+        );
+    }
+
+    /** @test */
+    public function 備品編集更新バリデーションedit_reason_idが最大値より大きい無効値()
+    {   
+        // 世界を構築
+        $edit_reasons = EditReason::factory()->count(5)->create();
+
+        $user = User::factory()->role(1)->create();
+        $this->actingAs($user);
+
+        // EditReasonはItemのカラムでないので、自動インクリメントされない
+        $item = Item::factory()->create();
+
+        $response = $this->from('items/'.$item->id.'/edit')
+            ->put(route('items.update', $item), ['edit_reason_id' => $edit_reasons->max('id') + 1]);
+
+        $response->assertRedirect(route('items.edit', ['item' => $item->id])); //URLにリダイレクト
+        $response->assertStatus(302);
+
+        $response = $this->followRedirects($response);
+
+        $response->assertInertia(fn (Assert $page) => $page
+            ->component('Items/Edit')
+            ->has('errors.edit_reason_id')
+            ->where('errors.edit_reason_id', '選択された編集理由は正しくありません。')
+            // ->dump()
+        );
+    }
+
+
+    // edit_reason_textのバリデーションテスト
+    /** @test */
+    public function 備品編集更新バリデーションedit_reason_text空欄の有効値()
+    {   
+        $user = User::factory()->role(1)->create();
+        $this->actingAs($user);
+
+        $item = Item::factory()->create();
+
+        $response = $this->from('items/'.$item->id.'/edit')
+            ->put(route('items.update', $item), ['edit_reason_text' => '']);
+
+        $response->assertRedirect(route('items.edit', ['item' => $item->id])); //URLにリダイレクト
+        $response->assertStatus(302);
+
+        $response = $this->followRedirects($response);
+
+        $response->assertInertia(fn (Assert $page) => $page
+            ->component('Items/Edit')
+            ->missing('errors.edit_reason_text')
+            // ->dump()
+        );
+    }
+
+    /** @test */
+    public function 備品編集更新バリデーションedit_reason_text1文字の有効値()
+    {   
+        $user = User::factory()->role(1)->create();
+        $this->actingAs($user);
+
+        $item = Item::factory()->create();
+
+        $response = $this->from('items/'.$item->id.'/edit')
+            ->put(route('items.update', $item), ['edit_reason_text' => str_repeat('あ', 1)]);
+
+        $response->assertRedirect(route('items.edit', ['item' => $item->id])); //URLにリダイレクト
+        $response->assertStatus(302);
+
+        $response = $this->followRedirects($response);
+
+        $response->assertInertia(fn (Assert $page) => $page
+            ->component('Items/Edit')
+            ->missing('errors.edit_reason_text')
+            // ->dump()
+        );
+    }
+
+    /** @test */
+    public function 備品編集更新バリデーションedit_reason_text200文字の有効値()
+    {   
+        $user = User::factory()->role(1)->create();
+        $this->actingAs($user);
+
+        $item = Item::factory()->create();
+
+        $response = $this->from('items/'.$item->id.'/edit')
+            ->put(route('items.update', $item), ['edit_reason_text' => str_repeat('あ', 200)]);
+
+        $response->assertRedirect(route('items.edit', ['item' => $item->id])); //URLにリダイレクト
+        $response->assertStatus(302);
+
+        $response = $this->followRedirects($response);
+
+        $response->assertInertia(fn (Assert $page) => $page
+            ->component('Items/Edit')
+            ->missing('errors.edit_reason_text')
+            // ->dump()
+        );
+    }
+
+    /** @test */
+    public function 備品編集更新バリデーションedit_reason_text201文字の無効値()
+    {   
+        $user = User::factory()->role(1)->create();
+        $this->actingAs($user);
+
+        $item = Item::factory()->create();
+
+        $response = $this->from('items/'.$item->id.'/edit')
+            ->put(route('items.update', $item), ['edit_reason_text' => str_repeat('あ', 201)]);
+
+        $response->assertRedirect(route('items.edit', ['item' => $item->id])); //URLにリダイレクト
+        $response->assertStatus(302);
+
+        $response = $this->followRedirects($response);
+
+        $response->assertInertia(fn (Assert $page) => $page
+            ->component('Items/Edit')
+            ->has('errors.edit_reason_text')
+            ->where('errors.edit_reason_text', '理由詳細は、200文字以下で指定してください。')
+            // ->dump()
+        );
+    }
 }

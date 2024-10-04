@@ -75,7 +75,13 @@ class UpdateMethodTest extends TestCase
     function 備品編集画面で備品を編集更新できる()
     {
         // 世界の構築
-        $categories = Category::factory()->count(11)->create();
+        // $categories = Category::factory()->count(11)->create();
+        $category = Category::factory()->create([
+            'id' => 1,
+            'name' => '消耗品'
+        ]);
+        $categories = Category::factory()->count(10)->create(); //残りのカテゴリ
+        $categories = $categories->concat($category); //全てのカテゴリ
         $units = Unit::factory()->count(10)->create();
         $usage_statuses = UsageStatus::factory()->count(2)->create();
         $locations = Location::factory()->count(12)->create();
@@ -93,16 +99,15 @@ class UpdateMethodTest extends TestCase
         ]);
         // dd($item);
 
-
         // itemの段階でinspectionsテーブルにレコードがあるか設定する＝世界構築
         // Inspection::factory()->create()をやらない限りデータは保存されていない
         // 1, inspectionsにレコードがない場合->レコードを生成せずそのまま
-    
+        // 何もコードはいらない
+
         // 2, inspectionsにレコードがある場合->inspectionsのレコードを生成する
-        // factoryだとstatusはtrueになってしまう
         $inspection = Inspection::factory()->create([
             'item_id' => $item->id,
-            'inspection_scheduled_date' => '2024-08-31',
+            'inspection_scheduled_date' => '2024-09-05',
             'status' => false
         ]);
         
@@ -132,13 +137,13 @@ class UpdateMethodTest extends TestCase
 
         $validData = [
             'name' => 'ペーパータオル',
-            'category_id' => $categories->first()->id,
+            'category_id' => $category->id,
             'image_file' => null,
             'image1' => $this->fakeImage,
             'stock' => 10,
             'unit_id' => $units->first()->id,
             'minimum_stock' => 2,
-            'notification' => true,
+            'notification' => 1, //trueだとテストでパスしない
             'usage_status_id' => $usage_statuses->first()->id,
             'end_user' => '山田',
             'location_of_use_id' => $locations->first()->id,
@@ -146,7 +151,7 @@ class UpdateMethodTest extends TestCase
             'acquisition_method_id' => $aquisition_methods->first()->id,
             'acquisition_source' => 'Amazon',
             'price' => 500,
-            'date_of_acquisition' => '2024-09-03',
+            'date_of_acquisition' => '2024-09-01',
             'manufacturer' => null,
             'product_number' => null,
             'remarks' => 'テストコードです',
@@ -172,7 +177,7 @@ class UpdateMethodTest extends TestCase
 
         $this->assertDatabaseHas('items', [
             'name' => 'ペーパータオル',
-            'category_id' => $categories->first()->id,
+            'category_id' => $category->id,
             // 'image1' => 'mocked_image.jpg',
             'stock' => 10,
             'unit_id' => $units->first()->id,
@@ -185,7 +190,7 @@ class UpdateMethodTest extends TestCase
             'acquisition_method_id' => $aquisition_methods->first()->id,
             'acquisition_source' => 'Amazon',
             'price' => 500,
-            'date_of_acquisition' => '2024-09-03',
+            'date_of_acquisition' => '2024-09-01',
             'manufacturer' => null,
             'product_number' => null,
             'remarks' => 'テストコードです',
@@ -194,7 +199,7 @@ class UpdateMethodTest extends TestCase
         // 更新されたことのチェック
         $item->refresh();
         $this->assertSame('ペーパータオル', $item->name);
-        $this->assertSame($categories->first()->id, $item->category_id);
+        $this->assertSame($category->id, $item->category_id);
         $this->assertSame(10, $item->stock);
         $this->assertSame($units->first()->id, $item->unit_id);
         $this->assertSame(2, $item->minimum_stock);
@@ -211,11 +216,12 @@ class UpdateMethodTest extends TestCase
         
         $this->assertDatabaseCount('items', 1);
 
-        $inspection->refresh();
+        // $inspection->refresh();
         // inspectionsテーブルに保存されているか確認
         $this->assertDatabaseHas('inspections', [
             'item_id' => $item->id,
             'inspection_scheduled_date' =>  '2024-09-10',
+            'status' => 0, //false
         ]);
 
         // disposalsテーブルに保存されているか確認

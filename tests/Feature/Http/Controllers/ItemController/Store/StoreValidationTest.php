@@ -81,7 +81,7 @@ class StoreValidationTest extends TestCase
             'nameが空文字の時はエラーメッセージが出る' => [
                 ['name' => '', 'expectedError' => '名前は必ず指定してください。']
             ],
-            'nameが1文字以下の時はエラーメッセージが出る' => [
+            'nameが1文字以下の時はエラーメッセージが出ない' => [
                 ['name' => str_repeat('あ', 1), 'expectedError' => null]
             ],
             'nameが21文字の時はエラーメッセージが出る' => [
@@ -185,8 +185,8 @@ class StoreValidationTest extends TestCase
         );
     }
 
-    // 新規登録のstockのバリデーションのテスト
 
+    // 新規登録のstockのバリデーションのテスト
     /** @test */
     public function 備品新規登録バリデーションstockが最小値より小さい無効値()
     {
@@ -767,7 +767,7 @@ class StoreValidationTest extends TestCase
         $user = User::factory()->role(1)->create();
         $this->actingAs($user);
 
-        $response = $this->from('items/create')->post('items', ['location_of_use_id' => Location::min('id')]);
+        $response = $this->from('items/create')->post('items', ['location_of_use_id' => $locations->min('id')]);
         $response->assertRedirect('items/create'); //URLにリダイレクト
         $response->assertStatus(302);
 
@@ -791,7 +791,7 @@ class StoreValidationTest extends TestCase
         
         dump(Location::max('id'));
 
-        $response = $this->from('items/create')->post('items', ['location_of_use_id' => Location::max('id')]);
+        $response = $this->from('items/create')->post('items', ['location_of_use_id' => $locations->max('id')]);
         $response->assertRedirect('items/create'); //URLにリダイレクト
         $response->assertStatus(302);
 
@@ -813,7 +813,7 @@ class StoreValidationTest extends TestCase
         $user = User::factory()->role(1)->create();
         $this->actingAs($user);
 
-        $response = $this->from('items/create')->post('items', ['location_of_use_id' => Location::max('id') + 1]);
+        $response = $this->from('items/create')->post('items', ['location_of_use_id' => $locations->max('id') + 1]);
         $response->assertRedirect('items/create'); //URLにリダイレクト
         $response->assertStatus(302);
 
