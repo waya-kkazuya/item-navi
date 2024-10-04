@@ -118,7 +118,7 @@ Route::get('/', function () {
 
 // ダッシュボード
 Route::get('/dashboard', [DashboardController::class, 'index'])
-->middleware(['auth', 'verified', 'can:staff-higher'])->name('dashboard');
+->middleware(['auth', 'verified', 'checkRole', 'can:staff-higher'])->name('dashboard');
 
 // Route::get('item-requests', [ItemRequestController::class, 'index'])
 // ->middleware(['auth', 'verified', 'can:user-higher'])->name('item_requests.index');
@@ -134,10 +134,6 @@ Route::middleware(['auth', 'verified', 'can:user-higher'])->group(function () {
 
 
 
-
-// ウィッシュリスト
-Route::resource('wishes', WishController::class)
-->middleware(['auth', 'verified', 'can:user-higher']);
 
 // 棚卸計画
 Route::resource('inventory_plans', InventoryPlanController::class)
