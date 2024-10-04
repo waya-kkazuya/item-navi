@@ -290,9 +290,10 @@ return [
         'transaction_date' => '入出庫日',
         'operator_name' => '実施者',
         'quantity' => '数量',
-        'requestor' => '申請者',
-        'remarks_from_requestor' => '申請理由',
         'edit_reason_id' => '編集理由',
         'edit_reason_text' => '理由詳細',
+        'requestor' => '申請者',
+        'remarks_from_requestor' => '申請理由',
+        'reference' => '参考サイト',
     ],
 ];
