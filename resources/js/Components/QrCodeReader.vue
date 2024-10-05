@@ -19,41 +19,31 @@ const onDetect = content => {
   // emits('qrDetected', content)
   // モーダルを開くにはitemモデルが必要なので、一旦コントローラー側を経由する
   // item_idのみあればfind($id)で取って来れる
-  console.log(content)
   // alert(`QRコードの内容: ${content}`); //contentの中身がオブジェクト
   // QRコードの内容がJSON形式の場合
   let parsedContent;
   try {
-    parsedContent = JSON.parse(content);
-    console.log(parsedContent);
-    alert(`QRコードのパースされた内容: ${JSON.stringify(parsedContent)}`)
+    // parsedContent = JSON.parse(content);
+    rawValue = content.rawValue
+    alert(`QRコードのパースされた内容: ${rawValue}`)
+
+    // router.visit(`consumable_items/${content}`)
     router.visit({
       url: `consumable_items`,
       method: 'get',
-      data: { item_id: parsedContent.rawValue }
+      data: { item_id: rawValue }
     });
   } catch (e) {
     alert(`QRコードの内容をパースできませんでした: ${e.message}`)
-    // console.error('QRコードの内容をパースできませんでした:', e)
   }
-  // router.visit(`consumable_items/${content}`)
+  
 
   scannerActive.value = false // スキャンが完了したらカメラを停止
 }
 
-// const routeTest = content => {
-//     router.visit(`consumable_items/${content}`)
-//   // router.visit({
-//   //   url: `consumable_items`,
-//   //   method: 'get',
-//   //   data: { item_id: content }
-//   // });
-// }
-
 const stopScan = () => {
   scannerActive.value = false;
 }
-
 
 </script>
 
