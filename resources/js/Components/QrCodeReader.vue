@@ -17,11 +17,10 @@ const startScan = () => {
 const onDetect = content => {
   // QRコードの内容を取得し、特定のURLに遷移
   // emits('qrDetected', content)
-  // モーダルを開くにはitemモデルが必要なので、一旦コントローラー側を経由する
-  // item_idのみあればfind($id)で取って来れる
-  // alert(`QRコードの内容: ${content}`); //contentの中身がオブジェクト
+  alert(`QRコードの内容: ${content}`); //contentの中身がオブジェクト
   // QRコードの内容がJSON形式の場合
-  let parsedContent;
+  let rawValue;
+  alert(`QRコードのパースされた内容: ${rawValue}`)
   try {
     // parsedContent = JSON.parse(content);
     rawValue = content.rawValue
@@ -34,8 +33,7 @@ const onDetect = content => {
       data: { item_id: rawValue }
     });
   } catch (e) {
-    alert(`QRコードの内容をパースできませんでした: ${e.message}`)
-  }
+    alert(`QRコードの内容を取得できませんでした: ${e.message}`);  }
   
 
   scannerActive.value = false // スキャンが完了したらカメラを停止
