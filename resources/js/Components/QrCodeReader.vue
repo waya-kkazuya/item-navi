@@ -20,6 +20,7 @@ const onDetect = (content) => {
   // モーダルを開くにはitemモデルが必要なので、一旦コントローラー側を経由する
   // item_idのみあればfind($id)で取って来れる
   console.log(content)
+  alert(`QRコードの内容: ${content}`); 
   router.visit(`consumable_items/${content}`)
   // router.push(content)
   scannerActive.value = false // スキャンが完了したらカメラを停止
@@ -36,6 +37,7 @@ const onDetect = (content) => {
       </svg>
     </button>
     <qrcode-stream v-if="scannerActive" @detect="onDetect" class="scanner"></qrcode-stream>
+    <button v-if="scannerActive" @click="stopScan" class="stop-scan-button">×</button>
   </div>
 </template>
 
