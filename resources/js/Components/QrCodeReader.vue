@@ -23,8 +23,8 @@ const onDetect = content => {
   alert(`QRコードのパースされた内容: ${rawValue}`)
   try {
     // parsedContent = JSON.parse(content);
-    rawValue = content.rawValue
-    alert(`QRコードのパースされた内容: ${rawValue}`)
+    // rawValue = content.rawValue
+    alert(`QRコードの内容: ${content.rawValue}`)
 
     // router.visit(`consumable_items/${content}`)
     router.visit({
