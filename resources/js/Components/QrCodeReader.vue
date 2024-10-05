@@ -21,25 +21,33 @@ const onDetect = content => {
   // item_idのみあればfind($id)で取って来れる
   console.log(content)
   // alert(`QRコードの内容: ${content}`); //contentの中身がオブジェクト
-  alert(`QRコードの内容: ${JSON.stringify(content)}`); 
+  // QRコードの内容がJSON形式の場合
+  let parsedContent;
+  try {
+    parsedContent = JSON.parse(content);
+    console.log(parsedContent);
+    alert(`QRコードのパースされた内容: ${JSON.stringify(parsedContent)}`);
+  } catch (e) {
+    console.error('QRコードの内容をパースできませんでした:', e);
+  }
   // router.visit(`consumable_items/${content}`)
   router.visit({
     url: `consumable_items`,
     method: 'get',
-    data: { item_id: content }
+    data: { item_id: parsedContent.rawValue }
 });
 
   scannerActive.value = false // スキャンが完了したらカメラを停止
 }
 
-const routeTest = content => {
-    router.visit(`consumable_items/${content}`)
-  // router.visit({
-  //   url: `consumable_items`,
-  //   method: 'get',
-  //   data: { item_id: content }
-  // });
-}
+// const routeTest = content => {
+//     router.visit(`consumable_items/${content}`)
+//   // router.visit({
+//   //   url: `consumable_items`,
+//   //   method: 'get',
+//   //   data: { item_id: content }
+//   // });
+// }
 
 const stopScan = () => {
   scannerActive.value = false;
