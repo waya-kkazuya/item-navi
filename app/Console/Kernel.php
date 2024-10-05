@@ -10,6 +10,8 @@ use App\Models\Disposal;
 use App\Notifications\InspectionScheduleNotification;
 use App\Notifications\DisposalScheduleNotification;
 use Carbon\Carbon;
+use App\Http\Controllers\UpdateHtaccessForGitHubActionsController;
+
 
 class Kernel extends ConsoleKernel
 {
@@ -23,6 +25,16 @@ class Kernel extends ConsoleKernel
             $this->sendInspectionNotifications();
             $this->sendDisposalNotifications();
         })->weekdays()->at('06:00');
+
+        // GitHubのAPIからGitHub Actionsで使われるIPアドレスを取得する
+        $schedule->call(function () {
+            // 権限を持つユーザーでログイン
+            $user = User::where('role', '1')->first();
+            Auth::login($user);
+            $controller = new UpdateGitHubActionsHtaccessController();
+            $controller->update();
+            Auth::logout();
+        })->daily();
     }
 
     /**
