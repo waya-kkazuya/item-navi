@@ -14,17 +14,37 @@ const startScan = () => {
   }
 }
 
-const onDetect = (content) => {
+const onDetect = content => {
   // QRコードの内容を取得し、特定のURLに遷移
   // emits('qrDetected', content)
   // モーダルを開くにはitemモデルが必要なので、一旦コントローラー側を経由する
   // item_idのみあればfind($id)で取って来れる
   console.log(content)
-  alert(`QRコードの内容: ${content}`); 
-  router.visit(`consumable_items/${content}`)
-  // router.push(content)
+  // alert(`QRコードの内容: ${content}`); //contentの中身がオブジェクト
+  alert(`QRコードの内容: ${JSON.stringify(content)}`); 
+  // router.visit(`consumable_items/${content}`)
+  router.visit({
+    url: `consumable_items`,
+    method: 'get',
+    data: { item_id: content }
+});
+
   scannerActive.value = false // スキャンが完了したらカメラを停止
 }
+
+const routeTest = content => {
+    router.visit(`consumable_items/${content}`)
+  // router.visit({
+  //   url: `consumable_items`,
+  //   method: 'get',
+  //   data: { item_id: content }
+  // });
+}
+
+const stopScan = () => {
+  scannerActive.value = false;
+}
+
 
 </script>
 
