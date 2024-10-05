@@ -26,16 +26,17 @@ const onDetect = content => {
   try {
     parsedContent = JSON.parse(content);
     console.log(parsedContent);
-    alert(`QRコードのパースされた内容: ${JSON.stringify(parsedContent)}`);
+    alert(`QRコードのパースされた内容: ${JSON.stringify(parsedContent)}`)
+    router.visit({
+      url: `consumable_items`,
+      method: 'get',
+      data: { item_id: parsedContent.rawValue }
+    });
   } catch (e) {
-    console.error('QRコードの内容をパースできませんでした:', e);
+    alert(`QRコードの内容をパースできませんでした: ${e.message}`)
+    // console.error('QRコードの内容をパースできませんでした:', e)
   }
   // router.visit(`consumable_items/${content}`)
-  router.visit({
-    url: `consumable_items`,
-    method: 'get',
-    data: { item_id: parsedContent.rawValue }
-});
 
   scannerActive.value = false // スキャンが完了したらカメラを停止
 }
