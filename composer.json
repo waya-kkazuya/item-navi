@@ -11,7 +11,7 @@
         "barryvdh/laravel-debugbar": "^3.13",
         "barryvdh/laravel-dompdf": "^3.0",
         "barryvdh/laravel-snappy": "^1.0",
-        "guzzlehttp/guzzle": "^7.2",
+        "guzzlehttp/guzzle": "^7.8",
         "illuminate/filesystem": "*",
         "inertiajs/inertia-laravel": "^0.6.8",
         "intervention/image": "*",

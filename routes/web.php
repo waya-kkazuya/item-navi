@@ -18,6 +18,7 @@ use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\InspectionAndDisposalItemController;
 use App\Http\Controllers\ItemRequestController;
 use App\Http\Controllers\PDFController;
+use App\Http\Controllers\UpdateHtaccessForGitHubActionsController;
 use App\Models\Disposal;
 use App\Models\ImageTest;
 use App\Models\Inspection;
@@ -132,7 +133,9 @@ Route::middleware(['auth', 'verified', 'can:user-higher'])->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-
+// admin権限のみ可能
+Route::get('/update-htaccess', [UpdateHtaccessForGitHubActionsController::class, 'update'])
+->middleware(['auth', 'verified', 'can:admin-higher']);
 
 
 // 棚卸計画
