@@ -25,11 +25,7 @@ class EdithistoryFactory extends Factory
      */
     public function definition(): array
     {
-        // $user = ['管理者', 'スタッフ', '利用者'];
-        // $usageStatus = ['未使用', '使用中'];
-
-
-        $operation_types = ['store', 'update', 'stock_in', 'stock_out', 'delete', 'restore'];
+        $operation_types = ['store', 'update', 'stock_in', 'stock_out', 'soft_delete', 'restore'];
         $operation_type = $this->faker->randomElement($operation_types);
 
         $editedFields = $this->getEditableFields();

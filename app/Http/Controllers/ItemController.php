@@ -37,7 +37,7 @@ use Intervention\Image\Typography\FontFactory;
 class ItemController extends Controller
 {
 
-    const CONSUMABLE_ITEM_ID = 1;
+    const CATEGORY_ID_FOR_CONSUMABLE_ITME = 1;
 
     protected $managementIdService;
     protected $imageService;
@@ -52,8 +52,6 @@ class ItemController extends Controller
 
     public function index(Request $request)
     {  
-        // dd(phpinfo());
-
         Gate::authorize('staff-higher');
 
         $search = $request->query('search', '');
@@ -65,7 +63,6 @@ class ItemController extends Controller
         $category_id = $request->query('categoryId', 0);
         $location_of_use_id = $request->query('locationOfUseId', 0);
         $storage_location_id = $request->query('storageLocationId', 0);
-        // Log::info("location_of_use_id");
 
         $withRelations = ['category', 'unit', 'usageStatus', 'locationOfUse', 'storageLocation', 'acquisitionMethod', 'inspections', 'disposal'];
         $selectFields = [
@@ -93,14 +90,9 @@ class ItemController extends Controller
             'deleted_at',
             'created_at'
         ];
-    
-        Log::info("$request->has('disposal')");
-        Log::info($request->has('disposal'));
-        Log::info("$request->disposal");
-        Log::info($request->disposal);
 
         // 通常の備品か廃棄済みの備品かの分岐
-        // 明示的に厳密にイコールにしたらできた
+        // 明示的に厳密にイコールで切り替え可能
         if ($request->disposal === 'true') {
             $query = Item::onlyTrashed();
         } else {
@@ -113,15 +105,6 @@ class ItemController extends Controller
         ->searchItems($search)
         ->select($selectFields)
         ->orderBy('created_at', $sortOrder);
-
-
-        // // ブラウザから直接値を入力されることを考慮して事前に対策する
-
-        // フィルター部分はFatコントローラー防止で、分離できる
-        // マジックナンバーを使わない
-
-        // テスト：カラムに存在しない、idでクエリを実行すると動作がおかしくなる
-        // $query->where('location_of_use_id', 99);
 
         // DBに設定されているidの時のみ反映
         // 各プルダウン変更時のクエリ、ローカルスコープに切り出しリファクタリング
@@ -137,12 +120,6 @@ class ItemController extends Controller
             $query->where('storage_location_id', $storage_location_id);
         }
 
-        // 点検予定日のレコードを抽出、1対多のテーブルゆえ
-        // $query->get()->map(function ($item) {
-        //     $item->pending_inspection_date = $item->inspections->where('status', false)->sortBy('scheduled_date')->first()->scheduled_date ?? null;
-        //     return $item;
-        // });
-
         $total_count = $query->count();
 
         // paginateじゃなくget()の時のデータ構造解析
@@ -150,7 +127,7 @@ class ItemController extends Controller
 
         $items = $query->paginate(20);
 
-        // // map関数を使用するとpaginateオブジェクトの構造が変わり、ペジネーションが使えなくなる
+        // map関数を使用するとpaginateオブジェクトの構造が変わり、ペジネーションが使えなくなる
         // コレクションを取得して変換
         $items->getCollection()->transform(function ($item) {
             // image1カラムがnullかチェック
@@ -179,25 +156,10 @@ class ItemController extends Controller
         // 変換後のコレクションを元のpaginateオブジェクトに戻す
         $items = $items->setCollection($items->getCollection());
 
-        // dd($items);
-
         // プルダウン用データ
         $categories = Category::all();
         $locations = Location::all();
 
-
-        // 未使用
-        // itemsテーブルで使用しているidのみ抽出してユーザビリティを上げる
-        // locationsを加工し、利用場所用の使用されているloactionsデータ
-        // 保管場所の中で使用されているlocationsデータをVueファイルに渡してプルダウンに反映する
-        $locationOfUseIds = Item::distinct()->pluck('location_of_use_id');
-        $locationsOfUse = Location::whereIn('id', $locationOfUseIds)->get();
-        // dd($locationsOfUse);
-
-        $storageLocationIds = Item::distinct()->pluck('storage_location_id');
-        $storageOfLocation = Location::whereIn('id', $storageLocationIds)->get();
-
-        // dd($items);
 
         // 廃棄済み備品用API情報
         if ($request->has('disposal')) {
@@ -234,6 +196,7 @@ class ItemController extends Controller
         $usage_statuses = UsageStatus::all();
         $acquisition_methods = AcquisitionMethod::all();
 
+        // $request->queryはリクエスト一覧から「新規作成」でCreate.vueを開いたときに自動入力する値
         return Inertia::render('Items/Create', [
             'categories' => $categories,
             'locations' => $locations,
@@ -261,7 +224,7 @@ class ItemController extends Controller
         try{
             // もしもカテゴリが消耗品以外で、minimumに数値が入っていたらnullにする
             // categoriesテーブルで消耗品のidは1、定数に入れる
-            if($request->category_id == self::CONSUMABLE_ITEM_ID){
+            if($request->category_id == self::CATEGORY_ID_FOR_CONSUMABLE_ITME){
                 $minimum_stock = $request->minimum_stock;
             } else {
                 $minimum_stock = null;
@@ -336,7 +299,7 @@ class ItemController extends Controller
             // // ※消耗品のときだけcategory_id=1のときだけ生成する
             $labelNameToStore = null;
             $qrCodeNameToStore = null;
-            if($request->category_id == self::CONSUMABLE_ITEM_ID){ 
+            if($request->category_id == self::CATEGORY_ID_FOR_CONSUMABLE_ITME){ 
                 // ※注意
                 // 保存したあと、items->update()で部分的にqrcodeの名前を変更する
                 $url = 'https://itemnavi.com/consumable_items';
@@ -497,8 +460,6 @@ class ItemController extends Controller
     public function update(UpdateItemRequest $request, Item $item)
     {
         Gate::authorize('staff-higher');
-        // dd($request);
-        // dd($item);
         // dd($request->name, $request->pendingInspection, $item->name);
 
 
@@ -517,7 +478,12 @@ class ItemController extends Controller
             $item->category_id = $request->category_id;
             $item->stock = $request->stock;
             $item->unit_id = $request->unit_id;
-            $item->minimum_stock = $request->minimum_stock;
+            // 消耗品の時だけminimum_stockを保存できる
+            if ($request->category_id == self::CATEGORY_ID_FOR_CONSUMABLE_ITME) {
+                $item->minimum_stock = $request->minimum_stock;
+            } else {
+                $item->minimum_stock = null;
+            }
             $item->notification = $request->notification;
             $item->usage_status_id = $request->usage_status_id;
             $item->end_user = $request->end_user;
@@ -535,6 +501,7 @@ class ItemController extends Controller
             // 編集理由はItemObserverのupdatedメソッドでセッションから取得しedithistoriesに保存する
             Session::put('edit_reeason_id', $request->edit_reeason_id);
             Session::put('edit_reason_text', $request->edit_reason_text);
+            Session::put('operation_type', 'update');
 
 
             // 点検フォームが空欄で編集で追加するパターン
@@ -543,10 +510,10 @@ class ItemController extends Controller
 
             // 点検日のレコード、Vue側から値が返ってきたら変更の有無に関わらず保存する→シンプル
             // pendingInspectionとは、Inspectionsテーブルでstatusがfalseの一番近い（日付が古い）scheduled_date      
-            if ($request->inspectionSchedule) {
-                // nullのチェック
+            // 変更すべきinspectionScheduleがあれば変更する、なければ何もしない
+            if ($request->inspectionSchedule) {      
                 if($request->pendingInspection) {
-                    // 既存のレコードがあるなら、既存の点検レコードを更新
+                    // 既存の点検予定日が保存されているInspectionレコードがあればそのレコードを新しい値で更新
                     $pendingInspection = $item->inspections()->where('id', $request->pendingInspection['id'])->first(); //渡ってきたオブジェクトを取得
                     $pendingInspection->update(['inspection_scheduled_date' => $request->inspectionSchedule]);
                 } else {
@@ -568,14 +535,11 @@ class ItemController extends Controller
                 }    
             }
 
-
-            // 画像アップロード後ろに移動
             // ->isValid()は念のため、ちゃんとアップロードできているかチェックしてくれる
             $fileNameToStore = null;
             if(!is_null($request->image_file) && $request->image_file->isValid() ){
                 // 古い画像があれば削除
                 if ($item->image1) {
-                    // dd('削除の条件分岐の中');
                     Storage::disk('public')->delete('items/' . $item->image1);
                 }
 

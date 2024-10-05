@@ -22,7 +22,7 @@ class ProfileController extends Controller
      */
     public function edit(Request $request): Response
     {
-        Gate::authorize('staff-higher');
+        Gate::authorize('user-higher');
 
         $user = Auth::user();
         $profile_image = $user->profile_image;
@@ -53,7 +53,7 @@ class ProfileController extends Controller
      */
     public function update(ProfileUpdateRequest $request): RedirectResponse
     {
-        Gate::authorize('staff-higher');
+        Gate::authorize('user-higher');
 
         $request->user()->fill($request->validated());
 
@@ -90,6 +90,8 @@ class ProfileController extends Controller
      */
     public function destroy(Request $request): RedirectResponse
     {
+        Gate::authorize('staff-higher');
+
         $request->validate([
             'password' => ['required', 'current_password'],
         ]);

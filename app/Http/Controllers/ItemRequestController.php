@@ -67,6 +67,8 @@ class ItemRequestController extends Controller
     // API通信用
     public function updateStatus(Request $request, $id)
     {
+        Gate::authorize('staff-higher');
+
         Log::info('request');
         Log::info($request);
         Log::info('id');

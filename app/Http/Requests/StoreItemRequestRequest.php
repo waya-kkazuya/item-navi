@@ -22,15 +22,15 @@ class StoreItemRequestRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => ['required', 'min:3' ,'max:20'],
+            'name' => ['required', 'min:1' ,'max:20'],
             'category_id' => ['required', 'exists:categories,id'],
             'location_of_use_id' => ['required', 'exists:locations,id'],
+            'manufacturer' => ['nullable', 'max:20'],
+            'reference' => ['nullable', 'max:20'],
+            'price' => ['nullable', 'integer', 'min:0', 'max:1000000'],
             'requestor' => ['required', 'min:1' ,'max:20'],
             'remarks_from_requestor' => ['required', 'max:500'],
             'request_status_id' => ['nullable'], // admin・staffが変更する、enum型か、テーブルを追加するか
-            'manufacturer' => ['nullable', 'max:20'],
-            'reference' => ['nullable', 'max:20'],
-            'price' => ['nullable', 'integer', 'max:1000000'],
         ];
     }
 }
