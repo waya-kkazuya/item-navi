@@ -3,7 +3,7 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head, Link, router } from '@inertiajs/vue3';
 import FlashMessage from '@/Components/FlashMessage.vue';
 import Pagination from '@/Components/Pagination.vue';
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, watch } from 'vue';
 import { stringify } from 'postcss';
 import StockHistoryModal from '@/Components/StockHistoryModal.vue';
 import UpdateStockModal from '@/Components/UpdateStockModal.vue';
@@ -50,6 +50,13 @@ onMounted(() => {
     console.log(props.linkedItem)
     // selectedItem.value = props.selectedItem;
     openModal(props.linkedItem)
+  }
+})
+
+watch(() => props.linkedItem, (newVal) => {
+  if (newVal) {
+    alert('watch側で更新を検知しました');
+    openModal(newVal);
   }
 })
 
