@@ -18,10 +18,10 @@ const onDetect = content => {
   // QRコードの内容を取得し、特定のURLに遷移
   // emits('qrDetected', content)
   alert(`QRコードの内容stringify: ${JSON.stringify(content)}`);
-  alert(`QRコードの内容content.content: ${content.content}`); //contentの中身がオブジェクト
   // QRコードの内容がJSON形式の場合
   let itemId
-  itemId = JSON.stringify(content).rawValue
+  itemId = content.rawValue
+  // itemId = JSON.stringify(content).rawValue
   alert(`QRコードのパースされた内容: ${itemId}`)
   try {
     // parsedContent = JSON.parse(content);
