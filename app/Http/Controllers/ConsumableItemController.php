@@ -115,6 +115,8 @@ class ConsumableItemController extends Controller
 
         // Notification.vueのリンククリックで送られてきたItemのid
         $linkedItem = Item::find($item_id);
+        Log::info('$linkedItem');
+        Log::info($linkedItem);
         // dd($linkedItem);
 
         // dd('API');
