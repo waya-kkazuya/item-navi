@@ -18,15 +18,17 @@ const onDetect = content => {
   // QRコードの内容を取得し、特定のURLに遷移
   // emits('qrDetected', content)
   alert(`QRコードの内容stringify: ${JSON.stringify(content)}`);
-  // QRコードの内容がJSON形式の場合
-  let itemId
-  itemId = content.rawValue
-  // itemId = JSON.stringify(content).rawValue
-  alert(`QRコードのパースされた内容: ${itemId}`)
+
   try {
-    // parsedContent = JSON.parse(content);
-    // rawValue = content.rawValue
     // alert(`QRコードの内容: ${itemId}`)
+    // vue-qrcode-readerは複数のバーコードを同時に読み込めるので配列形式
+    if (Array.isArray(content) && content.length > 0) {
+      const firstItem = content[0];
+      const itemId = firstItem.rawValue;
+      alert(`QRコードのidデータ: ${itemId}`);
+    } else {
+      alert('QRコードの内容を取得できませんでした');
+    }
 
     // router.visit(`consumable_items/${content}`)
     router.visit({
@@ -35,7 +37,8 @@ const onDetect = content => {
       data: { item_id: itemId }
     });
   } catch (e) {
-    alert(`QRコードの内容を取得できませんでした: ${e.message}`);  }
+    alert(`QRコードの内容を取得できませんでした: ${e.message}`);
+  }
   
 
   scannerActive.value = false // スキャンが完了したらカメラを停止
