@@ -28,17 +28,27 @@ const onDetect = content => {
     alert(`QRコードのidデータ: ${itemId}`);
     try {
       // router.visit(`consumable_items/${itemId}`)
-      router.visit({
-        url: `consumable_items`,
-        method: 'get',
-        data: { item_id: itemId }
-      });
+      router.visit(route('consumable_items', { item_id: itemId }), {
+        onSuccess: (page) => {
+          alert('成功しました！');
+          console.log('成功時のページデータ:', page);
+        },
+        onError: (errors) => {
+          alert('エラーが発生しました。');
+          console.log('エラー内容:', errors);
+        }
+      })
+      // router.visit({
+      //   url: `consumable_items`,
+      //   method: 'get',
+      //   data: { item_id: itemId }
+      // });
     } catch (e) {
-      alert(`画面の遷移時にエラーが発生しました: ${e.message}`);
+      alert(`画面の遷移時にエラーが発生しました: ${e.message}`)
     }
 
   } else {
-    alert('QRコードの内容を取得できませんでした');
+    alert('QRコードの内容を取得できませんでした')
   }
 
   scannerActive.value = false // スキャンが完了したらカメラを停止
