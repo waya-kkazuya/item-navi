@@ -67,10 +67,10 @@ class ConsumableItemController extends Controller
 
             // withによるeagerローディングではリレーションを使用する
             $query = Item::with($withRelations)
-            ->where('category_id', self::CONSUMABLE_ITEM_CATEGORY_ID)
-            ->searchItems($search)
-            ->select($selectFields)
-            ->orderBy('created_at', $sortOrder);
+                ->where('category_id', self::CONSUMABLE_ITEM_CATEGORY_ID)
+                ->searchItems($search)
+                ->select($selectFields)
+                ->orderBy('created_at', $sortOrder);
 
             // dd($query->get());
 
@@ -115,7 +115,11 @@ class ConsumableItemController extends Controller
             // dd($consumableItems);
 
             // Notification.vueのリンククリックで送られてきたItemのid
-            $linkedItem = Item::find($item_id);
+            // $linkedItem = Item::find($item_id);
+            // Eagerローディング
+            $linkedItem = Item::with($withRelations)
+                ->select($selectFields)
+                ->find($item_id);
             Log::info('$linkedItem');
             Log::info($linkedItem);
             // dd($linkedItem);
