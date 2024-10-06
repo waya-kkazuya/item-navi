@@ -26,11 +26,11 @@ class QrCodeService
     // QRコードの名前はQR-とランダムな文字列
     $qrCodeNameToStore = 'QR-' . uniqid(rand().'_') . '.png';
     // Storage::put('public/qrcode/' . $qrCodeNameToStore, $qrCode);
-    Storage::disk('public')->put('qrcode/' . $qrCodeNameToStore, $qrCode);
+    Storage::disk('public')->put('qrcode/'.$qrCodeNameToStore, $qrCode);
     
     // 保存したファイルのパスを取得
     // $qrCodefilePath = Storage::path('public/qrcode/' . $qrCodeNameToStore);
-    $qrCodefilePath = Storage::disk('public')->path('qrcode/' . $qrCodeNameToStore);
+    $qrCodefilePath = Storage::disk('public')->path('qrcode/'.$qrCodeNameToStore);
 
     $qrManager = new ImageManager(new Driver());
     \Log::info($qrCodefilePath);
@@ -42,19 +42,20 @@ class QrCodeService
 
     // 白地に文字を追加
     $label->text('管理ID '.$item->management_id, 450, 160, function(FontFactory $font) {
-        $font->filename(resource_path('fonts/NotoSansJP-Medium.ttf'));
+        // $font->filename(resource_path('fonts/NotoSansJP-Medium.ttf'));
+        $font->filename(public_path('storage/fonts/NotoSansJP-Medium.ttf'));
         $font->size(30);
         $font->color('#000');
     });
 
     $label->text('備品名 '.$item->name, 450, 230, function(FontFactory $font) {
-        $font->filename(resource_path('fonts/NotoSansJP-Medium.ttf'));
+        $font->filename(public_path('storage/fonts/NotoSansJP-Medium.ttf'));
         $font->size(30);
         $font->color('#000');
     });
     // リレーションは使えるか
     $label->text('カテゴリ '.$item->category->name, 450, 300, function(FontFactory $font) {
-        $font->filename(resource_path('fonts/NotoSansJP-Medium.ttf'));
+        $font->filename(public_path('storage/fonts/NotoSansJP-Medium.ttf'));
         $font->size(30);
         $font->color('#000');
     });
@@ -62,7 +63,7 @@ class QrCodeService
     $labelNameToStore = 'label-' . uniqid(rand().'_') .'.jpg';
     // JpegEncoderでエンコードする、use分も書く
     // 画像をStorage/public/qrcodesに保存する
-    Storage::disk('public')->put('labels/' . $labelNameToStore, $label->encode(new JpegEncoder()));
+    Storage::disk('public')->put('labels/'.$labelNameToStore, $label->encode(new JpegEncoder()));
     // Storage::put('public/labels/' . $labelNameToStore, $label->encode(new JpegEncoder()));
 
     
