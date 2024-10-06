@@ -17,20 +17,22 @@ const startScan = () => {
 const onDetect = content => {
   // QRコードの内容を取得し、特定のURLに遷移
   // emits('qrDetected', content)
-  alert(`QRコードの内容: ${content}`); //contentの中身がオブジェクト
+  alert(`QRコードの内容stringify: ${JSON.stringify(content)}`);
+  alert(`QRコードの内容content.content: ${content.content}`); //contentの中身がオブジェクト
   // QRコードの内容がJSON形式の場合
-  let rawValue;
-  alert(`QRコードのパースされた内容: ${rawValue}`)
+  let itemId
+  itemId = content.rawValue
+  alert(`QRコードのパースされた内容: ${itemId}`)
   try {
     // parsedContent = JSON.parse(content);
     // rawValue = content.rawValue
-    alert(`QRコードの内容: ${content.rawValue}`)
+    // alert(`QRコードの内容: ${itemId}`)
 
     // router.visit(`consumable_items/${content}`)
     router.visit({
       url: `consumable_items`,
       method: 'get',
-      data: { item_id: rawValue }
+      data: { item_id: itemId }
     });
   } catch (e) {
     alert(`QRコードの内容を取得できませんでした: ${e.message}`);  }
