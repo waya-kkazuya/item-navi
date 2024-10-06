@@ -41,39 +41,52 @@ const storageLocationId = ref(props.storageLocationId ?? 0)
 const notificationItem = ref()
 
 onMounted(() => {
-  console.log(props.linkedItem)
+  console.log('props.linkedItem', props.linkedItem)
   // 通知からのリンクで送られてくるitemの可否でモーダルウィンドウを開く
   // モーダルウィンドウはモーダルのコンポーネントからemitで打ち上げて関数を発火させ閉じる
   if (props.linkedItem) {
     alert('props.linkedItem動いた')
     console.log('props.linkedItem動いた')
     console.log(props.linkedItem)
-    // selectedItem.value = props.selectedItem;
-    openModal(props.linkedItem)
+    // selectedStockHistoryItem.value = props.selectedStockHistoryItem;
+    openUpdateStockModal(props.linkedItem)
   }
 })
 
 watch(() => props.linkedItem, (newVal) => {
   if (newVal) {
     alert('watch側で更新を検知しました');
-    openModal(newVal);
+    openStockHistoryModal(newVal);
   }
 })
 
 // データとモーダルウィンドウの開閉の役割を分ける
-const isModalOpen = ref(false)
-const selectedItem = ref(null)
+const isStockHistoryModalOpen = ref(false)
+const selectedStockHistoryItem = ref(null)
 
-const openModal = (item) => {
+const openStockHistoryModal = (item) => {
   console.log(item)
-  selectedItem.value = item
-  console.log(selectedItem)
-  isModalOpen.value = true
-  console.log(isModalOpen.value)
+  selectedStockHistoryItem.value = item
+  console.log(selectedStockHistoryItem)
+  isStockHistoryModalOpen.value = true
+  console.log(isStockHistoryModalOpen.value)
+}
+const closeStockHistoryModal = () => {
+  isStockHistoryModalOpen.value = false
 }
 
-const closeModal = () => {
-  isModalOpen.value = false;
+
+const isUpdateStockModalOpen = ref(false)
+const selectedUpdateStockItem = ref(null)
+
+const openUpdateStockModal = item => {
+  console.log(item)
+  selectedUpdateStockItem .value = item
+  isUpdateStockModalOpen.value = true
+}
+const closeUpdateStockModal = () => {
+  isUpdateStockModalOpen.value = false
+  fetchConsumableItems()
 }
 
 
@@ -294,18 +307,24 @@ const fetchConsumableItems = async () => {
                                     </div>
                                     <div class="mt-2 flex justify-center space-x-4 md:space-x-1 lg:space-x-2 items-center max-h-20 ">
                                       <!-- 親コンポーネントからモーダルを開くボタン -->
-                                      <button @click="openModal(item)" type="button" data-micromodal-trigger="modal-1" class="flex items-center text-white text-sm bg-gray-500 border-0 py-2 px-4 focus:outline-none hover:bg-gray-600 rounded">
+                                      <button @click="openStockHistoryModal(item)" type="button" data-micromodal-trigger="modal-1" class="flex items-center text-white text-sm bg-gray-500 border-0 py-2 px-4 focus:outline-none hover:bg-gray-600 rounded">
                                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-5">
                                           <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 6 9 12.75l4.286-4.286a11.948 11.948 0 0 1 4.306 6.43l.776 2.898m0 0 3.182-5.511m-3.182 5.51-5.511-3.181" />
                                         </svg>
                                         在庫履歴
                                       </button>
-                                      <UpdateStockModal :item="item" :userName="userName" :errors="errors" @fetchConsumableItems="fetchConsumableItems" />
+                                      <button @click="openUpdateStockModal(item)" type="button" data-micromodal-trigger="modal-1" class="flex items-center text-white text-sm bg-sky-500 border-0 py-2 px-4 focus:outline-none hover:bg-sky-600 rounded">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-5">
+                                          <path stroke-linecap="round" stroke-linejoin="round" d="m20.25 7.5-.625 10.632a2.25 2.25 0 0 1-2.247 2.118H6.622a2.25 2.25 0 0 1-2.247-2.118L3.75 7.5M10 11.25h4M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125Z" />
+                                        </svg>
+                                        入出庫
+                                      </button>
                                     </div>
                                   </div>
                                 </div>
                               </template>
-                              <StockHistoryModal v-show="isModalOpen" :item="selectedItem" @close="closeModal" />
+                              <StockHistoryModal v-show="isStockHistoryModalOpen" :item="selectedStockHistoryItem" @close="closeStockHistoryModal" />
+                              <UpdateStockModal v-show="isUpdateStockModalOpen" :item="selectedUpdateStockItem" :userName="userName" :errors="errors" @close="closeUpdateStockModal" />
                             </div>
                             <div v-else>
                               <div class="flex items-center justify-center">
