@@ -73,8 +73,7 @@ const stopScan = () => {
     </button>
     <qrcode-stream v-if="scannerActive" @detect="onDetect" class="scanner"></qrcode-stream>
     <button v-if="scannerActive" @click="stopScan" class="stop-scan-button">×</button>
-    
-    <button @click="transitionTest">機能テスト用</button>
+    <!-- <button @click="transitionTest">機能テスト用</button> -->
   </div>
 </template>
 

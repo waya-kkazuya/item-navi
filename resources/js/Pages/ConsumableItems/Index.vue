@@ -162,11 +162,6 @@ const fetchConsumableItems = async () => {
                                   <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3" />
                                 </svg>
                               </a>
-                              <div>
-                                <!-- QRコード読み取りボタン -->
-                                <!-- <ToolTip /> -->
-                                <QrCodeReader />
-                              </div>
                             </div>
                             
 
@@ -230,6 +225,7 @@ const fetchConsumableItems = async () => {
                                 <div class="flex items-center relative">
                                   <input type="text" name="search" v-model="search" placeholder="備品名で検索" @keyup.enter="fetchAndFilterItems" class="h-9 md:w-60 text-sm md:text-base placeholder-text-xs md:placeholder-text-base">
                                   <div class="absolute right-10 md:right-11">
+                                    <!-- <ToolTip /> -->
                                     <QrCodeReader />
                                   </div>
                                   <button class="h-9 w-9 md:w-10 bg-blue-300 text-white py-2 px-2 flex justify-center items-center border border-gray-300" @click="fetchAndFilterItems">
