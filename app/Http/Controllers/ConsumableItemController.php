@@ -11,6 +11,7 @@ use App\Models\Edithistory;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
 
@@ -21,6 +22,9 @@ class ConsumableItemController extends Controller
     public function index(Request $request, $item_id = null)
     {
         Gate::authorize('user-higher');
+
+        Log::info('$item_id');
+        Log::info($item_id);
 
         $search = $request->query('search', '');
 
