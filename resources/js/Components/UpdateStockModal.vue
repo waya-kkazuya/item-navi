@@ -1,7 +1,7 @@
 <script setup>
 import axios from 'axios';
 import { router, useForm } from '@inertiajs/vue3';
-import { computed, ref, watch } from 'vue'
+import { computed, ref, watch, onMounted } from 'vue'
 
 
 // 親コンポーネントから、itemオブジェクトを受け取る
@@ -11,29 +11,37 @@ const props = defineProps({
   errors: Object
 })
 
-const emit = defineEmits(['fetchConsumableItems'])
-
 // errorsを編集できるようにする
 const localErrors = ref({...props.errors});
-const isShow = ref(false)
 
 // トグルステータスをopenModalとcloseModalに分ける
 // const toggleStatus = () => {
 //   // localErrors.value = {} //リセット
 //   isShow.value = !isShow.value
 // }
-const openModal = () => {
-  isShow.value = true
-}
+
+
+const emit = defineEmits(['close'])
 const closeModal = () => {
   localErrors.value = {} // エラーメッセージをリセット
-  isShow.value = false
+  // console.log('イベント打ち上げ')
+  emit('close') // 閉じるイベント発火
 }
+
+// onMounted(() => {
+//   console.log('UpdateStockMOdalのprops.item')
+//   console.log(props.item)
+//   localItem.value = props.item
+//   localUserName.value = props.userName
+
+// })
+
 
 // props.errorsの変更を監視し、localErrorsに反映
 watch(() => props.errors, (newErrors) => {
   localErrors.value = { ...newErrors };
 }, { deep: true });
+
 
 const activeTab = ref('出庫')
 const activateDecreaseTab = () => {
@@ -65,8 +73,9 @@ const decreaseStock = item => {
   if (confirm('本当に出庫処理をしますか？')) {
       const response = decreaseForm.put(`/decreaseStock/${item.id}`, {
         onSuccess: () => {
-          closeModal()
-          emit('fetchConsumableItems') // 親コンポーネントにイベントを発火
+          // 成功したらモーダルを閉じる
+          closeModal() //fetchConsumableItemsは親コンポーネントのcloseUpdateStockModalに含める
+          // emit('fetchConsumableItems') // 親コンポーネントにイベントを発火
           decreaseForm.quantity = 1 // モーダルのquantityをリセット
         },
         onError: (errors) => {
@@ -122,7 +131,7 @@ const formatDate = (timestamp) => {
 </script>
 
 <template>
-  <div v-show="isShow" class="modal" id="modal-1" aria-hidden="true">
+  <div v-if="props.item" class="modal" id="modal-1" aria-hidden="true">
     <div class="modal__overlay" tabindex="-1" data-micromodal-close>
       <div class="modal__container bg-white w-full md:w-2/3 lg:w-1/3 md:h-auto md:rounded-lg p-4 md:p-8 md:shadow-lg md:transform-none transform md:translate-y-0  transition-transform duration-500 ease-in-out" role="dialog" aria-modal="true" aria-labelledby="modal-1-title">
         <header class="modal__header">
@@ -322,12 +331,12 @@ const formatDate = (timestamp) => {
     </div>
   </div>
 
-  <button @click="openModal" type="button" data-micromodal-trigger="modal-1" href='javascript:;' class="flex items-center text-white text-sm bg-sky-500 border-0 py-2 px-4 focus:outline-none hover:bg-sky-600 rounded">
+  <!-- <button @click="openModal" type="button" data-micromodal-trigger="modal-1" href='javascript:;' class="flex items-center text-white text-sm bg-sky-500 border-0 py-2 px-4 focus:outline-none hover:bg-sky-600 rounded">
     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-5">
       <path stroke-linecap="round" stroke-linejoin="round" d="m20.25 7.5-.625 10.632a2.25 2.25 0 0 1-2.247 2.118H6.622a2.25 2.25 0 0 1-2.247-2.118L3.75 7.5M10 11.25h4M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125Z" />
     </svg>
     入出庫
-  </button>
+  </button> -->
 </template>
 
 <!-- <style>
