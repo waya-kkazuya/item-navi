@@ -29,7 +29,8 @@ class QrCodeService
     Storage::disk('public')->put('qrcode/' . $qrCodeNameToStore, $qrCode);
     
     // 保存したファイルのパスを取得
-    $qrCodefilePath = Storage::path('public/qrcode/' . $qrCodeNameToStore);
+    // $qrCodefilePath = Storage::path('public/qrcode/' . $qrCodeNameToStore);
+    $qrCodefilePath = Storage::disk('public')->path('qrcode/' . $qrCodeNameToStore);
 
     $qrManager = new ImageManager(new Driver());
     \Log::info($qrCodefilePath);
