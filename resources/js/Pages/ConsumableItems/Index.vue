@@ -43,12 +43,10 @@ const notificationItem = ref()
 onMounted(() => {
   console.log('props.linkedItem', props.linkedItem)
   // 通知からのリンクで送られてくるitemの可否でモーダルウィンドウを開く
-  // モーダルウィンドウはモーダルのコンポーネントからemitで打ち上げて関数を発火させ閉じる
   if (props.linkedItem) {
-    alert('props.linkedItem動いた')
+    // alert('props.linkedItem動いた')
     console.log('props.linkedItem動いた')
     console.log(props.linkedItem)
-    // selectedStockHistoryItem.value = props.selectedStockHistoryItem;
     openUpdateStockModal(props.linkedItem)
   }
 })
@@ -168,7 +166,6 @@ const fetchConsumableItems = async () => {
                                 <!-- QRコード読み取りボタン -->
                                 <!-- <ToolTip /> -->
                                 <QrCodeReader />
-                                <!-- <QrCodeReader @qrDetected="handleQrDetected" /> -->
                               </div>
                             </div>
                             

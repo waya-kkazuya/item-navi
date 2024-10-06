@@ -44,10 +44,9 @@ const fetchStockTransactions = async item => {
 
 // モーダルが開かなくてもonMountedが動いてしまう
 onMounted(() => {
+  console.log('StockHistoryModalのonMounted')
   console.log('props.item')
   console.log(props.item)
-//   console.log('StockHistoryModalのonMounted')
-//   fetchStockTransactions(props.item)
 })
 
 watch(() => props.item, (newItem) => {
