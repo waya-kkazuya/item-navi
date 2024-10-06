@@ -45,6 +45,7 @@ onMounted(() => {
   // 通知からのリンクで送られてくるitemの可否でモーダルウィンドウを開く
   // モーダルウィンドウはモーダルのコンポーネントからemitで打ち上げて関数を発火させ閉じる
   if (props.linkedItem) {
+    alert('props.linkedItem動いた')
     console.log('props.linkedItem動いた')
     console.log(props.linkedItem)
     // selectedItem.value = props.selectedItem;
