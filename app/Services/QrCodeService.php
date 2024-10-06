@@ -32,6 +32,7 @@ class QrCodeService
     $qrCodefilePath = Storage::path('public/qrcode/' . $qrCodeNameToStore);
 
     $qrManager = new ImageManager(new Driver());
+    \Log::info($qrCodefilePath);
     $qrImage = $qrManager->read($qrCodefilePath);
     // $qrImage = $qrManager->read($qrCode, 'raw')->resize(30, 30);
 
