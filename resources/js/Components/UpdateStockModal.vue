@@ -14,28 +14,12 @@ const props = defineProps({
 // errorsを編集できるようにする
 const localErrors = ref({...props.errors});
 
-// トグルステータスをopenModalとcloseModalに分ける
-// const toggleStatus = () => {
-//   // localErrors.value = {} //リセット
-//   isShow.value = !isShow.value
-// }
-
-
 const emit = defineEmits(['close'])
 const closeModal = () => {
   localErrors.value = {} // エラーメッセージをリセット
   // console.log('イベント打ち上げ')
   emit('close') // 閉じるイベント発火
 }
-
-// onMounted(() => {
-//   console.log('UpdateStockMOdalのprops.item')
-//   console.log(props.item)
-//   localItem.value = props.item
-//   localUserName.value = props.userName
-
-// })
-
 
 // props.errorsの変更を監視し、localErrorsに反映
 watch(() => props.errors, (newErrors) => {
@@ -52,7 +36,6 @@ const activateIncreaseTab = () => {
   localErrors.value = {} // エラーメッセージをリセット
   activeTab.value = '入庫'
 }
-
 
 
 // 出庫タブの在庫数自動計算
