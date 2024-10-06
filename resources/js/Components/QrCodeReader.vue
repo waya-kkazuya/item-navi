@@ -21,7 +21,7 @@ const onDetect = content => {
   alert(`QRコードの内容content.content: ${content.content}`); //contentの中身がオブジェクト
   // QRコードの内容がJSON形式の場合
   let itemId
-  itemId = content.rawValue
+  itemId = JSON.stringify(content).rawValue
   alert(`QRコードのパースされた内容: ${itemId}`)
   try {
     // parsedContent = JSON.parse(content);
