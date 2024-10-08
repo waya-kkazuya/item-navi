@@ -60,6 +60,7 @@ const markAsRead = async id => {
             <th class="min-w-32 md:min-w-40 px-4 py-3 title-font tracking-wider font-medium text-center text-gray-900 text-xs md:text-base bg-gray-100">備品名</th>
             <th class="min-w-24 md:min-w-28 px-4 py-3 title-font tracking-wider font-medium text-center text-gray-900 text-xs md:text-base bg-gray-100">画像</th>
             <th class="min-w-32 md:min-w-40 px-4 py-3 title-font tracking-wider font-medium text-center text-gray-900 text-xs md:text-base bg-gray-100">在庫数</th>
+            <th class="min-w-32 md:min-w-40 px-4 py-3 title-font tracking-wider font-medium text-center text-gray-900 text-xs md:text-base bg-gray-100">モーダル</th>
             <!-- <th class="min-w-32 md:min-w-40 px-4 py-3 title-font tracking-wider font-medium text-center text-gray-900 text-xs md:text-base bg-gray-100"></th> -->
           </tr>
         </thead>
@@ -71,10 +72,10 @@ const markAsRead = async id => {
               </td>
               <td class="border-b-2 border-gray-100 px-4 py-3 text-center text-xs md:text-base">
                 <Link :href="route('items.show', { item: notification.data.id })">
-                <span class="text-blue-600 title-font font-medium text-xs md:text-base">
-                  {{ notification.data.management_id }}
-                </span>
-              </Link>
+                  <span class="text-blue-600 title-font font-medium text-xs md:text-base">
+                    {{ notification.data.management_id }}
+                  </span>
+                </Link>
               </td>
               <td class="border-b-2 border-gray-100 px-4 py-3 text-center text-xs md:text-base">
                 {{ notification.data.item_name }}
@@ -86,6 +87,13 @@ const markAsRead = async id => {
               </td>
               <td class=" border-b-2 border-gray-100 px-4 py-3 text-center text-xs md:text-base">
                 {{ notification.data.quantity }} / {{ notification.data.minimum_stock }}
+              </td>
+              <td class="border-b-2 border-gray-100 px-4 py-3 text-center text-xs md:text-base">
+                <Link :href="route('consumable_items', { item_id: notification.data.id })">
+                  <span class="text-blue-600 title-font font-medium text-xs md:text-base">
+                    開く
+                  </span>
+                </Link>
               </td>
               <!-- <td class="border-b-2 border-gray-100 px-4 py-3 text-center text-xs md:text-base">
                 <Link :href="route('consumable_items', { item_id: notification.data.id })">

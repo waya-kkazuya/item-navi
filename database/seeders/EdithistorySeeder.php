@@ -45,91 +45,91 @@ class EdithistorySeeder extends Seeder
 
 
 
-        DB::table('edithistories')->insert([
-            [
-                'edit_mode' => 'normal', // 通常か、棚卸
-                'operation_type' => 'store', //store(新規作成),update(編集更新),stock_in(入庫・在庫追加),stock_out(出庫・在庫消費),delete(廃棄),restore(復元)
-                'item_id' => 1,
-                'edited_field'=> null,
-                'old_value' => null,
-                'new_value'=> null,
-                'edit_user' => 'admin',
-                'edit_reason_id' => null, 
-                'edit_reason_text' => null, 
-                'created_at' => '2024*04-01', //created_atは処理が行われたタイミング
-            ],
-            [
-                'edit_mode' => 'normal', // 通常か、棚卸
-                'operation_type' => 'update', //store(新規作成),update(編集更新),stock_in(入庫・在庫追加),stock_out(出庫・在庫消費),delete(廃棄),restore(復元)
-                'item_id' => 1,
-                'edited_field'=> 'stock',
-                'old_value' => 20,
-                'new_value'=> 18,
-                'edit_user' => 'admin',
-                'edit_reason_id' => 2, 
-                'edit_reason_text' => null, 
-                'created_at' => '2024*04-02', //created_atは処理が行われたタイミング
-            ],
-            [
-                'edit_mode' => 'normal',
-                'operation_type' => 'update', //store(新規作成),update(編集更新),stock_in(入庫・在庫追加),stock_out(出庫・在庫消費),delete(廃棄),restore(復元)
-                'item_id' => 1,
-                'edited_field'=> 'name',
-                'old_value' => 'ペーパータオル1',
-                'new_value'=> 'ペーパータオル',
-                'edit_user' => 'admin',
-                'edit_reason_id' => 1, 
-                'edit_reason_text' => 'あいうえおかきくけこ', 
-                'created_at' => '2024*04-03', //created_atは処理が行われたタイミング
-            ],
-            [
-                'edit_mode' => 'normal',
-                'operation_type' => 'update', //store(新規作成),update(編集更新),stock_in(入庫・在庫追加),stock_out(出庫・在庫消費),delete(廃棄),restore(復元)
-                'item_id' => 1,
-                'edited_field'=> 'usage_status_id',
-                'old_value' => 1,
-                'new_value'=> 2,
-                'edit_user' => 'admin',
-                'edit_reason_id' => 1, 
-                'edit_reason_text' => '使用状況のの変更をします', 
-                'created_at' => '2024*04-04', //created_atは処理が行われたタイミング
-            ],
-            [
-                'edit_mode' => 'normal',
-                'operation_type' => 'update', //store(新規作成),update(編集更新),stock_in(入庫・在庫追加),stock_out(出庫・在庫消費),delete(廃棄),restore(復元)
-                'item_id' => 1,
-                'edited_field'=> 'date_of_acquisition',
-                'old_value' => 1,
-                'new_value'=> 2,
-                'edit_user' => 'admin',
-                'edit_reason_id' => 5, 
-                'edit_reason_text' => '取得日が間違っていたので修正しました', 
-                'created_at' => '2024*04-04', //created_atは処理が行われたタイミング
-            ],
-            // ソフトデリートをダミーデータに含めると矛盾が生じる
-            // [
-            //     'edit_mode' => 'normal',
-            //     'operation_type' => 'soft_delete', //store(新規作成),update(編集更新),stock_in(入庫・在庫追加),stock_out(出庫・在庫消費),delete(廃棄),restore(復元)
-            //     'item_id' => 1,
-            //     'edited_field'=> null,
-            //     'old_value' => null,
-            //     'new_value'=> null,
-            //     'edit_user' => 'admin',
-            //     'edit_reason_id' => null, 
-            //     'created_at' => '2024*04-05', //created_atは処理が行われたタイミング
-            // ],
-            [
-                'edit_mode' => 'normal',
-                'operation_type' => 'restore', //store(新規作成),update(編集更新),stock_in(入庫・在庫追加),stock_out(出庫・在庫消費),delete(廃棄),restore(復元)
-                'item_id' => 1,
-                'edited_field'=> null,
-                'old_value' => null,
-                'new_value'=> null,
-                'edit_user' => 'admin',
-                'edit_reason_id' => null, 
-                'edit_reason_text' => null, 
-                'created_at' => '2024*04-06', //created_atは処理が行われたタイミング
-            ],
-        ]);
+        // DB::table('edithistories')->insert([
+        //     [
+        //         'edit_mode' => 'normal', // 通常か、棚卸
+        //         'operation_type' => 'store', //store(新規作成),update(編集更新),stock_in(入庫・在庫追加),stock_out(出庫・在庫消費),delete(廃棄),restore(復元)
+        //         'item_id' => 1,
+        //         'edited_field'=> null,
+        //         'old_value' => null,
+        //         'new_value'=> null,
+        //         'edit_user' => 'admin',
+        //         'edit_reason_id' => null, 
+        //         'edit_reason_text' => null, 
+        //         'created_at' => '2024*04-01', //created_atは処理が行われたタイミング
+        //     ],
+        //     [
+        //         'edit_mode' => 'normal', // 通常か、棚卸
+        //         'operation_type' => 'update', //store(新規作成),update(編集更新),stock_in(入庫・在庫追加),stock_out(出庫・在庫消費),delete(廃棄),restore(復元)
+        //         'item_id' => 1,
+        //         'edited_field'=> 'stock',
+        //         'old_value' => 20,
+        //         'new_value'=> 18,
+        //         'edit_user' => 'admin',
+        //         'edit_reason_id' => 2, 
+        //         'edit_reason_text' => null, 
+        //         'created_at' => '2024*04-02', //created_atは処理が行われたタイミング
+        //     ],
+        //     [
+        //         'edit_mode' => 'normal',
+        //         'operation_type' => 'update', //store(新規作成),update(編集更新),stock_in(入庫・在庫追加),stock_out(出庫・在庫消費),delete(廃棄),restore(復元)
+        //         'item_id' => 1,
+        //         'edited_field'=> 'name',
+        //         'old_value' => 'ペーパータオル1',
+        //         'new_value'=> 'ペーパータオル',
+        //         'edit_user' => 'admin',
+        //         'edit_reason_id' => 1, 
+        //         'edit_reason_text' => 'あいうえおかきくけこ', 
+        //         'created_at' => '2024*04-03', //created_atは処理が行われたタイミング
+        //     ],
+        //     [
+        //         'edit_mode' => 'normal',
+        //         'operation_type' => 'update', //store(新規作成),update(編集更新),stock_in(入庫・在庫追加),stock_out(出庫・在庫消費),delete(廃棄),restore(復元)
+        //         'item_id' => 1,
+        //         'edited_field'=> 'usage_status_id',
+        //         'old_value' => 1,
+        //         'new_value'=> 2,
+        //         'edit_user' => 'admin',
+        //         'edit_reason_id' => 1, 
+        //         'edit_reason_text' => '使用状況のの変更をします', 
+        //         'created_at' => '2024*04-04', //created_atは処理が行われたタイミング
+        //     ],
+        //     [
+        //         'edit_mode' => 'normal',
+        //         'operation_type' => 'update', //store(新規作成),update(編集更新),stock_in(入庫・在庫追加),stock_out(出庫・在庫消費),delete(廃棄),restore(復元)
+        //         'item_id' => 1,
+        //         'edited_field'=> 'date_of_acquisition',
+        //         'old_value' => 1,
+        //         'new_value'=> 2,
+        //         'edit_user' => 'admin',
+        //         'edit_reason_id' => 5, 
+        //         'edit_reason_text' => '取得日が間違っていたので修正しました', 
+        //         'created_at' => '2024*04-04', //created_atは処理が行われたタイミング
+        //     ],
+        //     // ソフトデリートをダミーデータに含めると矛盾が生じる
+        //     // [
+        //     //     'edit_mode' => 'normal',
+        //     //     'operation_type' => 'soft_delete', //store(新規作成),update(編集更新),stock_in(入庫・在庫追加),stock_out(出庫・在庫消費),delete(廃棄),restore(復元)
+        //     //     'item_id' => 1,
+        //     //     'edited_field'=> null,
+        //     //     'old_value' => null,
+        //     //     'new_value'=> null,
+        //     //     'edit_user' => 'admin',
+        //     //     'edit_reason_id' => null, 
+        //     //     'created_at' => '2024*04-05', //created_atは処理が行われたタイミング
+        //     // ],
+        //     [
+        //         'edit_mode' => 'normal',
+        //         'operation_type' => 'restore', //store(新規作成),update(編集更新),stock_in(入庫・在庫追加),stock_out(出庫・在庫消費),delete(廃棄),restore(復元)
+        //         'item_id' => 1,
+        //         'edited_field'=> null,
+        //         'old_value' => null,
+        //         'new_value'=> null,
+        //         'edit_user' => 'admin',
+        //         'edit_reason_id' => null, 
+        //         'edit_reason_text' => null, 
+        //         'created_at' => '2024*04-06', //created_atは処理が行われたタイミング
+        //     ],
+        // ]);
     }
 }

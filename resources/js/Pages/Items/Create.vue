@@ -108,12 +108,12 @@ const clearDisposalSchedule = () => {
                                                     <div class="p-4 border mb-8 md:mb-0 flex justify-center">
 
                                                         <div class="p-2 w-full">
-                                                            <label for="fileName" class="leading-7 text-xs md:text-base text-blue-900">
+                                                            <label for="imageFile" class="leading-7 text-xs md:text-base text-blue-900">
                                                                 画像
                                                                 <span class="ml-1 mr-2 bg-gray-400 text-white text-xs md:text-base lg:text-xs py-1 px-2 rounded-md">任意</span>
                                                             </label>
-                                                            <label for="fileName" class="cursor-pointer md:flex">
-                                                                <input type="file" @change="handleFileUpload" multiple accept="image/png, image/jpeg, image/jpg" id="fileName" name="fileName" class="sr-only">
+                                                            <label for="imageFile" class="cursor-pointer md:flex">
+                                                                <input type="file" @change="handleFileUpload" multiple accept="image/png, image/jpeg, image/jpg" id="imageFile" name="imageFile" class="sr-only">
                                                                 <div class="md:mt-1 w-48 h-48 md:w-40 md:h-40 border border-gray-300 rounded-md shadow-sm flex items-center justify-center">
                                                                     <template v-if="file_preview_src">
                                                                         <img :src=file_preview_src alt="画像プレビュー" class="w-full h-full object-cover rounded-md">
@@ -331,7 +331,7 @@ const clearDisposalSchedule = () => {
                                                         </div>
                                                     </div>
                                                     <div class="w-full">
-                                                        <button class="flex mx-auto text-white text-xs md:text-base bg-indigo-500 border-0 py-2 px-8 focus:outline-none hover:bg-indigo-600 rounded">
+                                                        <button id="item_register" class="flex mx-auto text-white text-xs md:text-base bg-indigo-500 border-0 py-2 px-8 focus:outline-none hover:bg-indigo-600 rounded">
                                                             登録する
                                                         </button>
                                                     </div>
