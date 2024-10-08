@@ -33,7 +33,6 @@ class ItemObserver
         ]);
     }
 
-
     public function updated(Item $item): void
     {
         $changes = $item->getChanges();
@@ -71,10 +70,6 @@ class ItemObserver
         }
     }
 
-
-    /**
-     * Handle the Item "deleted" event.
-     */
     public function deleted(Item $item): void
     {
         // ソフトデリート
@@ -89,9 +84,6 @@ class ItemObserver
         ]);
     }
 
-    /**
-     * Handle the Item "restored" event.
-     */
     public function restored(Item $item): void
     {
         // 備品復元時
@@ -102,12 +94,12 @@ class ItemObserver
             'edited_field' => null,
             'old_value' => null,
             'new_value' => null,       
+            'edit_user' => Auth::user()->name ?? '',
+            'edit_reason_id' => null, //プルダウン
+            'edit_reason_text' => null, //その他テキストエリア 
         ]);
     }
 
-    /**
-     * Handle the Item "force deleted" event.
-     */
     public function forceDeleted(Item $item): void
     {
         //
