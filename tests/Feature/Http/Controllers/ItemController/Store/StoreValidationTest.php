@@ -84,11 +84,11 @@ class StoreValidationTest extends TestCase
             'nameが1文字以下の時はエラーメッセージが出ない' => [
                 ['name' => str_repeat('あ', 1), 'expectedError' => null]
             ],
-            'nameが21文字の時はエラーメッセージが出る' => [
-                ['name' => str_repeat('あ', 21), 'expectedError' => '名前は、20文字以下で指定してください。']
+            'nameが41文字の時はエラーメッセージが出る' => [
+                ['name' => str_repeat('あ', 41), 'expectedError' => '名前は、40文字以下で指定してください。']
             ],
-            'nameが20文字の時はエラーメッセージが出ない' => [
-                ['name' => str_repeat('あ', 20), 'expectedError' => null]
+            'nameが40文字の時はエラーメッセージが出ない' => [
+                ['name' => str_repeat('あ', 40), 'expectedError' => null]
             ],
         ];
     }

@@ -22,7 +22,7 @@ class StoreItemRequestRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => ['required', 'min:1' ,'max:20'],
+            'name' => ['required', 'min:1' ,'max:40'],
             'category_id' => ['required', 'exists:categories,id'],
             'location_of_use_id' => ['required', 'exists:locations,id'],
             'manufacturer' => ['nullable', 'max:20'],

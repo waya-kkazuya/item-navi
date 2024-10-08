@@ -33,6 +33,7 @@ use Intervention\Image\ImageManager;
 // use Intervention\Image\Drivers\Gd\Driver;
 use Intervention\Image\Drivers\Imagick\Driver;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\DB;
 
 class decreaseStockMethodTest extends TestCase
 {
@@ -50,6 +51,11 @@ class decreaseStockMethodTest extends TestCase
     /** @test */
     function 出庫モーダルで出庫処理が出来る()
     {
+        // categoriesテーブルをトランケートして連番をリセット
+        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+        DB::table('categories')->truncate();
+        DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+
         // 世界を構築
         $category = Category::factory()->create(['id' => 1]);
 

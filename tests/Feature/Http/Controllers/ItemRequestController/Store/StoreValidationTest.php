@@ -98,7 +98,7 @@ class StoreValidationTest extends TestCase
 
         // routeにpostする
         $response = $this->from('item-requests/create')
-            ->post(route('item_requests.store'), ['name' => str_repeat('あ', 20)]);
+            ->post(route('item_requests.store'), ['name' => str_repeat('あ', 40)]);
         $response->assertRedirect('item-requests/create'); //URLにリダイレクト
         $response->assertStatus(302);
 
@@ -119,7 +119,7 @@ class StoreValidationTest extends TestCase
 
         // routeにpostする
         $response = $this->from('item-requests/create')
-            ->post(route('item_requests.store'), ['name' => str_repeat('あ', 21)]);
+            ->post(route('item_requests.store'), ['name' => str_repeat('あ', 41)]);
         $response->assertRedirect('item-requests/create'); //URLにリダイレクト
         $response->assertStatus(302);
 
@@ -128,7 +128,7 @@ class StoreValidationTest extends TestCase
         $response->assertInertia(fn (Assert $page) => $page
             ->component('ItemRequests/Create')
             ->has('errors.name')
-            ->where('errors.name', '名前は、20文字以下で指定してください。')
+            ->where('errors.name', '名前は、40文字以下で指定してください。')
             // ->dump()
         );
     }

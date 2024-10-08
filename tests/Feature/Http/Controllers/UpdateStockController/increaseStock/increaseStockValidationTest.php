@@ -33,6 +33,7 @@ use Intervention\Image\ImageManager;
 // use Intervention\Image\Drivers\Gd\Driver;
 use Intervention\Image\Drivers\Imagick\Driver;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\DB;
 
 class increaseStockValidationTest extends TestCase
 {
@@ -50,6 +51,11 @@ class increaseStockValidationTest extends TestCase
     /** @test */
     function 入出庫モーダルでの入庫処理バリデーションtransaction_dateがnullで無効値な場合()
     {
+        // categoriesテーブルをトランケートして連番をリセット
+        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+        DB::table('categories')->truncate();
+        DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+
         // 世界を構築
         $category = Category::factory()->create(['id' => 1]);
 
@@ -79,6 +85,11 @@ class increaseStockValidationTest extends TestCase
     /** @test */
     function 入出庫モーダルでの入庫処理バリデーションtransaction_dateが文字列で無効値な場合()
     {
+        // categoriesテーブルをトランケートして連番をリセット
+        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+        DB::table('categories')->truncate();
+        DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+
         // 世界を構築
         $category = Category::factory()->create(['id' => 1]);
 
@@ -108,6 +119,11 @@ class increaseStockValidationTest extends TestCase
     /** @test */
     function 入出庫モーダルでの入庫処理バリデーションtransaction_dateが数字で無効値な場合()
     {
+        // categoriesテーブルをトランケートして連番をリセット
+        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+        DB::table('categories')->truncate();
+        DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+
         // 世界を構築
         $category = Category::factory()->create(['id' => 1]);
 
@@ -137,6 +153,11 @@ class increaseStockValidationTest extends TestCase
     /** @test */
     function 入出庫モーダルでの入庫処理バリデーションtransaction_dateが日付で有効値な場合()
     {
+        // categoriesテーブルをトランケートして連番をリセット
+        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+        DB::table('categories')->truncate();
+        DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+
         // 世界を構築
         $category = Category::factory()->create(['id' => 1]);
 
@@ -165,6 +186,11 @@ class increaseStockValidationTest extends TestCase
     /** @test */
     function 入出庫モーダルでの入庫処理バリデーションoperator_nameがnullで無効値な場合()
     {
+        // categoriesテーブルをトランケートして連番をリセット
+        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+        DB::table('categories')->truncate();
+        DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+
         // 世界を構築
         $category = Category::factory()->create(['id' => 1]);
 
@@ -194,6 +220,11 @@ class increaseStockValidationTest extends TestCase
     /** @test */
     function 入出庫モーダルでの入庫処理バリデーションoperator_nameが1文字で有効値な場合()
     {
+        // categoriesテーブルをトランケートして連番をリセット
+        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+        DB::table('categories')->truncate();
+        DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+
         // 世界を構築
         $category = Category::factory()->create(['id' => 1]);
 
@@ -222,6 +253,11 @@ class increaseStockValidationTest extends TestCase
     /** @test */
     function 入出庫モーダルでの入庫処理バリデーションoperator_nameが10文字で有効境界値な場合()
     {
+        // categoriesテーブルをトランケートして連番をリセット
+        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+        DB::table('categories')->truncate();
+        DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+        
         // 世界を構築
         $category = Category::factory()->create(['id' => 1]);
 
@@ -250,6 +286,11 @@ class increaseStockValidationTest extends TestCase
     /** @test */
     function 入出庫モーダルでの入庫処理バリデーションoperator_nameが11文字で無効境界値な場合()
     {
+        // categoriesテーブルをトランケートして連番をリセット
+        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+        DB::table('categories')->truncate();
+        DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+
         // 世界を構築
         $category = Category::factory()->create(['id' => 1]);
 
@@ -279,6 +320,11 @@ class increaseStockValidationTest extends TestCase
     /** @test */
     function 入出庫モーダルでの入庫処理バリデーションquantityがnullで無効値な場合()
     {
+        // categoriesテーブルをトランケートして連番をリセット
+        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+        DB::table('categories')->truncate();
+        DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+        
         // 世界を構築
         $category = Category::factory()->create(['id' => 1]);
 
@@ -308,6 +354,11 @@ class increaseStockValidationTest extends TestCase
     /** @test */
     function 入出庫モーダルでの入庫処理バリデーションquantityが0で無効境界値な場合()
     {
+        // categoriesテーブルをトランケートして連番をリセット
+        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+        DB::table('categories')->truncate();
+        DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+
         // 世界を構築
         $category = Category::factory()->create(['id' => 1]);
 
@@ -337,6 +388,11 @@ class increaseStockValidationTest extends TestCase
     /** @test */
     function 入出庫モーダルでの入庫処理バリデーションquantityが1で有効境界値な場合()
     {
+        // categoriesテーブルをトランケートして連番をリセット
+        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+        DB::table('categories')->truncate();
+        DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+        
         // 世界を構築
         $category = Category::factory()->create(['id' => 1]);
 
@@ -365,6 +421,11 @@ class increaseStockValidationTest extends TestCase
     /** @test */
     function 入出庫モーダルでの入庫処理バリデーションquantityが100で有効境界値な場合()
     {
+        // categoriesテーブルをトランケートして連番をリセット
+        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+        DB::table('categories')->truncate();
+        DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+    
         // 世界を構築
         $category = Category::factory()->create(['id' => 1]);
 
@@ -393,6 +454,11 @@ class increaseStockValidationTest extends TestCase
     /** @test */
     function 入出庫モーダルでの入庫処理バリデーションquantityが101で無効境界値な場合()
     {
+        // categoriesテーブルをトランケートして連番をリセット
+        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+        DB::table('categories')->truncate();
+        DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+
         // 世界を構築
         $category = Category::factory()->create(['id' => 1]);
 
