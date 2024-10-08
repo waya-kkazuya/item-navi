@@ -13,67 +13,54 @@ use Intervention\Image\Typography\FontFactory;
 class QrCodeService
 {
   public static function upload($item) {
-    
-
-    // QRコード画像の名前をUUIDか、管理IDに依存するかで引数が変わる
-    // png生成にはImagickが必要
-    
-    // $item->id
-    // QRコードに備品情報のidを込める
-    $item_id = 1;
     // $item->idでQRコードを生成する
     $qrCode = QrCode::format('png')->size(300)->generate($item->id);
     // QRコードの名前はQR-とランダムな文字列
     $qrCodeNameToStore = 'QR-' . uniqid(rand().'_') . '.png';
-    // Storage::put('public/qrcode/' . $qrCodeNameToStore, $qrCode);
     Storage::disk('public')->put('qrcode/'.$qrCodeNameToStore, $qrCode);
     
     // 保存したファイルのパスを取得
-    // $qrCodefilePath = Storage::path('public/qrcode/' . $qrCodeNameToStore);
     $qrCodefilePath = Storage::disk('public')->path('qrcode/'.$qrCodeNameToStore);
 
     $qrManager = new ImageManager(new Driver());
     \Log::info($qrCodefilePath);
     $qrImage = $qrManager->read($qrCodefilePath);
-    // $qrImage = $qrManager->read($qrCode, 'raw')->resize(30, 30);
 
     $label = $qrManager->create(910, 550)->fill('fff');
-    $label->place($qrImage, 'top-left', 80, 125);
+    $label->place($qrImage, 'top-left', 40, 125);
 
     // 白地に文字を追加
-    $label->text('管理ID '.$item->management_id, 450, 160, function(FontFactory $font) {
-        // $font->filename(resource_path('fonts/NotoSansJP-Medium.ttf'));
+    $label->text('管理ID'.$item->management_id, 370, 160, function(FontFactory $font) {
         $font->filename(public_path('storage/fonts/NotoSansJP-Medium.ttf'));
         $font->size(30);
         $font->color('#000');
     });
-
-    $label->text('備品名 '.$item->name, 450, 230, function(FontFactory $font) {
-        $font->filename(public_path('storage/fonts/NotoSansJP-Medium.ttf'));
-        $font->size(30);
-        $font->color('#000');
-    });
-    // リレーションは使えるか
-    $label->text('カテゴリ '.$item->category->name, 450, 300, function(FontFactory $font) {
-        $font->filename(public_path('storage/fonts/NotoSansJP-Medium.ttf'));
-        $font->size(30);
-        $font->color('#000');
-    });
-
-    $labelNameToStore = 'label-' . uniqid(rand().'_') .'.jpg';
-    // JpegEncoderでエンコードする、use分も書く
-    // 画像をStorage/public/qrcodesに保存する
-    Storage::disk('public')->put('labels/'.$labelNameToStore, $label->encode(new JpegEncoder()));
-    // Storage::put('public/labels/' . $labelNameToStore, $label->encode(new JpegEncoder()));
-
     
-    // ※注意
-    // 保存したあと、items->update()で部分的にqrcodeの名前を変更する
-    // return $labelNameToStore;
+    // $lineBreakText = mb_convert_encoding(self::wrapText('備品名 '.$item->name, 14), 'UTF-8'); 
+    $label->text('備品名 '.$item->name, 370, 230, function(FontFactory $font) {
+        $font->filename(public_path('storage/fonts/NotoSansJP-Medium.ttf'));
+        $font->size(30);
+        $font->color('#000');
+    });
 
+    $label->text('カテゴリ'.$item->category->name, 370, 300, function(FontFactory $font) {
+        $font->filename(public_path('storage/fonts/NotoSansJP-Medium.ttf'));
+        $font->size(30);
+        $font->color('#000');
+    });
+
+    $labelNameToStore = 'label-'.uniqid(rand().'_') .'.jpg';
+    Storage::disk('public')->put('labels/'.$labelNameToStore, $label->encode(new JpegEncoder()));
+
+    // トランザクション処理が失敗した時のロールバック用にQRコード画像名も返す
     return [
       'labelNameToStore' => $labelNameToStore,
       'qrCodeNameToStore' => $qrCodeNameToStore,
     ];
+  }
+
+  public static function wrapText($text, $maxLength)
+  {
+      return wordwrap($text, $maxLength, PHP_EOL, true);
   }
 }
