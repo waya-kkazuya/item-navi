@@ -34,6 +34,7 @@ use Intervention\Image\ImageManager;
 use Intervention\Image\Drivers\Imagick\Driver;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Illuminate\Support\Facades\DB;
 
 class UpdateValidationTest extends TestCase
 {
@@ -46,6 +47,11 @@ class UpdateValidationTest extends TestCase
         // \Artisan::call('cache:clear');
 
         $this->faker = FakerFactory::create();
+
+        // categoriesテーブルをトランケートして連番をリセット
+        // DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+        // DB::table('categories')->truncate();
+        // DB::statement('SET FOREIGN_KEY_CHECKS=1;');
     }
 
     // 編集更新のnameのバリデーションのテスト
@@ -103,7 +109,7 @@ class UpdateValidationTest extends TestCase
         $item = Item::factory()->create();
 
         $response = $this->from('items/'.$item->id.'/edit')
-            ->put(route('items.update', $item), ['name' => str_repeat('あ', 20)]);
+            ->put(route('items.update', $item), ['name' => str_repeat('あ', 40)]);
         $response->assertRedirect('items/'.$item->id.'/edit'); //URLにリダイレクト
         $response->assertStatus(302);
 
@@ -125,7 +131,7 @@ class UpdateValidationTest extends TestCase
         $item = Item::factory()->create();
 
         $response = $this->from('items/'.$item->id.'/edit')
-            ->put(route('items.update', $item), ['name' => str_repeat('あ', 21)]);
+            ->put(route('items.update', $item), ['name' => str_repeat('あ', 41)]);
         $response->assertRedirect('items/'.$item->id.'/edit'); //URLにリダイレクト
         $response->assertStatus(302);
 
@@ -134,7 +140,7 @@ class UpdateValidationTest extends TestCase
         $response->assertInertia(fn (Assert $page) => $page
             ->component('Items/Edit')
             ->has('errors.name')
-            ->where('errors.name', '名前は、20文字以下で指定してください。')
+            ->where('errors.name', '名前は、40文字以下で指定してください。')
             // ->dump()
         );
     }
@@ -343,6 +349,11 @@ class UpdateValidationTest extends TestCase
     /** @test */
     public function 備品編集更新バリデーションカテゴリが消耗品の時はminimum_stockの値は保存される()
     {
+        // categoriesテーブルをトランケートして連番をリセット
+        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+        DB::table('categories')->truncate();
+        DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+
         // 世界を構築
         // $categories = Category::factory()->count(11)->create();
         $category = Category::factory()->create([
@@ -406,6 +417,11 @@ class UpdateValidationTest extends TestCase
     /** @test */
     public function 備品編集更新バリデーションカテゴリが消耗品以外の時は値がminimum_stockはnullで保存される()
     {
+        // categoriesテーブルをトランケートして連番をリセット
+        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+        DB::table('categories')->truncate();
+        DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+
         // 世界を構築
         // $categories = Category::factory()->count(11)->create();
         $category1 = Category::factory()->create([
@@ -478,6 +494,11 @@ class UpdateValidationTest extends TestCase
     /** @test */
     public function 備品編集更新バリデーションminimum_stockが最小値より小さい無効値()
     {
+        // categoriesテーブルをトランケートして連番をリセット
+        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+        DB::table('categories')->truncate();
+        DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+
         $category = Category::factory()->create([
             'id' => 1,
             'name' => '消耗品'
@@ -515,6 +536,11 @@ class UpdateValidationTest extends TestCase
     /** @test */
     public function 備品編集更新バリデーションminimum_stockが最小の有効値()
     {
+        // categoriesテーブルをトランケートして連番をリセット
+        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+        DB::table('categories')->truncate();
+        DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+
         $category = Category::factory()->create([
             'id' => 1,
             'name' => '消耗品'
@@ -551,6 +577,11 @@ class UpdateValidationTest extends TestCase
     /** @test */
     public function 備品編集更新バリデーションminimum_stockが最大の有効値()
     {
+        // categoriesテーブルをトランケートして連番をリセット
+        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+        DB::table('categories')->truncate();
+        DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+
         $category = Category::factory()->create([
             'id' => 1,
             'name' => '消耗品'
@@ -586,7 +617,12 @@ class UpdateValidationTest extends TestCase
 
     /** @test */
     public function 備品編集更新バリデーションminimum_stockが最大値を超える無効値()
-    {
+{
+        // categoriesテーブルをトランケートして連番をリセット
+        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+        DB::table('categories')->truncate();
+        DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+
         $category = Category::factory()->create([
             'id' => 1,
             'name' => '消耗品'
@@ -624,6 +660,11 @@ class UpdateValidationTest extends TestCase
     /** @test */
     public function 備品編集更新バリデーションunit_idが最小値より小さい無効値()
     {   
+        // categoriesテーブルをトランケートして連番をリセット
+        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+        DB::table('units')->truncate();
+        DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+
         // 世界を構築
         $units = Unit::factory()->count(10)->create();
 
