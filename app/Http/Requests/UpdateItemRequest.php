@@ -25,8 +25,8 @@ class UpdateItemRequest extends FormRequest
         // Vue側の命名規則であることに注意
         return [
             // 'image1' => ['nullable'], // 正方形画像 画像名の命名規則にしたがって制限をかける、何文字以内
-            'image_file' => ['nullable', 'image', 'mimes:jpeg,png,jpg', 'max:2048'],
-            'name' => ['required', 'min:1' ,'max:20'],
+            'image_file' => ['nullable', 'image', 'mimes:jpeg,png,jpg'],
+            'name' => ['required', 'min:1' ,'max:40'],
             'category_id' => ['required', 'exists:categories,id'],
             'stock' => ['required', 'integer', 'min:0', 'max:200'],
             'unit_id' => ['required', 'exists:units,id'] ,
