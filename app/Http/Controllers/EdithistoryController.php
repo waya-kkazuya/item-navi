@@ -19,7 +19,8 @@ class EdithistoryController extends Controller
             ->get()
             ->map(function ($edithistory) {
                 // operation_typeの表示用の値を設定
-                // operation_type=>更新種類　store(新規作成),update(編集更新),stock_in(入庫・在庫追加),stock_out(出庫・在庫消費),delete(廃棄),restore(復元)
+                // operation_type=>更新種類　store(新規作成),update(編集更新),stock_in(入庫・在庫追加),stock_out(出庫・在庫消費),delete(廃棄),restore(復元)                
+                \Log::debug('$edithistory->operation_type: '.$edithistory->operation_type);
                 $edithistory->operation_type_for_display = match ($edithistory->operation_type) {
                     'store' => '新規登録',
                     'update' => '編集更新',
@@ -52,7 +53,7 @@ class EdithistoryController extends Controller
                     'remarks' => '備考',
                     'inspection_scheduled_date' => '点検予定日',
                     'disposal_scheduled_date' => '廃棄予定日',
-                    default => '不明',
+                    default => null,
                 };
 
                 return $edithistory;
