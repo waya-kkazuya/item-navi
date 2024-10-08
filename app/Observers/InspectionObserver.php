@@ -14,7 +14,34 @@ class InspectionObserver
      */
     public function created(Inspection $inspection): void
     {
-        //
+        // ItemControllerのstoreおよびupdateでcreateでInspectionの新規レコードを生成したとき
+        // パターン
+        // 1,ItemControllerのstoreメソッドでcreate
+        // 2,ItemControllerのupdateメソッドでupdate レコードがある場合
+        // 3,ItemControllerのupdateメソッドでcreate レコードがない場合
+
+        // セッションから編集理由を取得
+        $edit_reason_id = Session::get('edit_reeason_id');
+        $edit_reason_text = Session::get('edit_reason_text');
+        $operation_type = Session::get('operation_type');
+
+        // 仮置き
+        $edit_mode = 'normal';
+
+        $oldValue = null;
+        $newValue = $inspection->inspection_scheduled_date; 
+        
+        Edithistory::create([
+            'edit_mode' => $edit_mode,
+            'operation_type' => $operation_type ?? 'store',
+            'item_id' => $inspection->item_id,
+            'edited_field' => 'inspection_scheduled_date',
+            'old_value' => $oldValue,
+            'new_value' => $newValue,
+            'edit_user' => Auth::user()->name ?? '',
+            'edit_reason_id' => $edit_reason_id ?? null, //プルダウン
+            'edit_reason_text' => $edit_reason_text ?? null, //その他テキストエリア  
+        ]);
     }
 
     /**
@@ -33,13 +60,10 @@ class InspectionObserver
         // セッションから編集理由を取得
         $edit_reason_id = Session::get('edit_reeason_id');
         $edit_reason_text = Session::get('edit_reason_text');
-
-        // dd($changes);
-        // dd($changes['scheduled_date']);
+        $operation_type = Session::get('operation_type');
 
         // scheduled_dateカラムのみを追跡
         if (isset($changes['inspection_scheduled_date'])) {
-
             // 仮置き
             $edit_mode = 'normal';
 
@@ -49,7 +73,7 @@ class InspectionObserver
 
             Edithistory::create([
                 'edit_mode' => $edit_mode,
-                'operation_type' => 'update',
+                'operation_type' => $operation_type,
                 'item_id' => $inspection->item_id,
                 'edited_field' => 'inspection_scheduled_date',
                 'old_value' => $oldValue,
