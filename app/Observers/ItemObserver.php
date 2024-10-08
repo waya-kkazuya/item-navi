@@ -20,8 +20,7 @@ class ItemObserver
     {
         // 注意
         //createdはseederやfactoryでダミーデータを作成した時も動く
-
-        // 新規作成時はitem_idとedit_user,edited_atがあればいいのでは。
+        
         // category_idはitemにあるし、category_id(カテゴリ)も変化する可能性がある
         Edithistory::create([
             'edit_mode' => 'normal' ,
@@ -70,15 +69,6 @@ class ItemObserver
                 'edit_reason_text' => $edit_reason_text, //その他テキストエリア
             ]);
         }
-
-        // ココの部分は通常時の分だけでも作ってしまった方が良い
-        // 棚卸時のURLを作成したら、Request::url()で$edit_typeを分ける
-        // $url = Request::url();
-        // if (strpos($url, 'normal-edit-url') !== false) {
-        //     $model->edithistory()->create(['edit_type' => '通常時']);
-        // } elseif (strpos($url, 'inventory-edit-url') !== false) {
-        //     $model->edithistory()->create(['edit_type' => '棚卸時']);
-        // }
     }
 
 
