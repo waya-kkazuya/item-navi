@@ -14,7 +14,32 @@ class DisposalObserver
      */
     public function created(Disposal $disposal): void
     {
-        //
+        // パターン
+        // 1,ItemControllerのstoreメソッドでcreate
+        // 2,ItemControllerのupdateメソッドでupdate レコードがある場合
+        // 3,ItemControllerのupdateメソッドでcreate レコードがない場合
+
+        $edit_reason_id = Session::get('edit_reeason_id');
+        $edit_reason_text = Session::get('edit_reason_text');
+        $operation_type = Session::get('operation_type');
+
+        // 仮置き
+        $edit_mode = 'normal';
+
+        $oldValue = null;
+        $newValue = $disposal->disposal_scheduled_date; 
+
+        Edithistory::create([
+            'edit_mode' => $edit_mode,
+            'operation_type' => $operation_type ?? 'store',
+            'item_id' => $disposal->item_id,
+            'edited_field' => 'disposal_scheduled_date',
+            'old_value' => $oldValue,
+            'new_value' => $newValue,
+            'edit_user' => Auth::user()->name ?? '',
+            'edit_reason_id' => $edit_reason_id ?? null, //プルダウン
+            'edit_reason_text' => $edit_reason_text ?? null, //その他テキストエリア  
+        ]);
     }
 
     /**
@@ -23,20 +48,15 @@ class DisposalObserver
     public function updated(Disposal $disposal): void
     {
         // updatedメソッドが呼び出されるのは
-        // 1,備品編集時->Edithistoryに保存
-        // 2,廃棄実行時にフォーム入力で保存
-        // 廃棄実行時はDisposalsテーブルの各項目にデータを保存して
-        // scheduled_dateはnullにする
-        // 備品はソフトデリートされる、備品は廃棄済み備品一覧で確認可能
-        // またretoreで復元できる
+        // 2,ItemControllerのupdateメソッドでupdate レコードがある場合
+        // 4,廃棄実行時にフォーム入力でレコード更新(廃棄予定日がレコードに登録されている場合)
+        // 廃棄実行時はDisposalsテーブルの各項目にデータを保存、disposal_scheduled_dateはnullにする
         $changes = $disposal->getChanges();
 
         // セッションから編集理由を取得
         $edit_reason_id = Session::get('edit_reeason_id');
         $edit_reason_text = Session::get('edit_reason_text');
-
-        // dd($changes);
-        // dd($changes['disposal_scheduled_date']);
+        $operation_type = Session::get('operation_type');
 
         // scheduled_dateカラムのみを追跡
         if (isset($changes['disposal_scheduled_date'])) {
@@ -46,11 +66,10 @@ class DisposalObserver
 
             $oldValue = $disposal->getOriginal('disposal_scheduled_date');
             $newValue = $changes['disposal_scheduled_date'];
-            // dd($oldValue, $newValue);
 
             Edithistory::create([
                 'edit_mode' => $edit_mode,
-                'operation_type' => 'update',
+                'operation_type' => $operation_type,
                 'item_id' => $disposal->item_id,
                 'edited_field' => 'disposal_scheduled_date',
                 'old_value' => $oldValue,
@@ -59,10 +78,7 @@ class DisposalObserver
                 'edit_reason_id' => $edit_reason_id, //プルダウン
                 'edit_reason_text' => $edit_reason_text, //その他テキストエリア 
             ]);
-        }
-
-
-        
+        }        
     }
 
     /**
