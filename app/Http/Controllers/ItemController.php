@@ -291,7 +291,7 @@ class ItemController extends Controller
                 // $pendingInspection->update(['inspection_scheduled_date' => $request->inspectionSchedule]);
             }
 
-            // QRコード生成 ※消耗品の時(category_id=1)だけ生成する
+            // QRコード生成 ※消耗品の時だけ生成する
             $labelNameToStore = null;
             $qrCodeNameToStore = null;
             if($request->category_id == self::CATEGORY_ID_FOR_CONSUMABLE_ITME){ 
@@ -518,7 +518,6 @@ class ItemController extends Controller
                 }    
             }
 
-
             $fileNameToStore = null;
             $fileNameOfOldImage = null;
             if(!is_null($request->image_file) && $request->image_file->isValid() ){
@@ -534,6 +533,25 @@ class ItemController extends Controller
                 // 画像ファイルのアップロードとDBのimage1のファイル名更新
                 $fileNameToStore = ImageService::resizeUpload($request->image_file);
                 $item->update(['image1' => $fileNameToStore]);
+            }
+
+
+            // QRラベルの生成のタイミング=category_idを消耗品のidに変更した瞬間、かつQRラベル画像がなまだ存在しない時
+            // 1.変更後: $request->category_id == self::CATEGORY_ID_FOR_CONSUMABLE_ITME
+            // 2.変更前: $item->id !== self::CATEGORY_ID_FOR_CONSUMABLE_ITME
+            // 3.is_null($item->qrcode) 
+            $labelNameToStore = null;
+            $qrCodeNameToStore = null;
+            if ($request->category_id == self::CATEGORY_ID_FOR_CONSUMABLE_ITME
+                && $item->id !== self::CATEGORY_ID_FOR_CONSUMABLE_ITME
+                && is_null($item)) {
+
+                $result = $this->qrCodeService::upload($item);
+                // トランザクション処理失敗時のためにQRコード画像のファイル名を取得
+                $labelNameToStore = $result['labelNameToStore'];
+                $qrCodeNameToStore = $result['qrCodeNameToStore'];
+                
+                $item->update(['qrcode' => $labelNameToStore]);
             }
 
             DB::commit();
@@ -556,6 +574,21 @@ class ItemController extends Controller
                 // バックアップファイルを元の場所に戻す
                 Storage::disk('public')->move($temporaryBackupPath, 'items/'.$fileNameOfOldImage);
             }
+
+            // qrCodeService内で保存したQRコードを削除
+            $qrImagePath = 'qrcode/' . $qrCodeNameToStore;
+            if (Storage::disk('public')->exists($qrImagePath)) {
+                Storage::disk('public')->delete($qrImagePath);            
+            }
+
+            // 保存したQRコードラベルを削除
+            $labelImagePath = 'labels/' . $labelNameToStore;
+            if (Storage::disk('public')->exists($labelImagePath)) {
+                Storage::disk('public')->delete($labelImagePath);            
+            }
+
+
+
 
             return redirect()->back()
             ->with([
