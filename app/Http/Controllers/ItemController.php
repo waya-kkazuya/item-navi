@@ -375,8 +375,6 @@ class ItemController extends Controller
             }
         }
 
-        // dd($pendingInspection);
-
         $user = auth()->user();
 
         return Inertia::render('Items/Show', [
@@ -412,8 +410,6 @@ class ItemController extends Controller
             }
         }
 
-        // dd($pendingInspection);
-
         $categories = Category::all();
         $locations = Location::all();
         $units = Unit::all();
@@ -448,6 +444,14 @@ class ItemController extends Controller
         // ２、元の画像のファイル名からパス作成→元の画像ファイルの削除処理
         
         // トランザクション処理をする、ItemObserverでもDBにも保存するため
+
+    
+        // トランザクション処理が失敗した際に、画像を元に戻すため
+        // tempフォルダが存在するか確認、なければ作成
+        if (!Storage::disk('public')->exists('temp')) {
+            Storage::disk('public')->makeDirectory('temp');
+        }
+    
         DB::beginTransaction();
 
         try {
@@ -514,12 +518,17 @@ class ItemController extends Controller
                 }    
             }
 
-            // ->isValid()は念のため、ちゃんとアップロードできているかチェックしてくれる
+
             $fileNameToStore = null;
+            $fileNameOfOldImage = null;
             if(!is_null($request->image_file) && $request->image_file->isValid() ){
                 // 古い画像があれば削除
-                if ($item->image1) {
-                    Storage::disk('public')->delete('items/' . $item->image1);
+                $fileNameOfOldImage = $item->image1;
+                if ($fileNameOfOldImage) {
+                    $temporaryBackupPath = 'temp/'.$fileNameOfOldImage;
+                    // 一時的な退避フォルダ(temp)に変更前の画像をコピーでバックアップ
+                    Storage::disk('public')->copy('items/'.$fileNameOfOldImage, $temporaryBackupPath);
+                    Storage::disk('public')->delete('items/'.$fileNameOfOldImage);
                 }
 
                 // 画像ファイルのアップロードとDBのimage1のファイル名更新
@@ -527,34 +536,42 @@ class ItemController extends Controller
                 $item->update(['image1' => $fileNameToStore]);
             }
 
-
             DB::commit();
 
-            // ひとまず、showに画面遷移するように変更
             return to_route('items.show', $item->id)
             ->with([
                 'message' => '備品を更新しました',
                 'status' => 'success'
             ]);
 
-        
-
         } catch (\Exception $e) {
             DB::rollBack();
 
-            // 画像
+            // 変更後の画像を削除
+            if ($fileNameToStore) {
+                Storage::disk('public')->delete('items/' . $fileNameToStore);
+            }
+
+            if ($temporaryBackupPath) {
+                // バックアップファイルを元の場所に戻す
+                Storage::disk('public')->move($temporaryBackupPath, 'items/'.$fileNameOfOldImage);
+            }
 
             return redirect()->back()
             ->with([
                 'message' => '登録中にエラーが発生しました',
                 'status' => 'danger'
             ]);
+            
+        } finally {
+            // 成功しても失敗しても必ず行う処理
+            if ($temporaryBackupPath) {
+                Storage::disk('public')->delete($temporaryBackupPath);
+            }
         }
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
+
     public function destroy(Item $item)
     {
         $item->delete();
@@ -565,6 +582,7 @@ class ItemController extends Controller
             'status' => 'danger'
         ]);
     }
+
 
     public function restore($id)
     {
@@ -588,10 +606,11 @@ class ItemController extends Controller
     }
 
 
-    public function forceDelete($id)
-    {
+    // public function forceDelete($id)
+    // {
         
-    }
+    // }
+
 
     public function disposedItemIndex(){
         $disposedItems = Item::onlyTrashed()->get();
