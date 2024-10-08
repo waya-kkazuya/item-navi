@@ -279,47 +279,38 @@ class ItemController extends Controller
                     'details' => null, 
                 ]);
             }
-            
 
-            // 画像保存とimage1画像名カラムをupdateで部分的に変更
-            // トランザクション処理失敗の時のため、画像削除処理をcatch節に書く
-
-            // 画像保存処理はデータ保存処理の後に配置
-            // image1は部分的に保存する
-            
+            // 画像名image1はレコードが作成された後に部分的に更新する
             // ->isValid()は念のため、ちゃんとアップロードできているかチェックしてくれる
             $fileNameToStore = null;
             if(!is_null($request->image_file) && $request->image_file->isValid() ){
                 $fileNameToStore = $this->imageService::resizeUpload($request->image_file);
-                $item->update(['image1' => $fileNameToStore]);
+                Item::withoutEvents(function () use ($item, $fileNameToStore) {
+                    $item->update(['image1' => $fileNameToStore]);
+                });  
                 // $pendingInspection->update(['inspection_scheduled_date' => $request->inspectionSchedule]);
             }
 
-            // // QRコード生成、QrCodeServiceに切り分ける
-            // // ※消耗品のときだけcategory_id=1のときだけ生成する
+            // QRコード生成 ※消耗品の時(category_id=1)だけ生成する
             $labelNameToStore = null;
             $qrCodeNameToStore = null;
             if($request->category_id == self::CATEGORY_ID_FOR_CONSUMABLE_ITME){ 
-                // ※注意
-                // 保存したあと、items->update()で部分的にqrcodeの名前を変更する
-                $url = 'https://itemnavi.com/consumable_items';
-                // $itemそのものを渡せるか
-                // $labelNameToStore = $this->qrCodeService::upload($item->management_id, );
-                // $labelNameToStore = $this->qrCodeService::upload($item);
                 $result = $this->qrCodeService::upload($item);
+                // トランザクション処理失敗時のためにQRコード画像のファイル名を取得
                 $labelNameToStore = $result['labelNameToStore'];
                 $qrCodeNameToStore = $result['qrCodeNameToStore'];
-                // dd($labelNameToStore, $qrCodeNameToStore);
-                $item->update(['qrcode' => $labelNameToStore]);
+                
+                // 一時的にObserverを無効にする
+                Item::withoutEvents(function () use ($item, $labelNameToStore) {
+                    $item->update(['qrcode' => $labelNameToStore]);
+                });
             }
 
             DB::commit();
 
-            Log::info('commitした');
-
             return to_route('items.index')
             ->with([
-                'message' => '登録しました。',
+                'message' => '備品を登録しました',
                 'status' => 'success'
             ]);
 
@@ -346,22 +337,10 @@ class ItemController extends Controller
 
             return redirect()->back()
             ->with([
-                'message' => '登録中にエラーが発生しました',
+                'message' => '備品の登録中にエラーが発生しました',
                 'status' => 'danger'
             ]);
         }
-        //     // ->withErrors($e->errors())->withInput();
-
-        // }catch(\Exception $e){
-        //     DB::rollBack();
-
-        //     return redirect()->back()
-        //     ->with([
-        //         'message' => '登録中にエラーが発生しました',
-        //         'status' => 'danger'
-        //     ]);
-        //     // ->withInput();
-        // }
     }
 
 
@@ -469,9 +448,9 @@ class ItemController extends Controller
         // ２、元の画像のファイル名からパス作成→元の画像ファイルの削除処理
         
         // トランザクション処理をする、ItemObserverでもDBにも保存するため
-        // DB::beginTransaction();
+        DB::beginTransaction();
 
-        // try {
+        try {
             // dd($request->image_file);
             
             $item->name = $request->name;
@@ -549,34 +528,28 @@ class ItemController extends Controller
             }
 
 
-            // DB::commit();
+            DB::commit();
 
             // ひとまず、showに画面遷移するように変更
             return to_route('items.show', $item->id)
             ->with([
-                'message' => '更新しました。',
+                'message' => '備品を更新しました',
                 'status' => 'success'
             ]);
-            // return to_route('items.index')
-            // ->with([
-            //     'message' => '更新しました。',
-            //     'status' => 'success'
-            // ]);
 
         
 
-        // } catch (\Exception $e) {
-        //     DB::rollBack();
+        } catch (\Exception $e) {
+            DB::rollBack();
 
-    //     return redirect()->back()
-    //     ->with([
-    //         'message' => '登録中にエラーが発生しました',
-    //         'status' => 'danger'
-    //     ]);
-        // }
+            // 画像
 
-
-
+            return redirect()->back()
+            ->with([
+                'message' => '登録中にエラーが発生しました',
+                'status' => 'danger'
+            ]);
+        }
     }
 
     /**
@@ -588,7 +561,7 @@ class ItemController extends Controller
 
         return to_route('items.index')
         ->with([
-            'message' => '廃棄しました。',
+            'message' => '備品を廃棄しました',
             'status' => 'danger'
         ]);
     }
