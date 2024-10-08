@@ -20,7 +20,6 @@ class DisposalController extends Controller
         try {
         
             $disposal = Disposal::where('item_id', $item->id)->first();
-            // dd($disposal);
 
             if (is_null($disposal)) {
                 // 新しいレコードを作成
@@ -35,7 +34,7 @@ class DisposalController extends Controller
             $disposal->details = $request->details;
             $disposal->save();
 
-            // ソフトデリート
+            // 廃棄なのでソフトデリート
             $item->delete();
 
             DB::commit();

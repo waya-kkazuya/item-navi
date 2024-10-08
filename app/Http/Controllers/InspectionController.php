@@ -38,18 +38,11 @@ class InspectionController extends Controller
             $inspection->inspection_date = $request->inspection_date;
             $inspection->inspection_person = $request->inspection_person;
             $inspection->details = $request->details;
-            $inspection->status = true; // 点検実行済みとしてstatusを変更->これでshow画面に表示されないか
+            $inspection->status = true; // 点検実行済みとしてstatusを変更
             $inspection->save();
-
-            // 処理４，Show画面に点検済みのレコードの点検予定日が表示されないようにする
-            // showで表示するのは、statusがfalseで一番古いものだからOK
-
-            // 処理５、Show画面の前回の点検日を表示する
-            // statusがtrueで一番新しいものを表示
 
             DB::commit();
 
-            // 点検の場合は、モーダルを閉じて点検画面を再表示
             return to_route('items.show', ['item' => $item->id])
             ->with([
                 'message' => '点検を実施しました。',

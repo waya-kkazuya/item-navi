@@ -121,10 +121,6 @@ class ItemController extends Controller
         }
 
         $total_count = $query->count();
-
-        // paginateじゃなくget()の時のデータ構造解析
-        // dd($query->get());
-
         $items = $query->paginate(20);
 
         // map関数を使用するとpaginateオブジェクトの構造が変わり、ペジネーションが使えなくなる
@@ -146,7 +142,6 @@ class ItemController extends Controller
                     $item->image_path1 = asset('storage/items/No_Image.jpg');
                 }
             }
-
             // pending_inspection_dateの設定
             $item->pending_inspection_date = $item->inspections->where('status', false)->sortBy('scheduled_date')->first()->scheduled_date ?? null;
 
@@ -347,25 +342,19 @@ class ItemController extends Controller
 
     public function show(Item $item)
     {
-        // dd($item);
         $withRelations = ['category', 'unit', 'usageStatus', 'locationOfUse', 'storageLocation', 'acquisitionMethod', 'inspections', 'disposal'];
         // 再代入はNG
         $item = Item::with($withRelations)->find($item->id);  
 
-        // statusがfalseの点検予定日だけを取得し、日付でソートして最も古いものを取得
+        // まだ点検を実施していない点検テーブルのレコードを取得
         $pendingInspection = $item->inspections->where('status', false)->sortBy('inspection_scheduled_date')->first();
         // 最後に行った点検のレコードを取得
         $previousInspection = $item->inspections->where('status', true)->sortByDesc('inspection_date')->first();
-        // dd($previousInspection);
         // $previousInspectionDate = $previousInspection ? Carbon::parse($previousInspection->inspection_date)->format('Y年m月d日') : '';
 
-        // dd($pendingInspection);
-
-        // image1カラムがnullかチェック
         if (is_null($item->image1)) {
             $item->image_path1 = asset('storage/items/No_Image.jpg');
         } else {
-            // image1の画像名のファイルが存在するかチェックする
             if (Storage::disk('public')->exists('items/' . $item->image1)) {
                 // 画像ファイルが存在する場合
                 $item->image_path1 = asset('storage/items/' . $item->image1);
@@ -435,17 +424,9 @@ class ItemController extends Controller
     public function update(UpdateItemRequest $request, Item $item)
     {
         Gate::authorize('staff-higher');
-        // dd($request->name, $request->pendingInspection, $item->name);
 
+        // トランザクション処理は、ItemObserverでのDB保存もロールバックする
 
-        // 課題１ Inspectionsのschedule
-        // 課題２ 画像の変更処理　順番はどうか
-        // １、DB上のitem->image1の画像のファイル名変更
-        // ２、元の画像のファイル名からパス作成→元の画像ファイルの削除処理
-        
-        // トランザクション処理をする、ItemObserverでもDBにも保存するため
-
-    
         // トランザクション処理が失敗した際に、画像を元に戻すため
         // tempフォルダが存在するか確認、なければ作成
         if (!Storage::disk('public')->exists('temp')) {
@@ -454,9 +435,7 @@ class ItemController extends Controller
     
         DB::beginTransaction();
 
-        try {
-            // dd($request->image_file);
-            
+        try {            
             $item->name = $request->name;
             $item->category_id = $request->category_id;
             $item->stock = $request->stock;
@@ -487,20 +466,17 @@ class ItemController extends Controller
             Session::put('operation_type', 'update');
 
 
-            // 点検フォームが空欄で編集で追加するパターン
-            // 最初から点検フォームに入っている（DBに保存しているパターン）パターン
-            // 点検データの更新または作成
 
-            // 点検日のレコード、Vue側から値が返ってきたら変更の有無に関わらず保存する→シンプル
-            // pendingInspectionとは、Inspectionsテーブルでstatusがfalseの一番近い（日付が古い）scheduled_date      
-            // 変更すべきinspectionScheduleがあれば変更する、なければ何もしない
-            if ($request->inspectionSchedule) {      
+            // 点検日のレコード、Vue側から値が返ってきたら変更の有無に関わらず保存する
+            // inspectionScheduleはVueから渡ってきた点検予定日
+            if ($request->inspectionSchedule) {
+                // pendingInspectionは未実施の点検日のレコード
                 if($request->pendingInspection) {
-                    // 既存の点検予定日が保存されているInspectionレコードがあればそのレコードを新しい値で更新
+                    // 未実施の点検予定日が保存されているInspectionレコードがあればそのレコードを新しい値で更新
                     $pendingInspection = $item->inspections()->where('id', $request->pendingInspection['id'])->first(); //渡ってきたオブジェクトを取得
                     $pendingInspection->update(['inspection_scheduled_date' => $request->inspectionSchedule]);
                 } else {
-                    // 既存のレコードがないなら、新しい点検のレコードを作成
+                    // 点検(Inspection)テーブルのレコードがないなら、新しいレコードを作成
                     $item->inspections()->create(['inspection_scheduled_date' => $request->inspectionSchedule]);
                 }
             }
