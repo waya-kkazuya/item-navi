@@ -36,7 +36,6 @@ use Intervention\Image\Typography\FontFactory;
 
 class ItemController extends Controller
 {
-
     const CATEGORY_ID_FOR_CONSUMABLE_ITME = 1;
 
     protected $managementIdService;
@@ -601,7 +600,7 @@ class ItemController extends Controller
 
             return to_route('items.index')
             ->with([
-                'message' => '備品を復元しました。',
+                'message' => '備品を復元しました',
                 'status' => 'success'
             ]);
         }
