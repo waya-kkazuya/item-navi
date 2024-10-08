@@ -146,14 +146,11 @@ const restoreItem = (id) => {
                 <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                     <div class="p-4 md:p-6 text-gray-900">
                       <FlashMessage />
-                      <div>
-                        ウィンドウ幅テスト {{ width }}px
-                      </div>
-                      <section class="text-gray-600 body-font">
+                      <section class="mt-2 text-gray-600 body-font">
                           <div class="container md:px-5 mx-auto">
                             <!-- ボタンはコンテナ直下 -->
                             <div class="flex justify-center">
-                                <Link as="button" :href="route('items.create')" class="flex items-center text-white text-sm bg-green-500 border-0 py-2 px-6 focus:outline-none hover:bg-green-600 rounded">
+                                <Link as="button" id="create" :href="route('items.create')" class="flex items-center text-white text-sm bg-green-500 border-0 py-2 px-6 focus:outline-none hover:bg-green-600 rounded">
                                   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
                                   </svg>
