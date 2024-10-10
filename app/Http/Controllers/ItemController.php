@@ -495,6 +495,7 @@ class ItemController extends Controller
 
             $fileNameToStore = null;
             $fileNameOfOldImage = null;
+            $temporaryBackupPath = null;
             if(!is_null($request->image_file) && $request->image_file->isValid() ){
                 // 古い画像があれば削除
                 $fileNameOfOldImage = $item->image1;
