@@ -38,14 +38,6 @@ use Illuminate\Notifications\Notification;
 */
 
 
-// 後で必ず削除
-
-// Route::get('/phpinfo', function () {
-//     phpinfo();
-// })
-// ->middleware(['auth', 'verified', 'can:staff-higher']);
-
-
 
 // それぞれに適切な権限レベル(admin,staff,user)のmiddlewareをかける
 
@@ -105,16 +97,17 @@ Route::get('/preview-pdf', [PDFController::class, 'designPDF'])
 // Route::get('analysis', [AnalysisController::class, 'index'])->name('analysis');
 
 
-
-
-
+// Route::get('/', function () {
+//     return redirect('/login');
+// });
 Route::get('/', function () {
-    return Inertia::render('Welcome', [
-        'canLogin' => Route::has('login'),
-        'canRegister' => Route::has('register'),
-        'laravelVersion' => Application::VERSION,
-        'phpVersion' => PHP_VERSION,
-    ]);
+    return redirect('/login');
+    // return Inertia::render('Welcome', [
+    //     'canLogin' => Route::has('login'),
+    //     'canRegister' => Route::has('register'),
+    //     'laravelVersion' => Application::VERSION,
+    //     'phpVersion' => PHP_VERSION,
+    // ]);
 });
 
 // ダッシュボード
