@@ -28,16 +28,22 @@ class PDFController extends Controller
             $qrCodes[] = Storage::path('labels/'.$consumableItem->qrcode);
         }
 
-        // dd($qrCodes);
-
         // for ($i = 1; $i <= 11; $i++) {
-        //     // とりあえず1種類でを10枚で試してみる
-        //     // $qrCodes[] = storage_path('app/public/qrcode/qrcode_' . $i . '.png');
+        // 10枚でテスト
+        // $qrCodes[] = storage_path('app/public/qrcode/qrcode_' . $i . '.png');
         //     $qrCodes[] = Storage::path('public/labels/QRCodeTest_label.jpg');
         // }
 
         // dd($qrCodes);
         \Log::info("qrCodes",$qrCodes);
+
+        if (empty($qrCodes)) {
+            return to_route('consumable_items')
+            ->with([
+                'message' => 'QRラベルが存在しません',
+                'status' => 'danger'
+            ]);
+        }
 
         // ビューを作成してPDFを生成
         $pdf = PDF::loadView('pdf.pdf-preview-table', compact('qrCodes'))
