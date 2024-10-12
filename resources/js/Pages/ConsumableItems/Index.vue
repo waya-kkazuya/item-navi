@@ -9,6 +9,7 @@ import StockHistoryModal from '@/Components/StockHistoryModal.vue';
 import UpdateStockModal from '@/Components/UpdateStockModal.vue';
 import QrCodeReader from '@/Components/QrCodeReader.vue';
 import ToolTip from '@/Components/ToolTip.vue';
+import { isMobile } from '@/utils/device';
 
 const props = defineProps({
   consumableItems: Object,
@@ -38,15 +39,21 @@ const sortOrder = ref(props.sortOrder ?? 'asc')
 const locationOfUseId = ref(props.locationOfUseId ?? 0)
 const storageLocationId = ref(props.storageLocationId ?? 0)
 
-const notificationItem = ref()
+// デバイスがPCかスマホ・タブレットか判定する
+const isMobileDevice = ref(false)
 
 onMounted(() => {
-  console.log('props.linkedItem', props.linkedItem)
+  isMobileDevice.value = isMobile()
+  console.log(isMobile())
+  console.log(isMobileDevice.value)
+
+  // console.log('props.linkedItem', props.linkedItem)
+
   // 通知からのリンクで送られてくるitemの可否でモーダルウィンドウを開く
   if (props.linkedItem) {
     // alert('props.linkedItem動いた')
-    console.log('props.linkedItem動いた')
-    console.log(props.linkedItem)
+    // console.log('props.linkedItem動いた')
+    // console.log(props.linkedItem)
     openUpdateStockModal(props.linkedItem)
   }
 })
@@ -224,7 +231,7 @@ const fetchConsumableItems = async () => {
                                 <!-- 検索フォーム -->
                                 <div class="flex items-center relative">
                                   <input type="text" name="search" v-model="search" placeholder="備品名で検索" @keyup.enter="fetchAndFilterItems" class="h-9 md:w-60 text-sm md:text-base placeholder-text-xs md:placeholder-text-base">
-                                  <div class="absolute right-10 md:right-11">
+                                  <div v-if="isMobileDevice" class="absolute right-10 md:right-11">
                                     <!-- <ToolTip /> -->
                                     <QrCodeReader />
                                   </div>
