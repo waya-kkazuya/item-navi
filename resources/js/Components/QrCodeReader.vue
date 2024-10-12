@@ -47,7 +47,6 @@ const onDetect = content => {
 const stopScan = () => {
   scannerActive.value = false;
 }
-
 </script>
 
 <template>
@@ -59,15 +58,29 @@ const stopScan = () => {
       </svg>
     </button>
     <qrcode-stream v-if="scannerActive" @detect="onDetect" class="scanner"></qrcode-stream>
-    <button v-if="scannerActive" @click="stopScan" class="stop-scan-button">×</button>
-    <!-- <button @click="transitionTest">機能テスト用</button> -->
+    <button v-if="scannerActive" @click="stopScan" class="stop-scan-button">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+      </svg>
+    </button>
   </div>
 </template>
 
 <style scoped>
 .scanner {
+  position: fixed; /* 固定位置にする */
+  top: 0;
+  left: 0;
   width: 100vw; /* ビューポートの幅いっぱいに */
   height: 100vh; /* ビューポートの高さいっぱいに */
   object-fit: cover; /* カメラ映像を全体に表示 */
+  z-index: 1000; /* 他の要素の上に表示 */
+  background-color: black; /* 背景を黒にしてカメラ以外の部分を隠す */
+}
+.stop-scan-button {
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  z-index: 1001; /* カメラ映像の上に表示 */
 }
 </style>
