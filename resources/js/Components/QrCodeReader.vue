@@ -48,19 +48,6 @@ const stopScan = () => {
   scannerActive.value = false;
 }
 
-// QRコードから開くテスト用
-// const transitionTest = () => {
-//   router.visit(route('consumable_items', { item_id: 111 }), {
-//         onSuccess: (page) => {
-//           alert('成功しました！');
-//           console.log('成功時のページデータ:', page);
-//         },
-//         onError: (errors) => {
-//           alert('エラーが発生しました。');
-//           console.log('エラー内容:', errors);
-//         }
-//       })
-// }
 </script>
 
 <template>
