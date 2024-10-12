@@ -57,12 +57,33 @@ const stopScan = () => {
         <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 6.75h.75v.75h-.75v-.75ZM6.75 16.5h.75v.75h-.75v-.75ZM16.5 6.75h.75v.75h-.75v-.75ZM13.5 13.5h.75v.75h-.75v-.75ZM13.5 19.5h.75v.75h-.75v-.75ZM19.5 13.5h.75v.75h-.75v-.75ZM19.5 19.5h.75v.75h-.75v-.75ZM16.5 16.5h.75v.75h-.75v-.75Z" />
       </svg>
     </button>
-    <qrcode-stream v-if="scannerActive" @detect="onDetect" class="scanner"></qrcode-stream>
+
+    <!-- <qrcode-stream v-if="scannerActive" @detect="onDetect" class="scanner"></qrcode-stream>
     <button v-if="scannerActive" @click="stopScan" class="stop-scan-button">
       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
         <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
       </svg>
-    </button>
+    </button> -->
+
+    <div v-show="scannerActive" class="modal fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center z-50" id="modal-1" aria-hidden="true">
+      <div class="modal__overlay" tabindex="-1" data-micromodal-close>
+        <div class="modal__container bg-white w-full md:w-11/12 md:h-auto md:rounded-lg p-4 md:p-8 md:shadow-lg md:transform-none transform md:translate-y-0  transition-transform duration-500 ease-in-out" role="dialog" aria-modal="true" aria-labelledby="modal-1-title">
+          <header class="modal__header">
+            <button class="modal__close" aria-label="Close modal" @click="stopScan"></button>
+          </header>
+          <main class="modal__content" id="modal-1-content">
+            <qrcode-stream @detect="onDetect" class="scanner"></qrcode-stream>
+            <!-- カメラ映像を止める「×」ボタン -->
+            <button v-if="scannerActive" @click="stopScan" class="stop-scan-button">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </main>
+        </div>
+      </div>
+    </div>
+
   </div>
 </template>
 
