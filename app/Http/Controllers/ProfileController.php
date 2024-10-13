@@ -30,17 +30,15 @@ class ProfileController extends Controller
         // dd($profile_image);
         
         if (is_null($profile_image)) {
-            $profile_image_path = null;
+            $profile_image_path = asset('storage/profile/profile_default_image.png');
         } else {
-            // if (Storage::exists('public/profile/' . $profile_image)) {
             if (Storage::disk('public')->exists('profile/' . $profile_image)) {
                 $profile_image_path = asset('storage/profile/' . $profile_image);
             } else {
-                $profile_image_path = null;
+                $profile_image_path = asset('storage/profile/profile_default_image.png');
             }
         }
         
-        // dd($profile_image_path);
         return Inertia::render('Profile/Edit', [
             'mustVerifyEmail' => $request->user() instanceof MustVerifyEmail,
             'status' => session('status'),
@@ -71,13 +69,11 @@ class ProfileController extends Controller
 
             // 画像ファイルのアップロードとDBのimage1のファイル名更新
             $fileNameToStore = ImageService::profileImageResizeUpload($request->profile_image_file);
-            $request->user()->update(['profile_image' => $fileNameToStore]);
+            $request->user()->profile_image = $fileNameToStore;
         }
-
-        // $request->user()->profile_image = $fileNameToStore;
+        
         $request->user()->save();
 
-        // フラッシュメッセージをVueに設置
         return Redirect::route('profile.edit')
         ->with([
             'message' => 'プロフィールを更新しました。',
