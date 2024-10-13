@@ -5,16 +5,16 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreInspectionRequest;
 use App\Models\Inspection;
+use App\Models\Edithistory;
 use App\Models\Item;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 
 class InspectionController extends Controller
 {
     public function inspectItem(StoreInspectionRequest $request, Item $item)
     {
-        // dd($item);
-        // dd($request);
         DB::beginTransaction();
 
         try {
@@ -45,6 +45,19 @@ class InspectionController extends Controller
             Inspection::withoutEvents(function () use ($inspection) {
                 $inspection->save();
             });
+
+            // 点検をしたというoperation_typeのみをDBに保存する
+            Edithistory::create([
+                'edit_mode' => 'normal',
+                'operation_type' => 'inspection',
+                'item_id' => $inspection->item_id,
+                'edited_field' => null,
+                'old_value' => null,
+                'new_value' => null,
+                'edit_user' => Auth::user()->name ?? '',
+                'edit_reason_id' => null, //プルダウン
+                'edit_reason_text' => null, //その他テキストエリア  
+            ]);
 
             DB::commit();
 

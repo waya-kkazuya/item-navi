@@ -28,6 +28,7 @@ class EdithistoryController extends Controller
                     'stock_in' => '入庫',
                     'soft_delete' => '廃棄',
                     'restore' => '復元',
+                    'inspection' => '点検',
                     default => '不明',
                 };
 
