@@ -24,7 +24,7 @@ class InspectionController extends Controller
                 ->orderBy('inspection_scheduled_date', 'asc')
                 ->first();
 
-            // 仕様上は1件しかないはず
+            // 仕様上は$inspectionのレコードは1件しか存在しない
             // 処理２，予定日を保存していない場合はレコードが返らずnullとなるので新規作成
             if (is_null($inspection)) {
                 // 新しいレコードを作成
@@ -39,7 +39,12 @@ class InspectionController extends Controller
             $inspection->inspection_person = $request->inspection_person;
             $inspection->details = $request->details;
             $inspection->status = true; // 点検実行済みとしてstatusを変更
-            $inspection->save();
+            ;
+
+            // InspectionObserverを一時的に無効にして保存
+            Inspection::withoutEvents(function () use ($inspection) {
+                $inspection->save();
+            });
 
             DB::commit();
 
