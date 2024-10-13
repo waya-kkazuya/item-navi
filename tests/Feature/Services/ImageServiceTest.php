@@ -13,17 +13,32 @@ class ImageServiceTest extends TestCase
 {
     use RefreshDatabase;
 
+    // ItemControllerのstore,updateの画像アップロード
     /** @test */
-    function ImageServiceのテスト()
+    function resizeUploadのテスト()
     {
         Storage::fake('public');
 
-        $image = UploadedFile::fake()->image('test_image.jpg');
+        $image_file = UploadedFile::fake()->image('test_item_image.jpg');
 
-        $fileNameToStore = ImageService::resizeUpload($image);
+        $fileNameToStore = ImageService::resizeUpload($image_file);
 
         dump($fileNameToStore);
 
-        Storage::disk('public')->assertExists('items/' . $fileNameToStore);
+        Storage::disk('public')->assertExists('items/'.$fileNameToStore);
+    }
+
+    /** @test */
+    function profileImageResizeUploadのテスト()
+    {
+        Storage::fake('public');
+
+        $imageFile = UploadedFile::fake()->image('test_profile_image.jpg');
+
+        $fileNameToStore = ImageService::profileImageResizeUpload($imageFile);
+
+        // dd($fileNameToStore);
+
+        Storage::disk('public')->assertExists('profile/'.$fileNameToStore);
     }
 }
