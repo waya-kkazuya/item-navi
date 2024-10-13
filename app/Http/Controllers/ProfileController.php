@@ -14,6 +14,7 @@ use Inertia\Response;
 use App\Services\ImageService;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\DB;
 
 class ProfileController extends Controller
 {
@@ -30,17 +31,15 @@ class ProfileController extends Controller
         // dd($profile_image);
         
         if (is_null($profile_image)) {
-            $profile_image_path = null;
+            $profile_image_path = asset('storage/profile/profile_default_image.png');
         } else {
-            // if (Storage::exists('public/profile/' . $profile_image)) {
             if (Storage::disk('public')->exists('profile/' . $profile_image)) {
                 $profile_image_path = asset('storage/profile/' . $profile_image);
             } else {
-                $profile_image_path = null;
+                $profile_image_path = asset('storage/profile/profile_default_image.png');
             }
         }
         
-        // dd($profile_image_path);
         return Inertia::render('Profile/Edit', [
             'mustVerifyEmail' => $request->user() instanceof MustVerifyEmail,
             'status' => session('status'),
@@ -55,34 +54,52 @@ class ProfileController extends Controller
     {
         Gate::authorize('user-higher');
 
-        $request->user()->fill($request->validated());
+        DB::beginTransaction();
 
-        if ($request->user()->isDirty('email')) {
-            $request->user()->email_verified_at = null;
-        }
+        try{
+            $request->user()->fill($request->validated());
 
-        // Storageへの画像の保存
-        $fileNameToStore = null;
-        if(!is_null($request->profile_image_file) && $request->profile_image_file->isValid() ){
-            // 古い画像があれば削除
-            if ($request->user()->profile_image) {
-                Storage::disk('public')->delete('profile/' . $request->user()->profile_image);
+            if ($request->user()->isDirty('email')) {
+                $request->user()->email_verified_at = null;
             }
 
-            // 画像ファイルのアップロードとDBのimage1のファイル名更新
-            $fileNameToStore = ImageService::profileImageResizeUpload($request->profile_image_file);
-            $request->user()->update(['profile_image' => $fileNameToStore]);
+            // Storageへの画像の保存
+            $profileImagefileNameToStore = null;
+            if(!is_null($request->profile_image_file) && $request->profile_image_file->isValid() ){
+                // 古い画像があれば削除
+                if ($request->user()->profile_image) {
+                    Storage::disk('public')->delete('profile/' . $request->user()->profile_image);
+                }
+
+                // 画像ファイルのアップロードとDBのimage1のファイル名更新
+                $profileImagefileNameToStore = ImageService::profileImageResizeUpload($request->profile_image_file);
+                $request->user()->profile_image = $profileImagefileNameToStore;
+            }
+            
+            $request->user()->save();
+
+            DB::commit();
+
+            return Redirect::route('profile.edit')
+            ->with([
+                'message' => 'プロフィールを更新しました。',
+                'status' => 'success'
+            ]);
+        } catch(ValidationException $e) {
+            DB::rollBack();
+
+            // アップロードした備品の画像の削除
+            $profileImagePath = 'profile/' . $profileImagefileNameToStore;
+            if (Storage::disk('public')->exists($profileImagePath)) {
+                Storage::disk('public')->delete($profileImagePath);
+            }
+
+            return redirect()->back()
+            ->with([
+                'message' => 'プロフィールの更新中にエラーが発生しました',
+                'status' => 'danger'
+            ]);
         }
-
-        // $request->user()->profile_image = $fileNameToStore;
-        $request->user()->save();
-
-        // フラッシュメッセージをVueに設置
-        return Redirect::route('profile.edit')
-        ->with([
-            'message' => 'プロフィールを更新しました。',
-            'status' => 'success'
-        ]);
     }
 
     /**

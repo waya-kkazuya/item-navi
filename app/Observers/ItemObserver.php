@@ -21,7 +21,6 @@ class ItemObserver
         // 注意
         //createdはseederやfactoryでダミーデータを作成した時も動く
         
-        // category_idはitemにあるし、category_id(カテゴリ)も変化する可能性がある
         Edithistory::create([
             'edit_mode' => 'normal' ,
             'operation_type' => 'store',
@@ -37,21 +36,14 @@ class ItemObserver
     {
         $changes = $item->getChanges();
 
-        unset($changes['updated_at']);
-        // unset($changes['softdeletes']);
-
+        unset($changes['updated_at'], $changes['qrcode'], $changes['deleted_at']);
 
         // セッションから編集理由を取得
         $edit_reason_id = Session::get('edit_reeason_id');
         $edit_reason_text = Session::get('edit_reason_text');
 
-        // dd($edit_reason_id, $edit_reason_text);
-
         // 仮置き
         $edit_mode = 'normal';
-
-        // 備品編集updateを行った際、セッションに編集理由を保存
-        // □UpdateItemRequestのリクエストファイルにバージョンルールを記載する
 
         foreach ($changes as $field => $newValue) {
             $oldValue = $item->getOriginal($field);
@@ -72,16 +64,7 @@ class ItemObserver
 
     public function deleted(Item $item): void
     {
-        // ソフトデリート
-        Edithistory::create([
-            'edit_mode' => 'normal' ,
-            'operation_type' => 'soft_delete',
-            'item_id' => $item->id,
-            'edited_field' => null,
-            'old_value' => null,
-            'new_value' => null,
-            'edit_user' => Auth::user()->name ?? '',        
-        ]);
+
     }
 
     public function restored(Item $item): void

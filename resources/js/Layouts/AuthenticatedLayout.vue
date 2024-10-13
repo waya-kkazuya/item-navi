@@ -16,7 +16,7 @@ const page = usePage()
 const profileImageUrl = computed(() =>{
     return page.props.auth.user.profile_image
     ? `${import.meta.env.VITE_APP_URL}/storage/profile/${page.props.auth.user.profile_image}`
-    : null
+    : `${import.meta.env.VITE_APP_URL}/storage/profile/profile_default_image.png`
 })
 
 </script>

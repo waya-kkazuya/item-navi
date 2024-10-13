@@ -8,6 +8,8 @@ use App\Models\Disposal;
 use App\Models\Item;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Models\Edithistory;
+use Illuminate\Support\Facades\Auth;
 
 use function PHPUnit\Framework\isNull;
 
@@ -32,10 +34,25 @@ class DisposalController extends Controller
             $disposal->disposal_date = $request->disposal_date;
             $disposal->disposal_person = $request->disposal_person;
             $disposal->details = $request->details;
-            $disposal->save();
 
-            // 廃棄なのでソフトデリート
+            // DisposalObserverを一時的に無効にして保存
+            Disposal::withoutEvents(function () use ($disposal) {
+                $disposal->save();
+            });
+                
+            // 廃棄なのでソフトデリート、ItemObserverが動く
             $item->delete();
+
+            // 廃棄したというoperation_typeのみをDBに保存する
+            Edithistory::create([
+                'edit_mode' => 'normal' ,
+                'operation_type' => 'soft_delete',
+                'item_id' => $item->id,
+                'edited_field' => null,
+                'old_value' => null,
+                'new_value' => null,
+                'edit_user' => Auth::user()->name ?? '',        
+            ]);
 
             DB::commit();
 
