@@ -61,7 +61,7 @@ class LowStockNotification extends Notification
             'item_name' => $this->item->name,
             'quantity' => $this->item->stock,
             'minimum_stock' => $this->item->minimum_stock,
-            'message' => '在庫数が在庫通知数以下になっています'
+            'message' => '在庫数が通知在庫数以下になっています'
         ];
     }
 }
