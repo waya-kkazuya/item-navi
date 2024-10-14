@@ -72,20 +72,19 @@ class ImageService
   }
 
 
-
   public function setImagePath($collection)
   {
-    return $collection->transform(function ($inspection) {
-      if (is_null($inspection->item->image1)) {
-        $inspection->item->image_path1 = asset('storage/items/No_Image.jpg');
+    return $collection->transform(function ($record) {
+      if (is_null($record->item->image1)) {
+        $record->item->image_path1 = asset('storage/items/No_Image.jpg');
       } else {
-          if (Storage::disk('public')->exists('items/' . $inspection->item->image1)) {
-              $inspection->item->image_path1 = asset('storage/items/' . $inspection->item->image1);
+          if (Storage::disk('public')->exists('items/' . $record->item->image1)) {
+              $record->item->image_path1 = asset('storage/items/' . $record->item->image1);
           } else {
-              $inspection->item->image_path1 = asset('storage/items/No_Image.jpg');
+              $record->item->image_path1 = asset('storage/items/No_Image.jpg');
           }
       }
-      return $inspection;
+      return $record;
     });
   }
 }
