@@ -63,8 +63,6 @@ class InspectionAndDisposalItemController extends Controller
         \Log::info("scheduledInspections");
         \Log::info($scheduledInspections->toArray());
 
-        // dd('ここまでエラーなし');
-
         $scheduledInspections = $scheduledInspections->setCollection($this->imageService->setImagePath($scheduledInspections->getCollection()));
 
 
@@ -81,6 +79,7 @@ class InspectionAndDisposalItemController extends Controller
         // ログ用
         $historyInspections->getCollection()->transform(function ($inspection) {
             if (is_null($inspection->item)) {
+                // 廃棄(ソフトデリートされている際はitemはnullになる)
                 \Log::info('Item is null for inspection ID: ' . $inspection->id);
             } else {
                 \Log::info('Item is present for inspection ID: ' . $inspection->id . ', Item ID: ' . $inspection->item->id);
