@@ -22,6 +22,7 @@ class Kernel extends ConsoleKernel
     {
         // $schedule->command('inspire')->hourly();
         $schedule->call(function () {
+            \Log::info('scheduleが呼ばれいる');
             $this->sendInspectionNotifications();
             $this->sendDisposalNotifications();
         })->weekdays()->at('06:00');
@@ -47,7 +48,6 @@ class Kernel extends ConsoleKernel
         require base_path('routes/console.php');
     }
 
-    
     protected function sendInspectionNotifications()
     {   
         $dates = [
@@ -58,8 +58,10 @@ class Kernel extends ConsoleKernel
             Carbon::today()
         ];
 
-        $inspections = Inspection::whereIn('scheduled_date', $dates)->get();
+        $inspections = Inspection::whereIn('inspection_scheduled_date', $dates)->get();
         
+        \Log::info('sendInspectionNotifications called'); // ログを記録
+
         foreach ($inspections as $inspection) {
             $users = User::whereIn('role', [1, 5])->get(); // roleが1（admin）または5（staff）のユーザーを取得
             foreach ($users as $user) {
@@ -78,8 +80,10 @@ class Kernel extends ConsoleKernel
             Carbon::today()
         ];
 
-        $disposals = Disposal::whereIn('scheduled_date', $dates)->get();
+        $disposals = Disposal::whereIn('disposal_scheduled_date', $dates)->get();
         
+        \Log::info('sendDisposalNotifications called');
+
         foreach ($disposals as $disposal) {
             $users = User::whereIn('role', [1, 5])->get(); // roleが1（admin）または5（staff）のユーザーを取得
             foreach ($users as $user) {
