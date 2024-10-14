@@ -87,19 +87,10 @@ Route::get('/generate-pdf', [PDFController::class, 'generatePDF'])
 Route::get('/preview-pdf', [PDFController::class, 'designPDF'])
 ->middleware(['auth', 'verified', 'can:user-higher'])->name('preview_pdf');
 
-// snappy pdf
-// Route::middleware(['auth', 'verified', 'can:user-higher'])->group(function () {
-//     Route::get('/dango', 'DangoController@dango')->name('dango');
-//     Route::get('/pdf', 'DangoController@pdf')->name('pdf');
-// });
-
 // グラフテスト用
 // Route::get('analysis', [AnalysisController::class, 'index'])->name('analysis');
 
 
-// Route::get('/', function () {
-//     return redirect('/login');
-// });
 Route::get('/', function () {
     return redirect('/login');
     // return Inertia::render('Welcome', [
