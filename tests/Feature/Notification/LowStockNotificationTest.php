@@ -56,7 +56,5 @@ class LowStockNotificationTest extends TestCase
             $this->assertEquals($item->minimum_stock, $notification->data['minimum_stock']);
             $this->assertEquals('在庫数が通知在庫数以下になっています', $notification->data['message']);
         }
-
     }
-
 }
