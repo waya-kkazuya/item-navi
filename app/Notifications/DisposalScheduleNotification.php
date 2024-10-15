@@ -6,6 +6,7 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
+use Illuminate\Support\Facades\Storage;
 
 class DisposalScheduleNotification extends Notification
 {
@@ -14,9 +15,9 @@ class DisposalScheduleNotification extends Notification
     /**
      * Create a new notification instance.
      */
-    public function __construct($item)
+    public function __construct($disposal)
     {
-        $this->item = $item;
+        $this->disposal = $disposal;
     }
 
     /**
@@ -47,11 +48,18 @@ class DisposalScheduleNotification extends Notification
      */
     public function toArray(object $notifiable): array
     {
-        $disposal = $this->item->disposal; // リレーションで取得
+        // 画像パスの設定
+        $imagePath = 'storage/items/' . $this->disposal->item->image1;
+        if (!$this->disposal->item->image1 || !Storage::disk('public')->exists('items/' . $this->disposal->item->image1)) {
+            $imagePath = 'storage/items/No_Image.jpg';
+        }
 
         return [
-            'item_name' => $this->item->name,
-            'scheduled_date' => $disposal->scheduled_date,
+            'id' => $this->disposal->item->id,
+            'management_id' => $this->disposal->item->management_id,
+            'image_path1' => asset($imagePath),
+            'item_name' => $this->disposal->item->name,
+            'scheduled_date' => $this->disposal ? $this->disposal->disposal_scheduled_date : null,
             'message' => '廃棄予定日が近づいています'
         ];
     }

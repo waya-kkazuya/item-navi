@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Notification;
 use App\Events\LowStockDetectEvent;
 use App\Listeners\LowStockDetectListener;
 use App\Notifications\LowStockNotification;
+use Illuminate\Support\Facades\DB;
 
 class LowStockNotificationTest extends TestCase
 {
@@ -21,6 +22,11 @@ class LowStockNotificationTest extends TestCase
     /** @test */
     function LowStockNotificationのテスト()
     {
+        // categoriesテーブルをトランケートして連番をリセット
+        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+        DB::table('categories')->truncate();
+        DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+
         // Notification::fake();とEvent::fake();は使用しない
         // 送信するユーザーを世界に構築
         $users = User::factory()->createMany([

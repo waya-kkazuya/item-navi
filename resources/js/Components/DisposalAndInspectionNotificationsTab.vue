@@ -56,6 +56,7 @@ const markAsRead = async id => {
             <th class="min-w-32 md:min-w-40 px-4 py-3 title-font tracking-wider font-medium text-center text-gray-900 text-xs md:text-base bg-gray-100">備品名</th>
             <th class="min-w-24 md:min-w-28 px-4 py-3 title-font tracking-wider font-medium text-center text-gray-900 text-xs md:text-base bg-gray-100">画像</th>
             <th class="min-w-48 md:min-w-48 px-4 py-3 title-font tracking-wider font-medium text-center text-gray-900 text-xs md:text-base bg-gray-100">メッセージ</th>
+            <th class="min-w-48 md:min-w-48 px-4 py-3 title-font tracking-wider font-medium text-center text-gray-900 text-xs md:text-base bg-gray-100">点検予定日</th>
           </tr>
         </thead>
         <tbody>
@@ -81,6 +82,9 @@ const markAsRead = async id => {
               </td>
               <td class="border-b-2 border-gray-100 px-4 py-3 text-center text-xs md:text-base">
                 {{ notification.data.message }}
+              </td>
+              <td class="border-b-2 border-gray-100 px-4 py-3 text-center text-xs md:text-base">
+                {{ notification.data.scheduled_date }}
               </td>
             </tr>
         </tbody>
