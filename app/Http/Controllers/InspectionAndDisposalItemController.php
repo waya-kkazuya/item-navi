@@ -13,131 +13,42 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
 use Inertia\Inertia;
 use App\Services\ImageService;
+use App\UseCases\InspectionAndDisposalItem\ScheduledInspectionsUseCase;
+use App\UseCases\InspectionAndDisposalItem\HistoryInspectionsUseCase;
+use App\UseCases\InspectionAndDisposalItem\ScheduledDisposalUseCase;
+use App\UseCases\InspectionAndDisposalItem\HistoryDisposalUseCase;
 
 
 class InspectionAndDisposalItemController extends Controller
 {
     protected $imageService;
+    protected $scheduledInspectionsUseCase;
+    protected $historyInspectionsUseCase;
+    protected $scheduledDisposalUseCase;
+    protected $historyDisposalUseCase;
     
-    public function __construct(ImageService $imageService)
-    {
+    public function __construct(
+        ImageService $imageService,
+        ScheduledInspectionsUseCase $scheduledInspectionsUseCase,
+        HistoryInspectionsUseCase $historyInspectionsUseCase,
+        ScheduledDisposalUseCase $scheduledDisposalUseCase,
+        HistoryDisposalUseCase $historyDisposalUseCase
+    ){
         $this->imageService = $imageService;
+        $this->scheduledInspectionsUseCase = $scheduledInspectionsUseCase;
+        $this->historyInspectionsUseCase = $historyInspectionsUseCase;
+        $this->scheduledDisposalUseCase = $scheduledDisposalUseCase;
+        $this->historyDisposalUseCase = $historyDisposalUseCase;
     }
 
     public function index()
     {
         Gate::authorize('staff-higher');
 
-        // 欲しいのは備品情報ではなく、InspceitonとDisposalの予定
-        $inspectionWithRelations = [
-            'item.category', 
-            'item.unit', 
-            'item.usageStatus', 
-            'item.locationOfUse', 
-            'item.storageLocation', 
-            'item.acquisitionMethod'
-        ];
-        
-        $inspectionSelectFields = [
-            'id',
-            'item_id',
-            'inspection_scheduled_date',
-            'inspection_date',
-            'status',
-            'inspection_person',
-            'details',
-            'created_at'
-        ];
-        
-        // 廃棄された備品の点検と廃棄の予定日は必要ない
-        $scheduledInspections = Inspection::with($inspectionWithRelations)
-            ->select($inspectionSelectFields)
-            ->where('status', false)
-            ->whereNotNull('inspection_scheduled_date')
-            ->whereHas('item', function ($query) {
-                $query->whereNull('deleted_at');
-            })
-            ->orderBy('inspection_scheduled_date', 'asc')
-            ->paginate(10);
-
-        \Log::info("scheduledInspections");
-        \Log::info($scheduledInspections->toArray());
-
-        $scheduledInspections = $scheduledInspections->setCollection($this->imageService->setImagePath($scheduledInspections->getCollection()));
-
-
-
-        $historyInspections = Inspection::with($inspectionWithRelations)
-            ->select($inspectionSelectFields)
-            ->where('status', true)
-            ->orderBy('inspection_scheduled_date', 'asc')
-            ->paginate(10);
-
-        \Log::info("historyInspections");
-        \Log::info($historyInspections->toArray());
-
-        // ログ用
-        $historyInspections->getCollection()->transform(function ($inspection) {
-            if (is_null($inspection->item)) {
-                // 廃棄(ソフトデリートされている際はitemはnullになる)
-                \Log::info('Item is null for inspection ID: ' . $inspection->id);
-            } else {
-                \Log::info('Item is present for inspection ID: ' . $inspection->id . ', Item ID: ' . $inspection->item->id);
-            }
-            return $inspection;
-        });
-
-        $historyInspections = $historyInspections->setCollection($this->imageService->setImagePath($historyInspections->getCollection()));
-
-
-        
-        // ユースケースに分ける
-        // ここからDisposal
-        $disposalWithRelations = [
-            'item' => function ($query) {
-                $query->withTrashed()->with([
-                    'category', 
-                    'unit', 
-                    'usageStatus', 
-                    'locationOfUse', 
-                    'storageLocation', 
-                    'acquisitionMethod'
-                ]);
-            }
-        ];
-
-        $disposalSelectFields = [
-            'id',
-            'item_id',
-            'disposal_scheduled_date',
-            'disposal_date',
-            'disposal_person',
-            'details',
-            'created_at'
-        ];
-        
-        // クエリの再利用をやめる、干渉する可能性がある
-        // 条件：廃棄されておらず、scheduled_dateが存在するレコード
-        $scheduledDisposals = Disposal::with($disposalWithRelations)
-            ->select($disposalSelectFields)
-            ->orderBy('disposal_scheduled_date', 'asc')
-            ->whereNotNull('disposal_scheduled_date') 
-            ->whereHas('item', function ($query) {
-                $query->whereNull('deleted_at');
-            })->paginate(10);
-
-        $scheduledDisposals = $scheduledDisposals->setCollection($this->imageService->setImagePath($scheduledDisposals->getCollection()));
-
-        // 条件：廃棄されている
-        $historyDisposals = Disposal::with($disposalWithRelations)
-            ->select($disposalSelectFields)
-            ->orderBy('disposal_scheduled_date', 'asc')
-            ->whereHas('item', function ($query) {
-                $query->whereNotNull('deleted_at');
-            })->paginate(10);;
-        
-        $historyDisposals = $historyDisposals->setCollection($this->imageService->setImagePath($historyDisposals->getCollection()));
-
+        $scheduledInspections = $this->scheduledInspectionsUseCase->handle();
+        $historyInspections = $this->historyInspectionsUseCase->handle();
+        $scheduledDisposals = $this->scheduledDisposalUseCase->handle();
+        $historyDisposals = $this->historyDisposalUseCase->handle();
 
         return Inertia::render('InspectionAndDisposalItems/Index', [
             'scheduledInspections' => $scheduledInspections,
