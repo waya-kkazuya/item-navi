@@ -15,17 +15,18 @@ use App\Http\Controllers\UpdateHtaccessForGitHubActionsController;
 
 class Kernel extends ConsoleKernel
 {
+    protected $commands = [
+        Commands\InspectionSchedule::class,
+        Commands\DisposalSchedule::class,
+    ];
+    
     /**
      * Define the application's command schedule.
      */
     protected function schedule(Schedule $schedule): void
     {
-        // $schedule->command('inspire')->hourly();
-        $schedule->call(function () {
-            \Log::info('scheduleが呼ばれいる');
-            $this->sendInspectionNotifications();
-            $this->sendDisposalNotifications();
-        })->weekdays()->at('06:00');
+        $schedule->command('app:inspection-schedule')->weekdays()->at('00:00');
+        $schedule->command('app:disposal-schedule')->weekdays()->at('00:00');
 
         // GitHubのAPIからGitHub Actionsで使われるIPアドレスを取得する
         // $schedule->call(function () {
@@ -47,48 +48,4 @@ class Kernel extends ConsoleKernel
 
         require base_path('routes/console.php');
     }
-
-    protected function sendInspectionNotifications()
-    {   
-        $dates = [
-            Carbon::today()->addWeeks(4),
-            Carbon::today()->addWeeks(2),
-            Carbon::today()->addWeek(),
-            Carbon::today()->addDays(3),
-            Carbon::today()
-        ];
-
-        $inspections = Inspection::whereIn('inspection_scheduled_date', $dates)->get();
-        
-        \Log::info('sendInspectionNotifications called'); // ログを記録
-
-        foreach ($inspections as $inspection) {
-            $users = User::whereIn('role', [1, 5])->get(); // roleが1（admin）または5（staff）のユーザーを取得
-            foreach ($users as $user) {
-                $user->notify(new InspectionScheduleNotification($inspection));
-            }
-        }
-    }
-
-    protected function sendDisposalNotifications()
-    {
-        $dates = [
-            Carbon::today()->addWeeks(4),
-            Carbon::today()->addWeeks(2),
-            Carbon::today()->addWeek(),
-            Carbon::today()->addDays(3),
-            Carbon::today()
-        ];
-
-        $disposals = Disposal::whereIn('disposal_scheduled_date', $dates)->get();
-        
-        \Log::info('sendDisposalNotifications called');
-
-        foreach ($disposals as $disposal) {
-            $users = User::whereIn('role', [1, 5])->get(); // roleが1（admin）または5（staff）のユーザーを取得
-            foreach ($users as $user) {
-                $user->notify(new DisposalScheduleNotification($disposal));
-            }
-        }
-    }    
 }
