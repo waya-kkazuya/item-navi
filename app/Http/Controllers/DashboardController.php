@@ -49,29 +49,6 @@ class DashboardController extends Controller
         }
 
         // // 日付ごとにまとめる
-        // $editHistories = DB::table('edithistories')
-        // ->join('items', 'edithistories.item_id', '=', 'items.id')
-            // ->select(
-            //     DB::raw('DATE(edithistories.created_at) as date'), 
-            //     DB::raw('DAYOFWEEK(edithistories.created_at) as day_of_week'),
-            //     DB::raw('DATE_FORMAT(edithistories.created_at, "%H:%i") as time'), 
-            //         'edithistories.id', 
-            //         'edithistories.edit_mode', 
-            //         'edithistories.operation_type', 
-            //         'edithistories.item_id', 
-            //         'edithistories.edited_field', 
-            //         'edithistories.old_value', 
-            //         'edithistories.new_value', 
-            //         'edithistories.edit_user', 
-            //         'edithistories.edit_reason_id', 
-            //         'edithistories.edit_reason_text', 
-            //         'edithistories.created_at',
-            //         'items.management_id as item_management_id',
-            //         'items.name as item_name'
-            //     )
-            // ->orderBy('edithistories.created_at', 'desc')
-            // ->get()
-            // ->groupBy('date');
         $editHistories = EditHistory::with(['item' => function ($query) {
                         $query->withTrashed();
                     }, 'editReason'])
@@ -92,6 +69,7 @@ class DashboardController extends Controller
                     'created_at',
                 )
             ->orderBy('created_at', 'desc')
+            ->limit(20)
             ->get()
             ->groupBy('date');
 
@@ -129,8 +107,6 @@ class DashboardController extends Controller
             });
         });
 
-        // dd($editHistories);
-
         // 空でも送れる
         return Inertia::render('Dashboard', [
             'allItems' => $items,
@@ -138,6 +114,5 @@ class DashboardController extends Controller
             'edithistories' => $editHistories,
             'type' => $type
         ]); 
-
     }
 }
