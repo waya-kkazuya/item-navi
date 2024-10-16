@@ -131,7 +131,7 @@ const deleteItemRequest = request => {
                           <table v-if="itemRequests.data && itemRequests.data.length > 0" class="table-fixed min-w-full text-left whitespace-no-wrap">
                             <thead>
                               <tr>
-                                <th class="min-w-32 md:min-w-32 px-4 py-3 title-font tracking-wider font-medium text-center text-white text-xs md:text-base bg-sky-700">登録</th>
+                                <th v-if="loginUserRole <= 5" class="min-w-32 md:min-w-32 px-4 py-3 title-font tracking-wider font-medium text-center text-white text-xs md:text-base bg-sky-700">登録</th>
                                 <th class="min-w-32 md:min-w-32 px-4 py-3 title-font tracking-wider font-medium text-center text-white text-xs md:text-base bg-sky-700">ステータス</th>
                                 <th class="min-w-48 md:min-w-36 px-4 py-3 title-font tracking-wider font-medium text-center text-white text-xs md:text-base bg-sky-700">登録日</th>
                                 <th class="min-w-28 md:min-w-40 px-4 py-3 title-font tracking-wider font-medium text-center text-white text-xs md:text-base bg-sky-700">商品名</th>
@@ -142,12 +142,12 @@ const deleteItemRequest = request => {
                                 <th class="min-w-24 md:min-w-32 px-4 py-3 title-font tracking-wider font-medium text-center text-white text-xs md:text-base bg-sky-700">価格</th>
                                 <th class="min-w-24 md:min-w-32 px-4 py-3 title-font tracking-wider font-medium text-center text-white text-xs md:text-base bg-sky-700">申請者</th>
                                 <th class="min-w-36 md:min-w-36 px-4 py-3 title-font tracking-wider font-medium text-center text-white text-xs md:text-base bg-sky-700">申請理由</th>
-                                <th class="min-w-36 md:min-w-36 px-4 py-3 title-font tracking-wider font-medium text-center text-white text-xs md:text-base bg-sky-700">削除</th>
+                                <th v-if="loginUserRole <= 5" class="min-w-36 md:min-w-36 px-4 py-3 title-font tracking-wider font-medium text-center text-white text-xs md:text-base bg-sky-700"></th>
                               </tr>
                             </thead>
                             <tbody>
                               <tr v-for="request in itemRequests.data" :key="request.id">
-                                <td class="border-b-2 border-gray-200 text-center text-xs md:text-base px-4 py-3">
+                                <td v-if="loginUserRole <= 5" class="border-b-2 border-gray-200 text-center text-xs md:text-base px-4 py-3">
                                   <Link as="button" 
                                     :href="route('items.create', {
                                       name: request.name, 
@@ -180,7 +180,17 @@ const deleteItemRequest = request => {
                                     </select>
                                   </template>
                                   <template v-else>
-                                    {{ request.request_status.status_name }}
+                                    <div :class="[
+                                      'w-full bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-xs md:text-base outline-none text-gray-700 py-0 md:py-1 md:px-3 leading-8 transition-colors duration-200 ease-in-out',
+                                      {
+                                        'bg-gray-200': request.request_status_id == 1,
+                                        'bg-yellow-200': request.request_status_id == 2,
+                                        'bg-green-200': request.request_status_id == 3,
+                                        'bg-pink-200': request.request_status_id == 4
+                                      }
+                                    ]">
+                                      {{ request.request_status.status_name }}
+                                    </div>
                                   </template>
                                 </td>
                                 <td class="border-b-2 border-gray-200 text-center text-xs md:text-base px-4 py-2">{{ request.formatted_created_at }}</td>
@@ -192,7 +202,7 @@ const deleteItemRequest = request => {
                                 <td class="border-b-2 border-gray-200 text-center text-xs md:text-base px-4 py-2">{{ request.price }}</td>
                                 <td class="border-b-2 border-gray-200 text-center text-xs md:text-base px-4 py-2">{{ request.requestor }}</td>
                                 <td class="border-b-2 border-gray-200 text-center text-xs md:text-base px-4 py-2">{{ request.remarks_from_requestor ?? '' }}</td>
-                                <td class="border-b-2 border-gray-200 text-center text-xs md:text-base px-4 py-2">
+                                <td v-if="loginUserRole <= 5" class="border-b-2 border-gray-200 text-center text-xs md:text-base px-4 py-2">
                                   <button @click="deleteItemRequest(request)"  class="w-28 flex justify-center items-center text-white text-xs bg-red-500 border-0 py-2 px-8 focus:outline-none hover:bg-red-600 rounded">
                                     削除
                                   </button>
