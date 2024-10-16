@@ -7,11 +7,10 @@ const props = defineProps({
 })
 
 
-// const localNotifications = ref({...props.requestedItemNotifications});
 const localNotifications = ref(Object.values(props.requestedItemNotifications));
 
 // プロパティが変更された場合にローカル変数を更新
-// 自動では反映してくれないところが注意点
+// 自動では反映してくれないので注意
 watch(() => props.requestedItemNotifications, (newNotifications) => {
   localNotifications.value = Object.values(newNotifications);
 });
@@ -30,7 +29,6 @@ const markAsRead = async id => {
   console.log(id)
   try {
     await axios.patch(`/api/notifications/${id}/read`)
-
   } catch (error) {
     console.error('APIでの既読処理が失敗しました', error)
   }
@@ -46,9 +44,9 @@ const markAsRead = async id => {
         リクエスト一覧へ
       </Link>
     </div>
-    <!-- <div>{{ requestedItemNotifications }}</div> -->
+
     <div class="min-w-full overflow-auto flex justify-center">
-      <table v-if="requestedItemNotifications" class="table-fixed text-left whitespace-no-wrap">
+      <table v-if="requestedItemNotifications.length > 0" class="table-fixed text-left whitespace-no-wrap">
         <thead>
           <tr>
             <th class="min-w-32 md:min-w-26 px-4 py-3 title-font tracking-wider font-medium text-center text-gray-900 text-xs md:text-base bg-gray-100">通知</th>
