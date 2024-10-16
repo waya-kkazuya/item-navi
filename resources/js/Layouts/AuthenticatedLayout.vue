@@ -202,6 +202,11 @@ const profileImageUrl = computed(() =>{
             <main>
                 <slot />
             </main>
+
+            <footer class="text-center text-sm py-4">
+                <p>&copy; 2024 waya. All rights reserved.</p>
+                <p>Icons provided by <a href="https://heroicons.com/" target="_blank" class="text-blue-500">Heroicons</a>. Licensed under the MIT License.</p>
+            </footer>
         </div>
     </div>
 </template>
