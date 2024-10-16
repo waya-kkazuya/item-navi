@@ -259,7 +259,7 @@ const deleteItem = id => {
                                                         </label>
                                                         <div class="flex items-center">
                                                             <div type="date" id="disposalSchedule" name="disposalSchedule" class="w-full bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-xs md:text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
-                                                                {{ item.disposal ? item.disposal.disposal_scheduled_date : 'なし' }}
+                                                                {{ item.disposal && item.disposal.disposal_scheduled_date ? item.disposal.disposal_scheduled_date : 'なし' }}
                                                             </div>
                                                             <div class="w-full">
                                                                 <DisposalModal :item="item" :userName="userName" :errors="errors" />
