@@ -20,21 +20,12 @@ class PDFController extends Controller
             ->where('category_id', self::CATEGORY_ID_FOR_CONSUMABLE_ITME)
             ->get();
 
-        // dd($consumableItems);
-
         // QRラベル画像のパスの配列を取得
         $qrCodes = [];
         foreach($consumableItems as $consumableItem) {
             $qrCodes[] = Storage::path('labels/'.$consumableItem->qrcode);
         }
 
-        // for ($i = 1; $i <= 11; $i++) {
-        // 10枚でテスト
-        // $qrCodes[] = storage_path('app/public/qrcode/qrcode_' . $i . '.png');
-        //     $qrCodes[] = Storage::path('public/labels/QRCodeTest_label.jpg');
-        // }
-
-        // dd($qrCodes);
         \Log::info("qrCodes",$qrCodes);
 
         if (empty($qrCodes)) {
@@ -55,7 +46,7 @@ class PDFController extends Controller
             ->setOption('footer-center', '[page] / [topage]') // フッター中央に現在のページ番号と総ページ数を表示
             ->setOption('footer-font-size', 10);
 
-        // return $pdf->download('消耗品QRコード.pdf');　//直にダウンロードする
+        // return $pdf->download('消耗品QRコード.pdf');　//直にダウンロードする場合
         return $pdf->inline('消耗品QRコード.pdf');
     }
 
@@ -70,5 +61,4 @@ class PDFController extends Controller
         // blade側でchunkする
         return view('pdf.pdf-preview-table', compact('qrCodes'));
     }
-
 }

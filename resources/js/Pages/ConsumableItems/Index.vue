@@ -47,20 +47,15 @@ onMounted(() => {
   console.log(isMobile())
   console.log(isMobileDevice.value)
 
-  // console.log('props.linkedItem', props.linkedItem)
-
-  // 通知からのリンクで送られてくるitemの可否でモーダルウィンドウを開く
+  // 通知からのリンクで送られてくるlinkedItemの可否でモーダルウィンドウを開く
   if (props.linkedItem) {
-    // alert('props.linkedItem動いた')
-    // console.log('props.linkedItem動いた')
-    // console.log(props.linkedItem)
     openUpdateStockModal(props.linkedItem)
   }
 })
 
 watch(() => props.linkedItem, (newVal) => {
   if (newVal) {
-    alert('watch側で更新を検知しました');
+    // alert('watch側で更新を検知しました');
     openStockHistoryModal(newVal);
   }
 })
@@ -70,11 +65,9 @@ const isStockHistoryModalOpen = ref(false)
 const selectedStockHistoryItem = ref(null)
 
 const openStockHistoryModal = (item) => {
-  console.log(item)
+  // 入出庫履歴モーダルで使用するitemをセット
   selectedStockHistoryItem.value = item
-  console.log(selectedStockHistoryItem)
   isStockHistoryModalOpen.value = true
-  console.log(isStockHistoryModalOpen.value)
 }
 const closeStockHistoryModal = () => {
   isStockHistoryModalOpen.value = false
@@ -85,7 +78,7 @@ const isUpdateStockModalOpen = ref(false)
 const selectedUpdateStockItem = ref(null)
 
 const openUpdateStockModal = item => {
-  console.log(item)
+  // 入出庫実施モーダルで使用するitemをセット
   selectedUpdateStockItem .value = item
   isUpdateStockModalOpen.value = true
 }
@@ -113,7 +106,6 @@ const toggleSortOrder = () => {
   fetchAndFilterItems()
 };
 
-
 const resetState = () => {
   //それぞれのリアクティブな値もデフォルトの値に戻して、プルダウンや検索フォームに反映する 
   search.value = ''
@@ -124,11 +116,9 @@ const resetState = () => {
   fetchAndFilterItems()
 }
 
-// 
 // 入出庫処理をした後に画面の情報を更新する
 const fetchConsumableItems = async () => {
   try {
-    console.log('emit通っている')
     const res = await axios.get('/api/consumable_items?reload=true');
     // 必要に応じてデータを更新
     console.log(res.data.items);
@@ -140,8 +130,7 @@ const fetchConsumableItems = async () => {
   } catch (e){
     console.error('データの取得に失敗しました:', e.message)
   }
-};
-
+}
 </script>
 
 <template>
