@@ -23,13 +23,12 @@ onMounted(() => {
   })
 })
 
-// 既読処理
+// 画面を開いたら既読にする処理、次回アクセスもしくは更新でオレンジの新着マークが消える
 const markAsRead = async id => {
   console.log('notification_id')
   console.log(id)
   try {
     await axios.patch(`/api/notifications/${id}/read`)
-
   } catch (error) {
     console.error('APIでの既読処理が失敗しました', error)
   }
@@ -50,9 +49,8 @@ const markAsRead = async id => {
       </Link>
     </div>
     
-    <!-- <div>{{ lowStockNotifications }}</div> -->
     <div class="min-w-full overflow-auto flex justify-center">
-      <table v-if="lowStockNotifications" class="table-fixed text-left whitespace-no-wrap">
+      <table v-if="lowStockNotifications.length > 0" class="table-fixed text-left whitespace-no-wrap">
         <thead>
           <tr>
             <th class="min-w-32 md:min-w-26 px-4 py-3 title-font tracking-wider font-medium text-center text-gray-900 text-xs md:text-base bg-gray-100">通知</th>
@@ -61,7 +59,6 @@ const markAsRead = async id => {
             <th class="min-w-24 md:min-w-28 px-4 py-3 title-font tracking-wider font-medium text-center text-gray-900 text-xs md:text-base bg-gray-100">画像</th>
             <th class="min-w-32 md:min-w-40 px-4 py-3 title-font tracking-wider font-medium text-center text-gray-900 text-xs md:text-base bg-gray-100">在庫数</th>
             <th class="min-w-32 md:min-w-40 px-4 py-3 title-font tracking-wider font-medium text-center text-gray-900 text-xs md:text-base bg-gray-100">モーダル</th>
-            <!-- <th class="min-w-32 md:min-w-40 px-4 py-3 title-font tracking-wider font-medium text-center text-gray-900 text-xs md:text-base bg-gray-100"></th> -->
           </tr>
         </thead>
         <tbody>
@@ -95,11 +92,6 @@ const markAsRead = async id => {
                   </span>
                 </Link>
               </td>
-              <!-- <td class="border-b-2 border-gray-100 px-4 py-3 text-center text-xs md:text-base">
-                <Link :href="route('consumable_items', { item_id: notification.data.id })">
-                <div class="text-blue-600 title-font text-xs md:text-base font-medium">詳細を見る</div>
-              </Link>
-              </td> -->
             </tr>
         </tbody>
       </table>
