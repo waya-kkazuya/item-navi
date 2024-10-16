@@ -59,8 +59,15 @@ const getUserRole = async () => {
 
 onMounted(() => {
   getUserRole()
-  // console.log(loginUserRole.value)
 })
+
+const deleteItemRequest = request => {
+  if (confirm('本当に削除しますか？')) {
+    router.visit(route('item_requests.destroy', request), {
+      method: 'delete'
+    })
+  }
+}
 
 </script>
 
@@ -135,6 +142,7 @@ onMounted(() => {
                                 <th class="min-w-24 md:min-w-32 px-4 py-3 title-font tracking-wider font-medium text-center text-white text-xs md:text-base bg-sky-700">価格</th>
                                 <th class="min-w-24 md:min-w-32 px-4 py-3 title-font tracking-wider font-medium text-center text-white text-xs md:text-base bg-sky-700">申請者</th>
                                 <th class="min-w-36 md:min-w-36 px-4 py-3 title-font tracking-wider font-medium text-center text-white text-xs md:text-base bg-sky-700">申請理由</th>
+                                <th class="min-w-36 md:min-w-36 px-4 py-3 title-font tracking-wider font-medium text-center text-white text-xs md:text-base bg-sky-700">削除</th>
                               </tr>
                             </thead>
                             <tbody>
@@ -184,6 +192,11 @@ onMounted(() => {
                                 <td class="border-b-2 border-gray-200 text-center text-xs md:text-base px-4 py-2">{{ request.price }}</td>
                                 <td class="border-b-2 border-gray-200 text-center text-xs md:text-base px-4 py-2">{{ request.requestor }}</td>
                                 <td class="border-b-2 border-gray-200 text-center text-xs md:text-base px-4 py-2">{{ request.remarks_from_requestor ?? '' }}</td>
+                                <td class="border-b-2 border-gray-200 text-center text-xs md:text-base px-4 py-2">
+                                  <button @click="deleteItemRequest(request)"  class="w-28 flex justify-center items-center text-white text-xs bg-red-500 border-0 py-2 px-8 focus:outline-none hover:bg-red-600 rounded">
+                                    削除
+                                  </button>
+                                </td>
                               </tr>
                             </tbody>
                           </table>

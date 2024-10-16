@@ -138,4 +138,15 @@ class ItemRequestController extends Controller
             ]);
         }
     }
+
+    public function destroy(ItemRequest $itemRequest)
+    {
+        $itemRequest->delete();
+
+        return to_route('item_requests.index')
+        ->with([
+            'message' => 'リクエストを削除しました',
+            'status' => 'danger'
+        ]);
+    }
 }

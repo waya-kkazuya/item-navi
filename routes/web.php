@@ -41,7 +41,6 @@ use Illuminate\Notifications\Notification;
 
 // それぞれに適切な権限レベル(admin,staff,user)のmiddlewareをかける
 
-
 Route::resource('items', ItemController::class)
 ->middleware(['auth', 'verified', 'can:staff-higher']);
 
@@ -79,7 +78,12 @@ Route::middleware(['auth', 'verified', 'can:user-higher'])->group(function () {
     ->name('item_requests.store');
 });
 
-// dompdf
+// 削除はstaff以上の権限が必要
+Route::delete('item-requests/{item_request}', [ItemRequestController::class, 'destroy'])
+->middleware(['auth', 'verified', 'can:staff-higher'])->name('item_requests.destroy');
+
+
+// dompdfでPDFのダウンロード
 Route::get('/generate-pdf', [PDFController::class, 'generatePDF'])
 ->middleware(['auth', 'verified', 'can:user-higher'])->name('generate_pdf');
 
@@ -105,10 +109,6 @@ Route::get('/', function () {
 Route::get('/dashboard', [DashboardController::class, 'index'])
 ->middleware(['auth', 'verified', 'checkRole', 'can:staff-higher'])->name('dashboard');
 
-// Route::get('item-requests', [ItemRequestController::class, 'index'])
-// ->middleware(['auth', 'verified', 'can:user-higher'])->name('item_requests.index');
-
-
 
 // プロフィール編集用ルート
 Route::middleware(['auth', 'verified', 'can:user-higher'])->group(function () {
@@ -121,10 +121,6 @@ Route::middleware(['auth', 'verified', 'can:user-higher'])->group(function () {
 Route::get('/update-htaccess', [UpdateHtaccessForGitHubActionsController::class, 'update'])
 ->middleware(['auth', 'verified', 'can:admin-higher']);
 
-
-// 棚卸計画
-Route::resource('inventory_plans', InventoryPlanController::class)
-->middleware(['auth', 'verified', 'can:staff-higher']);
 
 // 画像テスト
 // Route::resource('image_tests', ImageTestController::class)
