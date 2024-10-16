@@ -7,7 +7,7 @@ import { ref } from 'vue';
 const props = defineProps({
     allItems: Array,
     itemsByType: Object,
-    edithistories: Array,
+    groupedEdithistories: Array,
     type: Number
 })
 
@@ -20,6 +20,7 @@ const switchViewMode = () => {
   }), {
     method: 'get'
   })
+  console.log(type.value)
 }
 
 
@@ -130,7 +131,7 @@ const switchViewMode = () => {
                                 </tr>
                             </thead>
                             <tbody>
-                                <template  v-for="(histories, date) in edithistories" :key="date">
+                                <template  v-for="(histories, date) in groupedEdithistories" :key="date">
                                     <tr>
                                         <td class="border-b-2 p-2 border-gray-200 text-left bg-gray-200" colspan="2">
                                             {{ date }} ({{ histories[0].day_of_week }})
