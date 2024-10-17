@@ -91,9 +91,6 @@ Route::get('/generate-pdf', [PDFController::class, 'generatePDF'])
 Route::get('/preview-pdf', [PDFController::class, 'designPDF'])
 ->middleware(['auth', 'verified', 'can:user-higher'])->name('preview_pdf');
 
-// グラフテスト用
-// Route::get('analysis', [AnalysisController::class, 'index'])->name('analysis');
-
 
 Route::get('/', function () {
     return redirect('/login');
