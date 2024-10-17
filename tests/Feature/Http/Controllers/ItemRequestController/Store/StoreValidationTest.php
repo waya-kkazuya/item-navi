@@ -33,6 +33,7 @@ use Intervention\Image\ImageManager;
 // use Intervention\Image\Drivers\Gd\Driver;
 use Intervention\Image\Drivers\Imagick\Driver;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\DB;
 
 class StoreValidationTest extends TestCase
 {
@@ -41,8 +42,13 @@ class StoreValidationTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-
         $this->faker = FakerFactory::create();
+
+        // テーブルのデータとIDをリセット
+        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+        DB::table('request_statuses')->truncate();
+        DB::table('categories')->truncate();
+        DB::statement('SET FOREIGN_KEY_CHECKS=1;');
     }
 
 

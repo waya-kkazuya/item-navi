@@ -33,6 +33,7 @@ use Intervention\Image\ImageManager;
 // use Intervention\Image\Drivers\Gd\Driver;
 use Intervention\Image\Drivers\Imagick\Driver;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\DB;
 
 
 class StoreMethodTest extends TestCase
@@ -42,13 +43,18 @@ class StoreMethodTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-
         $this->faker = FakerFactory::create();
+
+        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+        DB::table('request_statuses')->truncate();
+        DB::table('categories')->truncate();
+        DB::statement('SET FOREIGN_KEY_CHECKS=1;');
     }
 
     /** @test */
     function リクエストの登録が出来る()
     {
+        // テーブルのデータとIDをリセット
         //世界の構築
         $categories = Category::factory()->count(11)->create();
         $locations = Location::factory()->count(12)->create();
@@ -76,7 +82,11 @@ class StoreMethodTest extends TestCase
         $response = $this->from('item_requests/create')
             ->post(route('item_requests.store'), $validData);
 
-        $response->assertRedirect('item-requests');
+        // フラッシュメッセージの確認
+        $response->assertSessionHas('message', 'リクエストしました。');
+        $response->assertSessionHas('status', 'success');
+            
+        $response->assertRedirect(route('item_requests.index'));
 
         $this->assertDatabaseHas('item_requests', [
             'name' => 'ボールペン',
@@ -90,6 +100,4 @@ class StoreMethodTest extends TestCase
             'price' => 100,
         ]);
     }
-
-
 }
