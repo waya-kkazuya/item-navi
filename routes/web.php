@@ -117,10 +117,6 @@ Route::middleware(['auth', 'verified', 'can:user-higher'])->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-// admin権限のみ可能
-Route::get('/update-htaccess', [UpdateHtaccessForGitHubActionsController::class, 'update'])
-->middleware(['auth', 'verified', 'can:admin-higher']);
-
 
 // 画像テスト
 // Route::resource('image_tests', ImageTestController::class)
