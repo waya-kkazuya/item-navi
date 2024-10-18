@@ -41,11 +41,11 @@ class UpdateMethodTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-
         $this->faker = FakerFactory::create();
     }
 
-    public function test_profile_page_is_displayed(): void
+    /** @test */
+    public function プロフィール画面が表示される(): void
     {
         // adminユーザー
         $user = User::factory()->role(1)->create();
@@ -56,27 +56,42 @@ class UpdateMethodTest extends TestCase
         $response->assertOk();
     }
 
-    public function test_profile_information_can_be_updated(): void
+    /** @test */
+    public function プロフィール情報を更新出来る(): void
     {
-        // adminユーザー
-        $user = User::factory()->role(1)->create();
+        // フェイクの画像ファイルを作成
+        $this->fakeImage = UploadedFile::fake()->image('test_profile_image.jpg');
 
-        // dd($user);
+        // ImageServiceのモックを作成
+        $this->imageService = Mockery::mock(ImageService::class);
+        $this->imageService->shouldReceive('profileImageResizeUpload')
+            ->once()
+            ->with(Mockery::on(function ($arg) {
+                return $arg instanceof UploadedFile && $arg->getClientOriginalName() === 'test_profile_image.jpg';
+            }))
+            ->andReturn('mocked_profile_image.jpg');
+        // サービスコンテナにモックを登録
+        $this->app->instance(ImageService::class, $this->imageService);
+
+        $user = User::factory()->role(1)->create();
 
         $response = $this->actingAs($user)
             ->patch('/profile', [
                 'name' => 'Test User',
-                // 'email' => 'test@example.com',
+                'profile_image_file' => $this->fakeImage
             ]);
 
         $response->assertSessionHasNoErrors()
             ->assertRedirect('/profile');
 
-        $user->refresh();
+        $this->assertDatabaseHas('users', [
+            'name' => 'Test User',
+            'profile_image' => 'mocked_profile_image.jpg'
+        ]);
 
+        $user->refresh();
         $this->assertSame('Test User', $user->name);
-        // $this->assertSame('test@example.com', $user->email);
-        // $this->assertNull($user->email_verified_at);
+        $this->assertSame('mocked_profile_image.jpg', $user->profile_image);
     }
 
     // public function test_email_verification_status_is_unchanged_when_the_email_address_is_unchanged(): void

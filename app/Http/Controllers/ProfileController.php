@@ -18,17 +18,18 @@ use Illuminate\Support\Facades\DB;
 
 class ProfileController extends Controller
 {
-    /**
-     * Display the user's profile form.
-     */
+    protected $imageService;
+
+    public function __construct(ImageService $imageService) {
+        $this->imageService = $imageService;
+    }
+
     public function edit(Request $request): Response
     {
         Gate::authorize('user-higher');
 
         $user = Auth::user();
         $profile_image = $user->profile_image;
-
-        // dd($profile_image);
         
         if (is_null($profile_image)) {
             $profile_image_path = asset('storage/profile/profile_default_image.png');
@@ -47,9 +48,6 @@ class ProfileController extends Controller
         ]);
     }
 
-    /**
-     * Update the user's profile information.
-     */
     public function update(ProfileUpdateRequest $request): RedirectResponse
     {
         Gate::authorize('user-higher');
@@ -72,7 +70,7 @@ class ProfileController extends Controller
                 }
 
                 // 画像ファイルのアップロードとDBのimage1のファイル名更新
-                $profileImagefileNameToStore = ImageService::profileImageResizeUpload($request->profile_image_file);
+                $profileImagefileNameToStore = $this->imageService->profileImageResizeUpload($request->profile_image_file);
                 $request->user()->profile_image = $profileImagefileNameToStore;
             }
             
