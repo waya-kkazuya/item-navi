@@ -12,6 +12,7 @@ use App\Models\Category;
 use App\Models\Location;
 use App\Models\UsageStatus;
 use App\Models\AcquisitionMethod;
+use App\Models\Disposal;
 use App\Models\Edithistory;
 use App\Models\Inspection;
 use App\Models\EditReason;
@@ -24,6 +25,7 @@ use Mockery;
 use App\Services\ManagementIdService;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
+use GuzzleHttp\Promise\Create;
 use Illuminate\Database\Console\DumpCommand;
 use Illuminate\Testing\Fluent\AssertableJson;
 use Inertia\Inertia;
@@ -39,12 +41,10 @@ use Illuminate\Support\Facades\Session;
 class UpdateMethodTest extends TestCase
 {
     use RefreshDatabase;
-    // use DatabaseTransactions;
 
     protected function setUp(): void
     {
         parent::setUp();
-
         $this->faker = FakerFactory::create();
 
         // フェイクの画像ファイルを作成
@@ -60,28 +60,25 @@ class UpdateMethodTest extends TestCase
             ->andReturn('mocked_image.jpg');
 
         // サービスコンテナにモックを登録
-        $this->app->instance(ImageService::class, $this->imageService);
-
+        $this->app->instance(ImageService::class, $this->imageService);     
     }
 
-    // Observerが邪魔をしている？？
-    // 課題1, テスト上でInspectionsが更新されない 
-    // 課題2, InspcetionObserverを使用すると、Edithistoryのoperation_typeがあべこべになるのを修正
-    // 解決策①セッションを使用する、解決策②ItemControllerにEdithistoryの保存を直接書き、ユースケースの整理
-    // 課題3, ファイルアップロードのImageServiceがモック出来ていない、Mockの返す画像名で保存されていない
-    // 課題4, Disposalの方も確認する
-
     /** @test */
-    function 備品編集画面で備品を編集更新できる()
+    function 備品編集画面で備品を編集更新できる_点検予定日のレコードが存在かつ廃棄予定日のレコードが存在_画像アップロードはモック()
     {
+        $this->withoutExceptionHandling(); // 詳細なエラーメッセージを表示
+
         // 世界の構築
-        // $categories = Category::factory()->count(11)->create();
-        $category = Category::factory()->create([
+        $category_after = Category::factory()->create([
             'id' => 1,
             'name' => '消耗品'
         ]);
-        $categories = Category::factory()->count(10)->create(); //残りのカテゴリ
-        $categories = $categories->concat($category); //全てのカテゴリ
+        $category_before = Category::factory()->create([
+            'id' => 2,
+            'name' => 'IT機器'
+        ]);
+        $categories = Category::factory()->count(9)->create(); //残りのカテゴリ
+        $categories = $categories->concat($category_before)->concat($category_after); //全てのカテゴリ
         $units = Unit::factory()->count(10)->create();
         $usage_statuses = UsageStatus::factory()->count(2)->create();
         $locations = Location::factory()->count(12)->create();
@@ -92,159 +89,360 @@ class UpdateMethodTest extends TestCase
         $user = User::factory()->role(1)->create();
         $this->actingAs($user);
 
-
-        // $item = Item::factory()->create();
+        // 変更前の備品を作成
+        // ここでItemObserverのcreatedでedithistoryに$operation_type=storeで保存される
         $item = Item::factory()->create([
-            'date_of_acquisition' => '2024-09-01',
-        ]);
-        // dd($item);
-
-        // itemの段階でinspectionsテーブルにレコードがあるか設定する＝世界構築
-        // Inspection::factory()->create()をやらない限りデータは保存されていない
-        // 1, inspectionsにレコードがない場合->レコードを生成せずそのまま
-        // 何もコードはいらない
-
-        // 2, inspectionsにレコードがある場合->inspectionsのレコードを生成する
-        $inspection = Inspection::factory()->create([
-            'item_id' => $item->id,
-            'inspection_scheduled_date' => '2024-09-05',
-            'status' => false
-        ]);
-        
-        // dd($inspection);
-        
-        // fakeの画像を準備
-        // Storage::fake('public');
-        // $fakeImage = UploadedFile::fake()->image('test_image.jpg');
-        
-        // dd($fakeImage);
-
-        // ImageServiceのモックを作成
-        // $mock = Mockery::mock(ImageService::class);
-        // $mock->shouldReceive('resizeUpload')
-        //     ->once()
-        //     ->with(Mockery::on(function ($arg) {
-        //         \Log::info($arg);
-        //         return $arg instanceof UploadedFile && $arg->getClientOriginalName() === 'test_image.jpg';
-        //     }))
-        //     ->andReturn('mocked_image.jpg');
-
-        // $this->instance(ImageService::class, $mock);
-
-        // モックの戻り値を確認
-        // dd($this->imageService->resizeUpload($this->fakeImage));
-        // $this->assertEquals('mocked_image.jpg', $mock->resizeUpload($fakeImage));
-
-        $validData = [
-            'name' => 'ペーパータオル',
-            'category_id' => $category->id,
-            'image_file' => null,
-            'image1' => $this->fakeImage,
+            'name' => '備品名変更前',
+            'category_id' => $category_before->id,
+            'image1' => null,
             'stock' => 10,
-            'unit_id' => $units->first()->id,
+            'unit_id' => $units[0]->id,
             'minimum_stock' => 2,
-            'notification' => 1, //trueだとテストでパスしない
-            'usage_status_id' => $usage_statuses->first()->id,
-            'end_user' => '山田',
-            'location_of_use_id' => $locations->first()->id,
-            'storage_location_id' => $locations->last()->id,
-            'acquisition_method_id' => $aquisition_methods->first()->id,
+            'notification' => 1, //trueだとパスしない
+            'usage_status_id' => $usage_statuses[0]->id,
+            'end_user' => '鈴木',
+            'location_of_use_id' => $locations[0]->id,
+            'storage_location_id' => $locations[0]->id,
+            'acquisition_method_id' => $aquisition_methods[0]->id,
             'acquisition_source' => 'Amazon',
             'price' => 500,
             'date_of_acquisition' => '2024-09-01',
             'manufacturer' => null,
             'product_number' => null,
-            'remarks' => 'テストコードです',
+            'remarks' => '備考更新前',
+        ]);
+        
+        // 点検予定日のレコードが存在する場合
+        // ここでInspectionObserverのcreatedでedithistoryに$operation_type=storeで保存される
+        session(['operation_type' => 'store']);
+        $inspection = Inspection::factory()->create([
+            'item_id' => $item->id,
+            'inspection_scheduled_date' => '2024-09-05',
+            'status' => false
+        ]);
+        session()->forget('operation_type'); // セッションから'operation_type'を削除
+
+        // おそらくここでoperation_typeがなくてえらーになっている、InspectionObserverと見比べる
+        // 廃棄予定日のレコードが存在する場合
+        session(['operation_type' => 'store']);
+        $disposal = Disposal::factory()->create([
+            'item_id' => $item->id,
+            'disposal_scheduled_date' => '2024-09-15',
+        ]);
+        session()->forget('operation_type'); // セッションから'operation_type'を削除
+
+        $validData = [
+            'name' => '備品名更新後',
+            'category_id' => $category_after->id,
+            'image_file' => $this->fakeImage,
+            'stock' => 11,
+            'unit_id' => $units[1]->id,
+            'minimum_stock' => 3,
+            'notification' => 0,
+            'usage_status_id' => $usage_statuses[1]->id,
+            'end_user' => '山田',
+            'location_of_use_id' => $locations[1]->id,
+            'storage_location_id' => $locations[1]->id,
+            'acquisition_method_id' => $aquisition_methods[1]->id,
+            'acquisition_source' => '楽天',
+            'price' => 1000,
+            'date_of_acquisition' => '2024-09-02',
+            'manufacturer' => 'メーカー更新後',
+            'product_number' => '製品番号更新後',
+            'remarks' => '備考更新後',
             'inspection_scheduled_date' => '2024-09-10',
             'disposal_scheduled_date' => '2024-09-20',
             'edit_reason_id' => $edit_reasons->first()->id,
             'edit_reason_text' => 'あいうえおかきくけこ',
         ];
 
-
-        // 更新リクエストを送信
         $response = $this->from('items/'.$item->id.'/edit')
             ->put(route('items.update', $item), $validData);
-        $response->assertRedirect('items/'.$item->id); // 詳細画面にリダイレクトする
+        $response->assertRedirect(route('items.show', ['item' => $item]));
         $response->assertStatus(302);
 
-        // セッションデータが正しく設定されているか確認
-        // dd(Session::get('operation_type'));
-        $this->assertEquals('update', Session::get('operation_type'));
-
-        // モックが呼ばれているか確認
-        // $mock->shouldHaveReceived('resizeUpload')->once();
-
         $this->assertDatabaseHas('items', [
-            'name' => 'ペーパータオル',
-            'category_id' => $category->id,
-            // 'image1' => 'mocked_image.jpg',
-            'stock' => 10,
-            'unit_id' => $units->first()->id,
-            'minimum_stock' => 2,
-            'notification' => true,
-            'usage_status_id' => $usage_statuses->first()->id,
+            'name' => '備品名更新後',
+            'category_id' => $category_after->id,
+            'image1' => 'mocked_image.jpg',
+            'stock' => 11,
+            'unit_id' => $units[1]->id,
+            'minimum_stock' => 3,
+            'notification' => 0,
+            'usage_status_id' => $usage_statuses[1]->id,
             'end_user' => '山田',
-            'location_of_use_id' => $locations->first()->id,
-            'storage_location_id' => $locations->last()->id,
-            'acquisition_method_id' => $aquisition_methods->first()->id,
-            'acquisition_source' => 'Amazon',
-            'price' => 500,
-            'date_of_acquisition' => '2024-09-01',
-            'manufacturer' => null,
-            'product_number' => null,
-            'remarks' => 'テストコードです',
+            'location_of_use_id' => $locations[1]->id,
+            'storage_location_id' => $locations[1]->id,
+            'acquisition_method_id' => $aquisition_methods[1]->id,
+            'acquisition_source' => '楽天',
+            'price' => 1000,
+            'date_of_acquisition' => '2024-09-02',
+            'manufacturer' => 'メーカー更新後',
+            'product_number' => '製品番号更新後',
+            'remarks' => '備考更新後',
         ]);
 
-        // 更新されたことのチェック
+        // 更新されたことのチェック 同じレコードかどうか
         $item->refresh();
-        $this->assertSame('ペーパータオル', $item->name);
-        $this->assertSame($category->id, $item->category_id);
-        $this->assertSame(10, $item->stock);
-        $this->assertSame($units->first()->id, $item->unit_id);
-        $this->assertSame(2, $item->minimum_stock);
-        $this->assertSame(true, (bool) $item->notification);
-        $this->assertSame('山田', $item->end_user);
-        $this->assertSame($locations->first()->id, $item->location_of_use_id);
-        $this->assertSame($locations->last()->id, $item->storage_location_id);
-        $this->assertSame($aquisition_methods->first()->id, $item->acquisition_method_id);
-        $this->assertSame('Amazon', $item->acquisition_source);
-        $this->assertSame(500, $item->price);
-        $this->assertSame(null, $item->manufacturer);
-        $this->assertSame(null, $item->product_number);
-        $this->assertSame('テストコードです', $item->remarks);
-        
         $this->assertDatabaseCount('items', 1);
-
-        // $inspection->refresh();
+        $this->assertSame('備品名更新後', $item->name);
+        $this->assertSame($category_after->id, $item->category_id);
+        $this->assertSame('mocked_image.jpg', $item->image1);
+        $this->assertSame(11, $item->stock);
+        $this->assertSame($units[1]->id, $item->unit_id);
+        $this->assertSame(3, $item->minimum_stock);
+        $this->assertSame(false, (bool) $item->notification);
+        $this->assertSame($usage_statuses[1]->id, $item->usage_status_id);
+        $this->assertSame('山田', $item->end_user);
+        $this->assertSame($locations[1]->id, $item->location_of_use_id);
+        $this->assertSame($locations[1]->id, $item->storage_location_id);
+        $this->assertSame($aquisition_methods[1]->id, $item->acquisition_method_id);
+        $this->assertSame('楽天', $item->acquisition_source);
+        $this->assertSame(1000, $item->price);
+        $this->assertSame('2024-09-02', $item->date_of_acquisition);
+        $this->assertSame('メーカー更新後', $item->manufacturer);
+        $this->assertSame('製品番号更新後', $item->product_number);
+        $this->assertSame('備考更新後', $item->remarks);
+            
         // inspectionsテーブルに保存されているか確認
+        $inspection->refresh();
+        //2件、更新ではなく、新規にレコードが追加されている
+        $this->assertDatabaseCount('inspections', 1);
         $this->assertDatabaseHas('inspections', [
             'item_id' => $item->id,
             'inspection_scheduled_date' =>  '2024-09-10',
-            'status' => 0, //false
+            'status' => 0,
         ]);
 
         // disposalsテーブルに保存されているか確認
+        $disposal->refresh();
+        $this->assertDatabaseCount('disposals', 1);
         $this->assertDatabaseHas('disposals', [
             'item_id' => $item->id,
             'disposal_scheduled_date' => '2024-09-20',
         ]);
 
-        // ItemObserverのupdatedメソッドで保存される
-        // 更新されたカラムの分だけforeachを回すべきか
-        $this->assertDatabaseHas('edithistories', [
-            'edit_mode' => 'normal',
-            'operation_type' => 'update',
-            'item_id' => $item->id,
-            // 'edited_field' => $field,
-            // 'old_value' => $oldValue,
-            // 'new_value' => $newValue,
-            'edit_user' =>  $user->name ?? '',
-            'edit_reason_id' => $edit_reasons->first()->id, //プルダウン
-            'edit_reason_text' => 'あいうえおかきくけこ', //その他テキストエリア
+        dump(Edithistory::all()->toArray());
+
+        // 最初の準備で3件のデータ、の備品作成で1レコード、点検レコード更新で1レコード、廃棄レコード更新で1レコード
+        // 残りは更新した20件のデータの分
+        $this->assertDatabaseCount('edithistories', 23);
+
+        $fields = [
+            'name' => ['old_value' => '備品名変更前', 'new_value' => '備品名更新後'],
+            'category_id' => ['old_value' => $category_before->id, 'new_value' => $category_after->id],
+            'image1' => ['old_value' => null, 'new_value' => 'mocked_image.jpg'],
+            'stock' => ['old_value' => 10, 'new_value' => 11],
+            'unit_id' => ['old_value' => $units[0]->id, 'new_value' => $units[1]->id],
+            'minimum_stock' => ['old_value' => 2, 'new_value' => 3],
+            'notification' => ['old_value' => 1, 'new_value' => 0],
+            'usage_status_id' => ['old_value' => $usage_statuses[0]->id, 'new_value' => $usage_statuses[1]->id],
+            'end_user' => ['old_value' => '鈴木', 'new_value' => '山田'],
+            'location_of_use_id' => ['old_value' => $locations[0]->id, 'new_value' => $locations[1]->id],
+            'storage_location_id' => ['old_value' => $locations[0]->id, 'new_value' => $locations[1]->id],
+            'acquisition_method_id' => ['old_value' => $aquisition_methods[0]->id, 'new_value' => $aquisition_methods[1]->id],
+            'acquisition_source' => ['old_value' => 'Amazon', 'new_value' => '楽天'],
+            'price' => ['old_value' => 500, 'new_value' => 1000],
+            'date_of_acquisition' => ['old_value' => '2024-09-01', 'new_value' => '2024-09-02'],
+            'manufacturer' => ['old_value' => null, 'new_value' => 'メーカー更新後'],
+            'product_number' => ['old_value' => null, 'new_value' => '製品番号更新後'],
+            'remarks' => ['old_value' => '備考更新前', 'new_value' => '備考更新後'],
+            'inspection_scheduled_date' => ['old_value' => '2024-09-05', 'new_value' => '2024-09-10'],
+            'disposal_scheduled_date' => ['old_value' => '2024-09-15', 'new_value' => '2024-09-20']
+        ];
+        
+        foreach ($fields as $field => $values) {
+            $this->assertDatabaseHas('edithistories', [
+                'edit_mode' => 'normal',
+                'operation_type' => 'update',
+                'item_id' => $item->id,
+                'edited_field' => $field,
+                'old_value' => $values['old_value'],
+                'new_value' => $values['new_value'],
+                'edit_user' => $user->name ?? '',
+                'edit_reason_id' => $edit_reasons->first()->id,
+                'edit_reason_text' => 'あいうえおかきくけこ',
+            ]);
+        }
+    }
+
+    /** @test */
+    function 備品編集画面で備品を編集更新できる_点検予定日のレコードが無いかつ廃棄予定日のレコードが無い_画像アップロードはモック()
+    {   
+        // 世界の構築
+        $category_after = Category::factory()->create([
+            'id' => 1,
+            'name' => '消耗品'
+        ]);
+        $category_before = Category::factory()->create([
+            'id' => 2,
+            'name' => 'IT機器'
+        ]);
+        $categories = Category::factory()->count(9)->create(); //残りのカテゴリ
+        $categories = $categories->concat($category_before)->concat($category_after); //全てのカテゴリ
+        $units = Unit::factory()->count(10)->create();
+        $usage_statuses = UsageStatus::factory()->count(2)->create();
+        $locations = Location::factory()->count(12)->create();
+        $aquisition_methods = AcquisitionMethod::factory()->count(6)->create();
+        $edit_reasons = EditReason::factory()->count(5)->create();
+
+        // adminユーザーを作成
+        $user = User::factory()->role(1)->create();
+        $this->actingAs($user);
+
+        // 変更前の備品を作成
+        // ここでItemObserverのcreatedでedithistoryに$operation_type=storeで保存される
+        $item = Item::factory()->create([
+            'name' => '備品名変更前',
+            'category_id' => $category_before->id,
+            'image1' => null,
+            'stock' => 10,
+            'unit_id' => $units[0]->id,
+            'minimum_stock' => 2,
+            'notification' => 1, //trueだとパスしない
+            'usage_status_id' => $usage_statuses[0]->id,
+            'end_user' => '鈴木',
+            'location_of_use_id' => $locations[0]->id,
+            'storage_location_id' => $locations[0]->id,
+            'acquisition_method_id' => $aquisition_methods[0]->id,
+            'acquisition_source' => 'Amazon',
+            'price' => 500,
+            'date_of_acquisition' => '2024-09-01',
+            'manufacturer' => null,
+            'product_number' => null,
+            'remarks' => '備考更新前',
         ]);
 
-        // 作成したデータを19項目の更新がある
-        $this->assertDatabaseCount('edithistories', 19);
+        $validData = [
+            'name' => '備品名更新後',
+            'category_id' => $category_after->id,
+            'image_file' => $this->fakeImage,
+            'stock' => 11,
+            'unit_id' => $units[1]->id,
+            'minimum_stock' => 3,
+            'notification' => 0,
+            'usage_status_id' => $usage_statuses[1]->id,
+            'end_user' => '山田',
+            'location_of_use_id' => $locations[1]->id,
+            'storage_location_id' => $locations[1]->id,
+            'acquisition_method_id' => $aquisition_methods[1]->id,
+            'acquisition_source' => '楽天',
+            'price' => 1000,
+            'date_of_acquisition' => '2024-09-02',
+            'manufacturer' => 'メーカー更新後',
+            'product_number' => '製品番号更新後',
+            'remarks' => '備考更新後',
+            'inspection_scheduled_date' => '2024-09-10',
+            'disposal_scheduled_date' => '2024-09-20',
+            'edit_reason_id' => $edit_reasons->first()->id,
+            'edit_reason_text' => 'あいうえおかきくけこ',
+        ];
+
+        $response = $this->from('items/'.$item->id.'/edit')
+            ->put(route('items.update', $item), $validData);
+        $response->assertRedirect(route('items.show', ['item' => $item]));
+        $response->assertStatus(302);
+
+        $this->assertDatabaseHas('items', [
+            'name' => '備品名更新後',
+            'category_id' => $category_after->id,
+            'image1' => 'mocked_image.jpg',
+            'stock' => 11,
+            'unit_id' => $units[1]->id,
+            'minimum_stock' => 3,
+            'notification' => 0,
+            'usage_status_id' => $usage_statuses[1]->id,
+            'end_user' => '山田',
+            'location_of_use_id' => $locations[1]->id,
+            'storage_location_id' => $locations[1]->id,
+            'acquisition_method_id' => $aquisition_methods[1]->id,
+            'acquisition_source' => '楽天',
+            'price' => 1000,
+            'date_of_acquisition' => '2024-09-02',
+            'manufacturer' => 'メーカー更新後',
+            'product_number' => '製品番号更新後',
+            'remarks' => '備考更新後',
+        ]);
+
+        // 更新されたことのチェック 同じレコードかどうか
+        $item->refresh();
+        $this->assertDatabaseCount('items', 1);
+        $this->assertSame('備品名更新後', $item->name);
+        $this->assertSame($category_after->id, $item->category_id);
+        $this->assertSame('mocked_image.jpg', $item->image1);
+        $this->assertSame(11, $item->stock);
+        $this->assertSame($units[1]->id, $item->unit_id);
+        $this->assertSame(3, $item->minimum_stock);
+        $this->assertSame(false, (bool) $item->notification);
+        $this->assertSame($usage_statuses[1]->id, $item->usage_status_id);
+        $this->assertSame('山田', $item->end_user);
+        $this->assertSame($locations[1]->id, $item->location_of_use_id);
+        $this->assertSame($locations[1]->id, $item->storage_location_id);
+        $this->assertSame($aquisition_methods[1]->id, $item->acquisition_method_id);
+        $this->assertSame('楽天', $item->acquisition_source);
+        $this->assertSame(1000, $item->price);
+        $this->assertSame('2024-09-02', $item->date_of_acquisition);
+        $this->assertSame('メーカー更新後', $item->manufacturer);
+        $this->assertSame('製品番号更新後', $item->product_number);
+        $this->assertSame('備考更新後', $item->remarks);
+        
+        
+        // inspectionsテーブルに保存されているか確認
+        $this->assertDatabaseCount('inspections', 1);
+        $this->assertDatabaseHas('inspections', [
+            'item_id' => $item->id,
+            'inspection_scheduled_date' =>  '2024-09-10',
+            'status' => 0,
+        ]);
+
+        // disposalsテーブルに保存されているか確認
+        $this->assertDatabaseCount('disposals', 1);
+        $this->assertDatabaseHas('disposals', [
+            'item_id' => $item->id,
+            'disposal_scheduled_date' => '2024-09-20',
+        ]);
+
+        dump(Edithistory::all()->toArray());
+
+        // 最初の準備で1件、備品作成で1レコード
+        // 残りは更新した20件のデータの分
+        $this->assertDatabaseCount('edithistories', 21);
+
+        $fields = [
+            'name' => ['old_value' => '備品名変更前', 'new_value' => '備品名更新後'],
+            'category_id' => ['old_value' => $category_before->id, 'new_value' => $category_after->id],
+            'image1' => ['old_value' => null, 'new_value' => 'mocked_image.jpg'],
+            'stock' => ['old_value' => 10, 'new_value' => 11],
+            'unit_id' => ['old_value' => $units[0]->id, 'new_value' => $units[1]->id],
+            'minimum_stock' => ['old_value' => 2, 'new_value' => 3],
+            'notification' => ['old_value' => 1, 'new_value' => 0],
+            'usage_status_id' => ['old_value' => $usage_statuses[0]->id, 'new_value' => $usage_statuses[1]->id],
+            'end_user' => ['old_value' => '鈴木', 'new_value' => '山田'],
+            'location_of_use_id' => ['old_value' => $locations[0]->id, 'new_value' => $locations[1]->id],
+            'storage_location_id' => ['old_value' => $locations[0]->id, 'new_value' => $locations[1]->id],
+            'acquisition_method_id' => ['old_value' => $aquisition_methods[0]->id, 'new_value' => $aquisition_methods[1]->id],
+            'acquisition_source' => ['old_value' => 'Amazon', 'new_value' => '楽天'],
+            'price' => ['old_value' => 500, 'new_value' => 1000],
+            'date_of_acquisition' => ['old_value' => '2024-09-01', 'new_value' => '2024-09-02'],
+            'manufacturer' => ['old_value' => null, 'new_value' => 'メーカー更新後'],
+            'product_number' => ['old_value' => null, 'new_value' => '製品番号更新後'],
+            'remarks' => ['old_value' => '備考更新前', 'new_value' => '備考更新後'],
+            'inspection_scheduled_date' => ['old_value' => null, 'new_value' => '2024-09-10'],
+            'disposal_scheduled_date' => ['old_value' => null, 'new_value' => '2024-09-20']
+        ];
+        
+        foreach ($fields as $field => $values) {
+            $this->assertDatabaseHas('edithistories', [
+                'edit_mode' => 'normal',
+                'operation_type' => 'update',
+                'item_id' => $item->id,
+                'edited_field' => $field,
+                'old_value' => $values['old_value'],
+                'new_value' => $values['new_value'],
+                'edit_user' => $user->name ?? '',
+                'edit_reason_id' => $edit_reasons->first()->id,
+                'edit_reason_text' => 'あいうえおかきくけこ',
+            ]);
+        }
     }
 }
