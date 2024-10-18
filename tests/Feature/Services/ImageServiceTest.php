@@ -8,6 +8,9 @@ use Tests\TestCase;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 use App\Services\ImageService;
+use Intervention\Image\ImageManager;
+// use Intervention\Image\Drivers\Gd\Driver;
+use Intervention\Image\Drivers\Imagick\Driver;
 
 class ImageServiceTest extends TestCase
 {
@@ -40,5 +43,24 @@ class ImageServiceTest extends TestCase
         // dd($fileNameToStore);
 
         Storage::disk('public')->assertExists('profile/'.$fileNameToStore);
+    }
+
+    /** @test */
+    function InterventionImageテスト()
+    {
+        // テスト用の画像ファイルを準備
+        Storage::fake('public');
+        $image = UploadedFile::fake()->image('test_image.jpg');
+
+        try {
+            // 画像を処理するコード
+            $manager = new ImageManager(new Driver());
+            $image = $manager->read($image->getPathname());
+        } catch (\Intervention\Image\Exception\NotReadableException $e) {
+            Log::error('Image not readable: ' . $e->getMessage());
+            $this->fail('Image processing failed: ' . $e->getMessage());
+        }
+    
+        $this->assertTrue(true);
     }
 }

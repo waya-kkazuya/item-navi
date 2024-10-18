@@ -22,6 +22,7 @@ use Faker\Factory as FakerFactory;
 use Inertia\Testing\AssertableInertia as Assert;
 use Mockery;
 use App\Services\ManagementIdService;
+use App\Services\QrCodeService;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 use Illuminate\Database\Console\DumpCommand;
@@ -41,50 +42,41 @@ class StoreMethodTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-
         $this->faker = FakerFactory::create();
-    }
 
-    /** @test */
-    function InterventionImageテスト()
-    {
-        // テスト用の画像ファイルを準備
-        Storage::fake('public');
-        $image = UploadedFile::fake()->image('test_image.jpg');
+        // フェイクの画像ファイルを作成
+        $this->fakeImage = UploadedFile::fake()->image('test_image.jpg');
 
-        try {
-            // 画像を処理するコード
-            $manager = new ImageManager(new Driver());
-            $image = $manager->read($image->getPathname());
-        } catch (\Intervention\Image\Exception\NotReadableException $e) {
-            Log::error('Image not readable: ' . $e->getMessage());
-            $this->fail('Image processing failed: ' . $e->getMessage());
-        }
-    
-        $this->assertTrue(true);
+        // ImageServiceのモックを作成
+        $this->imageService = Mockery::mock(ImageService::class);
+        $this->imageService->shouldReceive('resizeUpload')
+            ->once()
+            ->with(Mockery::on(function ($arg) {
+                return $arg instanceof UploadedFile && $arg->getClientOriginalName() === 'test_image.jpg';
+            }))
+            ->andReturn('mocked_image.jpg');
+        // サービスコンテナにモックを登録
+        $this->app->instance(ImageService::class, $this->imageService);
     }
 
     /** @test */
     function 備品新規登録画面で備品を登録できる、消耗品の時()
     {
-        // ※注意
         // 備品が新規作成された裏でItemObserverによってedithistoriesテーブルにもデータが保存される
 
-        //世界の構築が不十分
-        // dump(Category::factory()->create(['id' => 1]));
         $category = Category::factory()->create([
             'id' => 1,
             'name' => '消耗品'
         ]);
-        // $categories = Category::factory()->count(11)->create();
+        $categories = Category::factory()->count(10)->create(); //残りのカテゴリ
+        $categories = $categories->concat($category); //全てのカテゴリ
         $units = Unit::factory()->count(10)->create();
         $usage_statuses = UsageStatus::factory()->count(2)->create();
         $locations = Location::factory()->count(12)->create();
         $aquisition_methods = AcquisitionMethod::factory()->count(6)->create();
 
-        // adminユーザーを作成
-        $user = User::factory()->role(1)->create();
-        $this->actingAs($user);   
+        $user = User::factory()->role(1)->create(); //admin権限
+        $this->actingAs($user);
 
         // モックを作成
         $mock = Mockery::mock(ManagementIdService::class);
@@ -95,16 +87,10 @@ class StoreMethodTest extends TestCase
         // サービスコンテナで呼び出す
         $this->instance(ManagementIdService::class, $mock);
 
-        // テスト用の画像ファイルを準備
-        // Storage::fake('public');
-        // $fakeimage = UploadedFile::fake()->image('test_image.jpg');
-
-        // ※注意
-        // フロントから送られてくるデータを適切に模倣しないといけいない
         $validData = [
             'name' => 'ペーパータオル',
             'category_id' => $category->id,
-            // 'image_file' => $image,
+            'image_file' => $this->fakeImage,
             'image1' => null,
             'stock' => 10,
             'unit_id' => $units->first()->id,
@@ -126,31 +112,20 @@ class StoreMethodTest extends TestCase
             'disposal_scheduled_date' => '2024-09-20'
         ];
 
-        // $response = $this->from('items/create')->post('items', $validData);
-        $response = $this->from('items/create')->post(route('items.store'), $validData);
-        // ステータスコード
-        // dd($response->status());
-        // レスポンスの内容を確認
-        // dd($response->getContent());
+        $response = $this->from('items/create')
+            ->post(route('items.store'), $validData);
+        
+        // dd($response->status()); // ステータスコード
+        // dd($response->getContent()); // レスポンスの内容を確認
+        
         $response->assertStatus(302); 
         $response->assertRedirect('items');
 
-
-        // 仮のディスクに保存されたすべてのファイルの一覧を取得
-        // $allFiles = Storage::disk('public')->allFiles();
-        // echo "仮のディスクに保存されたファイル一覧:\n";
-        // print_r($allFiles);
-
-        // dd($image->hashName());
-        // データベースに画像ファイルが保存されていることを確認
-        // Storage::disk('public')->assertExists('items/'.$image->hashName());
-
-        // $this->assertDatabaseHas('items', array_merge($validData, ['management_id' => 'CO-1111']));
         $this->assertDatabaseHas('items', [
             'management_id' => 'CO-1111',
             'name' => 'ペーパータオル',
             'category_id' => $category->id,
-            // 'image1' => 'items/'.$image->hashName(),
+            'image1' => 'mocked_image.jpg',
             'stock' => 10,
             'unit_id' => $units->first()->id,
             'minimum_stock' => 2,
@@ -175,21 +150,21 @@ class StoreMethodTest extends TestCase
 
         // inspectionsテーブルに保存されているか確認
         $this->assertDatabaseHas('inspections', [
-            'item_id' => Item::where('management_id', 'CO-1111')->first()->id,
+            'item_id' => $item->id,
             'inspection_scheduled_date' =>  '2024-09-10',
         ]);
 
         // disposalsテーブルに保存されているか確認
         $this->assertDatabaseHas('disposals', [
-            'item_id' => Item::where('management_id', 'CO-1111')->first()->id,
+            'item_id' => $item->id,
             'disposal_scheduled_date' => '2024-09-20',
         ]);
 
-        // その後ItemObserverによるedithistoriesテーブルへの保存をテスト
+        // その後ItemObserverによるedithistoriesテーブルへの保存をアサ―ト
         $this->assertDatabaseHas('edithistories', [
             'edit_mode' => 'normal',
             'operation_type' => 'store',
-            'item_id' => Item::where('management_id', 'CO-1111')->first()->id,
+            'item_id' => $item->id,
             'edited_field' => null,
             'old_value' => null,
             'new_value' => null,
@@ -200,23 +175,20 @@ class StoreMethodTest extends TestCase
     /** @test */
     function 備品新規登録画面で備品を登録できる、消耗品以外の時()
     {
-        // ※注意
         // 備品が新規作成された裏でItemObserverによってedithistoriesテーブルにもデータが保存される
 
-        //世界の構築が不十分
-        // dump(Category::factory()->create(['id' => 1]));
         $category = Category::factory()->create([
             'id' => 2,
             'name' => 'IT機器'
         ]);
-        // $categories = Category::factory()->count(11)->create();
+        $categories = Category::factory()->count(10)->create(); //残りのカテゴリ
+        $categories = $categories->concat($category); //全てのカテゴリ
         $units = Unit::factory()->count(10)->create();
         $usage_statuses = UsageStatus::factory()->count(2)->create();
         $locations = Location::factory()->count(12)->create();
         $aquisition_methods = AcquisitionMethod::factory()->count(6)->create();
 
-        // adminユーザーを作成
-        $user = User::factory()->role(1)->create();
+        $user = User::factory()->role(1)->create(); //admin権限
         $this->actingAs($user);   
 
         // モックを作成
@@ -228,12 +200,10 @@ class StoreMethodTest extends TestCase
         // サービスコンテナで呼び出す
         $this->instance(ManagementIdService::class, $mock);
 
-
         $validData = [
-            // 'management_id' => 'CO-1111',
             'name' => 'ペーパータオル',
             'category_id' => $category->id,
-            'image1' => null,
+            'image_file' => $this->fakeImage,
             'stock' => 10,
             'unit_id' => $units->first()->id,
             'minimum_stock' => 2,
@@ -254,24 +224,19 @@ class StoreMethodTest extends TestCase
             'disposal_scheduled_date' => '2024-09-20'
         ];
 
-        // dump(array_merge($validData, $inspectionData, $disposalData));
-
-        // 新規作成時items
-        // $response = $this->from('items/create')->post('items', array_merge($validData, $inspectionData, $disposalData));
-        // $response = $this->from('items/create')->post('items', $validData);
-        $response = $this->from('items/create')->post(route('items.store'), $validData);
+        $response = $this->from('items/create')
+            ->post(route('items.store'), $validData);
 
         $response->assertRedirect('items');
 
-        // $this->assertDatabaseHas('items', array_merge($validData, ['management_id' => 'CO-1111']));
         $this->assertDatabaseHas('items', [
             'management_id' => 'CO-1111',
             'name' => 'ペーパータオル',
             'category_id' => $category->id,
-            'image1' => null,
+            'image1' => 'mocked_image.jpg',
             'stock' => 10,
             'unit_id' => $units->first()->id,
-            'minimum_stock' => null,
+            'minimum_stock' => null, //IT機器なのでminimum_stockはnull
             'notification' => true,
             'usage_status_id' => $usage_statuses->first()->id,
             'end_user' => '山田',
@@ -290,16 +255,15 @@ class StoreMethodTest extends TestCase
         $item = Item::where('management_id', 'CO-1111')->first();
         dump(Item::where('management_id', 'CO-1111')->first()->id);
 
-
         // inspectionsテーブルに保存されているか確認
         $this->assertDatabaseHas('inspections', [
-            'item_id' => Item::where('management_id', 'CO-1111')->first()->id,
+            'item_id' => $item->id,
             'inspection_scheduled_date' =>  '2024-09-10',
         ]);
 
         // disposalsテーブルに保存されているか確認
         $this->assertDatabaseHas('disposals', [
-            'item_id' => Item::where('management_id', 'CO-1111')->first()->id,
+            'item_id' => $item->id,
             'disposal_scheduled_date' => '2024-09-20',
         ]);
 
@@ -307,12 +271,11 @@ class StoreMethodTest extends TestCase
         $this->assertDatabaseHas('edithistories', [
             'edit_mode' => 'normal',
             'operation_type' => 'store',
-            'item_id' => Item::where('management_id', 'CO-1111')->first()->id,
+            'item_id' => $item->id,
             'edited_field' => null,
             'old_value' => null,
             'new_value' => null,
             'edit_user' => Auth::user()->name,
         ]);
     }
-
 }
