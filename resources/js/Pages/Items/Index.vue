@@ -10,7 +10,6 @@ import { useWindowSize } from '@/hooks/useWindowSize';
 
 const { width } = useWindowSize();
 
-
 const props = defineProps({
   items: Object,
   categories: Array,
@@ -128,7 +127,6 @@ const restoreItem = (id) => {
     showDisposal.value = false;
   }
 }
-
 </script>
 
 <template>
@@ -372,8 +370,8 @@ const restoreItem = (id) => {
                                     <td class="border-b-2 border-gray-200 px-4 py-2 text-center text-xs md:text-base" :class="showDisposal ? 'bg-red-100' : ''">{{ item.acquisition_source }}</td>
                                     <td class="border-b-2 border-gray-200 px-4 py-2 text-center text-xs md:text-base" :class="showDisposal ? 'bg-red-100' : ''">{{ item.price }}円</td>
                                     <td class="border-b-2 border-gray-200 px-4 py-2 text-center text-xs md:text-base" :class="showDisposal ? 'bg-red-100' : ''">{{ item.date_of_acquisition }}</td>
-                                    <td class="border-b-2 border-gray-200 px-4 py-2 text-center text-xs md:text-base" :class="showDisposal ? 'bg-red-100' : ''">{{ item.pending_inspection_date ?? '予定なし'  }}</td>
-                                    <td class="border-b-2 border-gray-200 px-4 py-2 text-center text-xs md:text-base" :class="showDisposal ? 'bg-red-100' : ''">{{ item.disposal ? item.disposal.scheduled_date : '予定なし' }}</td>
+                                    <td class="border-b-2 border-gray-200 px-4 py-2 text-center text-xs md:text-base" :class="showDisposal ? 'bg-red-100' : ''">{{ item.inspection_scheduled_date ?? '予定なし'  }}</td>
+                                    <td class="border-b-2 border-gray-200 px-4 py-2 text-center text-xs md:text-base" :class="showDisposal ? 'bg-red-100' : ''">{{ item.disposal ? item.disposal.disposal_scheduled_date : '予定なし' }}</td>
                                     <td class="border-b-2 border-gray-200 px-4 py-2 text-center text-xs md:text-base" :class="showDisposal ? 'bg-red-100' : ''">{{ item.manufacturer }}</td>
                                     <td class="border-b-2 border-gray-200 px-4 py-2 text-center text-xs md:text-base" :class="showDisposal ? 'bg-red-100' : ''">{{ item.product_number }}</td>
                                     <td class="border-b-2 border-gray-200 px-4 py-2 text-center text-xs md:text-base" :class="showDisposal ? 'bg-red-100' : ''">{{ item.remarks ?? '' }}</td>

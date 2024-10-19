@@ -134,20 +134,21 @@ class ItemController extends Controller
                 $item->image_path1 = asset('storage/items/No_Image.jpg');
             } else {
                 // image1の画像名のファイルが存在するかチェックする
-                // if(Storage::exists('public/items/' . $item->image1)) {
                 if(Storage::disk('public')->exists('items/' . $item->image1)) {
-                    // 画像ファイルが存在する場合
                     \Log::info(' 画像ファイルが存在する場合');
                     $item->image_path1 = asset('storage/items/' . $item->image1);
                 } else {
-                    // 画像ファイルが存在しない場合
                     \Log::info(' 画像ファイルが存在しない場合');
                     $item->image_path1 = asset('storage/items/No_Image.jpg');
                 }
             }
-            // pending_inspection_dateの設定
-            $item->pending_inspection_date = $item->inspections->where('status', false)->sortBy('scheduled_date')->first()->scheduled_date ?? null;
+            return $item;
+        });
 
+        $items->getCollection()->transform(function ($item) {
+            // inspection_scheduled_dateを追加
+            $inspection = $item->inspections->where('status', false)->sortBy('inspection_scheduled_date')->first();
+            $item->inspection_scheduled_date = $inspection ? $inspection->inspection_scheduled_date : null;
             return $item;
         });
 
