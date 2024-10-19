@@ -42,6 +42,6 @@ class HistoryInspectionsUseCase
             ->orderBy('inspection_scheduled_date', 'asc')
             ->paginate(10);
 
-        return $historyInspections->setCollection($this->imageService->setImagePath($historyInspections->getCollection()));
+        return $historyInspections->setCollection($this->imageService->setImagePathInCollection($historyInspections->getCollection()));
     }
 }

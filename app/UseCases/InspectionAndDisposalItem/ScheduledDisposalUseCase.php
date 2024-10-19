@@ -48,6 +48,6 @@ class ScheduledDisposalUseCase
             })
             ->paginate(10);
 
-        return $scheduledDisposals->setCollection($this->imageService->setImagePath($scheduledDisposals->getCollection()));
+        return $scheduledDisposals->setCollection($this->imageService->setImagePathInCollection($scheduledDisposals->getCollection()));
     }
 }
