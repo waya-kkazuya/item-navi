@@ -50,18 +50,21 @@ class ShowMethodTest extends TestCase
             'acquisition_method_id' => $aquisition_methods->random()->id
         ]);
 
-        // カラムの値は上書きできる
-        $pendingInspection = Inspection::factory()->create([
-            'item_id' => $item->id,
-            'status' => false //点検予定
-        ]);
 
-        $previousInspection = Inspection::factory()->create([
-            'item_id' => $item->id,
-            'status' => true //点検実行済み
-        ]);
-
-
+        $pendingInspection = Inspection::withoutEvents(function () use ($item) {
+            return Inspection::factory()->create([
+                'item_id' => $item->id,
+                'status' => false, // 点検予定
+            ]);
+        });
+        
+        $previousInspection = Inspection::withoutEvents(function () use ($item) {
+            return Inspection::factory()->create([
+                'item_id' => $item->id,
+                'status' => true, // 点検実行済み
+            ]);
+        });
+        
         $user = User::factory()->role(1)->create();
         $this->actingAs($user);
 

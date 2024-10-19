@@ -25,10 +25,6 @@ class ItemTest extends TestCase
     {
         $item = Item::factory()->create();
 
-        dump($item);
-        dump($item->category_id);
-
-
         $this->assertInstanceOf(Category::class, $item->category);
     }
 
@@ -77,15 +73,24 @@ class ItemTest extends TestCase
     {
         $item = Item::factory()->create();
 
+        Inspection::withoutEvents(function () use ($item) {
+            $inspections = Inspection::factory()->count(2)->create(['item_id' => $item->id]);
+        });
+
         // hasMany1対多なので、Inspectionのインスタンスが単体で返ってくるわけではない
         $this->assertInstanceOf(Collection::class, $item->inspections);
+        $this->assertInstanceOf(Inspection::class, $item->inspections[0]);
+        $this->assertInstanceOf(Inspection::class, $item->inspections[1]);
     }
 
     /** @test */
     function disposalリレーションを返す()
     {
         $item = Item::factory()->create();
-        $disposal = Disposal::factory()->create(['item_id' => $item->id]);
+
+        Disposal::withoutEvents(function () use ($item) {
+            $disposal = Disposal::factory()->create(['item_id' => $item->id]);
+        });
 
         $this->assertInstanceOf(Disposal::class, $item->disposal);
     }

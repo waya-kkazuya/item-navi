@@ -13,7 +13,7 @@ use App\Models\Disposal;
 use Inertia\Testing\AssertableInertia as Assert;
 use Carbon\Carbon;
 
-class indexMethodTest extends TestCase
+class IndexMethodTest extends TestCase
 {
     use RefreshDatabase;
 
@@ -30,25 +30,30 @@ class indexMethodTest extends TestCase
         // DBにデータを構築
         // Inspectionのデータ
         // 点検予定日
-        $scheduledInspections = Inspection::factory()->count(10)->create([
-            'status' => 0, //点検がされていない
-        ]);
+        $scheduledInspections = Inspection::withoutEvents(function () {
+            return Inspection::factory()->count(10)->create(['status' => 0]); // 点検がされていない
+        });
+
         // 点検履歴
-        $historyInspections = Inspection::factory()->count(10)->create([
-            'status' => 1, //点検済み
-        ]);
+        $historyInspections = Inspection::withoutEvents(function () {
+            return Inspection::factory()->count(10)->create(['status' => 1]); // 点検済み
+        });
 
         // Disposalのデータ
         // 廃棄予定日
-        $scheduledDisposals = Disposal::factory()->count(10)->create([
-            'item_id' => Item::factory()->create(['deleted_at' => null])->id, //廃棄されていない
-            'disposal_scheduled_date' => Carbon::today()->addWeek(),
-        ]);
-        // 廃棄履歴 
-        $historyDisposals = Disposal::factory()->count(10)->create([
-            'item_id' => Item::factory()->create(['deleted_at' => Carbon::now()])->id, //廃棄済み
-        ]);
+        $scheduledDisposals = Disposal::withoutEvents(function () {
+            return Disposal::factory()->count(10)->create([
+                'item_id' => Item::factory()->create(['deleted_at' => null])->id, // 廃棄されていない
+                'disposal_scheduled_date' => Carbon::today()->addWeek(),
+            ]);
+        });
 
+        // 廃棄履歴
+        $historyDisposals = Disposal::withoutEvents(function () {
+            return Disposal::factory()->count(10)->create([
+                'item_id' => Item::factory()->create(['deleted_at' => Carbon::now()])->id, // 廃棄済み
+            ]);
+        });
 
         // adminユーザーを作成
         $user = User::factory()->role(1)->create();

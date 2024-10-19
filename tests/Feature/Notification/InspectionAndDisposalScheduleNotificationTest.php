@@ -21,33 +21,34 @@ class InspectionAndDisposalScheduleNotificationTest extends TestCase
     function InspectionScheduleNotificationのテスト()
     {
         // 通知を送るすべてのタイミングの点検日を準備
-        $inspections = [
-            Inspection::factory()->create([
-                'item_id' => Item::factory()->create(['name' => 'テストアイテム1'])->id,
-                'inspection_scheduled_date' => Carbon::today()->addWeeks(4),
-            ]),
-            Inspection::factory()->create([
-                'item_id' => Item::factory()->create(['name' => 'テストアイテム2'])->id,
-                'inspection_scheduled_date' => Carbon::today()->addWeeks(2),
-            ]),
-            Inspection::factory()->create([
-                'item_id' => Item::factory()->create(['name' => 'テストアイテム3'])->id,
-                'inspection_scheduled_date' => Carbon::today()->addWeek(),
-            ]),
-            Inspection::factory()->create([
-                'item_id' => Item::factory()->create(['name' => 'テストアイテム4'])->id,
-                'inspection_scheduled_date' => Carbon::today()->addDays(3),
-            ]),
-            Inspection::factory()->create([
-                'item_id' => Item::factory()->create(['name' => 'テストアイテム5'])->id,
-                'inspection_scheduled_date' => Carbon::today()->addDay(),
-            ]),
-            Inspection::factory()->create([
-                'item_id' => Item::factory()->create(['name' => 'テストアイテム6'])->id,
-                'inspection_scheduled_date' => Carbon::today(),
-            ]),
-        ];
-    
+        $inspections = Inspection::withoutEvents(function () {
+            return [
+                Inspection::factory()->create([
+                    'item_id' => Item::factory()->create(['name' => 'テストアイテム1'])->id,
+                    'inspection_scheduled_date' => Carbon::today()->addWeeks(4),
+                ]),
+                Inspection::factory()->create([
+                    'item_id' => Item::factory()->create(['name' => 'テストアイテム2'])->id,
+                    'inspection_scheduled_date' => Carbon::today()->addWeeks(2),
+                ]),
+                Inspection::factory()->create([
+                    'item_id' => Item::factory()->create(['name' => 'テストアイテム3'])->id,
+                    'inspection_scheduled_date' => Carbon::today()->addWeek(),
+                ]),
+                Inspection::factory()->create([
+                    'item_id' => Item::factory()->create(['name' => 'テストアイテム4'])->id,
+                    'inspection_scheduled_date' => Carbon::today()->addDays(3),
+                ]),
+                Inspection::factory()->create([
+                    'item_id' => Item::factory()->create(['name' => 'テストアイテム5'])->id,
+                    'inspection_scheduled_date' => Carbon::today()->addDay(),
+                ]),
+                Inspection::factory()->create([
+                    'item_id' => Item::factory()->create(['name' => 'テストアイテム6'])->id,
+                    'inspection_scheduled_date' => Carbon::today(),
+                ]),
+            ];
+        });
         // 送信するユーザーを世界に構築
         $users = User::factory()->createMany([
             ['role' => 1],
@@ -83,33 +84,35 @@ class InspectionAndDisposalScheduleNotificationTest extends TestCase
     /** @test */
     function DisposalScheduleNotificationのテスト()
     {
-        // 通知を送るすべてのタイミングの点検日を
-        $disposals = [
-            Disposal::factory()->create([
-                'item_id' => Item::factory()->create(['name' => 'テストアイテム1'])->id,
-                'disposal_scheduled_date' => Carbon::today()->addWeeks(4),
-            ]),
-            Disposal::factory()->create([
-                'item_id' => Item::factory()->create(['name' => 'テストアイテム2'])->id,
-                'disposal_scheduled_date' => Carbon::today()->addWeeks(2),
-            ]),
-            Disposal::factory()->create([
-                'item_id' => Item::factory()->create(['name' => 'テストアイテム3'])->id,
-                'disposal_scheduled_date' => Carbon::today()->addWeek(),
-            ]),
-            Disposal::factory()->create([
-                'item_id' => Item::factory()->create(['name' => 'テストアイテム4'])->id,
-                'disposal_scheduled_date' => Carbon::today()->addDays(3),
-            ]),
-            Disposal::factory()->create([
-                'item_id' => Item::factory()->create(['name' => 'テストアイテム5'])->id,
-                'disposal_scheduled_date' => Carbon::today()->addDay(),
-            ]),
-            Disposal::factory()->create([
-                'item_id' => Item::factory()->create(['name' => 'テストアイテム6'])->id,
-                'disposal_scheduled_date' => Carbon::today(),
-            ]),
-        ];
+        // 通知を送るすべてのタイミングの点検日を作成、DisposalObserverは無効化
+        $disposals = Disposal::withoutEvents(function () {
+            return [
+                Disposal::factory()->create([
+                    'item_id' => Item::factory()->create(['name' => 'テストアイテム1'])->id,
+                    'disposal_scheduled_date' => Carbon::today()->addWeeks(4),
+                ]),
+                Disposal::factory()->create([
+                    'item_id' => Item::factory()->create(['name' => 'テストアイテム2'])->id,
+                    'disposal_scheduled_date' => Carbon::today()->addWeeks(2),
+                ]),
+                Disposal::factory()->create([
+                    'item_id' => Item::factory()->create(['name' => 'テストアイテム3'])->id,
+                    'disposal_scheduled_date' => Carbon::today()->addWeek(),
+                ]),
+                Disposal::factory()->create([
+                    'item_id' => Item::factory()->create(['name' => 'テストアイテム4'])->id,
+                    'disposal_scheduled_date' => Carbon::today()->addDays(3),
+                ]),
+                Disposal::factory()->create([
+                    'item_id' => Item::factory()->create(['name' => 'テストアイテム5'])->id,
+                    'disposal_scheduled_date' => Carbon::today()->addDay(),
+                ]),
+                Disposal::factory()->create([
+                    'item_id' => Item::factory()->create(['name' => 'テストアイテム6'])->id,
+                    'disposal_scheduled_date' => Carbon::today(),
+                ]),
+            ];
+        });
 
         // 送信するユーザーを世界に構築
         $users = User::factory()->createMany([
