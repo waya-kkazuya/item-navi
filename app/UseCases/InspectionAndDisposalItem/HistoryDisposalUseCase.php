@@ -38,7 +38,6 @@ class HistoryDisposalUseCase
             'details',
             'created_at'
         ];
-
         
         $historyDisposals = Disposal::with($disposalWithRelations)
             ->select($disposalSelectFields)
@@ -48,6 +47,6 @@ class HistoryDisposalUseCase
             })
             ->paginate(10);
 
-        return $historyDisposals->setCollection($this->imageService->setImagePath($historyDisposals->getCollection()));
+        return $historyDisposals->setCollection($this->imageService->setImagePathInCollection($historyDisposals->getCollection()));
     }
 }

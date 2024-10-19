@@ -72,7 +72,7 @@ class ImageService
   }
 
 
-  public function setImagePath($collection)
+  public function setImagePathInCollection($collection)
   {
     return $collection->transform(function ($record) {
       if (is_null($record->item->image1)) {
@@ -86,5 +86,19 @@ class ImageService
       }
       return $record;
     });
+  }
+
+  public function setImagePathToObject($item)
+  {
+    if(is_null($item->image1)) {
+      $item->image_path1 = asset('storage/items/No_Image.jpg');
+    } else {
+        if(Storage::disk('public')->exists('items/' . $item->image1)) {
+            $item->image_path1 = asset('storage/items/' . $item->image1);
+        } else {
+            $item->image_path1 = asset('storage/items/No_Image.jpg');
+        }
+    }
+    return $item;
   }
 }

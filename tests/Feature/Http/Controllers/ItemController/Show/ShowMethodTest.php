@@ -51,14 +51,14 @@ class ShowMethodTest extends TestCase
         ]);
 
 
-        $pendingInspection = Inspection::withoutEvents(function () use ($item) {
+        $uncompleted_inspection = Inspection::withoutEvents(function () use ($item) {
             return Inspection::factory()->create([
                 'item_id' => $item->id,
                 'status' => false, // 点検予定
             ]);
         });
         
-        $previousInspection = Inspection::withoutEvents(function () use ($item) {
+        $last_completed_inspection = Inspection::withoutEvents(function () use ($item) {
             return Inspection::factory()->create([
                 'item_id' => $item->id,
                 'status' => true, // 点検実行済み
@@ -78,10 +78,10 @@ class ShowMethodTest extends TestCase
                 ->where('id', $item->id)
                 ->etc()
             )
-            ->where('pendingInspection.inspection_date', $pendingInspection->inspection_date->format('Y-m-d')) //日付は文字列の形式に変換、ダミーデータとの整合性
-            ->where('pendingInspection.inspection_scheduled_date', $pendingInspection->inspection_scheduled_date->format('Y-m-d'))
-            ->where('previousInspection.inspection_date', $previousInspection->inspection_date->format('Y-m-d'))
-            ->where('previousInspection.inspection_scheduled_date', $previousInspection->inspection_scheduled_date->format('Y-m-d'))
+            ->where('uncompleted_inspection.inspection_date', $uncompleted_inspection->inspection_date->format('Y-m-d')) //日付は文字列の形式に変換、ダミーデータとの整合性
+            ->where('uncompleted_inspection.inspection_scheduled_date', $uncompleted_inspection->inspection_scheduled_date->format('Y-m-d'))
+            ->where('last_completed_inspection.inspection_date', $last_completed_inspection->inspection_date->format('Y-m-d'))
+            ->where('last_completed_inspection.inspection_scheduled_date', $last_completed_inspection->inspection_scheduled_date->format('Y-m-d'))
             ->where('userName', $user->name)
         );
     }

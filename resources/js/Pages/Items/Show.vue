@@ -9,11 +9,11 @@ import EditHistoryModal from '@/Components/EditHistoryModal.vue';
 
 defineProps({
     item: Object,
-    pendingInspection: {
+    uncompleted_inspection: {
         type: Object,
         default: null
     },
-    previousInspection: {
+    last_completed_inspection: {
         type: Object,
         default: null
     },
@@ -21,18 +21,7 @@ defineProps({
     errors: Object
 })
 
-
-const inspectItem = id => {
-
-}
-
-
 const deleteItem = id => {
-    // router.visit(route('items.destroy', { item: id }), {
-    //     method: 'delete',
-    //     onBefore: visit => confirm('本当に削除しますか？')
-    //     // onBefore: () => confirm('本当に削除しますか？')
-    // })
     if (confirm('本当に削除しますか？')) {
         router.delete(`/items/${id}`, {
             onSuccess: () => {
@@ -239,18 +228,18 @@ const deleteItem = id => {
 
                                                 <div class="p-4 border bordr-4 mb-2">
                                                     <div class="p-2 w-full">
-                                                        <label for="inspectionSchedule" class="leading-7 text-xs md:text-base text-blue-900">
+                                                        <label for="inspection_scheduled_date" class="leading-7 text-xs md:text-base text-blue-900">
                                                             点検予定日
                                                             </label>
                                                         <div class="flex items-center">
-                                                            <div id="inspectionSchedule" name="inspectionSchedule" class="w-full bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-xs md:text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
-                                                                {{ pendingInspection ? pendingInspection.inspection_scheduled_date : 'なし' }}
+                                                            <div id="inspection_scheduled_date" name="inspection_scheduled_date" class="w-full bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-xs md:text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
+                                                                {{ uncompleted_inspection ? uncompleted_inspection.inspection_scheduled_date : 'なし' }}
                                                             </div>
                                                             <div class="w-full">
-                                                                <InspectionModal :item="item" :userName="userName" :pendingInspection="pendingInspection" :errors="errors" />
+                                                                <InspectionModal :item="item" :userName="userName" :uncompleted_inspection="uncompleted_inspection" :errors="errors" />
                                                             </div>
                                                         </div>
-                                                        <div class="mt-4 leading-7 text-xs md:text-base">前回の点検日: {{ previousInspection ? previousInspection.inspection_date : 'なし' }}</div>
+                                                        <div class="mt-4 leading-7 text-xs md:text-base">前回の点検日: {{ last_completed_inspection ? last_completed_inspection.inspection_date : 'なし' }}</div>
                                                     </div>
 
                                                     <div class="p-2 w-full">

@@ -39,7 +39,6 @@ use Illuminate\Support\Facades\Auth;
 class ItemController extends Controller
 {
     const CATEGORY_ID_FOR_CONSUMABLE_ITME = 1;
-
     protected $managementIdService;
     protected $imageService;
     protected $qrCodeService;
@@ -127,27 +126,14 @@ class ItemController extends Controller
         $items = $query->paginate(20);
 
         // map関数を使用するとpaginateオブジェクトの構造が変わり、ペジネーションが使えなくなる
-        // コレクションを取得して変換
         $items->getCollection()->transform(function ($item) {
-            // image1カラムがnullかチェック
-            if(is_null($item->image1)) {
-                $item->image_path1 = asset('storage/items/No_Image.jpg');
-            } else {
-                // image1の画像名のファイルが存在するかチェックする
-                // if(Storage::exists('public/items/' . $item->image1)) {
-                if(Storage::disk('public')->exists('items/' . $item->image1)) {
-                    // 画像ファイルが存在する場合
-                    \Log::info(' 画像ファイルが存在する場合');
-                    $item->image_path1 = asset('storage/items/' . $item->image1);
-                } else {
-                    // 画像ファイルが存在しない場合
-                    \Log::info(' 画像ファイルが存在しない場合');
-                    $item->image_path1 = asset('storage/items/No_Image.jpg');
-                }
-            }
-            // pending_inspection_dateの設定
-            $item->pending_inspection_date = $item->inspections->where('status', false)->sortBy('scheduled_date')->first()->scheduled_date ?? null;
+            return $this->imageService->setImagePathToObject($item);
+        });
 
+        $items->getCollection()->transform(function ($item) {
+            // inspection_scheduled_dateを追加
+            $inspection = $item->inspections->where('status', false)->sortBy('inspection_scheduled_date')->first();
+            $item->inspection_scheduled_date = $inspection ? $inspection->inspection_scheduled_date : null;
             return $item;
         });
 
@@ -183,8 +169,6 @@ class ItemController extends Controller
     public function create(Request $request)
     {   
         Gate::authorize('staff-higher');
-
-        // dd($request);
 
         $categories = Category::all();
         $locations = Location::all();
@@ -338,28 +322,19 @@ class ItemController extends Controller
         $item = Item::with($withRelations)->find($item->id);  
 
         // まだ点検を実施していない点検テーブルのレコードを取得
-        $pendingInspection = $item->inspections->where('status', false)->sortBy('inspection_scheduled_date')->first();
-        // 最後に行った点検のレコードを取得
-        $previousInspection = $item->inspections->where('status', true)->sortByDesc('inspection_date')->first();
+        $uncompleted_inspection = $item->inspections->where('status', false)->sortBy('inspection_scheduled_date')->first();
+        // // 最後に行った点検のレコードを取得
+        $last_completed_inspection = $item->inspections->where('status', true)->sortByDesc('inspection_date')->first();
 
-        if (is_null($item->image1)) {
-            $item->image_path1 = asset('storage/items/No_Image.jpg');
-        } else {
-            if (Storage::disk('public')->exists('items/' . $item->image1)) {
-                // 画像ファイルが存在する場合
-                $item->image_path1 = asset('storage/items/' . $item->image1);
-            } else {
-                // 画像ファイルが存在しない場合
-                $item->image_path1 = asset('storage/items/No_Image.jpg');
-            }
-        }
+        // 画像パスを追加
+        $this->imageService->setImagePathToObject($item);
 
         $user = auth()->user();
 
         return Inertia::render('Items/Show', [
             'item' => $item,
-            'pendingInspection' => $pendingInspection,
-            'previousInspection' => $previousInspection,
+            'uncompleted_inspection' => $uncompleted_inspection,
+            'last_completed_inspection' => $last_completed_inspection,
             'userName' => $user->name,
         ]);
     }
@@ -375,15 +350,8 @@ class ItemController extends Controller
         $uncompleted_inspection = $item->inspections->where('status', false)->sortBy('inspection_scheduled_date')->first();
         $uncompleted_inspection_scheduled_date = $uncompleted_inspection ? $uncompleted_inspection->inspection_scheduled_date : null;
 
-        if (is_null($item->image1)) {
-            $item->image_path1 = asset('storage/items/No_Image.jpg');
-        } else {
-            if (Storage::disk('public')->exists('items/' . $item->image1)) {
-                $item->image_path1 = asset('storage/items/' . $item->image1);
-            } else {
-                $item->image_path1 = asset('storage/items/No_Image.jpg');
-            }
-        }
+        // 画像パスを追加
+        $this->imageService->setImagePathToObject($item);
 
         $categories = Category::all();
         $locations = Location::all();
@@ -408,7 +376,6 @@ class ItemController extends Controller
     public function update(UpdateItemRequest $request, Item $item)
     {
         // トランザクション処理は、ItemObserverでのDB保存もロールバックする
-        
         Gate::authorize('staff-higher');
 
         // ロールバックした時の備品画像を元に戻す準備

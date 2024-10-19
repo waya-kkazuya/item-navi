@@ -46,6 +46,6 @@ class ScheduledInspectionsUseCase
             ->orderBy('inspection_scheduled_date', 'asc')
             ->paginate(10);
 
-        return $scheduledInspections->setCollection($this->imageService->setImagePath($scheduledInspections->getCollection()));
+        return $scheduledInspections->setCollection($this->imageService->setImagePathInCollection($scheduledInspections->getCollection()));
     }
 }

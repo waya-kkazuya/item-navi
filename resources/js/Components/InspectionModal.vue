@@ -7,10 +7,9 @@ import { ref } from 'vue'
 const isShow = ref(false)
 const toggleStatus = () => { isShow.value = !isShow.value}
 
-// 親コンポーネントから、itemオブジェクトを受け取る
 const props = defineProps({
   item: Object,
-  pendingInspection: Object,
+  uncompleted_inspection: Object,
   userName: String,
   errors: Object
 })
@@ -21,22 +20,18 @@ const form = useForm({
     details: null,
 })
 
-
 const saveInspection = item => {
   if (confirm('本当に点検しますか？')) {
     form.put(`/inspect_item/${item.id}`, {
       onSuccess: () => {
-        // 通信が成功したときの処理
         toggleStatus();
       },
       onError: errors => {
-        // エラーハンドリング
         console.error('Validation Error:', errors);
       }
     })
   }
 }
-
 
 // 日付フォーマット関数
 const formatDate = (timestamp) => {
@@ -77,11 +72,11 @@ const formatDate = (timestamp) => {
                   </div>
               </div>
               <div class="p-2 w-full">
-                <label for="inspectionSchedule" class="leading-7 text-xs md:text-base text-blue-900">
+                <label for="inspection_scheduled_date" class="leading-7 text-xs md:text-base text-blue-900">
                   点検予定日
                 </label>
-                <div id="inspectionSchedule" name="inspectionSchedule" class="w-full bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-xs md:text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
-                  {{ pendingInspection ? pendingInspection.inspection_scheduled_date : '予定なし' }}  
+                <div id="inspection_scheduled_date" name="inspection_scheduled_date" class="w-full bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-xs md:text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
+                  {{ uncompleted_inspection ? uncompleted_inspection.inspection_scheduled_date : '予定なし' }}  
                 </div>
               </div>
               <div class="p-2 w-full">
