@@ -34,8 +34,13 @@ class IndexMethodTest extends TestCase
         $user = User::factory()->role(1)->create();
 
         $item = Item::factory()->create();
-        $inspection = Inspection::factory()->create();
-        $disposal = Disposal::factory()->create();
+        $inspection = Inspection::withoutEvents(function () {
+            return Inspection::factory()->create();
+        });
+        $disposal = Disposal::withoutEvents(function () {
+            return Disposal::factory()->create();
+        });
+        
         $itemRequest = ItemRequest::factory()->create();
 
         $lowStockNotification = new LowStockNotification($item);

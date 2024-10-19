@@ -88,15 +88,16 @@ class inspectItemMethodTest extends TestCase
         ];
 
         // inspection_scheduled_dateが登録されていてstatusがfalseの場合、
-        $inspection = Inspection::factory()->create([
-            'item_id' => $item->id,
-            'inspection_scheduled_date' => '2024-09-01',
-            'inspection_date' => null,
-            'status' => false,
-            'inspection_person' => null,
-            'details' => null
-        ]);
-
+        $inspection = Inspection::withoutEvents(function () use ($item) {
+            return Inspection::factory()->create([
+                'item_id' => $item->id,
+                'inspection_scheduled_date' => '2024-09-01',
+                'inspection_date' => null,
+                'status' => false,
+                'inspection_person' => null,
+                'details' => null
+            ]);
+        });
         // 備品をソフトデリート
         $response = $this->from('items/'.$item->id)
             ->put(route('inspect_item.inspectItem', $item->id), $validData);
