@@ -1142,6 +1142,9 @@ class UpdateValidationTest extends TestCase
 
         $response = $this->followRedirects($response);
 
+        // レスポンス内容を確認
+        // dump($response->getContent());
+
         $response->assertInertia(fn (Assert $page) => $page
             ->component('Items/Edit')
             ->missing('errors.storage_location_id')
@@ -1163,7 +1166,7 @@ class UpdateValidationTest extends TestCase
         $response = $this->from('items/'.$item->id.'/edit')
             ->put(route('items.update', $item), ['storage_location_id' => Location::max('id') + 1]);
 
-        $response->assertRedirect(route('items.edit', ['item' => $item->id])); //URLにリダイレクト
+        $response->assertRedirect(route('items.edit', ['item' => $item])); //URLにリダイレクト
         $response->assertStatus(302);
 
         $response = $this->followRedirects($response);
