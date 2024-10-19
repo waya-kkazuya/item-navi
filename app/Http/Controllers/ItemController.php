@@ -185,8 +185,6 @@ class ItemController extends Controller
     {   
         Gate::authorize('staff-higher');
 
-        // dd($request);
-
         $categories = Category::all();
         $locations = Location::all();
         $units = Unit::all();
@@ -339,18 +337,16 @@ class ItemController extends Controller
         $item = Item::with($withRelations)->find($item->id);  
 
         // まだ点検を実施していない点検テーブルのレコードを取得
-        $pendingInspection = $item->inspections->where('status', false)->sortBy('inspection_scheduled_date')->first();
-        // 最後に行った点検のレコードを取得
-        $previousInspection = $item->inspections->where('status', true)->sortByDesc('inspection_date')->first();
+        $uncompleted_inspection = $item->inspections->where('status', false)->sortBy('inspection_scheduled_date')->first();
+        // // 最後に行った点検のレコードを取得
+        $last_completed_inspection = $item->inspections->where('status', true)->sortByDesc('inspection_date')->first();
 
         if (is_null($item->image1)) {
             $item->image_path1 = asset('storage/items/No_Image.jpg');
         } else {
             if (Storage::disk('public')->exists('items/' . $item->image1)) {
-                // 画像ファイルが存在する場合
                 $item->image_path1 = asset('storage/items/' . $item->image1);
             } else {
-                // 画像ファイルが存在しない場合
                 $item->image_path1 = asset('storage/items/No_Image.jpg');
             }
         }
@@ -359,8 +355,8 @@ class ItemController extends Controller
 
         return Inertia::render('Items/Show', [
             'item' => $item,
-            'pendingInspection' => $pendingInspection,
-            'previousInspection' => $previousInspection,
+            'uncompleted_inspection' => $uncompleted_inspection,
+            'last_completed_inspection' => $last_completed_inspection,
             'userName' => $user->name,
         ]);
     }
