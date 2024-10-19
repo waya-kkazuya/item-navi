@@ -34,7 +34,6 @@ use Illuminate\Support\Facades\Session;
 class IndexMethodTest extends TestCase
 {
     use RefreshDatabase;
-    // use DatabaseTransactions;
 
     protected function setUp(): void
     {
@@ -55,14 +54,12 @@ class IndexMethodTest extends TestCase
         $locations = Location::factory()->count(12)->create();
         $aquisition_methods = AcquisitionMethod::factory()->count(6)->create();
 
-
         // 各コレクションの要素数を出力
         echo 'Categories count: ' . $categories->count() . PHP_EOL;
         echo 'Units count: ' . $units->count() . PHP_EOL;
         echo 'Usage Statuses count: ' . $usage_statuses->count() . PHP_EOL;
         echo 'Locations count: ' . $locations->count() . PHP_EOL;
         echo 'Acquisition Methods count: ' . $aquisition_methods->count() . PHP_EOL;
-
 
         $items = Item::factory()->count(20)->create([
             'management_id' => $this->faker->regexify('[A-Za-z0-9]{7}'),
@@ -78,16 +75,10 @@ class IndexMethodTest extends TestCase
 
         // adminユーザーを作成
         $user = User::factory()->role(1)->create();
-        // $user = User::factory()->create([
-        //     'role' => '1',
-        // ]);
-
         $this->actingAs($user);
 
         $response = $this->get('/items')
             ->assertOk();
-
-        // dd($response->getContent());
 
         $response->assertInertia(fn (Assert $page) => $page
             ->component('Items/Index')
@@ -119,7 +110,7 @@ class IndexMethodTest extends TestCase
                         'deleted_at',
                         'created_at',
                         'image_path1', //画像名から加工した画像パス
-                        'pending_inspection_date',
+                        'inspection_scheduled_date',
                         'category',
                         'unit',
                         'usage_status',
@@ -222,7 +213,7 @@ class IndexMethodTest extends TestCase
                         'deleted_at',
                         'created_at',
                         'image_path1', //画像名から加工した画像パス
-                        'pending_inspection_date',
+                        'inspection_scheduled_date',
                         'category',
                         'unit',
                         'usage_status',
