@@ -44,8 +44,11 @@ class ItemController extends Controller
     protected $imageService;
     protected $qrCodeService;
 
-    public function __construct(ManagementIdService $managementIdService, ImageService $imageService, QrCodeService $qrCodeService)
-    {
+    public function __construct(
+        ManagementIdService $managementIdService,
+        ImageService $imageService,
+        QrCodeService $qrCodeService
+    ) {
         $this->managementIdService = $managementIdService;
         $this->imageService = $imageService;
         $this->qrCodeService = $qrCodeService;
@@ -99,7 +102,6 @@ class ItemController extends Controller
         } else {
             $query = Item::whereNull('deleted_at');
         }
-
 
         // withによるeagerローディングではリレーションを使用する
         $query = $query->with($withRelations)
@@ -178,8 +180,6 @@ class ItemController extends Controller
         ]); 
     }
 
-
-
     public function create(Request $request)
     {   
         Gate::authorize('staff-higher');
@@ -207,11 +207,12 @@ class ItemController extends Controller
         ]);
     }
 
-    
-
     public function store(StoreItemRequest $request)
     {
-        Gate::authorize('staff-higher');        
+        Gate::authorize('staff-higher');
+
+        // 編集理由はItemObserverのメソッド内でセッションから取得し、edithistoriesに保存
+        Session::put('operation_type', 'store');
 
         DB::beginTransaction();
 
@@ -331,7 +332,6 @@ class ItemController extends Controller
         }
     }
 
-
     public function show(Item $item)
     {
         $withRelations = ['category', 'unit', 'usageStatus', 'locationOfUse', 'storageLocation', 'acquisitionMethod', 'inspections', 'disposal'];
@@ -364,7 +364,6 @@ class ItemController extends Controller
         ]);
     }
 
-
     public function edit(Item $item)
     {
         Gate::authorize('staff-higher');
@@ -373,8 +372,8 @@ class ItemController extends Controller
         $item = Item::with($withRelations)->find($item->id);  
 
         // 未実行の点検予定日を取得
-        $uncompleted_inspection_scheduled_date = $item->inspections->where('status', false)->sortBy('inspection_scheduled_date')->first()->inspection_scheduled_date;
-        // dd($uncompleted_inspection_scheduled_date);
+        $uncompleted_inspection = $item->inspections->where('status', false)->sortBy('inspection_scheduled_date')->first();
+        $uncompleted_inspection_scheduled_date = $uncompleted_inspection ? $uncompleted_inspection->inspection_scheduled_date : null;
 
         if (is_null($item->image1)) {
             $item->image_path1 = asset('storage/items/No_Image.jpg');
@@ -560,7 +559,6 @@ class ItemController extends Controller
         }
     }
 
-
     public function destroy(Item $item)
     {
         $item->delete();
@@ -571,7 +569,6 @@ class ItemController extends Controller
             'status' => 'danger'
         ]);
     }
-
 
     public function restore($id)
     {
@@ -594,12 +591,10 @@ class ItemController extends Controller
 
     }
 
-
     // public function forceDelete($id)
     // {
         
     // }
-
 
     public function disposedItemIndex(){
         $disposedItems = Item::onlyTrashed()->get();
