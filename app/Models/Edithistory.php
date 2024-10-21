@@ -31,32 +31,4 @@ class Edithistory extends Model
     {
         return $this->belongsTo(EditReason::class);
     }
-
-    public function scopeItemHistory()
-    {
-        
-        
-    }
-
-
-    public function scopeBetweenDate($query, $startDate = null, $endDate = null)
-    {
-        if(is_null($startDate) && is_null($endDate))
-        { return $query; }
-
-        if(!is_null($startDate) && is_null($endDate))
-        { return $query->where('edited_at', ">=", $startDate); }
-
-        if(is_null($startDate) && !is_null($endDate))
-        {
-            $endDate1 = Carbon::parse($endDate)->addDays(1);
-            return $query->where('edited_at', '<=', $endDate1);
-        }
-
-        if(!is_null($startDate) && !is_null($endDate))
-        {
-            return $query->where('edited_at', ">=", $startDate)
-            ->where('edited_at', '<=', $endDate);
-        }
-    }
 }
