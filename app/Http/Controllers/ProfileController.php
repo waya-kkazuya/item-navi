@@ -52,6 +52,11 @@ class ProfileController extends Controller
     {
         Gate::authorize('user-higher');
 
+        // ロールバックした時のプロフィール画像を元に戻す準備
+        if (!Storage::disk('public')->exists('temp')) {
+            Storage::disk('public')->makeDirectory('temp');
+        }
+
         DB::beginTransaction();
 
         try{
@@ -63,9 +68,14 @@ class ProfileController extends Controller
 
             // Storageへの画像の保存
             $profileImagefileNameToStore = null;
+            $fileNameOfOldProfileImage = null;
+            $temporaryBackupPath = null;
             if(!is_null($request->profile_image_file) && $request->profile_image_file->isValid() ){
-                // 古い画像があれば削除
-                if ($request->user()->profile_image) {
+                // すでに画像があれば削除
+                $fileNameOfOldProfileImage = $request->user()->profile_image;
+                if ($fileNameOfOldProfileImage) {
+                    $temporaryBackupPath = 'temp/'.$fileNameOfOldProfileImage;
+                    Storage::disk('public')->copy('items/'.$fileNameOfOldProfileImage, $temporaryBackupPath);
                     Storage::disk('public')->delete('profile/' . $request->user()->profile_image);
                 }
 
@@ -83,13 +93,19 @@ class ProfileController extends Controller
                 'message' => 'プロフィールを更新しました。',
                 'status' => 'success'
             ]);
-        } catch(ValidationException $e) {
+        } catch (\Exception $e) {
             DB::rollBack();
 
+            \Log::error('ProfileController@updateのcatch節');
+
             // アップロードした備品の画像の削除
-            $profileImagePath = 'profile/' . $profileImagefileNameToStore;
-            if (Storage::disk('public')->exists($profileImagePath)) {
-                Storage::disk('public')->delete($profileImagePath);
+            if (Storage::disk('public')->exists('profile/'.$profileImagefileNameToStore)) {
+                Storage::disk('public')->delete('profile/'.$profileImagefileNameToStore);
+            }
+
+            // バックアップした変更前のプロフィール画像を元の場所に保存
+            if ($temporaryBackupPath) {
+                Storage::disk('public')->move($temporaryBackupPath, 'items/'.$fileNameOfOldProfileImage);
             }
 
             return redirect()->back()
@@ -103,23 +119,23 @@ class ProfileController extends Controller
     /**
      * Delete the user's account.
      */
-    public function destroy(Request $request): RedirectResponse
-    {
-        Gate::authorize('staff-higher');
+    // public function destroy(Request $request): RedirectResponse
+    // {
+    //     Gate::authorize('staff-higher');
 
-        $request->validate([
-            'password' => ['required', 'current_password'],
-        ]);
+    //     $request->validate([
+    //         'password' => ['required', 'current_password'],
+    //     ]);
 
-        $user = $request->user();
+    //     $user = $request->user();
 
-        Auth::logout();
+    //     Auth::logout();
 
-        $user->delete();
+    //     $user->delete();
 
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
+    //     $request->session()->invalidate();
+    //     $request->session()->regenerateToken();
 
-        return Redirect::to('/');
-    }
+    //     return Redirect::to('/');
+    // }
 }
