@@ -1,0 +1,29 @@
+<?php
+
+namespace App\Http\Middleware;
+
+use Closure;
+use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Illuminate\Support\Facades\Auth;
+
+class RestrictGuestAccess
+{
+    /**
+     * Handle an incoming request.
+     *
+     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
+     */
+    public function handle(Request $request, Closure $next): Response
+    {
+        if (Auth::check() && Auth::user()->role == 0) {
+            \Log::info("RestrictGuestAccess");
+            return redirect()->back()
+                ->with([
+                    'message' => 'ゲストには許可されていません、ログインして実行してください',
+                    'status' => 'danger'
+                ]);
+        }
+        return $next($request);
+    }
+}

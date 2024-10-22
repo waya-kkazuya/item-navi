@@ -51,6 +51,9 @@ class ItemController extends Controller
         $this->managementIdService = $managementIdService;
         $this->imageService = $imageService;
         $this->qrCodeService = $qrCodeService;
+
+        // ミドルウェアの設定
+        $this->middleware('RestrictGuestAccess', ['only' => ['store', 'update', 'destroy', 'restore']]);
     }
 
     public function index(Request $request)
@@ -95,7 +98,6 @@ class ItemController extends Controller
         ];
 
         // 通常の備品か廃棄済みの備品かの分岐
-        // 明示的に厳密にイコールで切り替え可能
         if ($request->disposal === 'true') {
             $query = Item::onlyTrashed();
         } else {
@@ -287,7 +289,7 @@ class ItemController extends Controller
                 'status' => 'success'
             ]);
 
-        } catch(ValidationException $e) {
+        } catch (\Exception $e) {
             DB::rollBack();
 
             // アップロードした備品の画像の削除
@@ -446,7 +448,7 @@ class ItemController extends Controller
             $fileNameOfOldImage = null;
             $temporaryBackupPath = null;
             if(!is_null($request->image_file) && $request->image_file->isValid() ){
-                // 古い画像があれば削除
+                // すでに画像があれば削除
                 $fileNameOfOldImage = $item->image1;
                 if ($fileNameOfOldImage) {
                     $temporaryBackupPath = 'temp/'.$fileNameOfOldImage;
@@ -490,13 +492,13 @@ class ItemController extends Controller
         } catch (\Exception $e) {
             DB::rollBack();
 
-            // 変更後の画像を削除
-            if ($fileNameToStore) {
+            // アップロードしたプロフィール画像を削除
+            if (Storage::disk('public')->exists('items/' . $fileNameToStore)) {
                 Storage::disk('public')->delete('items/' . $fileNameToStore);
             }
 
+            // バックアップした変更前の画像を元の場所に保存
             if ($temporaryBackupPath) {
-                // バックアップファイルを元の場所に戻す
                 Storage::disk('public')->move($temporaryBackupPath, 'items/'.$fileNameOfOldImage);
             }
 
