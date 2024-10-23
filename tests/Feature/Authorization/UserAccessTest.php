@@ -15,6 +15,7 @@ use App\Models\AcquisitionMethod;
 use App\Models\Edithistory;
 use App\Models\Inspection;
 use App\Models\EditReason;
+use App\Models\ItemRequest;
 use App\Models\RequestStatus;
 use App\Models\StockTransaction;
 use App\Services\ImageService;
@@ -53,6 +54,7 @@ class UserAccessTest extends TestCase
         $this->actingAs($user);
 
         $item = Item::factory()->create();
+        $item_request = ItemRequest::factory()->create();
 
         // 表示できない場合はリダイレクトではなく、403Forbiddenにしておく
         $this->get(route('items.index'))->assertStatus(403);
@@ -74,6 +76,10 @@ class UserAccessTest extends TestCase
         $this->get(route('inspection_and_disposal_items'))->assertStatus(403);
         // 通知にはアクセスできない
         $this->get(route('notifications.index'))->assertStatus(403);
+
+        // リクエストは削除できない(削除ボタンは表示されていない)
+        $this->from(route('item_requests.index'))
+            ->delete(route('item_requests.destroy', ['item_request' => $item_request]))->assertStatus(403);
         
         // Dashboardはアプリアイコンにリンクが設定されていて、
         // ログイン後にアクセスすると403になってしまうので、消耗品管理画面にリダイレクトする
@@ -89,7 +95,6 @@ class UserAccessTest extends TestCase
         $this->actingAs($user);
 
         $item = Item::factory()->create();
-        $emptyItem = Item::factory()->create([]);
 
         // 消耗品管理画面にアクセスできる、出庫できる、入庫できる
         $this->get(route('consumable_items'))->assertOk();
@@ -104,7 +109,7 @@ class UserAccessTest extends TestCase
         $this->get(route('item_requests.create'))->assertOk();
         $this->from(route('item_requests.create'))
             ->post(route('item_requests.store'), [])->assertStatus(302); //バリデーションエラー
-        
+
         // プロフィール情報画面にアクセス、プロフィール情報更新ができる
         $this->get(route('profile.edit'))->assertOk();
         $this->from(route('profile.edit'))
