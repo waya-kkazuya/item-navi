@@ -45,13 +45,6 @@ class UserAccessTest extends TestCase
         $this->faker = FakerFactory::create();
     }
 
-    // Userカラムのroleが9のuserのアクセスをテスト
-
-    // User権限で出来ないことをテスト
-    // ページへのアクセス
-    // １，アクセスできるページは消耗費管理の入出庫モーダルの出庫タブのみv-ifで設定
-    // ２、リクエスト一覧画面、
-    // ３，ダッシュボードでは、表示できる情報のみか、消耗品管理画面へリダイレクト
     /** @test */
     function Userが権限のない画面にアクセスできない()
     {
@@ -62,36 +55,59 @@ class UserAccessTest extends TestCase
         $item = Item::factory()->create();
 
         // 表示できない場合はリダイレクトではなく、403Forbiddenにしておく
-        $this->get('items')->assertStatus(403);
-        $this->get('items/create')->assertStatus(403);
-        $this->from('items/create')->post('items', [])->assertStatus(403);
-        $this->get('items/'.$item->id.'/edit')->assertStatus(403);
-        $this->from('items/'.$item->id.'/edit')->patch(route('items.update', $item->id), [])->assertStatus(403);
-        $this->from('items/'.$item->id)->delete('items/'.$item->id)->assertStatus(403);
+        $this->get(route('items.index'))->assertStatus(403);
+        $this->get(route('items.create'))->assertStatus(403);
+        $this->from(route('items.create'))
+            ->post(route('items.store'), [])->assertStatus(403);
+        $this->get(route('items.edit', ['item' => $item]))->assertStatus(403);
+        $this->from(route('items.edit', ['item' => $item]))
+            ->patch(route('items.update', $item->id), [])->assertStatus(403);
         
-        $this->get('inspection-and-disposal-items')->assertStatus(403);
-        $this->get('notifications')->assertStatus(403);
+        // 詳細画面から廃棄できない
+        $this->from(route('items.show', ['item' => $item]))
+            ->put(route('dispose_item.disposeItem', ['item' => $item]), [])->assertStatus(403);
+        // 詳細画面から点検できない
+        $this->from(route('items.show', ['item' => $item]))
+            ->put(route('inspect_item.inspectItem', ['item' => $item]), [])->assertStatus(403);
+
+        // 点検と廃棄画面にはアクセスできない
+        $this->get(route('inspection_and_disposal_items'))->assertStatus(403);
+        // 通知にはアクセスできない
+        $this->get(route('notifications.index'))->assertStatus(403);
         
         // Dashboardはアプリアイコンにリンクが設定されていて、
         // ログイン後にアクセスすると403になってしまうので、消耗品管理画面にリダイレクトする
-        $this->get('dashboard')->assertRedirect('consumable_items');
-
+        // ダッシュボードにアクセスすると、消耗品管理画面へリダイレクトする
+        $this->get(route('dashboard'))->assertRedirect('consumable_items');
     }
 
     /** @test */
     function Userが権限のある画面にアクセスできる()
     {
-        $loginUrl = 'login';
-
         // roleが9の場合のuser
         $user = User::factory()->role(9)->create();
         $this->actingAs($user);
 
         $item = Item::factory()->create();
+        $emptyItem = Item::factory()->create([]);
 
-        $this->get('consumable_items')->assertOk();
-        $this->get('item-requests')->assertOk();
-        $this->get('profile')->assertOk();
+        // 消耗品管理画面にアクセスできる、出庫できる、入庫できる
+        $this->get(route('consumable_items'))->assertOk();
+        $this->from(route('consumable_items'))
+            ->put(route('decreaseStock', ['item' => $item]), [])->assertStatus(302); //バリデーションエラー
+        $this->from(route('consumable_items'))
+            ->put(route('increaseStock', ['item' => $item]), [])->assertStatus(302); //バリデーションエラー
 
+
+        // リクエスト一覧、新規作成画面、新規登録はできる
+        $this->get(route('item_requests.index'))->assertOk();
+        $this->get(route('item_requests.create'))->assertOk();
+        $this->from(route('item_requests.create'))
+            ->post(route('item_requests.store'), [])->assertStatus(302); //バリデーションエラー
+        
+        // プロフィール情報画面にアクセス、プロフィール情報更新ができる
+        $this->get(route('profile.edit'))->assertOk();
+        $this->from(route('profile.edit'))
+            ->patch(route('profile.update'), [])->assertStatus(302);
     }
 }
