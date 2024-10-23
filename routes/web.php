@@ -85,7 +85,7 @@ Route::middleware(['auth', 'verified', 'can:user-higher'])->group(function () {
 
 // 削除はstaff以上の権限が必要
 Route::delete('item-requests/{item_request}', [ItemRequestController::class, 'destroy'])
-->middleware(['auth', 'verified', 'can:staff-higher'])->name('item_requests.destroy');
+->middleware(['auth', 'verified', 'can:staff-higher', 'RestrictGuestAccess'])->name('item_requests.destroy');
 
 // dompdfでPDFのダウンロード
 Route::get('/generate-pdf', [PDFController::class, 'generatePDF'])
@@ -98,7 +98,7 @@ Route::get('/preview-pdf', [PDFController::class, 'designPDF'])
 // プロフィール編集用ルート
 Route::middleware(['auth', 'verified', 'can:user-higher'])->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::middleware('RestrictGuestAccess')->patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     // Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 

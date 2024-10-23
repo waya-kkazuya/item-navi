@@ -45,7 +45,6 @@ const guestLogin = () => {
         <form @submit.prevent="submit">
             <div>
                 <InputLabel for="email" value="Eメール" />
-
                 <TextInput
                     id="email"
                     type="email"
@@ -55,13 +54,11 @@ const guestLogin = () => {
                     autofocus
                     autocomplete="username"
                 />
-
                 <InputError class="mt-2" :message="form.errors.email" />
             </div>
 
             <div class="mt-4">
                 <InputLabel for="password" value="パスワード" />
-
                 <TextInput
                     id="password"
                     type="password"
@@ -70,26 +67,10 @@ const guestLogin = () => {
                     required
                     autocomplete="current-password"
                 />
-
                 <InputError class="mt-2" :message="form.errors.password" />
             </div>
-            <!-- 
-            <div class="block mt-4">
-                <label class="flex items-center">
-                    <Checkbox name="remember" v-model:checked="form.remember" />
-                    <span class="ms-2 text-sm text-gray-600">Remember me</span>
-                </label>
-            </div> -->
 
             <div class="flex items-center justify-center mt-4">
-                <!-- <Link
-                    v-if="canResetPassword"
-                    :href="route('password.request')"
-                    class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                >
-                    Forgot your password?
-                </Link> -->
-
                 <button id="login" class="mb-4 inline-flex items-center justify-center w-44 px-8 py-2 bg-blue-900 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-800 focus:bg-blue-800 active:bg-blue-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150"
                     :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
                     ログイン

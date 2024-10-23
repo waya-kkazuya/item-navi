@@ -17,10 +17,19 @@ class RestrictGuestAccess
     public function handle(Request $request, Closure $next): Response
     {
         if (Auth::check() && Auth::user()->role == 0) {
-            \Log::info("RestrictGuestAccess");
+            \Log::info("RestrictGuestAccessミドルウェア");
+
+            if ($request->expectsJson()) {
+                \Log::info("RestrictGuestAccessミドルウェア:APIリクエスト");
+                return response()->json([
+                    'message' => 'ゲストには許可されていない機能です、ログインして実行してください',
+                    'status' => 'danger'
+                ], 403);
+            }
+
             return redirect()->back()
                 ->with([
-                    'message' => 'ゲストには許可されていません、ログインして実行してください',
+                    'message' => 'ゲストには許可されていない機能です、ログインして実行してください',
                     'status' => 'danger'
                 ]);
         }

@@ -36,10 +36,13 @@ const updateStatus = async request => {
   console.log(request.id)
   try {
     const res = await axios.post(`/api/item-requests/${request.id}/update-status`, { requestStatusId: request.request_status_id });
-    console.log('Status updated successfully', res.data)
-    window.location.reload() // ページをリロード
   } catch (error) {
-    console.error('Error updating status:', error)
+    // フラッシュメッセージの代わりにアラートを表示する
+    if (error.response && error.response.data) {
+      alert(error.response.data.message);
+    }
+  } finally {
+    window.location.reload() // ページをリロード
   }
 }
 
@@ -49,7 +52,7 @@ const loginUserRole = ref(null);
 const getUserRole = async () => {
   try {
     const res = await axios.get('/api/user-role');
-    console.log(res.data)
+    // console.log(res.data)
     loginUserRole.value = res.data;
     console.log(loginUserRole.value)
   } catch (error) {

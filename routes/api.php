@@ -70,8 +70,9 @@ Route::middleware(['auth:sanctum', 'verified', 'can:staff-higher'])->group(funct
 
 
 // リクエストのステータスのプルダウンをadmin,staffが変更するためのAPI
-Route::middleware(['auth:sanctum', 'verified', 'can:staff-higher'])
-->post('item-requests/{id}/update-status', [ItemRequestController::class, 'updateStatus']);
+Route::middleware(['auth:sanctum', 'verified', 'can:staff-higher', 'RestrictGuestAccess'])
+->post('item-requests/{id}/update-status', [ItemRequestController::class, 'updateStatus'])
+->name('item-requests.update-status');
 
 // リクエスト一覧画面でユーザーの権限情報を取得するためのAPI
 Route::middleware(['auth:sanctum', 'verified', 'can:user-higher'])

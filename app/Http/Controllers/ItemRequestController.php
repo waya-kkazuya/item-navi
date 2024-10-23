@@ -69,17 +69,12 @@ class ItemRequestController extends Controller
     {
         Gate::authorize('staff-higher');
 
-        Log::info('request');
-        Log::info($request);
-        Log::info('id');
-        Log::info($id);
-
         // $idはURLパラメータから取得される
         $itemRequest = ItemRequest::findOrFail($id);
         $itemRequest->request_status_id = $request->requestStatusId;
         $itemRequest->save();
 
-        return response()->json(['message' => 'Status updated successfully']);
+        return response()->json(['message' => 'Status updated successfully'], 200);
     }
 
 
@@ -103,7 +98,6 @@ class ItemRequestController extends Controller
         DB::beginTransaction();
 
         try {
-
             $itemRequest = ItemRequest::create([            
                 'name' => $request->name,
                 'category_id' => $request->category_id ,
@@ -116,9 +110,8 @@ class ItemRequestController extends Controller
                 'price' => $request->price,
             ]);
 
-            // リクエストが作成されたら
+            // リクエストが作成されたらイベントを発火
             event(new RequestedItemDetectEvent($itemRequest));
-
 
             DB::commit();
 
@@ -130,6 +123,7 @@ class ItemRequestController extends Controller
 
         } catch (\Exception $e) {
             DB::rollBack();
+            \Log::error('エラーが発生しました ItemRequstController@store: '.$e->getMessage());
 
             return redirect()->back()
             ->with([
@@ -141,6 +135,8 @@ class ItemRequestController extends Controller
 
     public function destroy(ItemRequest $itemRequest)
     {
+        Gate::authorize('staff-higher');
+
         $itemRequest->delete();
 
         return to_route('item_requests.index')
