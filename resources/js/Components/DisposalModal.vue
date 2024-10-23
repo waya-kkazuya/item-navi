@@ -21,8 +21,14 @@ const form = useForm({
 // disposalsテーブルに保存する関数
 const saveDisposal = item => {
   if (confirm('本当に削除しますか？')) {
-    form.put(`/dispose_item/${item.id}`)
-    // toggleStatus()
+    form.put(`/dispose_item/${item.id}`, {
+      onSuccess: () => {
+        toggleStatus()
+      },
+      onError: errors => {
+        // console.error('Validation Error:', errors)
+      }
+    })
   }
 }
 
@@ -103,5 +109,5 @@ const saveDisposal = item => {
   </div>
   <button @click="toggleStatus" type="button" data-micromodal-trigger="modal-1" href='javascript:;' class="flex mx-auto md:ml-4 text-xs md:text-base text-white bg-red-500 border-0 py-2 px-8 focus:outline-none hover:bg-red-600 rounded">
     廃棄する
-    </button>
+  </button>
 </template>
