@@ -531,6 +531,7 @@ class ItemController extends Controller
     // 廃棄はDisposalControllerで行う
     // public function destroy(Item $item)
     // {
+    
     // }
 
     public function restore($id)
