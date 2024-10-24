@@ -175,7 +175,7 @@ class IndexMethodTest extends TestCase
             ->has('groupedEdithistories.'.Carbon::now()->subDay()->format('Y-m-d')) 
             ->where('groupedEdithistories.'.Carbon::now()->subDay()->format('Y-m-d').'.1.item_id', $editHistory4->item_id)
             ->where('groupedEdithistories.'.Carbon::now()->subDay()->format('Y-m-d').'.1.operation_type', $editHistory4->operation_type)
-            ->dump()
+            // ->dump()
         );
     }
 }
