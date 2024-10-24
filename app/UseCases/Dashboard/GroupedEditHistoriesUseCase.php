@@ -32,7 +32,7 @@ class GroupedEditHistoriesUseCase
         ->orderBy('created_at', 'desc')
         ->limit(20)
         ->get()
-        ->groupBy('date');
+        ->groupBy('date'); //日付(年月)でまとめる
 
     $groupedEditHistories = $editHistories->map(function ($histories) {
         return $histories->map(function ($history) {
@@ -40,30 +40,15 @@ class GroupedEditHistoriesUseCase
             $days = ['日', '月', '火', '水', '木', '金', '土'];
             $history->day_of_week = $days[$history->day_of_week - 1];
 
-            // operation_typeに応じて文章を追加
-            switch ($history->operation_type) {
-                case 'store':
-                    $history->operation_description = '新規登録';
-                    break;
-                case 'update':
-                    $history->operation_description = '更新';
-                    break;
-                case 'stock_out':
-                    $history->operation_description = 'の在庫を出庫';
-                    break;
-                case 'stock_in':
-                    $history->operation_description = 'の在庫を入庫';
-                    break;
-                case 'soft_delete':
-                    $history->operation_description = '廃棄';
-                    break;
-                case 'restore':
-                    $history->operation_description = '復元';
-                    break;
-                default:
-                    $history->operation_description = '不明な操作を';
-                    break;
-            }
+            $history->operation_description = match ($history->operation_type) {
+                'store' => '新規登録',
+                'update' => '更新',
+                'stock_out' => 'の在庫を出庫',
+                'stock_in' => 'の在庫を入庫',
+                'soft_delete' => '廃棄',
+                'restore' => '復元',
+                default => '不明な操作を',
+            };
 
             return $history;
         });
