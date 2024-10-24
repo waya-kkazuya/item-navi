@@ -528,16 +528,10 @@ class ItemController extends Controller
         }
     }
 
-    public function destroy(Item $item)
-    {
-        $item->delete();
-
-        return to_route('items.index')
-        ->with([
-            'message' => '備品を廃棄しました',
-            'status' => 'danger'
-        ]);
-    }
+    // 廃棄はDisposalControllerで行う
+    // public function destroy(Item $item)
+    // {
+    // }
 
     public function restore($id)
     {
