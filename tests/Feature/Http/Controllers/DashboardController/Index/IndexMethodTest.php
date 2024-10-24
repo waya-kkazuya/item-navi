@@ -14,6 +14,7 @@ use App\Models\Location;
 use App\Models\Edithistory;
 use App\Models\EditReason;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
 
 class IndexMethodTest extends TestCase
 {
@@ -121,64 +122,60 @@ class IndexMethodTest extends TestCase
     function DashboardControllerが編集履歴のデータを渡せる()
     {
         $item = Item::factory()->create();
-        $editReason = EditReason::factory()->create();
 
-        $edithistories = Edithistory::factory()->count(20)->create();
-
-        // 3つの編集履歴を作成
-        // $edithistories = collect([
-        //     EditHistory::factory()->create([
-        //         'item_id' => $item->id,
-        //         'edit_reason_id' => $editReason->id,
-        //         'created_at' => Carbon::now()->subDays(1),
-        //         'operation_type' => 'store',
-        //     ]),
-        //     EditHistory::factory()->create([
-        //         'item_id' => $item->id,
-        //         'edit_reason_id' => $editReason->id,
-        //         'created_at' => Carbon::now()->subDays(1),
-        //         'operation_type' => 'update',
-        //     ]),
-        //     EditHistory::factory()->create([
-        //         'item_id' => $item->id,
-        //         'edit_reason_id' => $editReason->id,
-        //         'created_at' => Carbon::now(),
-        //         'operation_type' => 'stock_in',
-        //     ]),
-        // ]);
+        // DBに存在するデータを構築、まとめるのはコントローラ側UseCase側
+        // 4つの編集履歴を作成、当日にCarbon::now()を使うとおかしくなるので使用しない
+        // $editHistory3,$editHistory4は同じ日付でまとめられているかテスト
+        $editHistory1 = EditHistory::factory()->create([
+            'item_id' => $item->id,
+            'operation_type' => 'store',
+            'created_at' => Carbon::now()->addDays(2),
+        ]);
+        $editHistory2 = EditHistory::factory()->create([
+            'item_id' => $item->id,
+            'operation_type' => 'update',
+            'created_at' => Carbon::now()->addDays(1),
+        ]);
+        $editHistory3 = EditHistory::factory()->create([
+            'item_id' => $item->id,
+            'operation_type' => 'stock_in',
+            'created_at' => Carbon::now()->subDay(),
+        ]);
+        $editHistory4 = EditHistory::factory()->create([
+            'item_id' => $item->id,
+            'operation_type' => 'stock_out',
+            'created_at' => Carbon::now()->subDay()->subHour(), //1時間前
+        ]);
 
         $user = User::factory()->role(1)->create();
         $this->actingAs($user);
 
         $response = $this->get('/dashboard')
             ->assertOk();
-
-        // テストデータを日付ごとにグループ化
-        // $groupedEdithistories = $edithistories->groupBy(function ($history) {
-        //     return $history->created_at->format('Y-m-d');
-        // });
         
-        // 20件の編集履歴も日付でまとめたら20件ではなくなる
+        // Log::info('editHistory1 created_at: ' . $editHistory1->created_at);
+        // Log::info('editHistory1 operation_type: ' . $editHistory1->operation_type);
+        // Log::info('editHistory2 created_at: ' . $editHistory2->created_at);
+        // Log::info('editHistory2 operation_type: ' . $editHistory2->operation_type);
+        // Log::info('editHistory3 created_at: ' . $editHistory3->created_at);
+        // Log::info('editHistory4 created_at: ' . $editHistory4->created_at);
+
         $response->assertInertia(fn (Assert $page) => $page
             ->component('Dashboard')
-            ->has('groupedEdithistories')
-            // ->where('groupedEdithistories', fn (Assert $data) =>
-            //     collect($data->toArray())->each(function ($values, $date) use ($data) {
-            //         $data->has($date)
-            //             ->has($values)
-            //         }
-            //     )
-            // )
+            ->has('groupedEdithistories')     
+            ->has('groupedEdithistories.'.Carbon::now()->addDays(2)->format('Y-m-d')) //具体的な日付でグループ化されていることを確認する
+            ->where('groupedEdithistories.'.Carbon::now()->addDays(2)->format('Y-m-d').'.0.item_id', $editHistory1->item_id)
+            ->where('groupedEdithistories.'.Carbon::now()->addDays(2)->format('Y-m-d').'.0.operation_type', $editHistory1->operation_type)
+            ->has('groupedEdithistories.'.Carbon::now()->addDays(1)->format('Y-m-d')) 
+            ->where('groupedEdithistories.'.Carbon::now()->addDays(1)->format('Y-m-d').'.0.item_id', $editHistory2->item_id)
+            ->where('groupedEdithistories.'.Carbon::now()->addDays(1)->format('Y-m-d').'.0.operation_type', $editHistory2->operation_type)
+            ->has('groupedEdithistories.'.Carbon::now()->subDay()->format('Y-m-d')) 
+            ->where('groupedEdithistories.'.Carbon::now()->subDay()->format('Y-m-d').'.0.item_id', $editHistory3->item_id)
+            ->where('groupedEdithistories.'.Carbon::now()->subDay()->format('Y-m-d').'.0.operation_type', $editHistory3->operation_type)
+            ->has('groupedEdithistories.'.Carbon::now()->subDay()->format('Y-m-d')) 
+            ->where('groupedEdithistories.'.Carbon::now()->subDay()->format('Y-m-d').'.1.item_id', $editHistory4->item_id)
+            ->where('groupedEdithistories.'.Carbon::now()->subDay()->format('Y-m-d').'.1.operation_type', $editHistory4->operation_type)
+            ->dump()
         );
-            // ->where('groupedEdithistories', fn(Assert $data) =>
-            //         $data->each(fn ($values, $date) =>
-            //             $data->has($values, fn (Assert $daysData) =>
-            //                 $daysData->hasAll([
-            //                     'day_of_week',
-            //                     'operation_description'
-            //                 ])
-            //             )
-            //         )
-            //     )
     }
 }
