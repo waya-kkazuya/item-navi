@@ -48,6 +48,10 @@ class RestoreMethodTest extends TestCase
     /** @test */
     function 廃棄された備品を復元できる()
     {
+        // adminユーザーでログイン
+        $user = User::factory()->role(1)->create();
+        $this->actingAs($user);
+
         // アイテムを作成してソフトデリート
         $item = Item::factory()->create();
         $item->delete();
@@ -56,7 +60,10 @@ class RestoreMethodTest extends TestCase
         $this->assertSoftDeleted('items', ['id' => $item->id]);
 
         // アイテムを復元
-        $item->restore();
+        // $item->restore();
+        $response = $this->from(route('items.index'))
+            ->post(route('items.restore', ['id' => $item->id]));
+        $response->assertRedirect(route('items.index'));
 
         // アイテムが復元されたことを確認
         $this->assertDatabaseHas('items', [
