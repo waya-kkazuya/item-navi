@@ -129,22 +129,22 @@ class IndexMethodTest extends TestCase
         $editHistory1 = EditHistory::factory()->create([
             'item_id' => $item->id,
             'operation_type' => 'store',
-            'created_at' => Carbon::now()->addDays(2),
+            'created_at' => Carbon::now()->subDays(1),
         ]);
         $editHistory2 = EditHistory::factory()->create([
             'item_id' => $item->id,
             'operation_type' => 'update',
-            'created_at' => Carbon::now()->addDays(1),
+            'created_at' => Carbon::now()->subDays(2),
         ]);
         $editHistory3 = EditHistory::factory()->create([
             'item_id' => $item->id,
             'operation_type' => 'stock_in',
-            'created_at' => Carbon::now()->subDay(),
+            'created_at' => Carbon::now()->subDays(3),
         ]);
         $editHistory4 = EditHistory::factory()->create([
             'item_id' => $item->id,
             'operation_type' => 'stock_out',
-            'created_at' => Carbon::now()->subDay()->subHour(), //1時間前
+            'created_at' => Carbon::now()->subDays(3)->subHour(), //1時間前
         ]);
 
         $user = User::factory()->role(1)->create();
@@ -153,28 +153,29 @@ class IndexMethodTest extends TestCase
         $response = $this->get('/dashboard')
             ->assertOk();
         
-        // Log::info('editHistory1 created_at: ' . $editHistory1->created_at);
-        // Log::info('editHistory1 operation_type: ' . $editHistory1->operation_type);
-        // Log::info('editHistory2 created_at: ' . $editHistory2->created_at);
-        // Log::info('editHistory2 operation_type: ' . $editHistory2->operation_type);
-        // Log::info('editHistory3 created_at: ' . $editHistory3->created_at);
-        // Log::info('editHistory4 created_at: ' . $editHistory4->created_at);
+        // slackにログ送信テスト用
+        Log::critical('editHistory1 created_at: ' . $editHistory1->created_at);
+        Log::critical('editHistory1 operation_type: ' . $editHistory1->operation_type);
+        Log::info('editHistory2 created_at: ' . $editHistory2->created_at);
+        Log::info('editHistory2 operation_type: ' . $editHistory2->operation_type);
+        Log::info('editHistory3 created_at: ' . $editHistory3->created_at);
+        Log::info('editHistory4 created_at: ' . $editHistory4->created_at);
 
         $response->assertInertia(fn (Assert $page) => $page
             ->component('Dashboard')
             ->has('groupedEdithistories')     
-            ->has('groupedEdithistories.'.Carbon::now()->addDays(2)->format('Y-m-d')) //具体的な日付でグループ化されていることを確認する
-            ->where('groupedEdithistories.'.Carbon::now()->addDays(2)->format('Y-m-d').'.0.item_id', $editHistory1->item_id)
-            ->where('groupedEdithistories.'.Carbon::now()->addDays(2)->format('Y-m-d').'.0.operation_type', $editHistory1->operation_type)
-            ->has('groupedEdithistories.'.Carbon::now()->addDays(1)->format('Y-m-d')) 
-            ->where('groupedEdithistories.'.Carbon::now()->addDays(1)->format('Y-m-d').'.0.item_id', $editHistory2->item_id)
-            ->where('groupedEdithistories.'.Carbon::now()->addDays(1)->format('Y-m-d').'.0.operation_type', $editHistory2->operation_type)
-            ->has('groupedEdithistories.'.Carbon::now()->subDay()->format('Y-m-d')) 
-            ->where('groupedEdithistories.'.Carbon::now()->subDay()->format('Y-m-d').'.0.item_id', $editHistory3->item_id)
-            ->where('groupedEdithistories.'.Carbon::now()->subDay()->format('Y-m-d').'.0.operation_type', $editHistory3->operation_type)
-            ->has('groupedEdithistories.'.Carbon::now()->subDay()->format('Y-m-d')) 
-            ->where('groupedEdithistories.'.Carbon::now()->subDay()->format('Y-m-d').'.1.item_id', $editHistory4->item_id)
-            ->where('groupedEdithistories.'.Carbon::now()->subDay()->format('Y-m-d').'.1.operation_type', $editHistory4->operation_type)
+            ->has('groupedEdithistories.'.Carbon::now()->subDays(1)->format('Y-m-d')) //具体的な日付でグループ化されていることを確認する
+            ->where('groupedEdithistories.'.Carbon::now()->subDays(1)->format('Y-m-d').'.0.item_id', $editHistory1->item_id)
+            ->where('groupedEdithistories.'.Carbon::now()->subDays(1)->format('Y-m-d').'.0.operation_type', $editHistory1->operation_type)
+            ->has('groupedEdithistories.'.Carbon::now()->subDays(2)->format('Y-m-d')) 
+            ->where('groupedEdithistories.'.Carbon::now()->subDays(2)->format('Y-m-d').'.0.item_id', $editHistory2->item_id)
+            ->where('groupedEdithistories.'.Carbon::now()->subDays(2)->format('Y-m-d').'.0.operation_type', $editHistory2->operation_type)
+            ->has('groupedEdithistories.'.Carbon::now()->subDays(3)->format('Y-m-d')) 
+            ->where('groupedEdithistories.'.Carbon::now()->subDays(3)->format('Y-m-d').'.0.item_id', $editHistory3->item_id)
+            ->where('groupedEdithistories.'.Carbon::now()->subDays(3)->format('Y-m-d').'.0.operation_type', $editHistory3->operation_type)
+            ->has('groupedEdithistories.'.Carbon::now()->subDays(3)->format('Y-m-d')) 
+            ->where('groupedEdithistories.'.Carbon::now()->subDays(3)->format('Y-m-d').'.1.item_id', $editHistory4->item_id)
+            ->where('groupedEdithistories.'.Carbon::now()->subDays(3)->format('Y-m-d').'.1.operation_type', $editHistory4->operation_type)
             // ->dump()
         );
     }
