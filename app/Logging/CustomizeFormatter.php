@@ -28,6 +28,7 @@ class CustomizeFormatter
                 'extra.stack' => 'stack' //stack traceを表示する
             ]
         );
+
         $introprocessor = new IntrospectionProcessor(Level::Debug, [
             'Monolog\\',
             'Illuminate\\',
