@@ -60,6 +60,8 @@ class ItemController extends Controller
     {  
         Gate::authorize('staff-higher');
 
+        Log::info('Index method called');
+
         $search = $request->query('search', '');
         
         // 作成日でソートの値、初期値はasc
@@ -155,6 +157,8 @@ class ItemController extends Controller
             ];
         }
         
+        Log::info('Index method executed successfully');
+
         return Inertia::render('Items/Index', [
             'items' => $items,
             'categories' => $categories,
@@ -172,11 +176,15 @@ class ItemController extends Controller
     {   
         Gate::authorize('staff-higher');
 
+        Log::info('Create method called');
+
         $categories = Category::all();
         $locations = Location::all();
         $units = Unit::all();
         $usage_statuses = UsageStatus::all();
         $acquisition_methods = AcquisitionMethod::all();
+
+        Log::info('Create method executed successfully');
 
         // $request->queryはリクエスト一覧から「新規作成」でCreate.vueを開いたときに自動入力する値
         return Inertia::render('Items/Create', [
@@ -196,6 +204,8 @@ class ItemController extends Controller
     public function store(StoreItemRequest $request)
     {
         Gate::authorize('staff-higher');
+
+        Log::info('Store method called');
 
         // 編集理由はItemObserverのメソッド内でセッションから取得し、edithistoriesに保存
         Session::put('operation_type', 'store');
@@ -283,6 +293,8 @@ class ItemController extends Controller
 
             DB::commit();
 
+            Log::info('Store method executed successfully');
+
             return to_route('items.index')
             ->with([
                 'message' => '備品を登録しました',
@@ -291,6 +303,8 @@ class ItemController extends Controller
 
         } catch (\Exception $e) {
             DB::rollBack();
+
+            Log::error('Transaction failed');
 
             // アップロードした備品の画像の削除
             $imagePath = 'items/' . $fileNameToStore;
@@ -320,6 +334,10 @@ class ItemController extends Controller
 
     public function show(Item $item)
     {
+        Gate::authorize('staff-higher');
+
+        Log::info('Show method called');
+
         $withRelations = ['category', 'unit', 'usageStatus', 'locationOfUse', 'storageLocation', 'acquisitionMethod', 'inspections', 'disposal'];
         $item = Item::with($withRelations)->find($item->id);  
 
@@ -333,17 +351,21 @@ class ItemController extends Controller
 
         $user = auth()->user();
 
+        Log::info('Show method executed successfully');
+
         return Inertia::render('Items/Show', [
             'item' => $item,
             'uncompleted_inspection' => $uncompleted_inspection,
             'last_completed_inspection' => $last_completed_inspection,
             'userName' => $user->name,
-        ]);
+        ]);                                                           
     }
 
     public function edit(Item $item)
     {
         Gate::authorize('staff-higher');
+
+        Log::info('Edit method called');
 
         $withRelations = ['category', 'unit', 'usageStatus', 'locationOfUse', 'storageLocation', 'acquisitionMethod', 'inspections', 'disposal'];
         $item = Item::with($withRelations)->find($item->id);  
@@ -362,6 +384,8 @@ class ItemController extends Controller
         $acquisition_methods = AcquisitionMethod::all();
         $edit_reasons = EditReason::all();
 
+        Log::info('Edit method executed successfully');
+
         return Inertia::render('Items/Edit', [
             'item' => $item,
             'uncompleted_inspection_scheduled_date' => $uncompleted_inspection_scheduled_date,
@@ -379,6 +403,8 @@ class ItemController extends Controller
     {
         // トランザクション処理は、ItemObserverでのDB保存もロールバックする
         Gate::authorize('staff-higher');
+
+        Log::info('Update method called');
 
         // ロールバックした時の備品画像を元に戻す準備
         if (!Storage::disk('public')->exists('temp')) {
@@ -483,6 +509,8 @@ class ItemController extends Controller
 
             DB::commit();
 
+            Log::info('Update method executed successfully');
+
             return to_route('items.show', $item->id)
             ->with([
                 'message' => '備品を更新しました',
@@ -491,6 +519,8 @@ class ItemController extends Controller
 
         } catch (\Exception $e) {
             DB::rollBack();
+
+            Log::error('Transaction failed');
 
             // アップロードしたプロフィール画像を削除
             if (Storage::disk('public')->exists('items/' . $fileNameToStore)) {
@@ -536,6 +566,10 @@ class ItemController extends Controller
 
     public function restore($id)
     {
+        Gate::authorize('staff-higher');
+
+        Log::info('Restore method called');
+
         $item = Item::withTrashed()->find($id);
         if ($item) {
             $item->restore();
@@ -546,6 +580,8 @@ class ItemController extends Controller
                 'status' => 'success'
             ]);
         }
+
+        Log::info('Restore method executed successfully');
 
         return to_route('items.index')
         ->with([
@@ -560,8 +596,15 @@ class ItemController extends Controller
         
     // }
 
-    public function disposedItemIndex(){
+    public function disposedItemIndex()
+    {
+        Gate::authorize('staff-higher');
+
+        Log::info('disposedItemIndex method called');
+
         $disposedItems = Item::onlyTrashed()->get();
+
+        Log::info('disposedItemIndex method executed successfully');
         
         return Inertia::render('Items/Index', [
             'disposedItems' => $disposedItems,
