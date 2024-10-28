@@ -157,7 +157,7 @@ class ItemController extends Controller
             ];
         }
         
-        Log::info('ItemController index method success');
+        Log::info('ItemController index method succeeded');
 
         return Inertia::render('Items/Index', [
             'items' => $items,
@@ -184,7 +184,7 @@ class ItemController extends Controller
         $usage_statuses = UsageStatus::all();
         $acquisition_methods = AcquisitionMethod::all();
 
-        Log::info('ItemController create method success');
+        Log::info('ItemController create method succeeded');
 
         // $request->queryはリクエスト一覧から「新規作成」でCreate.vueを開いたときに自動入力する値
         return Inertia::render('Items/Create', [
@@ -293,7 +293,7 @@ class ItemController extends Controller
 
             DB::commit();
 
-            Log::info('ItemController store method success');
+            Log::info('ItemController store method succeeded');
 
             return to_route('items.index')
             ->with([
@@ -355,7 +355,7 @@ class ItemController extends Controller
 
         $user = auth()->user();
 
-        Log::info('ItemController show method success');
+        Log::info('ItemController show method succeeded');
 
         return Inertia::render('Items/Show', [
             'item' => $item,
@@ -388,7 +388,7 @@ class ItemController extends Controller
         $acquisition_methods = AcquisitionMethod::all();
         $edit_reasons = EditReason::all();
 
-        Log::info('ItemController edit method success');
+        Log::info('ItemController edit method succeeded');
 
         return Inertia::render('Items/Edit', [
             'item' => $item,
@@ -513,7 +513,7 @@ class ItemController extends Controller
 
             DB::commit();
 
-            Log::info('ItemController update method success');
+            Log::info('ItemController update method succeeded');
 
             return to_route('items.show', $item->id)
             ->with([
@@ -582,7 +582,7 @@ class ItemController extends Controller
         if ($item) {
             $item->restore();
 
-            Log::info('ItemController restore method success');
+            Log::info('ItemController restore method succeeded');
 
             return to_route('items.index')
             ->with([
@@ -613,7 +613,7 @@ class ItemController extends Controller
 
         $disposedItems = Item::onlyTrashed()->get();
 
-        Log::info('ItemController disposedItemIndex method success');
+        Log::info('ItemController disposedItemIndex method succeeded');
         
         return Inertia::render('Items/Index', [
             'disposedItems' => $disposedItems,
