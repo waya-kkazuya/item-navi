@@ -14,22 +14,23 @@ use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Log;
 
 class UpdateStockController extends Controller
 {
     public function decreaseStock(DecreaseStockRequest $request, Item $item)
     {
         Gate::authorize('user-higher');
-        // dd($request);
-        // dd($item);
+
+        Log::info('UpdateStockController decreaseStock method called');
+
         DB::beginTransaction();
 
         try {
-
-            // バリデーションルールで'min:1'
-            // 念のため、サーバーサイドでもquantitiy=0対策をすpる
-            // 在庫数より大きいquantityは出庫出来ない
+            // 念のため、サーバーサイドでもバリデーション
             if($request->quantity <= 0 || $request->quantity > $item->stock){
+                Log::warning('UpdateStockController decreaseStock method failed');
+
                 return to_route('consumable_items')
                 ->with([
                     'message' => '出庫数に正しい値を入力してください',
@@ -37,8 +38,7 @@ class UpdateStockController extends Controller
                 ]);
             }
             
-            // stock_transactionsテーブルに保存し、Item->stockを更新する
-            // 新しいレコードを作成
+            // stock_transactionsテーブルの新しいレコードを作成
             $stockTransaction = new StockTransaction();
             $stockTransaction->item_id = $item->id;
             $stockTransaction->transaction_type = $request->transaction_type;
@@ -52,25 +52,26 @@ class UpdateStockController extends Controller
             $item->save();
 
             // 編集履歴Edithistoryにも保存
-            // Edithistory::create([
-            //     'edit_mode' => 'normal' ,
-            //     'operation_type' => 'stock_out',
-            //     'item_id' => $item->id,
-            //     'edited_field' => null,
-            //     'old_value' => null,
-            //     'new_value' => null,
-            //     'edit_user' => Auth()->user,
-            //     'edit_reason_id' => null,
-            //     'edit_reason_text' => null
-            // ]);
+            Edithistory::create([
+                'edit_mode' => 'normal' ,
+                'operation_type' => 'stock_out',
+                'item_id' => $item->id,
+                'edited_field' => null,
+                'old_value' => null,
+                'new_value' => null,
+                'edit_user' => Auth()->user ?? null,
+                'edit_reason_id' => null,
+                'edit_reason_text' => null
+            ]);
 
-            // LowStockDetectEventのイベント発火
-            // 通知がオンになっている、かつ、在庫数が通知在庫数を下回ったら通知を送る
+            // 通知がオンになっている、かつ、在庫数が通知在庫数以下になったら通知を送る
             if($item->notification && $item->stock <= $item->minimum_stock) {
                 event(new LowStockDetectEvent($item));
             }
             
             DB::commit();
+
+            Log::info('UpdateStockController decreaseStock method succeeded');
 
             return to_route('consumable_items')
             ->with([
@@ -81,6 +82,12 @@ class UpdateStockController extends Controller
         } catch (\Exception $e) {
             DB::rollBack();
 
+            Log::error('UpdateStockController decreaseStock method Transaction failed', [
+                'error' => $e->getMessage(),
+                'stack' => $e->getTraceAsString(),
+                'request' => $request->all()
+            ]);
+
             return redirect()->back()
             ->with([
                 'message' => '登録中にエラーが発生しました',
@@ -89,22 +96,19 @@ class UpdateStockController extends Controller
         }
     }
 
-
-
-    // Increase用のRequestファイルが必要
     public function increaseStock(IncreaseStockRequest $request, Item $item)
     {
         Gate::authorize('user-higher');
-        // dd($request);
-        // dd($item);
+
+        Log::info('UpdateStockController increaseStock method called');
+
         DB::beginTransaction();
 
         try {
-
-            // バリデーションルールで'min:1'
-            // 念のため、サーバーサイドでもquantitiy=0対策をする
-            // 在庫数より大きいquantityは出庫出来ない
+            // 念のため、サーバーサイドでもバリデーション
             if($request->quantity <= 0){
+                Log::warning('UpdateStockController increaseStock method failed');
+
                 return to_route('consumable_items')
                 ->with([
                     'message' => '出庫数に正しい値を入力してください',
@@ -112,8 +116,6 @@ class UpdateStockController extends Controller
                 ]);
             }
             
-            // stock_transactionsテーブルに保存し、Item->stockを更新する
-            // 新しいレコードを作成
             $stockTransaction = new StockTransaction();
             $stockTransaction->item_id = $item->id;
             $stockTransaction->transaction_type = $request->transaction_type;
@@ -125,14 +127,10 @@ class UpdateStockController extends Controller
             // itemsテーブルのstockカラムの値を更新
             $item->stock += $request->quantity;
             $item->save();
-
-
-            // 在庫数が通知在庫数以下になったときにイベントを発火
-            // LowStockDetectEventのイベント発火
-            // event(new LowStockDetectEvent($item));
-            // // event(new LowStockDetectEvent('こんにちは！'));
             
             DB::commit();
+
+            Log::info('UpdateStockController increaseStock method succeeded');
 
             return to_route('consumable_items')
             ->with([
@@ -143,12 +141,17 @@ class UpdateStockController extends Controller
         } catch (\Exception $e) {
             DB::rollBack();
 
+            Log::error('UpdateStockController increaseStock method Transaction failed', [
+                'error' => $e->getMessage(),
+                'stack' => $e->getTraceAsString(),
+                'request' => $request->all()
+            ]);
+
             return redirect()->back()
             ->with([
                 'message' => '登録中にエラーが発生しました',
                 'status' => 'danger'
             ]);
         }
-   
     }
 }
