@@ -29,6 +29,8 @@ class ConsumableItemController extends Controller
     {
         Gate::authorize('user-higher');
 
+        Log::info('ConsumableItemController index method called');
+
         try {
             $search = $request->query('search', '');
 
@@ -116,6 +118,8 @@ class ConsumableItemController extends Controller
                 ];
             }
 
+            Log::info('ConsumableItemController index method succeeded');
+
             return Inertia::render('ConsumableItems/Index', [
                 'consumableItems' => $consumableItems,
                 'locations' => $locations,
@@ -128,7 +132,11 @@ class ConsumableItemController extends Controller
                 'linkedItem' => $linkedItem
             ]);
         } catch (\Exception $e) {
-            Log::error('エラーが発生しました: ' . $e->getMessage());
+            Log::error('ConsumableItemController index method failed', [
+                'error' => $e->getMessage(),
+                'stack' => $e->getTraceAsString(),
+                'request' => $request->all()
+            ]);
         }
     }
 }
