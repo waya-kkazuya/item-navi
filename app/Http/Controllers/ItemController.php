@@ -60,7 +60,7 @@ class ItemController extends Controller
     {  
         Gate::authorize('staff-higher');
 
-        Log::info('Index method called');
+        Log::info('ItemController index method called');
 
         $search = $request->query('search', '');
         
@@ -157,7 +157,7 @@ class ItemController extends Controller
             ];
         }
         
-        Log::info('Index method executed successfully');
+        Log::info('ItemController index method executed successfully');
 
         return Inertia::render('Items/Index', [
             'items' => $items,
@@ -176,7 +176,7 @@ class ItemController extends Controller
     {   
         Gate::authorize('staff-higher');
 
-        Log::info('Create method called');
+        Log::info('ItemController create method called');
 
         $categories = Category::all();
         $locations = Location::all();
@@ -184,7 +184,7 @@ class ItemController extends Controller
         $usage_statuses = UsageStatus::all();
         $acquisition_methods = AcquisitionMethod::all();
 
-        Log::info('Create method executed successfully');
+        Log::info('ItemController create method executed successfully');
 
         // $request->queryはリクエスト一覧から「新規作成」でCreate.vueを開いたときに自動入力する値
         return Inertia::render('Items/Create', [
@@ -205,7 +205,7 @@ class ItemController extends Controller
     {
         Gate::authorize('staff-higher');
 
-        Log::info('Store method called');
+        Log::info('ItemController store method called');
 
         // 編集理由はItemObserverのメソッド内でセッションから取得し、edithistoriesに保存
         Session::put('operation_type', 'store');
@@ -293,7 +293,7 @@ class ItemController extends Controller
 
             DB::commit();
 
-            Log::info('Store method executed successfully');
+            Log::info('ItemController store method executed successfully');
 
             return to_route('items.index')
             ->with([
@@ -304,7 +304,7 @@ class ItemController extends Controller
         } catch (\Exception $e) {
             DB::rollBack();
 
-            Log::error('Transaction failed');
+            Log::error('ItemController store method Transaction failed');
 
             // アップロードした備品の画像の削除
             $imagePath = 'items/' . $fileNameToStore;
@@ -336,7 +336,7 @@ class ItemController extends Controller
     {
         Gate::authorize('staff-higher');
 
-        Log::info('Show method called');
+        Log::info('ItemController show method called');
 
         $withRelations = ['category', 'unit', 'usageStatus', 'locationOfUse', 'storageLocation', 'acquisitionMethod', 'inspections', 'disposal'];
         $item = Item::with($withRelations)->find($item->id);  
@@ -351,7 +351,7 @@ class ItemController extends Controller
 
         $user = auth()->user();
 
-        Log::info('Show method executed successfully');
+        Log::info('ItemController show method executed successfully');
 
         return Inertia::render('Items/Show', [
             'item' => $item,
@@ -365,7 +365,7 @@ class ItemController extends Controller
     {
         Gate::authorize('staff-higher');
 
-        Log::info('Edit method called');
+        Log::info('ItemController edit method called');
 
         $withRelations = ['category', 'unit', 'usageStatus', 'locationOfUse', 'storageLocation', 'acquisitionMethod', 'inspections', 'disposal'];
         $item = Item::with($withRelations)->find($item->id);  
@@ -384,7 +384,7 @@ class ItemController extends Controller
         $acquisition_methods = AcquisitionMethod::all();
         $edit_reasons = EditReason::all();
 
-        Log::info('Edit method executed successfully');
+        Log::info('ItemController edit method executed successfully');
 
         return Inertia::render('Items/Edit', [
             'item' => $item,
@@ -404,7 +404,7 @@ class ItemController extends Controller
         // トランザクション処理は、ItemObserverでのDB保存もロールバックする
         Gate::authorize('staff-higher');
 
-        Log::info('Update method called');
+        Log::info('ItemController update method called');
 
         // ロールバックした時の備品画像を元に戻す準備
         if (!Storage::disk('public')->exists('temp')) {
@@ -509,7 +509,7 @@ class ItemController extends Controller
 
             DB::commit();
 
-            Log::info('Update method executed successfully');
+            Log::info('ItemController update method executed successfully');
 
             return to_route('items.show', $item->id)
             ->with([
@@ -520,7 +520,7 @@ class ItemController extends Controller
         } catch (\Exception $e) {
             DB::rollBack();
 
-            Log::error('Transaction failed');
+            Log::error('ItemController update method Transaction failed');
 
             // アップロードしたプロフィール画像を削除
             if (Storage::disk('public')->exists('items/' . $fileNameToStore)) {
@@ -568,11 +568,13 @@ class ItemController extends Controller
     {
         Gate::authorize('staff-higher');
 
-        Log::info('Restore method called');
+        Log::info('ItemController restore method called');
 
         $item = Item::withTrashed()->find($id);
         if ($item) {
             $item->restore();
+
+            Log::info('ItemController restore method executed successfully');
 
             return to_route('items.index')
             ->with([
@@ -581,14 +583,13 @@ class ItemController extends Controller
             ]);
         }
 
-        Log::info('Restore method executed successfully');
+        Log::warning('ItemController restore method failed');
 
         return to_route('items.index')
         ->with([
             'message' => '該当の備品が存在しませんでした',
             'status' => 'danger'
         ]);
-
     }
 
     // public function forceDelete($id)
@@ -600,11 +601,11 @@ class ItemController extends Controller
     {
         Gate::authorize('staff-higher');
 
-        Log::info('disposedItemIndex method called');
+        Log::info('ItemController disposedItemIndex method called');
 
         $disposedItems = Item::onlyTrashed()->get();
 
-        Log::info('disposedItemIndex method executed successfully');
+        Log::info('ItemController disposedItemIndex method executed successfully');
         
         return Inertia::render('Items/Index', [
             'disposedItems' => $disposedItems,
