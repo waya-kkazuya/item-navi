@@ -15,6 +15,7 @@ use App\Services\ImageService;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class ProfileController extends Controller
 {
@@ -28,6 +29,8 @@ class ProfileController extends Controller
     {
         Gate::authorize('user-higher');
 
+        Log::info('ProfileController edit method called');
+
         $user = Auth::user();
         $profile_image = $user->profile_image;
         
@@ -40,6 +43,8 @@ class ProfileController extends Controller
                 $profile_image_path = asset('storage/profile/profile_default_image.png');
             }
         }
+
+        Log::info('ProfileController edit method succeeded');
         
         return Inertia::render('Profile/Edit', [
             'mustVerifyEmail' => $request->user() instanceof MustVerifyEmail,
@@ -51,6 +56,8 @@ class ProfileController extends Controller
     public function update(ProfileUpdateRequest $request): RedirectResponse
     {
         Gate::authorize('user-higher');
+
+        Log::info('ProfileController update method called');
 
         // ロールバックした時のプロフィール画像を元に戻す準備
         if (!Storage::disk('public')->exists('temp')) {
@@ -88,6 +95,8 @@ class ProfileController extends Controller
 
             DB::commit();
 
+            Log::info('ProfileController update method succeeded');
+
             return Redirect::route('profile.edit')
             ->with([
                 'message' => 'プロフィールを更新しました。',
@@ -96,7 +105,11 @@ class ProfileController extends Controller
         } catch (\Exception $e) {
             DB::rollBack();
 
-            \Log::error('ProfileController@updateのcatch節');
+            Log::error('ProfileController update method Transaction failed', [
+                'error' => $e->getMessage(),
+                'stack' => $e->getTraceAsString(),
+                'request' => $request->all()
+            ]);
 
             // アップロードした備品の画像の削除
             if (Storage::disk('public')->exists('profile/'.$profileImagefileNameToStore)) {
