@@ -62,114 +62,122 @@ class ItemController extends Controller
 
         Log::info('ItemController index method called');
 
-        $search = $request->query('search', '');
-        
-        // 作成日でソートの値、初期値はasc
-        $sortOrder = $request->query('sortOrder', 'desc');
+        try {
+            $search = $request->query('search', '');
+            
+            // 作成日でソートの値、初期値はasc
+            $sortOrder = $request->query('sortOrder', 'desc');
 
-        // プルダウンの数値、第2引数は初期値で0
-        $category_id = $request->query('categoryId', 0);
-        $location_of_use_id = $request->query('locationOfUseId', 0);
-        $storage_location_id = $request->query('storageLocationId', 0);
+            // プルダウンの数値、第2引数は初期値で0
+            $category_id = $request->query('categoryId', 0);
+            $location_of_use_id = $request->query('locationOfUseId', 0);
+            $storage_location_id = $request->query('storageLocationId', 0);
 
-        $withRelations = ['category', 'unit', 'usageStatus', 'locationOfUse', 'storageLocation', 'acquisitionMethod', 'inspections', 'disposal'];
-        $selectFields = [
-            'id',
-            'management_id',
-            'name',
-            'category_id',
-            'image1',
-            'stock',
-            'unit_id',
-            'minimum_stock',
-            'notification',
-            'usage_status_id',
-            'end_user',
-            'location_of_use_id',
-            'storage_location_id',
-            'acquisition_method_id',
-            'acquisition_source',
-            'price',
-            'date_of_acquisition',
-            'manufacturer',
-            'product_number',
-            'remarks',
-            'qrcode',
-            'deleted_at',
-            'created_at'
-        ];
-
-        // 通常の備品か廃棄済みの備品かの分岐
-        if ($request->disposal === 'true') {
-            $query = Item::onlyTrashed();
-        } else {
-            $query = Item::whereNull('deleted_at');
-        }
-
-        // withによるeagerローディングではリレーションを使用する
-        $query = $query->with($withRelations)
-        ->searchItems($search)
-        ->select($selectFields)
-        ->orderBy('created_at', $sortOrder);
-
-        // DBに設定されているidの時のみ反映
-        // 各プルダウン変更時のクエリ、ローカルスコープに切り出しリファクタリング
-        if (Category::where('id', $category_id)->exists()) {
-            $query->where('category_id', $category_id);
-        }
-
-        if (Location::where('id', $location_of_use_id)->exists()) {
-            $query->where('location_of_use_id', $location_of_use_id);
-        }
-
-        if (Location::where('id', $storage_location_id)->exists()) {
-            $query->where('storage_location_id', $storage_location_id);
-        }
-
-        $total_count = $query->count();
-        $items = $query->paginate(20);
-
-        // map関数を使用するとpaginateオブジェクトの構造が変わり、ペジネーションが使えなくなる
-        $items->getCollection()->transform(function ($item) {
-            return $this->imageService->setImagePathToObject($item);
-        });
-
-        $items->getCollection()->transform(function ($item) {
-            // inspection_scheduled_dateを追加
-            $inspection = $item->inspections->where('status', false)->sortBy('inspection_scheduled_date')->first();
-            $item->inspection_scheduled_date = $inspection ? $inspection->inspection_scheduled_date : null;
-            return $item;
-        });
-
-        // 変換後のコレクションを元のpaginateオブジェクトに戻す
-        $items = $items->setCollection($items->getCollection());
-
-        // プルダウン用データ
-        $categories = Category::all();
-        $locations = Location::all();
-
-
-        // 廃棄済み備品用API情報
-        if ($request->has('disposal')) {
-            return [
-                'items' => $items,
-                'total_count' => $total_count
+            $withRelations = ['category', 'unit', 'usageStatus', 'locationOfUse', 'storageLocation', 'acquisitionMethod', 'inspections', 'disposal'];
+            $selectFields = [
+                'id',
+                'management_id',
+                'name',
+                'category_id',
+                'image1',
+                'stock',
+                'unit_id',
+                'minimum_stock',
+                'notification',
+                'usage_status_id',
+                'end_user',
+                'location_of_use_id',
+                'storage_location_id',
+                'acquisition_method_id',
+                'acquisition_source',
+                'price',
+                'date_of_acquisition',
+                'manufacturer',
+                'product_number',
+                'remarks',
+                'qrcode',
+                'deleted_at',
+                'created_at'
             ];
-        }
-        
-        Log::info('ItemController index method succeeded');
 
-        return Inertia::render('Items/Index', [
-            'items' => $items,
-            'categories' => $categories,
-            'locations' => $locations,
-            'search' => $search,
-            'sortOrder' => $sortOrder,
-            'categoryId' => $category_id,
-            'locationOfUseId' => $location_of_use_id,
-            'storageLocationId' => $storage_location_id,
-            'totalCount' => $total_count
-        ]); 
+            // 通常の備品か廃棄済みの備品かの分岐
+            if ($request->disposal === 'true') {
+                $query = Item::onlyTrashed();
+            } else {
+                $query = Item::whereNull('deleted_at');
+            }
+
+            // withによるeagerローディングではリレーションを使用する
+            $query = $query->with($withRelations)
+            ->searchItems($search)
+            ->select($selectFields)
+            ->orderBy('created_at', $sortOrder);
+
+            // DBに設定されているidの時のみ反映
+            // 各プルダウン変更時のクエリ、ローカルスコープに切り出しリファクタリング
+            if (Category::where('id', $category_id)->exists()) {
+                $query->where('category_id', $category_id);
+            }
+
+            if (Location::where('id', $location_of_use_id)->exists()) {
+                $query->where('location_of_use_id', $location_of_use_id);
+            }
+
+            if (Location::where('id', $storage_location_id)->exists()) {
+                $query->where('storage_location_id', $storage_location_id);
+            }
+
+            $total_count = $query->count();
+            $items = $query->paginate(20);
+
+            // map関数を使用するとpaginateオブジェクトの構造が変わり、ペジネーションが使えなくなる
+            $items->getCollection()->transform(function ($item) {
+                return $this->imageService->setImagePathToObject($item);
+            });
+
+            $items->getCollection()->transform(function ($item) {
+                // inspection_scheduled_dateを追加
+                $inspection = $item->inspections->where('status', false)->sortBy('inspection_scheduled_date')->first();
+                $item->inspection_scheduled_date = $inspection ? $inspection->inspection_scheduled_date : null;
+                return $item;
+            });
+
+            // 変換後のコレクションを元のpaginateオブジェクトに戻す
+            $items = $items->setCollection($items->getCollection());
+
+            // プルダウン用データ
+            $categories = Category::all();
+            $locations = Location::all();
+
+
+            // 廃棄済み備品用API情報
+            if ($request->has('disposal')) {
+                return [
+                    'items' => $items,
+                    'total_count' => $total_count
+                ];
+            }
+            
+            Log::info('ItemController index method succeeded');
+
+            return Inertia::render('Items/Index', [
+                'items' => $items,
+                'categories' => $categories,
+                'locations' => $locations,
+                'search' => $search,
+                'sortOrder' => $sortOrder,
+                'categoryId' => $category_id,
+                'locationOfUseId' => $location_of_use_id,
+                'storageLocationId' => $storage_location_id,
+                'totalCount' => $total_count
+            ]);
+        } catch (\Exception $e) {
+            Log::error('ItemController index method failed', [
+                'error' => $e->getMessage(),
+                'stack' => $e->getTraceAsString(),
+                'request' => $request->all()
+            ]);
+        }
     }
 
     public function create(Request $request)
