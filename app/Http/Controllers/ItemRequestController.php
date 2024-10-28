@@ -21,6 +21,8 @@ class ItemRequestController extends Controller
     {
         Gate::authorize('user-higher');
 
+        Log::info('ItemRequestController index method called');        
+
         // 作成日でソートの値、初期値はasc
         $sortOrder = $request->query('sortOrder', 'asc');
 
@@ -56,6 +58,8 @@ class ItemRequestController extends Controller
 
         $request_statuses = RequestStatus::all();
 
+        Log::info('ItemRequestController index method succeeded');
+
         return Inertia::render('ItemRequests/Index', [
             'itemRequests' => $item_requests,
             'sortOrder' => $sortOrder,
@@ -69,21 +73,28 @@ class ItemRequestController extends Controller
     {
         Gate::authorize('staff-higher');
 
+        Log::info('ItemRequestController updateStatus api method called');
+
         // $idはURLパラメータから取得される
         $itemRequest = ItemRequest::findOrFail($id);
         $itemRequest->request_status_id = $request->requestStatusId;
         $itemRequest->save();
 
+        Log::info('ItemRequestController updateStatus api method succeeded');
+
         return response()->json(['message' => 'Status updated successfully'], 200);
     }
-
 
     public function create()
     {
         Gate::authorize('user-higher');
         
+        Log::info('ItemRequestController create method called');        
+
         $categories = Category::all();
         $locations = Location::all();
+
+        Log::info('ItemRequestController create method succeeded');
 
         return Inertia::render('ItemRequests/Create', [
             'categories' => $categories,
@@ -94,6 +105,8 @@ class ItemRequestController extends Controller
     public function store(StoreItemRequestRequest $request)
     {
         Gate::authorize('user-higher');
+
+        Log::info('ItemRequestController store method called');
         
         DB::beginTransaction();
 
@@ -115,6 +128,8 @@ class ItemRequestController extends Controller
 
             DB::commit();
 
+            Log::info('ItemRequestController store method succeeded');
+
             return to_route('item_requests.index')
             ->with([
                 'message' => 'リクエストしました。',
@@ -123,7 +138,12 @@ class ItemRequestController extends Controller
 
         } catch (\Exception $e) {
             DB::rollBack();
-            \Log::error('エラーが発生しました ItemRequstController@store: '.$e->getMessage());
+
+            Log::error('ItemRequestController store method Transaction failed', [
+                'error' => $e->getMessage(),
+                'stack' => $e->getTraceAsString(),
+                'request' => $request->all()
+            ]);
 
             return redirect()->back()
             ->with([
@@ -137,7 +157,11 @@ class ItemRequestController extends Controller
     {
         Gate::authorize('staff-higher');
 
+        Log::info('ItemRequestController destroy method called');
+
         $itemRequest->delete();
+
+        Log::info('ItemRequestController destroy method succeeded');
 
         return to_route('item_requests.index')
         ->with([
