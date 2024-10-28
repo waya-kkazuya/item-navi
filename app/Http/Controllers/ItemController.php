@@ -157,7 +157,7 @@ class ItemController extends Controller
             ];
         }
         
-        Log::info('ItemController index method executed successfully');
+        Log::info('ItemController index method success');
 
         return Inertia::render('Items/Index', [
             'items' => $items,
@@ -184,7 +184,7 @@ class ItemController extends Controller
         $usage_statuses = UsageStatus::all();
         $acquisition_methods = AcquisitionMethod::all();
 
-        Log::info('ItemController create method executed successfully');
+        Log::info('ItemController create method success');
 
         // $request->queryはリクエスト一覧から「新規作成」でCreate.vueを開いたときに自動入力する値
         return Inertia::render('Items/Create', [
@@ -293,7 +293,7 @@ class ItemController extends Controller
 
             DB::commit();
 
-            Log::info('ItemController store method executed successfully');
+            Log::info('ItemController store method success');
 
             return to_route('items.index')
             ->with([
@@ -304,7 +304,11 @@ class ItemController extends Controller
         } catch (\Exception $e) {
             DB::rollBack();
 
-            Log::error('ItemController store method Transaction failed');
+            Log::error('ItemController store method Transaction failed', [
+                'error' => $e->getMessage(),
+                'stack' => $e->getTraceAsString(),
+                'request' => $request->all()
+            ]);
 
             // アップロードした備品の画像の削除
             $imagePath = 'items/' . $fileNameToStore;
@@ -351,7 +355,7 @@ class ItemController extends Controller
 
         $user = auth()->user();
 
-        Log::info('ItemController show method executed successfully');
+        Log::info('ItemController show method success');
 
         return Inertia::render('Items/Show', [
             'item' => $item,
@@ -384,7 +388,7 @@ class ItemController extends Controller
         $acquisition_methods = AcquisitionMethod::all();
         $edit_reasons = EditReason::all();
 
-        Log::info('ItemController edit method executed successfully');
+        Log::info('ItemController edit method success');
 
         return Inertia::render('Items/Edit', [
             'item' => $item,
@@ -509,7 +513,7 @@ class ItemController extends Controller
 
             DB::commit();
 
-            Log::info('ItemController update method executed successfully');
+            Log::info('ItemController update method success');
 
             return to_route('items.show', $item->id)
             ->with([
@@ -520,7 +524,11 @@ class ItemController extends Controller
         } catch (\Exception $e) {
             DB::rollBack();
 
-            Log::error('ItemController update method Transaction failed');
+            Log::error('ItemController update method Transaction failed', [
+                'error' => $e->getMessage(),
+                'stack' => $e->getTraceAsString(),
+                'request' => $request->all()
+            ]);
 
             // アップロードしたプロフィール画像を削除
             if (Storage::disk('public')->exists('items/' . $fileNameToStore)) {
@@ -574,7 +582,7 @@ class ItemController extends Controller
         if ($item) {
             $item->restore();
 
-            Log::info('ItemController restore method executed successfully');
+            Log::info('ItemController restore method success');
 
             return to_route('items.index')
             ->with([
@@ -605,7 +613,7 @@ class ItemController extends Controller
 
         $disposedItems = Item::onlyTrashed()->get();
 
-        Log::info('ItemController disposedItemIndex method executed successfully');
+        Log::info('ItemController disposedItemIndex method success');
         
         return Inertia::render('Items/Index', [
             'disposedItems' => $disposedItems,
