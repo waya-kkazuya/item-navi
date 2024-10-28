@@ -8,6 +8,7 @@ use App\Models\Disposal;
 use App\Models\Item;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use App\Models\Edithistory;
 use Illuminate\Support\Facades\Auth;
 
@@ -19,8 +20,9 @@ class DisposalController extends Controller
     {
         DB::beginTransaction();
 
+        Log::info('DisposalController disposeItem method called');
+
         try {
-        
             $disposal = Disposal::where('item_id', $item->id)->first();
 
             if (is_null($disposal)) {
@@ -56,6 +58,8 @@ class DisposalController extends Controller
 
             DB::commit();
 
+            Log::info('DisposalController disposeItem method succeeded');
+
             return to_route('items.index')
             ->with([
                 'message' => '廃棄しました。',
@@ -64,6 +68,12 @@ class DisposalController extends Controller
 
         } catch (\Exception $e) {
             DB::rollBack();
+
+            Log::error('DisposalController disposeItem method Transaction failed', [
+                'error' => $e->getMessage(),
+                'stack' => $e->getTraceAsString(),
+                'request' => $request->all()
+            ]);
 
             return redirect()->back()
             ->with([
