@@ -5,22 +5,25 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Edithistory;
+use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Log;
 
 class EdithistoryController extends Controller
 {
     public function index(Request $request)
     {
-        // mapで更新種類と更新フィールドを日本語に変換する必要がある
-        // 新しいキーを作成するのが良い
+        Gate::authorize('user-higher');
+
+        Log::info('EdithistoryController index method called');
+
+        // 編集履歴で表示するために、更新種類と更新フィールドを日本語に変換する必要がある
          $edithistories = Edithistory::where('item_id', $request->item_id)
             ->with('editReason')
             ->orderBy('created_at', 'desc')
             ->take(10)
             ->get()
             ->map(function ($edithistory) {
-                // operation_typeの表示用の値を設定
-                // operation_type=>更新種類　store(新規作成),update(編集更新),stock_in(入庫・在庫追加),stock_out(出庫・在庫消費),delete(廃棄),restore(復元)                
-                \Log::debug('$edithistory->operation_type: '.$edithistory->operation_type);
+                // operation_typeの編集履歴に表示用の値を設定
                 $edithistory->operation_type_for_display = match ($edithistory->operation_type) {
                     'store' => '新規登録',
                     'update' => '編集更新',
@@ -31,8 +34,7 @@ class EdithistoryController extends Controller
                     'inspection' => '点検',
                     default => '不明',
                 };
-
-                 // edited_fieldの表示用の値を設定
+                 // edited_fieldの編集履歴に表示用の値を設定
                 $edithistory->edited_field_for_display = match ($edithistory->edited_field) {
                     'name' => '備品名',
                     'category_id' => 'カテゴリ',
@@ -56,9 +58,11 @@ class EdithistoryController extends Controller
                     'disposal_scheduled_date' => '廃棄予定日',
                     default => null,
                 };
-
+                
                 return $edithistory;
             });
+
+        Log::info('EdithistoryController index method succeeded');
 
         return [
             'edithistories' => $edithistories
