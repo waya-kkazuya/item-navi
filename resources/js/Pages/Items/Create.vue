@@ -18,29 +18,27 @@ const props = defineProps({
     errors: Object
 })
 
-
 const form = useForm({
-    id: null, //
+    id: null,
     image_file: null,
     name: props.name ?? null,
     category_id: props.category_id ?? 0, 
-    //   image1: null, //保存する際は画像名 
-    stock: 1, // 最初から1を入力しておく
+    stock: 1, // 初期値=1
     unit_id: 1,
     minimum_stock: 0,
     notification: true,
     usage_status_id: 0,
     end_user: null,
-    location_of_use_id: props.location_of_use_id ?? 0, // locationsテーブルで1は「未選択」
-    storage_location_id: 0, // locationsテーブルで1は「未選択」
+    location_of_use_id: props.location_of_use_id ?? 0,
+    storage_location_id: 0,
     acquisition_method_id: 0,
     acquisition_source: null,
     price: props.price ?? 0,
     date_of_acquisition: new Date().toISOString().substr(0, 10),
     manufacturer: props.manufacturer ?? null,
     product_number: null,
-    inspection_scheduled_date: null, // 初期値はnull
-    disposal_scheduled_date: null, // 初期値はnull
+    inspection_scheduled_date: null, // 初期値null
+    disposal_scheduled_date: null, // 初期値null
     remarks: null,
 })
 
@@ -49,21 +47,22 @@ const file_preview_src = ref('')
 
 const handleFileUpload = (event) => {
     form.image_file = event.target.files[0];
-    // ブラウザ限定の画像プレビュー用のURL生成
     if (form.image_file) {
         file_preview_src.value = URL.createObjectURL(form.image_file);
-        console.log(file_preview_src.value)
     }
 };
 
 // router.visitではuseFormの入力値保持機能は使えない
 // form.postなら入力値保持機能(old関数))が使える
 const storeItem = () => {
-  form.post('/items', {
-    // onError: (errors) => {
-    //   form.errors = errors
-    // }
-  })
+    try {
+        form.post('/items')
+    } catch (e) {
+        axios.post('/api/log-error', {
+            error: e.toString(),
+            component: 'Items/Create.vue storeItem method',
+        })
+    }
 }
 
 
@@ -77,7 +76,6 @@ const clearInspectionSchedule = () => {
 const clearDisposalSchedule = () => {
     form.disposal_scheduled_date = '';
 };
-
 </script>
 
 <template>
