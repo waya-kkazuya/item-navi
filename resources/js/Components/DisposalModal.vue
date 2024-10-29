@@ -20,14 +20,18 @@ const form = useForm({
 
 // disposalsテーブルに保存する関数
 const saveDisposal = item => {
-  if (confirm('本当に削除しますか？')) {
-    form.put(`/dispose_item/${item.id}`, {
-      onSuccess: () => {
-        toggleStatus()
-      },
-      onError: errors => {
-        // console.error('Validation Error:', errors)
-      }
+  try {
+    if (confirm('本当に削除しますか？')) {
+      form.put(`/dispose_item/${item.id}`, {
+        onSuccess: () => {
+          toggleStatus()
+        },
+      })
+    }
+  } catch (e) {
+    axios.post('/api/log-error', {
+      error: e.toString(),
+      component: 'DisposalModal.vue saveDisposal method',
     })
   }
 }
@@ -63,7 +67,7 @@ const saveDisposal = item => {
                   廃棄予定日
                 </label>
                 <div id="disposalSchedule" name="disposalSchedule" class="w-full bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-xs md:text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
-                  {{ item.disposal ? item.disposal.disposal_scheduled_date : '予定なし' }}  
+                  {{ item.disposal && item.disposal.disposal_scheduled_date ? item.disposal.disposal_scheduled_date : '予定なし' }}  
                 </div>
               </div>
               <div class="p-2 w-full">
