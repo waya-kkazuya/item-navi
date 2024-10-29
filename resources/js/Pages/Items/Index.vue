@@ -8,8 +8,6 @@ import EditHistoryModal from '@/Components/EditHistoryModal.vue';
 import { stringify } from 'postcss';
 import { useWindowSize } from '@/hooks/useWindowSize';
 
-const { width } = useWindowSize();
-
 const props = defineProps({
   items: Object,
   categories: Array,
@@ -29,15 +27,14 @@ const localItems = ref({...props.items});
 const search = ref(props.search)
 // 作成日でソート
 const sortOrder = ref(props.sortOrder ?? 'asc')
-// カテゴリプルダウン用(初期値は0)、更新したらその値
-// コントローラーをまたいで
+// カテゴリプルダウン用(初期値は0)
 const categoryId = ref(props.categoryId)
 const locationOfUseId = ref(props.locationOfUseId ?? 0)
 const storageLocationId = ref(props.storageLocationId ?? 0)
-
+// 備品の合計件数
 const totalCount = ref(props.totalCount)
 
-// すべてのフィルターをまとめる
+// プルダウンや検索フォームの条件を適用して備品情報を再取得
 const fetchAndFilterItems = () => {
   router.visit(route('items.index', {
     search: search.value,
@@ -50,8 +47,8 @@ const fetchAndFilterItems = () => {
   })
 }
 
+// プルダウンや検索フォームをすべてリセット
 const resetState = () => {
-  //それぞれのリアクティブな値もデフォルトの値に戻して、プルダウンや検索フォームに反映する 
   search.value = ''
   sortOrder.value = 'asc'
   categoryId.value = 0
@@ -61,18 +58,13 @@ const resetState = () => {
   fetchAndFilterItems()
 }
 
-// 行表示・タイル表示の切替 セッションにisTableViewを保存する
+// 行表示・タイル表示の切替 セッションにisTableViewを保存
 const isTableView = ref(sessionStorage.getItem('isTableView') !== 'false')
-
-// watchでisTableViewを監視している
+// watchでisTableViewを監視
 watch(isTableView, (newValue) => {
   sessionStorage.setItem('isTableView', newValue)
 })
-
-// プルダウン、ソートの情報もセッションに保存するかどうか
 onMounted(() => {
-  console.log(props.items)
-  console.log(props.locationOfUseId)
   if (sessionStorage.getItem('isTableView') === null) {
     isTableView.value = true
     sessionStorage.setItem('isTableView', 'true')
@@ -80,52 +72,42 @@ onMounted(() => {
 })
 
 const toggleSortOrder = () => {
-  // 昇順降順の切り替え
   sortOrder.value = sortOrder.value === 'asc' ? 'desc' : 'asc'
   fetchAndFilterItems()
 };
 
-
-// 備品<-->廃棄済み備品の表示切り替え
-// 初期値はfalse
+// 備品と廃棄済み備品の表示切り替え
 const showDisposal = ref(false);
 const toggleItems = async () => {
-  // showDisposal.value = !showDisposal.value;
-  // showDisposalの値で叩くAPIのURLを変える
-  console.log(showDisposal.value)
   const url = showDisposal.value ? 'api/items?disposal=true' : 'api/items?disposal=false';
-  console.log(url)
   try {
     const res = await axios.get(url)
-    
-    console.log(res.data)
     localItems.value = res.data.items
     totalCount.value = res.data.total_count
-    console.log(localItems.value)
   } catch (e) {
-    console.log('エラーメッセージです', e.message)
+    axios.post('/api/log-error', {
+      error: e.toString(),
+      component: 'Items/Index.vue toggleItems method',
+    })
   }
 };
 
-// props.itemsが新しい値になったら、localItemsに再代入
 watch(() => props.items, (newItems) => {
   localItems.value = {...newItems};
 });
 
-
-// 廃棄された備品の復元
 const restoreItem = (id) => {
-  if (confirm('本当に備品を復元をしますか？')) {
-    router.post(`/items/${id}/restore`, {
-      onSuccess: () => {
-        console.log('Item restored successfully')
-      },
-      onError: () => {
-        console.log('Failed to restore item')
-      },
+  try {
+    if (confirm('本当に備品を復元をしますか？')) {
+      router.post(`/items/${id}/restore`)
+    }
+  } catch (e) {
+    axios.post('/api/log-error', {
+      error: e.toString(),
+      component: 'Items/Index.vue restoreItem method',
     })
-    showDisposal.value = false;
   }
+  showDisposal.value = false;
 }
 </script>
 
