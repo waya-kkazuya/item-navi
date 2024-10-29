@@ -20,19 +20,6 @@ defineProps({
     userName: String,
     errors: Object
 })
-
-const deleteItem = id => {
-    if (confirm('本当に削除しますか？')) {
-        router.delete(`/items/${id}`, {
-            onSuccess: () => {
-                // 成功時の処理
-            },
-            onError: () => {
-                // エラー時の処理
-            }
-        });
-    }
-}
 </script>
 
 <template>
