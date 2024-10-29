@@ -1,12 +1,12 @@
 <script setup>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head, router, useForm } from '@inertiajs/vue3';
-import axios from 'axios';
 import { reactive, ref } from 'vue';
+import FlashMessage from '@/Components/FlashMessage.vue';
 
 const props = defineProps({
     item: Object,
-    pendingInspection: Object,
+    uncompleted_inspection_scheduled_date: Object,
     categories: Array,
     locations: Array,
     units: Array,
@@ -19,7 +19,6 @@ const props = defineProps({
 const form = useForm({
     id: props.item.id,
     image_file: null,
-    // image_path1: props.item.image_path1, //画像を更新できるようにするか、まずはCreateの方で「×」ボタンでキャンセル機能を実装
     name: props.item.name,
     category_id: props.item.category_id,
     stock: props.item.stock,
@@ -36,46 +35,36 @@ const form = useForm({
     date_of_acquisition: props.item.date_of_acquisition,
     manufacturer: props.item.manufacturer,
     product_number: props.item.product_number,
-    pendingInspection: props.pendingInspection, // pendingInspectionにオブジェクトを入れる,idが取得できる
-    inspectionSchedule: props.pendingInspection ? props.pendingInspection.inspection_scheduled_date : null,
-    disposalSchedule: props.item.disposal ? props.item.disposal.disposal_scheduled_date : null ,
+    inspection_scheduled_date: props.uncompleted_inspection_scheduled_date ?? null,
+    disposal_scheduled_date: props.item.disposal ? props.item.disposal.disposal_scheduled_date : null ,
     remarks: props.item.remarks,
     edit_reason_id: 0,
     edit_reason_text: null,
     _method: 'PUT'
 })
 
-
 // router.visitではuseFormの入力値保持機能は使えない
 // form.postなら入力値保持機能(old関数))が使える
 const updateItem = id => {
-    // putメソッドは使えない
-    // form.put(`/items/${id}`, {
-    form.post(`/items/${id}`, {
-        onSuccess: () => {
-            // 通信が成功したときの処理
-        },
-        onError: errors => {
-            // エラーハンドリング
-            console.error('Validation Error:', errors);
-        }
-    });
+    try {
+        // putメソッドが使えないため、useForm内に「_method: 'PUT'」を記述
+        form.post(`/items/${id}`)
+    } catch (e) {
+        axios.post('/api/log-error', {
+            error: e.toString(),
+            component: 'Item/Edit.vue updateItem method',
+        })
+    }
 }
 
-// 
 const file_preview_src = ref(props.item.image_path1)
-
 const handleFileUpload = (event) => {
-    form.image_file = event.target.files[0];
-    // ブラウザ限定の画像プレビュー用のURL生成
+    form.image_file = event.target.files[0]
     if (form.image_file) {
         console.log(file_preview_src.value)
-        file_preview_src.value = URL.createObjectURL(form.image_file);
-        console.log(file_preview_src.value)
+        file_preview_src.value = URL.createObjectURL(form.image_file)
     }
-};
-
-
+}
 </script>
 
 <template>
@@ -306,31 +295,31 @@ const handleFileUpload = (event) => {
 
                                                     <div class="p-4 border mb-4">
                                                         <div class="p-2 w-full">
-                                                            <label for="inspectionSchedule" class="leading-7 text-xs md:text-base text-blue-900">
+                                                            <label for="inspection_scheduled_date" class="leading-7 text-xs md:text-base text-blue-900">
                                                                 点検予定日
                                                                 <span class="ml-1 mr-2 bg-gray-400 text-white text-xs md:text-base lg:text-xs py-1 px-2 rounded-md">任意</span>
                                                             </label>
                                                             <div class="relative">
-                                                                <input type="date" id="inspectionSchedule" name="inspectionSchedule" v-model="form.inspectionSchedule" class="md:mt-1 w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-xs md:text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
+                                                                <input type="date" id="inspection_scheduled_date" name="inspection_scheduled_date" v-model="form.inspection_scheduled_date" class="md:mt-1 w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-xs md:text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
                                                                 <button type="button" @click="clearInspectionSchedule" class="absolute right-12 top-1/2 transform -translate-y-1/2 text-gray-500">×</button>
                                                             </div>
-                                                            <div v-if="errors.inspectionSchedule" class="font-medium text-red-600 text-xs md:text-base">{{ errors.inspectionSchedule }}</div>
+                                                            <div v-if="errors.inspection_scheduled_date" class="font-medium text-red-600 text-xs md:text-base">{{ errors.inspection_scheduled_date }}</div>
                                                         </div>
 
                                                         <div class="p-2 w-full">
-                                                            <label for="disposalSchedule" class="leading-7 text-xs md:text-base text-blue-900">
+                                                            <label for="disposal_scheduled_date" class="leading-7 text-xs md:text-base text-blue-900">
                                                                 廃棄予定日
                                                                 <span class="ml-1 mr-2 bg-gray-400 text-white text-xs md:text-base lg:text-xs py-1 px-2 rounded-md">任意</span>
                                                             </label>
                                                             <div class="relative">
-                                                                <input type="date" id="disposalSchedule" name="disposalSchedule" v-model="form.disposalSchedule" class="md:mt-1 w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-xs md:text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
+                                                                <input type="date" id="disposal_scheduled_date" name="disposal_scheduled_date" v-model="form.disposal_scheduled_date" class="md:mt-1 w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-xs md:text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
                                                                 <button type="button" @click="clearDisposalSchedule" class="absolute right-12 top-1/2 transform -translate-y-1/2 text-gray-500">×</button>
                                                             </div>
-                                                            <div v-if="errors.disposalSchedule" class="font-medium text-red-600 text-xs md:text-base">{{ errors.disposalSchedule }}</div>
+                                                            <div v-if="errors.disposal_scheduled_date" class="font-medium text-red-600 text-xs md:text-base">{{ errors.disposal_scheduled_date }}</div>
                                                         </div>
                                                     </div>
 
-                                                    <hr class="border-t my-4 border-gray-300">
+                                                    <hr class="border-t my-8 border-gray-300">
 
                                                     <div class="p-4 border mt-4 bg-red">
                                                         <div class="p-2 w-full">
