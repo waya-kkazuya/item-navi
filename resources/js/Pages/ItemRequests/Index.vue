@@ -27,20 +27,21 @@ const fetchAndFilterItems = () => {
 }
 
 const toggleSortOrder = () => {
-  // 昇順降順の切り替え
   sortOrder.value = sortOrder.value === 'asc' ? 'desc' : 'asc'
   fetchAndFilterItems()
 };
 
 const updateStatus = async request => {
-  console.log(request.id)
   try {
-    const res = await axios.post(`/api/item-requests/${request.id}/update-status`, { requestStatusId: request.request_status_id });
-  } catch (error) {
+    await axios.post(`/api/item-requests/${request.id}/update-status`, { requestStatusId: request.request_status_id });
+  } catch (e) {
+    axios.post('/api/log-error', {
+      error: e.toString(),
+      component: 'ItemRequests/Index.vue updateStatus method',
+    })
     // フラッシュメッセージの代わりにアラートを表示する
-    if (error.response && error.response.data) {
-      alert(error.response.data.message);
-    }
+    alert('ステータスの変更に失敗しました、もう一度お試しください。');
+
   } finally {
     window.location.reload() // ページをリロード
   }
@@ -52,11 +53,12 @@ const loginUserRole = ref(null);
 const getUserRole = async () => {
   try {
     const res = await axios.get('/api/user-role');
-    // console.log(res.data)
     loginUserRole.value = res.data;
-    console.log(loginUserRole.value)
-  } catch (error) {
-    console.error('Error fetching user role:', error);
+  } catch (e) {
+    axios.post('/api/log-error', {
+      error: e.toString(),
+      component: 'ItemRequests/Index.vue getUserRole method',
+    })
   }
 };
 
@@ -64,14 +66,21 @@ onMounted(() => {
   getUserRole()
 })
 
+
 const deleteItemRequest = request => {
-  if (confirm('本当に削除しますか？')) {
-    router.visit(route('item_requests.destroy', request), {
-      method: 'delete'
+  try {
+    if (confirm('本当に削除しますか？')) {
+      router.visit(route('item_requests.destroy', request), {
+        method: 'delete'
+      })
+    }
+  } catch (e) {
+    axios.post('/api/log-error', {
+      error: e.toString(),
+      component: 'ItemRequests/Index.vue deleteItemRequest method',
     })
   }
 }
-
 </script>
 
 <template>
