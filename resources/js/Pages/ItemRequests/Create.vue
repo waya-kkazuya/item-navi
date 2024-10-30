@@ -4,12 +4,12 @@ import { Head, router, useForm } from '@inertiajs/vue3';
 import { reactive, ref } from 'vue';
 import FlashMessage from '@/Components/FlashMessage.vue';
 
+
 const props = defineProps({
     categories: Array,
     locations: Array,
     errors: Object
 })
-
 
 const form = useForm({
     id: null,
@@ -18,25 +18,24 @@ const form = useForm({
     location_of_use_id: 0,
     requestor: null,
     remarks_from_requestor: null,
-    request_status_id: null, // request_statusはindex画面で変更する
+    request_status_id: null,
     manufacturer: null,
     reference: null,
     price: 0,
 })
 
-
 // router.visitではuseFormの入力値保持機能は使えない
 // form.postなら入力値保持機能(old関数))が使える
 const storeItemRequest = () => {
-  form.post('/item-requests', {
-    onError: (errors) => {
-        console.log('保存に失敗しました')
-        console.log(errors)
-    //   form.errors = errors
+    try {
+        form.post('/item-requests')
+    } catch (e) {
+        axios.post('/api/log-error', {
+            error: e.toString(),
+            component: 'ItemRequests/Create.vue storeItemRequest method',
+        })
     }
-  })
 }
-
 </script>
 
 <template>

@@ -13,10 +13,8 @@ const props = defineProps({
   requestedItemNotifications: Object,
 })
 
-
 const activeTab = ref(sessionStorage.getItem('activeTab') ?? 'tab1')
 
-// watchでisTableViewを監視している
 watch(activeTab, (newValue) => {
   sessionStorage.setItem('activeTab', newValue)
 })
@@ -27,47 +25,6 @@ onMounted(() => {
     sessionStorage.setItem('activeTab', 'tab1')
   }
 })
-
-// const localNotifications = ref([...props.notifications]);
-// // プロパティが変更された場合にローカル変数を更新
-// // 自動では反映してくれないところが注意点
-// watch(() => props.notifications, (newNotifications) => {
-//   localNotifications.value = [...newNotifications]
-// });
-
-// onMounted(() => {
-//   // console.log('props.notifications')
-//   // console.log(props.notifications)
-
-//   localNotifications.value.forEach(notification => {
-//     if (!notification.read_at) {
-//       markAsRead(notification.id)
-//     }
-//   })
-// })
-
-
-// // 画面を見たら既読にする処理、次回アクセスもしくは更新でオレンジの新着マークが消える
-// const markAsRead = async id => {
-//   console.log('notification_id')
-//   console.log(id)
-//   try {
-//     await axios.patch(`/api/notifications/${id}/read`)
-//     // 通知を既読にした後、Vue側ローカル側の状態を同期する（オレンジ●が消える）　idは引数のid
-//     // const notification = localNotifications.value.find(n => n.id === id)
-//     // if (notification) {
-//     //   notification.read_at = new Date().toISOString() // 日付を入れることで既読にする
-//     // }
-//   } catch (error) {
-//     console.error('APIでの既読処理が失敗しました', error)
-//   }
-// }
-
-// const handleClick = async (id, routeName, routeParams) => {
-//   await markAsRead(id)
-//   router.visit(routeName, { params: routeParams });
-// }
-
 </script>
 
 <template>
@@ -103,11 +60,9 @@ onMounted(() => {
                     </li>
                   </ul>
                 </div>
-                <!-- <div class="mt-4 flex justify-center"> -->
-                  <LowStockNotificationsTab v-if="activeTab === 'tab1'" :lowStockNotifications="lowStockNotifications" />
-                  <DisposalAndInspectionNotificationsTab v-if="activeTab === 'tab2'" :disposalAndInspectionNotifications="disposalAndInspectionNotifications" />
-                  <RequestedItemNotificationsTab v-if="activeTab === 'tab3'" :requestedItemNotifications="requestedItemNotifications" />
-                <!-- </div> -->
+                <LowStockNotificationsTab v-if="activeTab === 'tab1'" :lowStockNotifications="lowStockNotifications" />
+                <DisposalAndInspectionNotificationsTab v-if="activeTab === 'tab2'" :disposalAndInspectionNotifications="disposalAndInspectionNotifications" />
+                <RequestedItemNotificationsTab v-if="activeTab === 'tab3'" :requestedItemNotifications="requestedItemNotifications" />
               </div>
             </div>
           </div>

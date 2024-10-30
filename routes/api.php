@@ -12,6 +12,7 @@ use App\Http\Controllers\ItemController;
 use App\Http\Controllers\ItemRequestController;
 use App\Http\Controllers\StockTransactionController;
 use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\VueErrorController;
 
 /*
 |--------------------------------------------------------------------------
@@ -47,7 +48,7 @@ Route::middleware(['auth:sanctum', 'verified', 'can:staff-higher'])
 
 
 // 在庫数の入出庫履歴を取得するためのAPI
-Route::middleware('auth:sanctum', 'verified', 'can:staff-higher')
+Route::middleware('auth:sanctum', 'verified', 'can:user-higher')
 ->get('/stock_transactions', [StockTransactionController::class, 'stockTransaction'])
 ->name('stock_transactions');
 
@@ -79,3 +80,6 @@ Route::middleware(['auth:sanctum', 'verified', 'can:user-higher'])
 ->get('/user-role', function (Request $request) {
   return auth()->user()->role;
 });
+
+// Vue側のエラーをAPIでログに書き込む
+Route::post('/log-error', [VueErrorController::class, 'logError']);

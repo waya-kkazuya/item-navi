@@ -21,30 +21,23 @@ const form = useForm({
 })
 
 const saveInspection = item => {
-  if (confirm('本当に点検しますか？')) {
-    form.put(`/inspect_item/${item.id}`, {
-      onSuccess: () => {
-        toggleStatus();
-      },
-      onError: errors => {
-        console.error('Validation Error:', errors);
-      }
+  try {
+    if (confirm('本当に点検しますか？')) {
+      form.put(`/inspect_item/${item.id}`, {
+        onSuccess: () => {
+          toggleStatus();
+        },
+      })
+    }
+  } catch (e) {
+    axios.post('/api/log-error', {
+      error: e.toString(),
+      component: 'InspectionModal.vue saveInspection method',
     })
   }
 }
-
-// 日付フォーマット関数
-const formatDate = (timestamp) => {
-  const date = new Date(timestamp);
-  const year = date.getFullYear();
-  const month = ('0' + (date.getMonth() + 1)).slice(-2);
-  const day = ('0' + date.getDate()).slice(-2);
-  const hours = ('0' + date.getHours()).slice(-2);
-  const minutes = ('0' + date.getMinutes()).slice(-2);
-  return `${year}/${month}/${day} ${hours}:${minutes}`;
-};
-
 </script>
+
 <template>
   <div v-show="isShow" class="modal fixed inset-0 bg-gray-600 bg-opacity-50 flex items-end md:items-center md:justify-center z-50" id="modal-1" aria-hidden="true">
     <div class="modal__overlay" tabindex="-1" data-micromodal-close>

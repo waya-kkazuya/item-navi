@@ -9,6 +9,7 @@ use App\Models\Edithistory;
 use App\Models\Item;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 
 class InspectionController extends Controller
@@ -16,6 +17,8 @@ class InspectionController extends Controller
     public function inspectItem(StoreInspectionRequest $request, Item $item)
     {
         DB::beginTransaction();
+
+        Log::info('InspectionController inspectItem method called');
 
         try {
             // 処理１、Inspectionテーブルのstatusがfalseの登録日が一番古い日付のレコードを取得
@@ -61,6 +64,8 @@ class InspectionController extends Controller
 
             DB::commit();
 
+            Log::info('InspectionController inspectItem method succeeded');
+
             return to_route('items.show', ['item' => $item->id])
             ->with([
                 'message' => '点検を実施しました。',
@@ -69,6 +74,12 @@ class InspectionController extends Controller
             
         } catch (\Exception $e) {
             DB::rollBack();
+
+            Log::error('InspectionController inspectItem method Transaction failed', [
+                'error' => $e->getMessage(),
+                'stack' => $e->getTraceAsString(),
+                'request' => $request->all()
+            ]);
 
             return redirect()->back()
             ->with([

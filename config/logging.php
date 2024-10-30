@@ -3,6 +3,7 @@
 use Monolog\Handler\NullHandler;
 use Monolog\Handler\StreamHandler;
 use Monolog\Handler\SyslogUdpHandler;
+use App\Logging\CustomizeFormatter;
 
 return [
 
@@ -53,7 +54,13 @@ return [
     'channels' => [
         'stack' => [
             'driver' => 'stack',
-            'channels' => ['single'],
+            'channels' => ['daily', 'slack'],
+            'ignore_exceptions' => false,
+        ],
+
+        'local' => [
+            'driver' => 'stack',
+            'channels' => ['single', 'slack'],
             'ignore_exceptions' => false,
         ],
 
@@ -61,6 +68,7 @@ return [
             'driver' => 'single',
             'path' => storage_path('logs/laravel.log'),
             'level' => env('LOG_LEVEL', 'debug'),
+            'tap' => [CustomizeFormatter::class],
         ],
 
         'daily' => [
@@ -68,6 +76,7 @@ return [
             'path' => storage_path('logs/laravel.log'),
             'level' => env('LOG_LEVEL', 'debug'),
             'days' => 14,
+            'tap' => [CustomizeFormatter::class],
         ],
 
         'slack' => [
@@ -75,7 +84,8 @@ return [
             'url' => env('LOG_SLACK_WEBHOOK_URL'),
             'username' => 'Laravel Log',
             'emoji' => ':boom:',
-            'level' => env('LOG_LEVEL', 'critical'),
+            'level' => 'critical',
+            'tap' => [CustomizeFormatter::class],
         ],
 
         'papertrail' => [

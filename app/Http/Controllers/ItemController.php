@@ -60,123 +60,139 @@ class ItemController extends Controller
     {  
         Gate::authorize('staff-higher');
 
-        $search = $request->query('search', '');
-        
-        // 作成日でソートの値、初期値はasc
-        $sortOrder = $request->query('sortOrder', 'desc');
+        Log::info('ItemController index method called');
 
-        // プルダウンの数値、第2引数は初期値で0
-        $category_id = $request->query('categoryId', 0);
-        $location_of_use_id = $request->query('locationOfUseId', 0);
-        $storage_location_id = $request->query('storageLocationId', 0);
+        try {
+            $search = $request->query('search', '');
+            
+            // 作成日でソートの値、初期値はasc
+            $sortOrder = $request->query('sortOrder', 'desc');
 
-        $withRelations = ['category', 'unit', 'usageStatus', 'locationOfUse', 'storageLocation', 'acquisitionMethod', 'inspections', 'disposal'];
-        $selectFields = [
-            'id',
-            'management_id',
-            'name',
-            'category_id',
-            'image1',
-            'stock',
-            'unit_id',
-            'minimum_stock',
-            'notification',
-            'usage_status_id',
-            'end_user',
-            'location_of_use_id',
-            'storage_location_id',
-            'acquisition_method_id',
-            'acquisition_source',
-            'price',
-            'date_of_acquisition',
-            'manufacturer',
-            'product_number',
-            'remarks',
-            'qrcode',
-            'deleted_at',
-            'created_at'
-        ];
+            // プルダウンの数値、第2引数は初期値で0
+            $category_id = $request->query('categoryId', 0);
+            $location_of_use_id = $request->query('locationOfUseId', 0);
+            $storage_location_id = $request->query('storageLocationId', 0);
 
-        // 通常の備品か廃棄済みの備品かの分岐
-        if ($request->disposal === 'true') {
-            $query = Item::onlyTrashed();
-        } else {
-            $query = Item::whereNull('deleted_at');
-        }
-
-        // withによるeagerローディングではリレーションを使用する
-        $query = $query->with($withRelations)
-        ->searchItems($search)
-        ->select($selectFields)
-        ->orderBy('created_at', $sortOrder);
-
-        // DBに設定されているidの時のみ反映
-        // 各プルダウン変更時のクエリ、ローカルスコープに切り出しリファクタリング
-        if (Category::where('id', $category_id)->exists()) {
-            $query->where('category_id', $category_id);
-        }
-
-        if (Location::where('id', $location_of_use_id)->exists()) {
-            $query->where('location_of_use_id', $location_of_use_id);
-        }
-
-        if (Location::where('id', $storage_location_id)->exists()) {
-            $query->where('storage_location_id', $storage_location_id);
-        }
-
-        $total_count = $query->count();
-        $items = $query->paginate(20);
-
-        // map関数を使用するとpaginateオブジェクトの構造が変わり、ペジネーションが使えなくなる
-        $items->getCollection()->transform(function ($item) {
-            return $this->imageService->setImagePathToObject($item);
-        });
-
-        $items->getCollection()->transform(function ($item) {
-            // inspection_scheduled_dateを追加
-            $inspection = $item->inspections->where('status', false)->sortBy('inspection_scheduled_date')->first();
-            $item->inspection_scheduled_date = $inspection ? $inspection->inspection_scheduled_date : null;
-            return $item;
-        });
-
-        // 変換後のコレクションを元のpaginateオブジェクトに戻す
-        $items = $items->setCollection($items->getCollection());
-
-        // プルダウン用データ
-        $categories = Category::all();
-        $locations = Location::all();
-
-
-        // 廃棄済み備品用API情報
-        if ($request->has('disposal')) {
-            return [
-                'items' => $items,
-                'total_count' => $total_count
+            $withRelations = ['category', 'unit', 'usageStatus', 'locationOfUse', 'storageLocation', 'acquisitionMethod', 'inspections', 'disposal'];
+            $selectFields = [
+                'id',
+                'management_id',
+                'name',
+                'category_id',
+                'image1',
+                'stock',
+                'unit_id',
+                'minimum_stock',
+                'notification',
+                'usage_status_id',
+                'end_user',
+                'location_of_use_id',
+                'storage_location_id',
+                'acquisition_method_id',
+                'acquisition_source',
+                'price',
+                'date_of_acquisition',
+                'manufacturer',
+                'product_number',
+                'remarks',
+                'qrcode',
+                'deleted_at',
+                'created_at'
             ];
+
+            // 通常の備品か廃棄済みの備品かの分岐
+            if ($request->disposal === 'true') {
+                $query = Item::onlyTrashed();
+            } else {
+                $query = Item::whereNull('deleted_at');
+            }
+
+            // withによるeagerローディングではリレーションを使用する
+            $query = $query->with($withRelations)
+            ->searchItems($search)
+            ->select($selectFields)
+            ->orderBy('created_at', $sortOrder);
+
+            // DBに設定されているidの時のみ反映
+            // 各プルダウン変更時のクエリ、ローカルスコープに切り出しリファクタリング
+            if (Category::where('id', $category_id)->exists()) {
+                $query->where('category_id', $category_id);
+            }
+
+            if (Location::where('id', $location_of_use_id)->exists()) {
+                $query->where('location_of_use_id', $location_of_use_id);
+            }
+
+            if (Location::where('id', $storage_location_id)->exists()) {
+                $query->where('storage_location_id', $storage_location_id);
+            }
+
+            $total_count = $query->count();
+            $items = $query->paginate(20);
+
+            // map関数を使用するとpaginateオブジェクトの構造が変わり、ペジネーションが使えなくなる
+            $items->getCollection()->transform(function ($item) {
+                return $this->imageService->setImagePathToObject($item);
+            });
+
+            $items->getCollection()->transform(function ($item) {
+                // inspection_scheduled_dateを追加
+                $inspection = $item->inspections->where('status', false)->sortBy('inspection_scheduled_date')->first();
+                $item->inspection_scheduled_date = $inspection ? $inspection->inspection_scheduled_date : null;
+                return $item;
+            });
+
+            // 変換後のコレクションを元のpaginateオブジェクトに戻す
+            $items = $items->setCollection($items->getCollection());
+
+            // プルダウン用データ
+            $categories = Category::all();
+            $locations = Location::all();
+
+
+            // 廃棄済み備品用API情報
+            if ($request->has('disposal')) {
+                return [
+                    'items' => $items,
+                    'total_count' => $total_count
+                ];
+            }
+            
+            Log::info('ItemController index method succeeded');
+
+            return Inertia::render('Items/Index', [
+                'items' => $items,
+                'categories' => $categories,
+                'locations' => $locations,
+                'search' => $search,
+                'sortOrder' => $sortOrder,
+                'categoryId' => $category_id,
+                'locationOfUseId' => $location_of_use_id,
+                'storageLocationId' => $storage_location_id,
+                'totalCount' => $total_count
+            ]);
+        } catch (\Exception $e) {
+            Log::error('ItemController index method failed', [
+                'error' => $e->getMessage(),
+                'stack' => $e->getTraceAsString(),
+                'request' => $request->all()
+            ]);
         }
-        
-        return Inertia::render('Items/Index', [
-            'items' => $items,
-            'categories' => $categories,
-            'locations' => $locations,
-            'search' => $search,
-            'sortOrder' => $sortOrder,
-            'categoryId' => $category_id,
-            'locationOfUseId' => $location_of_use_id,
-            'storageLocationId' => $storage_location_id,
-            'totalCount' => $total_count
-        ]); 
     }
 
     public function create(Request $request)
     {   
         Gate::authorize('staff-higher');
 
+        Log::info('ItemController create method called');
+
         $categories = Category::all();
         $locations = Location::all();
         $units = Unit::all();
         $usage_statuses = UsageStatus::all();
         $acquisition_methods = AcquisitionMethod::all();
+
+        Log::info('ItemController create method succeeded');
 
         // $request->queryはリクエスト一覧から「新規作成」でCreate.vueを開いたときに自動入力する値
         return Inertia::render('Items/Create', [
@@ -196,6 +212,8 @@ class ItemController extends Controller
     public function store(StoreItemRequest $request)
     {
         Gate::authorize('staff-higher');
+
+        Log::info('ItemController store method called');
 
         // 編集理由はItemObserverのメソッド内でセッションから取得し、edithistoriesに保存
         Session::put('operation_type', 'store');
@@ -283,6 +301,8 @@ class ItemController extends Controller
 
             DB::commit();
 
+            Log::info('ItemController store method succeeded');
+
             return to_route('items.index')
             ->with([
                 'message' => '備品を登録しました',
@@ -291,6 +311,12 @@ class ItemController extends Controller
 
         } catch (\Exception $e) {
             DB::rollBack();
+
+            Log::error('ItemController store method Transaction failed', [
+                'error' => $e->getMessage(),
+                'stack' => $e->getTraceAsString(),
+                'request' => $request->all()
+            ]);
 
             // アップロードした備品の画像の削除
             $imagePath = 'items/' . $fileNameToStore;
@@ -320,6 +346,10 @@ class ItemController extends Controller
 
     public function show(Item $item)
     {
+        Gate::authorize('staff-higher');
+
+        Log::info('ItemController show method called');
+
         $withRelations = ['category', 'unit', 'usageStatus', 'locationOfUse', 'storageLocation', 'acquisitionMethod', 'inspections', 'disposal'];
         $item = Item::with($withRelations)->find($item->id);  
 
@@ -333,17 +363,21 @@ class ItemController extends Controller
 
         $user = auth()->user();
 
+        Log::info('ItemController show method succeeded');
+
         return Inertia::render('Items/Show', [
             'item' => $item,
             'uncompleted_inspection' => $uncompleted_inspection,
             'last_completed_inspection' => $last_completed_inspection,
             'userName' => $user->name,
-        ]);
+        ]);                                                           
     }
 
     public function edit(Item $item)
     {
         Gate::authorize('staff-higher');
+
+        Log::info('ItemController edit method called');
 
         $withRelations = ['category', 'unit', 'usageStatus', 'locationOfUse', 'storageLocation', 'acquisitionMethod', 'inspections', 'disposal'];
         $item = Item::with($withRelations)->find($item->id);  
@@ -362,6 +396,8 @@ class ItemController extends Controller
         $acquisition_methods = AcquisitionMethod::all();
         $edit_reasons = EditReason::all();
 
+        Log::info('ItemController edit method succeeded');
+
         return Inertia::render('Items/Edit', [
             'item' => $item,
             'uncompleted_inspection_scheduled_date' => $uncompleted_inspection_scheduled_date,
@@ -379,6 +415,8 @@ class ItemController extends Controller
     {
         // トランザクション処理は、ItemObserverでのDB保存もロールバックする
         Gate::authorize('staff-higher');
+
+        Log::info('ItemController update method called');
 
         // ロールバックした時の備品画像を元に戻す準備
         if (!Storage::disk('public')->exists('temp')) {
@@ -483,6 +521,8 @@ class ItemController extends Controller
 
             DB::commit();
 
+            Log::info('ItemController update method succeeded');
+
             return to_route('items.show', $item->id)
             ->with([
                 'message' => '備品を更新しました',
@@ -491,6 +531,12 @@ class ItemController extends Controller
 
         } catch (\Exception $e) {
             DB::rollBack();
+
+            Log::error('ItemController update method Transaction failed', [
+                'error' => $e->getMessage(),
+                'stack' => $e->getTraceAsString(),
+                'request' => $request->all()
+            ]);
 
             // アップロードしたプロフィール画像を削除
             if (Storage::disk('public')->exists('items/' . $fileNameToStore)) {
@@ -536,9 +582,15 @@ class ItemController extends Controller
 
     public function restore($id)
     {
+        Gate::authorize('staff-higher');
+
+        Log::info('ItemController restore method called');
+
         $item = Item::withTrashed()->find($id);
         if ($item) {
             $item->restore();
+
+            Log::info('ItemController restore method succeeded');
 
             return to_route('items.index')
             ->with([
@@ -547,12 +599,13 @@ class ItemController extends Controller
             ]);
         }
 
+        Log::warning('ItemController restore method failed');
+
         return to_route('items.index')
         ->with([
             'message' => '該当の備品が存在しませんでした',
             'status' => 'danger'
         ]);
-
     }
 
     // public function forceDelete($id)
@@ -560,8 +613,15 @@ class ItemController extends Controller
         
     // }
 
-    public function disposedItemIndex(){
+    public function disposedItemIndex()
+    {
+        Gate::authorize('staff-higher');
+
+        Log::info('ItemController disposedItemIndex method called');
+
         $disposedItems = Item::onlyTrashed()->get();
+
+        Log::info('ItemController disposedItemIndex method succeeded');
         
         return Inertia::render('Items/Index', [
             'disposedItems' => $disposedItems,

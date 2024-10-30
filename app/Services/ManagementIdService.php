@@ -4,12 +4,16 @@ namespace App\Services;
 
 use App\Models\Item;
 use Illuminate\Validation\ValidationException;
+use Illuminate\Support\Facades\Log;
 
 class ManagementIdService
 {
     public static function generate($category_id)
     {
+        Log::info('ManagementIdService generate method called');
+
         $prefix = '';
+        $category_id = (int) $category_id; // 整数型にキャスト
 
         $prefix = match ($category_id) {
             1 => 'CO', // 消耗品 (consumables)
@@ -30,6 +34,8 @@ class ManagementIdService
             $randomNumber = str_pad(rand(0, 9999), 4, '0', STR_PAD_LEFT);
             $managementId = $prefix . '-' . $randomNumber;
         } while (Item::where('management_id', $managementId)->exists());
+
+        Log::info('ManagementIdService generate method succeedes');
 
         return $managementId;
     }

@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 // use PDF;
 use Barryvdh\Snappy\Facades\SnappyPdf as PDF; // snappy pdfを使用する
+use Illuminate\Support\Facades\Log;
 
 class PDFController extends Controller
 {
@@ -15,6 +16,10 @@ class PDFController extends Controller
 
     public function generatePDF()
     {
+        Gate::authorize('user-higher');
+
+        Log::info('PDFController generatePDF method called');
+
         // 消耗品のQRコードをすべて取得する（現在カテゴリが消耗品のもの、変更されている可能性もある）
         $consumableItems = Item::whereNull('deleted_at')
             ->where('category_id', self::CATEGORY_ID_FOR_CONSUMABLE_ITME)
@@ -26,9 +31,9 @@ class PDFController extends Controller
             $qrCodes[] = Storage::path('labels/'.$consumableItem->qrcode);
         }
 
-        \Log::info("qrCodes",$qrCodes);
-
         if (empty($qrCodes)) {
+            Log::warning('PDFController generatePDF method failed because QRLabel does not exist');
+
             return to_route('consumable_items')
             ->with([
                 'message' => 'QRラベルが存在しません',
@@ -46,19 +51,8 @@ class PDFController extends Controller
             ->setOption('footer-center', '[page] / [topage]') // フッター中央に現在のページ番号と総ページ数を表示
             ->setOption('footer-font-size', 10);
 
-        // return $pdf->download('消耗品QRコード.pdf');　//直にダウンロードする場合
+        Log::info('PDFController generatePDF method succeeded');
+            
         return $pdf->inline('消耗品QRコード.pdf');
-    }
-
-    public function designPDF()
-    {
-        //デザイン調整用 
-        $qrCodes = [];
-        for ($i = 1; $i <= 11; $i++) {
-            $qrCodes[] = Storage::url('public/labels/QRCodeTest_label.jpg');
-        }
-
-        // blade側でchunkする
-        return view('pdf.pdf-preview-table', compact('qrCodes'));
     }
 }

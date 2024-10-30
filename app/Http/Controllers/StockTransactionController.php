@@ -12,16 +12,9 @@ class StockTransactionController extends Controller
 {
     public function stockTransaction(Request $request)
     {
-        $itemId = $request->item_id;
-        Log::info('item_id');
-        Log::info($itemId);
+        Log::info('StockTransactionController API stockTransaction method called');
 
-        $item = Item::find($itemId);
-
-        // 最新の在庫数を取得
-        $current_stock = $item->stock;
-        log::info('current_stock');
-        log::info($current_stock);
+        $item = Item::find($request->item_id);
 
         // stock_transactionsを取得 withを使うとitemの情報すべてが取れてくる
         $stock_transactions = StockTransaction::where('item_id', $item->id)
@@ -29,8 +22,8 @@ class StockTransactionController extends Controller
             ->take(10)
             ->get();
 
-        Log::info('stock_transactions');
-        Log::info($stock_transactions);
+        // 最新の在庫数を取得
+        $current_stock = $item->stock;
 
         // $current_stockはクロージャ―の外で定義されており、&を付けることで参照渡ししている
         // よって、値を引き継いだままループをする 1つずつズレる
@@ -45,6 +38,8 @@ class StockTransactionController extends Controller
                 $current_stock -= $transaction->quantity;
             }
         });
+
+        Log::info('StockTransactionController API stockTransaction method succeeded');
 
         return [
             'stockTransactions' => $stock_transactions

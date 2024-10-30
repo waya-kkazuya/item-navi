@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\DB;
 use App\UseCases\Dashboard\ItemsByTypeUseCase;
 use App\UseCases\Dashboard\GroupedEditHistoriesUseCase;
 use PhpParser\Node\Expr\List_;
+use Illuminate\Support\Facades\Log;
 
 class DashboardController extends Controller
 {
@@ -33,16 +34,28 @@ class DashboardController extends Controller
     {
         Gate::authorize('staff-higher');
 
-        $type = $request->input('type', self::CATEGORY);
-        List('allItems' => $allItems, 'itemsByType' => $itemsByType) = $this->itemsByTypeUseCase->handle($type);
+        Log::info('DashboardController index method called');
 
-        $groupedEditHistories = $this->groupedEditHistories->handle();
+        try {
+            $type = $request->input('type', self::CATEGORY);
+            List('allItems' => $allItems, 'itemsByType' => $itemsByType) = $this->itemsByTypeUseCase->handle($type);
 
-        return Inertia::render('Dashboard', [
-            'allItems' => $allItems,
-            'itemsByType' => $itemsByType,
-            'groupedEdithistories' => $groupedEditHistories,
-            'type' => $type
-        ]); 
+            $groupedEditHistories = $this->groupedEditHistories->handle();
+
+            Log::info('DashboardController index method succeeded');
+
+            return Inertia::render('Dashboard', [
+                'allItems' => $allItems,
+                'itemsByType' => $itemsByType,
+                'groupedEdithistories' => $groupedEditHistories,
+                'type' => $type
+            ]);
+        } catch(\Exception $e) {
+            Log::error('DashboardController index method failed', [
+                'error' => $e->getMessage(),
+                'stack' => $e->getTraceAsString(),
+                'request' => $request->all()
+            ]);
+        }
     }
 }

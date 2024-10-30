@@ -45,10 +45,14 @@ class InspectionAndDisposalItemController extends Controller
     {
         Gate::authorize('staff-higher');
 
+        Log::info('InspectionAndDisposalItemController index method called');
+
         $scheduledInspections = $this->scheduledInspectionsUseCase->handle();
         $historyInspections = $this->historyInspectionsUseCase->handle();
         $scheduledDisposals = $this->scheduledDisposalUseCase->handle();
         $historyDisposals = $this->historyDisposalUseCase->handle();
+
+        Log::info('InspectionAndDisposalItemController index method succeeded');
 
         return Inertia::render('InspectionAndDisposalItems/Index', [
             'scheduledInspections' => $scheduledInspections,

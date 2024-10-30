@@ -13,16 +13,9 @@ const props = defineProps({
   scheduledDisposals: Array,
   historyInspections: Array,
   historyDisposals: Array
-  // inspectionTotalCount: Number,
 })
 
 const activeTab = ref('tab1')
-
-onMounted(() => {
-  console.log(props.scheduledInspections)
-})
-
-
 </script>
 
 <template>

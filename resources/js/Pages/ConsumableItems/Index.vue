@@ -20,7 +20,7 @@ const props = defineProps({
   storageLocationId: Number,
   totalCount: Number,
   userName: String,
-  linkedItem: Object, // 指定した備品のモーダルを開くのに使う
+  linkedItem: Object, // 指定した備品のモーダルを開くために使用
   errors: Object
 })
 
@@ -29,13 +29,11 @@ const props = defineProps({
 const localConsumableItems = ref({...props.consumableItems})
 // 合計件数
 const totalCount = ref(props.totalCount)
-
 // 検索フォーム
 const search = ref(props.search)
 // 作成日でソート
 const sortOrder = ref(props.sortOrder ?? 'asc')
 // カテゴリプルダウン用(初期値は0)、更新したらその値
-// コントローラーをまたいで
 const locationOfUseId = ref(props.locationOfUseId ?? 0)
 const storageLocationId = ref(props.storageLocationId ?? 0)
 
@@ -44,10 +42,8 @@ const isMobileDevice = ref(false)
 
 onMounted(() => {
   isMobileDevice.value = isMobile()
-  console.log(isMobile())
-  console.log(isMobileDevice.value)
 
-  // 通知からのリンクで送られてくるlinkedItemの可否でモーダルウィンドウを開く
+  // 通知画面の消耗品在庫数タブのリンクからの画面遷移、linkedItemの可否でモーダルウィンドウを開く
   if (props.linkedItem) {
     openUpdateStockModal(props.linkedItem)
   }
@@ -55,17 +51,15 @@ onMounted(() => {
 
 watch(() => props.linkedItem, (newVal) => {
   if (newVal) {
-    // alert('watch側で更新を検知しました');
     openStockHistoryModal(newVal);
   }
 })
 
-// データとモーダルウィンドウの開閉の役割を分ける
+// 入出庫履歴モーダル
 const isStockHistoryModalOpen = ref(false)
 const selectedStockHistoryItem = ref(null)
 
 const openStockHistoryModal = (item) => {
-  // 入出庫履歴モーダルで使用するitemをセット
   selectedStockHistoryItem.value = item
   isStockHistoryModalOpen.value = true
 }
@@ -74,11 +68,11 @@ const closeStockHistoryModal = () => {
 }
 
 
+// 入出庫モーダル
 const isUpdateStockModalOpen = ref(false)
 const selectedUpdateStockItem = ref(null)
 
 const openUpdateStockModal = item => {
-  // 入出庫実施モーダルで使用するitemをセット
   selectedUpdateStockItem .value = item
   isUpdateStockModalOpen.value = true
 }
@@ -88,7 +82,7 @@ const closeUpdateStockModal = () => {
 }
 
 
-// すべてのフィルターをまとめる
+// プルダウンや検索フォームを反映
 const fetchAndFilterItems = () => {
   router.visit(route('consumable_items', {
     search: search.value,
@@ -101,13 +95,12 @@ const fetchAndFilterItems = () => {
 }
 
 const toggleSortOrder = () => {
-  // 昇順降順の切り替え
   sortOrder.value = sortOrder.value === 'asc' ? 'desc' : 'asc'
   fetchAndFilterItems()
 };
 
+//プルダウンや検索フォームをリセット
 const resetState = () => {
-  //それぞれのリアクティブな値もデフォルトの値に戻して、プルダウンや検索フォームに反映する 
   search.value = ''
   sortOrder.value = 'asc'
   locationOfUseId.value = 0
@@ -120,15 +113,13 @@ const resetState = () => {
 const fetchConsumableItems = async () => {
   try {
     const res = await axios.get('/api/consumable_items?reload=true');
-    // 必要に応じてデータを更新
-    console.log(res.data.items);
-    console.log(res.data.total_count);
     localConsumableItems.value = res.data.items
     totalCount.value = res.data.total_count
-    console.log(localConsumableItems.value)
-    console.log(localConsumableItems.length)
   } catch (e){
-    console.error('データの取得に失敗しました:', e.message)
+    axios.post('/api/log-error', {
+      error: e.toString(),
+      component: 'ConsumableItems/Index.vue fetchConsumableItems method',
+    })
   }
 }
 </script>

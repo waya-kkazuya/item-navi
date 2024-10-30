@@ -7,38 +7,51 @@ use Illuminate\Support\Facades\Storage;
 use Intervention\Image\ImageManager;
 // use Intervention\Image\Drivers\Gd\Driver;
 use Intervention\Image\Drivers\Imagick\Driver;
+use Illuminate\Support\Facades\Log;
 
 class ImageService
 {
   public static function resizeUpload($imageFile)
-  {  
-    $fileName = uniqid(rand().'_');
-    $extension = $imageFile->extension();
-    $fileNameToStore = $fileName. '.' . $extension;
+  {
+    Log::info('ImageService resizeUpload method called');
 
-    $manager = new ImageManager(new Driver());
+    try {
+      $fileName = uniqid(rand().'_');
+      $extension = $imageFile->extension();
+      $fileNameToStore = $fileName. '.' . $extension;
 
-    $image = $manager->read($imageFile->getPathname());
+      $manager = new ImageManager(new Driver());
 
-    // 画像のアスペクト比を取得
-    $aspectRatio = $image->width() / $image->height();
+      $image = $manager->read($imageFile->getPathname());
 
-    // 800:600の比率より縦長ならheightを600にscaleし、横長ならwidthを800にscale
-    if ($aspectRatio >= (800 / 600)) {
-        $image->scale(width: 800);
-    } else {
-        $image->scale(height: 600);
+      // 画像のアスペクト比を取得
+      $aspectRatio = $image->width() / $image->height();
+
+      // 800:600の比率より縦長ならheightを600にscaleし、横長ならwidthを800にscale
+      if ($aspectRatio >= (800 / 600)) {
+          $image->scale(width: 800);
+      } else {
+          $image->scale(height: 600);
+      }
+
+      // 画像をトリミング、縦に長い画像には左右に白地の余白が入る
+      $image->crop(800, 600, 0, 0, 'ffffff', 'center');
+
+      $resizedImage = $image->encode();
+
+      Storage::disk('public')->put('items/' . $fileNameToStore, $resizedImage);
+
+      Log::info('ImageService resizeUpload method succeed');
+
+      return $fileNameToStore;
+    } catch (\Exception $e) {
+        Log::error('ImageService resizeUpload method failed', [
+          'error' => $e->getMessage(),
+          'stack' => $e->getTraceAsString(),
+      ]);
+
+      throw $e; // エラーを再スローしてコントローラでキャッチできるように
     }
-
-    // 画像をトリミング、縦に長い画像には左右に白地の余白が入る
-    $image->crop(800, 600, 0, 0, 'ffffff', 'center');
-    // $image->resizeCanvas(800, 600, 'center', false, [0, 0, 0, 0]);
-
-    $resizedImage = $image->encode();
-
-    Storage::disk('public')->put('items/' . $fileNameToStore, $resizedImage);
-
-    return $fileNameToStore;
   }
 
   public static function profileImageResizeUpload($imageFile)
@@ -71,6 +84,19 @@ class ImageService
     return $fileNameToStore;
   }
 
+  public function setImagePathToObject($item)
+  {
+    if(is_null($item->image1)) {
+      $item->image_path1 = asset('storage/items/No_Image.jpg');
+    } else {
+        if(Storage::disk('public')->exists('items/' . $item->image1)) {
+            $item->image_path1 = asset('storage/items/' . $item->image1);
+        } else {
+            $item->image_path1 = asset('storage/items/No_Image.jpg');
+        }
+    }
+    return $item;
+  }
 
   public function setImagePathInCollection($collection)
   {
@@ -86,19 +112,5 @@ class ImageService
       }
       return $record;
     });
-  }
-
-  public function setImagePathToObject($item)
-  {
-    if(is_null($item->image1)) {
-      $item->image_path1 = asset('storage/items/No_Image.jpg');
-    } else {
-        if(Storage::disk('public')->exists('items/' . $item->image1)) {
-            $item->image_path1 = asset('storage/items/' . $item->image1);
-        } else {
-            $item->image_path1 = asset('storage/items/No_Image.jpg');
-        }
-    }
-    return $item;
   }
 }

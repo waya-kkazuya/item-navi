@@ -3,38 +3,28 @@ import axios from 'axios';
 import { ref, reactive, onMounted, defineProps } from 'vue';
 import apiClient from '@/apiClient';
 
-// 親コンポーネントから受け取る
 const props = defineProps({
   item: Object,
   isTableView: Boolean
 })
 
-
-onMounted(() => {
-  console.log(props.isTableView)
-  // MicroModal.init({
-  //   disableScroll: true,
-  //   closeTrigger: 'data-micromodal-close',
-  //   closeOnOutsideClick: true,
-  // });
-})
-
-
 const editHistoriesData = ref([]);
 
 const isShow = ref(false)
 const toggleStatus = () => { isShow.value = !isShow.value}
+
 const editHistories = async item => {
   try {
-    console.log(item.id)
     await apiClient.get(`api/edithistory?item_id=${item.id}`)
     .then( res => {
-      console.log(res.data)
       editHistoriesData.value = res.data.edithistories
     })
     toggleStatus()
   } catch(e) {
-      console.log(e.message)
+    axios.post('/api/log-error', {
+      error: e.toString(),
+      component: 'EditHistoryModal.vue editHistories method',
+    })
   }
 }
 
