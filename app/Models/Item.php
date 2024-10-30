@@ -39,7 +39,8 @@ class Item extends Model
         'qrcode',
     ];
 
-    public function category() {
+    public function category()
+    {
         return $this->belongsTo(Category::class);
     }
 
@@ -82,24 +83,11 @@ class Item extends Model
     {
         return $this->hasMany(StockTransaction::class);
     }
-    
-    // 次期バージョンで実装する棚卸用中間テーブルのリレーション
-    // public function inventory_plans()
-    // {
-    //     return $this->belongsToMany(InventoryPlan::class)
-    //     ->withPivot('item_id', 'inventory_date', 'inventory_person', 'insuffcient_data_status', 'insuffcient_data_details', 'unknown_assets_status', 'unknown_assets_details', 'inventory_status');
-    // }
-
 
     public function scopeSearchItems($query, $input = null)
     {   
-        // $input=検索ワードがemptyの場合はすべての備品一覧を返す
         if(!empty($input)){
-            // if(Item::where('name', 'like', "%{$input}%")->exists())
-            // {
-                // return $query->where('name', 'like', $input . '%' );
-                return $query->where('name', 'like', "%{$input}%");
-            // }
+            return $query->where('name', 'like', "%{$input}%");
         }
     }
 
