@@ -6,11 +6,9 @@ const props = defineProps({
   requestedItemNotifications: Object
 })
 
-
 const localNotifications = ref(Object.values(props.requestedItemNotifications));
 
-// プロパティが変更された場合にローカル変数を更新
-// 自動では反映してくれないので注意
+// プロパティが変更された場合にローカル変数を更新(※自動では更新されない)
 watch(() => props.requestedItemNotifications, (newNotifications) => {
   localNotifications.value = Object.values(newNotifications);
 });
@@ -23,17 +21,17 @@ onMounted(() => {
   })
 })
 
-// 既読処理
+// 画面を開いたら既読にする処理、次回アクセスもしくは更新でオレンジの新着マークが消える
 const markAsRead = async id => {
-  console.log('notification_id')
-  console.log(id)
   try {
     await axios.patch(`/api/notifications/${id}/read`)
-  } catch (error) {
-    console.error('APIでの既読処理が失敗しました', error)
+  } catch (e) {
+    axios.post('/api/log-error', {
+      error: e.toString(),
+      component: 'RequestedItemNotificationsTab.vue markAsRead method',
+    })
   }
 }
-
 </script>
 
 <template>
