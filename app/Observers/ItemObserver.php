@@ -11,16 +11,14 @@ use Illuminate\Support\Facades\Session;
 class ItemObserver
 {
     // storeメソッドのItem::createの呼び出しが行われる前に保存される
-    // public function creating(Item $item)
-    // {
-    //     
-    // }
+    public function creating(Item $item)
+    {
+        
+    }
 
     public function created(Item $item): void
     {
-        // 注意
-        //createdはseederやfactoryでダミーデータを作成した時も動く
-        
+        // 注意 createdはseederやfactoryでダミーデータを作成した時も動く
         Edithistory::create([
             'edit_mode' => 'normal' ,
             'operation_type' => 'store',
@@ -38,12 +36,10 @@ class ItemObserver
 
         unset($changes['updated_at'], $changes['qrcode'], $changes['deleted_at']);
 
-        // セッションから編集理由を取得
-        $edit_reason_id = Session::get('edit_reeason_id');
+        $edit_reason_id = Session::get('edit_reason_id');
         $edit_reason_text = Session::get('edit_reason_text');
-
-        // 仮置き
-        $edit_mode = 'normal';
+        
+        $edit_mode = 'normal'; // 仮置き
 
         foreach ($changes as $field => $newValue) {
             $oldValue = $item->getOriginal($field);
@@ -56,8 +52,8 @@ class ItemObserver
                 'old_value' => $oldValue,
                 'new_value' => $newValue,
                 'edit_user' => Auth::user()->name ?? '',
-                'edit_reason_id' => $edit_reason_id, //プルダウン
-                'edit_reason_text' => $edit_reason_text, //その他テキストエリア
+                'edit_reason_id' => $edit_reason_id,
+                'edit_reason_text' => $edit_reason_text,
             ]);
         }
     }
