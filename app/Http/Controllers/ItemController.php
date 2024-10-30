@@ -218,6 +218,11 @@ class ItemController extends Controller
         // 編集理由はItemObserverのメソッド内でセッションから取得し、edithistoriesに保存
         Session::put('operation_type', 'store');
 
+        // 変数の初期化
+        $fileNameToStore = null;
+        $labelNameToStore = null;
+        $qrCodeNameToStore = null;
+
         DB::beginTransaction();
 
         try{
@@ -276,7 +281,6 @@ class ItemController extends Controller
 
             // 画像名image1はレコードが作成された後に部分的に更新する
             // ->isValid()は念のため、ちゃんとアップロードできているかチェックしてくれる
-            $fileNameToStore = null;
             if(!is_null($request->image_file) && $request->image_file->isValid() ){
                 $fileNameToStore = $this->imageService->resizeUpload($request->image_file);
                 Item::withoutEvents(function () use ($item, $fileNameToStore) {
@@ -285,8 +289,6 @@ class ItemController extends Controller
             }
 
             // QRコード生成 ※消耗品の時だけ生成する
-            $labelNameToStore = null;
-            $qrCodeNameToStore = null;
             if($request->category_id == self::CATEGORY_ID_FOR_CONSUMABLE_ITME){ 
                 $result = $this->qrCodeService::upload($item);
                 // トランザクション処理失敗時のためにQRコード画像のファイル名を取得
@@ -428,6 +430,13 @@ class ItemController extends Controller
         Session::put('edit_reason_text', $request->edit_reason_text);
         Session::put('operation_type', 'update');
 
+        // 変数の初期化
+        $fileNameToStore = null;
+        $fileNameOfOldImage = null;
+        $temporaryBackupPath = null;
+        $labelNameToStore = null;
+        $qrCodeNameToStore = null;
+
         DB::beginTransaction();
         
         try {            
@@ -482,9 +491,7 @@ class ItemController extends Controller
                 }
             }
 
-            $fileNameToStore = null;
-            $fileNameOfOldImage = null;
-            $temporaryBackupPath = null;
+
             if(!is_null($request->image_file) && $request->image_file->isValid() ){
                 // すでに画像があれば削除
                 $fileNameOfOldImage = $item->image1;
@@ -505,8 +512,6 @@ class ItemController extends Controller
             // 1.変更後: $request->category_id == self::CATEGORY_ID_FOR_CONSUMABLE_ITME
             // 2.変更前: $item->id !== self::CATEGORY_ID_FOR_CONSUMABLE_ITME
             // 3.is_null($item->qrcode) 
-            $labelNameToStore = null;
-            $qrCodeNameToStore = null;
             if ($request->category_id == self::CATEGORY_ID_FOR_CONSUMABLE_ITME
                 && $item->id !== self::CATEGORY_ID_FOR_CONSUMABLE_ITME
                 && is_null($item)) {

@@ -64,6 +64,11 @@ class ProfileController extends Controller
             Storage::disk('public')->makeDirectory('temp');
         }
 
+        // 変数の初期化
+        $profileImagefileNameToStore = null;
+        $fileNameOfOldProfileImage = null;
+        $temporaryBackupPath = null;
+
         DB::beginTransaction();
 
         try{
@@ -73,10 +78,6 @@ class ProfileController extends Controller
                 $request->user()->email_verified_at = null;
             }
 
-            // Storageへの画像の保存
-            $profileImagefileNameToStore = null;
-            $fileNameOfOldProfileImage = null;
-            $temporaryBackupPath = null;
             if(!is_null($request->profile_image_file) && $request->profile_image_file->isValid() ){
                 // すでに画像があれば削除
                 $fileNameOfOldProfileImage = $request->user()->profile_image;
