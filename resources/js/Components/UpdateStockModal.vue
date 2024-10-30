@@ -14,13 +14,6 @@ const props = defineProps({
 // errorsを編集できるようにする
 const localErrors = ref({...props.errors});
 
-const emit = defineEmits(['close'])
-const closeModal = () => {
-  localErrors.value = {} // エラーメッセージをリセット
-  // console.log('イベント打ち上げ')
-  emit('close') // 閉じるイベント発火
-}
-
 // props.errorsの変更を監視し、localErrorsに反映
 watch(() => props.errors, (newErrors) => {
   localErrors.value = { ...newErrors };
@@ -29,14 +22,20 @@ watch(() => props.errors, (newErrors) => {
 
 const activeTab = ref('出庫')
 const activateDecreaseTab = () => {
-  localErrors.value = {} // エラーメッセージをリセット
+  localErrors.value = {} // タブ切り替えでバリデーションエラーエラーメッセージをリセット
   activeTab.value = '出庫'
 }
 const activateIncreaseTab = () => {
-  localErrors.value = {} // エラーメッセージをリセット
+  localErrors.value = {} // タブ切り替えでバリデーションエラーエラーメッセージをリセット
   activeTab.value = '入庫'
 }
 
+
+const emit = defineEmits(['close'])
+const closeModal = () => {
+  localErrors.value = {} // バリデーションエラーメッセージをリセット
+  emit('close') // モーダルウィンドウを閉じるイベント打ち上げ
+}
 
 // 出庫タブの在庫数自動計算
 const stockAfterDecrease = computed(() => props.item.stock - decreaseForm.quantity)
@@ -50,28 +49,23 @@ const decreaseForm = useForm({
   transaction_type: '出庫',　// enum型で入庫か出庫のみ
 })
 
-// 別な備品で開いたときにバリデーションメッセージを消す処理
-
 const decreaseStock = item => {
-  if (confirm('本当に出庫処理をしますか？')) {
-      const response = decreaseForm.put(`/decreaseStock/${item.id}`, {
-        onSuccess: () => {
-          // 成功したらモーダルを閉じる
-          closeModal() //fetchConsumableItemsは親コンポーネントのcloseUpdateStockModalに含める
-          // emit('fetchConsumableItems') // 親コンポーネントにイベントを発火
-          decreaseForm.quantity = 1 // モーダルのquantityをリセット
-        },
-        onError: (errors) => {
-          console.log('バリデーションエラーが発生しました:', errors)
-          console.log(props.errors)
-          console.log(localErrors.value)
-          console.log(localErrors.value.operator_name)
-          console.log(localErrors.operator_name)
-        }
-      })
+  try {
+    if (confirm('本当に出庫処理をしますか？')) {
+        const response = decreaseForm.put(`/decreaseStock/${item.id}`, {
+          onSuccess: () => {
+            closeModal() // 成功したらモーダルを閉じる
+            decreaseForm.quantity = 1 // モーダルのquantityをリセット
+          },
+        })
+    }
+  } catch (e) {
+    axios.post('/api/log-error', {
+      error: e.toString(),
+      component: 'UpdateStockModal.vue decreaseStock method',
+    })
   }
 }
-
 
 const increaseForm = useForm({
     transaction_date: new Date().toISOString().substr(0, 10),
@@ -81,36 +75,22 @@ const increaseForm = useForm({
 })
 
 const increaseStock = item => {
-  if (confirm('本当に入庫処理をしますか？')) {
-      const response = increaseForm.put(`/increaseStock/${item.id}`, {
-        onSuccess: () => {
-          closeModal()
-          emit('fetchConsumableItems') // 親コンポーネントにイベントを発火
-          increaseForm.quantity = 1 // モーダルのquantityをリセット
-        },
-        onError: (errors) => {
-          console.log('バリデーションエラーが発生しました:', errors)
-          console.log(props.errors)
-          console.log(localErrors.value)
-          console.log(localErrors.value.operator_name)
-          console.log(localErrors.operator_name)
-        }
-      })
+  try {
+    if (confirm('本当に入庫処理をしますか？')) {
+        const response = increaseForm.put(`/increaseStock/${item.id}`, {
+          onSuccess: () => {
+            closeModal()
+            increaseForm.quantity = 1 // モーダルのquantityをリセット
+          },
+        })
+    }
+  } catch (e) {
+    axios.post('/api/log-error', {
+      error: e.toString(),
+      component: 'UpdateStockModal.vue increaseStock method',
+    })
   }
 }
-
-
-// 日付フォーマット関数
-const formatDate = (timestamp) => {
-  const date = new Date(timestamp);
-  const year = date.getFullYear();
-  const month = ('0' + (date.getMonth() + 1)).slice(-2);
-  const day = ('0' + date.getDate()).slice(-2);
-  const hours = ('0' + date.getHours()).slice(-2);
-  const minutes = ('0' + date.getMinutes()).slice(-2);
-  return `${year}/${month}/${day} ${hours}:${minutes}`;
-};
-
 </script>
 
 <template>
@@ -223,8 +203,6 @@ const formatDate = (timestamp) => {
           </div>
 
 
-
-
           <div v-if="activeTab === '入庫'" class="p-4">
             <!-- フォームの開始 -->
             <form @submit.prevent="increaseStock(item)">
@@ -313,31 +291,4 @@ const formatDate = (timestamp) => {
       </div>
     </div>
   </div>
-
-  <!-- <button @click="openModal" type="button" data-micromodal-trigger="modal-1" href='javascript:;' class="flex items-center text-white text-sm bg-sky-500 border-0 py-2 px-4 focus:outline-none hover:bg-sky-600 rounded">
-    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-5">
-      <path stroke-linecap="round" stroke-linejoin="round" d="m20.25 7.5-.625 10.632a2.25 2.25 0 0 1-2.247 2.118H6.622a2.25 2.25 0 0 1-2.247-2.118L3.75 7.5M10 11.25h4M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125Z" />
-    </svg>
-    入出庫
-  </button> -->
 </template>
-
-<!-- <style>
-.tabs {
-  display: flex;
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-.tabs li {
-  padding: 10px 20px;
-  cursor: pointer;
-  font-size: 1.5em; /* h2タグの文字の大きさに合わせる */
-}
-
-.tabs li.active {
-  background-color: #007bff;
-  color: white;
-}
-</style> -->
