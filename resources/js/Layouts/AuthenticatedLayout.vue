@@ -143,9 +143,9 @@ const profileImageUrl = computed(() =>{
                     class="sm:hidden"
                 >
                     <div class="pt-2 pb-3 space-y-1 bg-white">
-                        <!-- <ResponsiveNavLink :href="route('dashboard')" :active="route().current('dashboard')">
-                            Dashboard
-                        </ResponsiveNavLink> -->
+                        <ResponsiveNavLink :href="route('dashboard')" :active="route().current('dashboard')">
+                            ダッシュボード
+                        </ResponsiveNavLink>
                         <ResponsiveNavLink v-if="$page.props.auth.user_role <= 5" :href="route('items.index')" :active="route().current('items.index')">
                             備品管理
                         </ResponsiveNavLink>
