@@ -13,7 +13,7 @@ const props = defineProps({
   requestedItemNotifications: Object,
 })
 
-const activeTab = ref(sessionStorage.getItem('activeTab') ?? 'tab1')
+const activeTab = ref(sessionStorage.getItem('activeTab') ?? 'consumableItems')
 
 watch(activeTab, (newValue) => {
   sessionStorage.setItem('activeTab', newValue)
@@ -21,8 +21,8 @@ watch(activeTab, (newValue) => {
 
 onMounted(() => {
   if (sessionStorage.getItem('activeTab') === null) {
-    activeTab.value = 'tab1'
-    sessionStorage.setItem('activeTab', 'tab1')
+    activeTab.value = 'consumableItems'
+    sessionStorage.setItem('activeTab', 'consumableItems')
   }
 })
 </script>
@@ -44,25 +44,25 @@ onMounted(() => {
                 <div class="flex justify-center">
                   <ul class="flex space-x-2 md:space-x-6 max-w-md">
                     <li class="flex-grow">
-                      <a @click="activeTab = 'tab1'" :class="['block text-center px-4 py-2 rounded-full font-bold text-xs md:text-md lg:text-lg', activeTab === 'tab1' ? 'bg-blue-500 text-white' : 'bg-white text-black border']">
+                      <a @click="activeTab = 'consumableItems'" :class="['block text-center px-4 py-2 rounded-full font-bold text-xs md:text-md lg:text-lg', activeTab === 'consumableItems' ? 'bg-blue-500 text-white' : 'bg-white text-black border']">
                         消耗品在庫数
                       </a>
                     </li>
                     <li class="flex-grow">
-                      <a @click="activeTab = 'tab2'" :class="['block text-center px-4 py-2 rounded-full font-bold text-xs md:text-md lg:text-lg', activeTab === 'tab2' ? 'bg-blue-500 text-white' : 'bg-white text-black border']">
+                      <a @click="activeTab = 'inspectionAndDisposalSchedule'" :class="['block text-center px-4 py-2 rounded-full font-bold text-xs md:text-md lg:text-lg', activeTab === 'inspectionAndDisposalSchedule' ? 'bg-blue-500 text-white' : 'bg-white text-black border']">
                         点検・廃棄予定
                       </a>
                     </li>
                     <li class="flex-grow">
-                      <a @click="activeTab = 'tab3'" :class="['block text-center px-4 py-2 rounded-full font-bold text-xs md:text-md lg:text-lg', activeTab === 'tab3' ? 'bg-blue-500 text-white' : 'bg-white text-black border']">
+                      <a @click="activeTab = 'request'" :class="['block text-center px-4 py-2 rounded-full font-bold text-xs md:text-md lg:text-lg', activeTab === 'request' ? 'bg-blue-500 text-white' : 'bg-white text-black border']">
                         リクエスト
                       </a>
                     </li>
                   </ul>
                 </div>
-                <LowStockNotificationsTab v-if="activeTab === 'tab1'" :lowStockNotifications="lowStockNotifications" />
-                <DisposalAndInspectionNotificationsTab v-if="activeTab === 'tab2'" :disposalAndInspectionNotifications="disposalAndInspectionNotifications" />
-                <RequestedItemNotificationsTab v-if="activeTab === 'tab3'" :requestedItemNotifications="requestedItemNotifications" />
+                <LowStockNotificationsTab v-if="activeTab === 'consumableItems'" :lowStockNotifications="lowStockNotifications" />
+                <DisposalAndInspectionNotificationsTab v-if="activeTab === 'inspectionAndDisposalSchedule'" :disposalAndInspectionNotifications="disposalAndInspectionNotifications" />
+                <RequestedItemNotificationsTab v-if="activeTab === 'request'" :requestedItemNotifications="requestedItemNotifications" />
               </div>
             </div>
           </div>
