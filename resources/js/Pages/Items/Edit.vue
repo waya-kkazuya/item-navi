@@ -61,7 +61,6 @@ const file_preview_src = ref(props.item.image_path1)
 const handleFileUpload = (event) => {
     form.image_file = event.target.files[0]
     if (form.image_file) {
-        console.log(file_preview_src.value)
         file_preview_src.value = URL.createObjectURL(form.image_file)
     }
 }
