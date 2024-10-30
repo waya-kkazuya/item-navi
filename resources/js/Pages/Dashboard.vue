@@ -20,10 +20,7 @@ const switchViewMode = () => {
   }), {
     method: 'get'
   })
-  console.log(type.value)
 }
-
-
 </script>
 
 <template>
