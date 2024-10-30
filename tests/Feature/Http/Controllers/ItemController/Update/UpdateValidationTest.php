@@ -64,7 +64,7 @@ class UpdateValidationTest extends TestCase
         $item = Item::factory()->create();
 
         $response = $this->from('items/'.$item->id.'/edit')
-        ->put(route('items.update', $item), ['name' => '']);
+            ->put(route('items.update', $item), ['name' => '']);
         $response->assertRedirect('items/'.$item->id.'/edit'); //URLにリダイレクト
         $response->assertStatus(302);
 
@@ -1166,7 +1166,7 @@ class UpdateValidationTest extends TestCase
         $response = $this->from('items/'.$item->id.'/edit')
             ->put(route('items.update', $item), ['storage_location_id' => Location::max('id') + 1]);
 
-        $response->assertRedirect(route('items.edit', ['item' => $item])); //URLにリダイレクト
+        $response->assertRedirect(route('items.edit', ['item' => $item->id])); //URLにリダイレクト
         $response->assertStatus(302);
 
         $response = $this->followRedirects($response);
