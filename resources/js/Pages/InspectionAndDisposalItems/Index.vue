@@ -15,7 +15,7 @@ const props = defineProps({
   historyDisposals: Array
 })
 
-const activeTab = ref('tab1')
+const activeTab = ref('schedule')
 </script>
 
 <template>
@@ -35,19 +35,19 @@ const activeTab = ref('tab1')
                       <div class="flex justify-center">
                         <ul class="flex space-x-2 md:space-x-6 max-w-md">
                           <li class="flex-grow">
-                            <a :class="['block text-center px-4 py-2 rounded-full font-bold text-xs md:text-md lg:text-lg', activeTab === 'tab1' ? 'bg-blue-500 text-white' : 'bg-white text-black border']" @click="activeTab = 'tab1'">
+                            <a :class="['block text-center px-4 py-2 rounded-full font-bold text-xs md:text-md lg:text-lg', activeTab === 'schedule' ? 'bg-blue-500 text-white' : 'bg-white text-black border']" @click="activeTab = 'schedule'">
                               予定
                             </a>
                           </li>
                           <li class="flex-grow">
-                            <a :class="['block text-center px-4 py-2 rounded-full font-bold text-xs md:text-md lg:text-lg', activeTab === 'tab2' ? 'bg-blue-500 text-white' : 'bg-white text-black border']" @click="activeTab = 'tab2'">
+                            <a :class="['block text-center px-4 py-2 rounded-full font-bold text-xs md:text-md lg:text-lg', activeTab === 'history' ? 'bg-blue-500 text-white' : 'bg-white text-black border']" @click="activeTab = 'history'">
                               履歴
                             </a>
                           </li>
                         </ul>
                       </div>
                       <!-- テーブル -->
-                      <div v-if="activeTab === 'tab1'">
+                      <div v-if="activeTab === 'schedule'">
                         <div class="mt-4">
                           <div class="flex items-center px-4 font-medium">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-5">
@@ -162,7 +162,7 @@ const activeTab = ref('tab1')
                       </div>
                     
                       <!-- ここから履歴 -->
-                      <div v-if="activeTab === 'tab2'">
+                      <div v-if="activeTab === 'history'">
                         <div class="mt-4">
                           <div class="flex items-center px-4 font-medium">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-5">
