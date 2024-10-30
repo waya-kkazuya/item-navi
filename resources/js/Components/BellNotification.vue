@@ -3,7 +3,7 @@ import { Link } from '@inertiajs/vue3';
 import { ref, onMounted } from 'vue';
 import axios from 'axios';
 
-// リンクとして使用するか、文字列として使用するか
+// 通常のNavLinkの場合はリンクとして、ResponsiveNavLinkの場合はただのアイコンとして使用
 defineProps({
   isLink: {
     type: Boolean,
@@ -11,21 +11,19 @@ defineProps({
   },
 })
 
-// 中身配列
 const notifications = ref([]);
-const showModal = ref(false);
 
 onMounted(async () => {
   try {
     await axios.get('/api/notifications_count')
     .then(res => {
-      console.log('BellNotification')
-      console.log(res.data)
       notifications.value = res.data
     })
   } catch (e) {
-    console.error(e);
-    console.error('BellNotificationAPI通信失敗');
+    axios.post('/api/log-error', {
+      error: e.toString(),
+      component: 'BellNotification.vue onMounted axios.get',
+    })
   }
 });
 </script>
