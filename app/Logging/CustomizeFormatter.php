@@ -7,26 +7,17 @@ use Monolog\Logger;
 use Monolog\Processor\IntrospectionProcessor;
 use Hikaeme\Monolog\Formatter\LtsvFormatter;
 use Monolog\Level;
+use App\Logging\CustomLtsvFormatter;
 
 class CustomizeFormatter
 {
     public function __invoke($logger)
     {
-        // $lineFormatter = new LineFormatter(
-        //     null, // デフォルトのフォーマットを使用
-        //     null,
-        //     true, // 改行を許可
-        //     false  // 空のcontextとextraフィールドを含まない
-        // );
-        $ltsvformatter = new LtsvFormatter(
-            'Y-m-d H:i:s',
-            [
-                'datetime' => 'datetime',
-                'channel' => 'channel',
-                'level_name' => 'level_name',
-                'message' => 'message',
-                'extra.stack' => 'stack' //stack traceを表示する
-            ]
+        $lineFormatter = new LineFormatter(
+            null, // デフォルトのフォーマットを使用
+            null,
+            true, // 改行を許可
+            false  // 空のcontextとextraフィールドを含まない
         );
 
         $introprocessor = new IntrospectionProcessor(Level::Debug, [
@@ -35,7 +26,7 @@ class CustomizeFormatter
         ]);
 
         foreach ($logger->getHandlers() as $handler) {
-            $handler->setFormatter($ltsvformatter);
+            $handler->setFormatter($lineFormatter);
             $handler->pushProcessor($introprocessor);
         }
     }
