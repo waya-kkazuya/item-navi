@@ -6,12 +6,9 @@ use App\Models\Item;
 
 class ItemsByTypeUseCase
 {
-  const CATEGORY = 1;
-  const LOCATION_OF_USE = 2;
-
-  public function handle(int $type)
+  public function handle(string $type)
   {
-    if ($type == self::CATEGORY) {
+    if ($type == 'category') {
         // 備品をカテゴリでまとめたもの
         $allItems = Item::with('category')->get();
         $itemsByType = $allItems->groupBy(function ($item) {

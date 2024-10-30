@@ -19,9 +19,6 @@ class DashboardController extends Controller
     private $itemsByTypeUseCase;
     private $groupedEditHistories;
 
-    const CATEGORY = 1;
-    const LOCATION_OF_USE = 2;
-
     public function __construct(
         ItemsByTypeUseCase $itemsByTypeUseCase,
         GroupedEditHistoriesUseCase $groupedEditHistories
@@ -37,7 +34,7 @@ class DashboardController extends Controller
         Log::info('DashboardController index method called');
 
         try {
-            $type = $request->input('type', self::CATEGORY);
+            $type = $request->input('type', 'category');
             List('allItems' => $allItems, 'itemsByType' => $itemsByType) = $this->itemsByTypeUseCase->handle($type);
 
             $groupedEditHistories = $this->groupedEditHistories->handle();

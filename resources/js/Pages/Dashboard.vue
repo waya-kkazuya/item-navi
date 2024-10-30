@@ -8,11 +8,11 @@ const props = defineProps({
     allItems: Array,
     itemsByType: Object,
     groupedEdithistories: Array,
-    type: Number
+    type: String
 })
 
-// 登録件数をプルダウンで切り替える用
-const type = ref(props.type ?? 1)
+// 登録件数をプルダウンで切り替え
+const type = ref(props.type ?? 'category')
 
 const switchViewMode = () => {
   router.visit(route('dashboard', {
@@ -47,12 +47,12 @@ const switchViewMode = () => {
                                         </th>
                                         <th class="w-1/3 border-b-2 border-gray-200 px-4 py-3 text-right bg-sky-700">
                                             <select v-model="type" @change="switchViewMode" class="h-9 text-xs md:text-base">
-                                                <option :value="1">カテゴリ
+                                                <option value="category">カテゴリ
                                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
                                                     <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
                                                     </svg>
                                                 </option>  
-                                                <option :value="2">使用場所
+                                                <option value="locationOfUse">使用場所
                                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
                                                     <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
                                                     </svg>
@@ -62,7 +62,7 @@ const switchViewMode = () => {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <template v-if="type == 1">
+                                    <template v-if="type == 'category'">
                                         <tr>
                                             <td class="border-b-2 border-gray-200 px-4 py-3">
                                                 <Link :href="route('items.index')" class="text-blue-500 hover:text-blue-700 underline block">
