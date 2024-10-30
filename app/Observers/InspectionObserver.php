@@ -14,33 +14,25 @@ class InspectionObserver
      */
     public function created(Inspection $inspection): void
     {
-        // ItemControllerのstoreおよびupdateでcreateでInspectionの新規レコードを生成したとき
-        // パターン
-        // 1,ItemControllerのstoreメソッドでcreate
-        // 2,ItemControllerのupdateメソッドでupdate レコードがある場合
-        // 3,ItemControllerのupdateメソッドでcreate レコードがない場合
-
-        // セッションから編集理由を取得
-        $edit_reason_id = Session::get('edit_reeason_id');
+        $edit_reason_id = Session::get('edit_reason_id');
         $edit_reason_text = Session::get('edit_reason_text');
         $operation_type = Session::get('operation_type');
 
-        // 仮置き
-        $edit_mode = 'normal';
+        $edit_mode = 'normal'; // 仮置き
 
         $oldValue = null;
         $newValue = $inspection->inspection_scheduled_date; 
         
         Edithistory::create([
             'edit_mode' => $edit_mode,
-            'operation_type' => $operation_type ?? 'store',
+            'operation_type' => $operation_type,
             'item_id' => $inspection->item_id,
             'edited_field' => 'inspection_scheduled_date',
             'old_value' => $oldValue,
             'new_value' => $newValue,
             'edit_user' => Auth::user()->name ?? '',
-            'edit_reason_id' => $edit_reason_id ?? null, //プルダウン
-            'edit_reason_text' => $edit_reason_text ?? null, //その他テキストエリア  
+            'edit_reason_id' => $edit_reason_id, //プルダウン
+            'edit_reason_text' => $edit_reason_text, //その他テキストエリア  
         ]);
     }
 
@@ -52,24 +44,23 @@ class InspectionObserver
         // updatedメソッドが呼び出されるのは
         // 1,備品編集時->Edithistoryに保存
         // 2,点検実行時にフォーム入力で保存
+
         // 点検実行時はInspectionsテーブルの各項目にデータを保存して
         // statusはtrueになり、そのレコードはもう備品詳細画面には表示されない
-        // where('status', false)->first()がnullになる
+        // $inspection->where('status', false)->first()がnullになる
         $changes = $inspection->getChanges();
 
         // セッションから編集理由を取得
-        $edit_reason_id = Session::get('edit_reeason_id');
+        $edit_reason_id = Session::get('edit_reason_id');
         $edit_reason_text = Session::get('edit_reason_text');
         $operation_type = Session::get('operation_type');
 
-        // scheduled_dateカラムのみを追跡
-        if (isset($changes['inspection_scheduled_date'])) {
-            // 仮置き
-            $edit_mode = 'normal';
+        // 備品編集更新の際、inspection_scheduled_dateカラムのみを追跡
+        if (isset($changes['inspection_scheduled_date'])) {    
+            $edit_mode = 'normal'; // 仮置き
 
             $oldValue = $inspection->getOriginal('inspection_scheduled_date');
             $newValue = $changes['inspection_scheduled_date'];
-            // dd($oldValue, $newValue);
 
             Edithistory::create([
                 'edit_mode' => $edit_mode,
@@ -79,8 +70,8 @@ class InspectionObserver
                 'old_value' => $oldValue,
                 'new_value' => $newValue,
                 'edit_user' => Auth::user()->name ?? '',
-                'edit_reason_id' => $edit_reason_id, //プルダウン
-                'edit_reason_text' => $edit_reason_text, //その他テキストエリア  
+                'edit_reason_id' => $edit_reason_id,
+                'edit_reason_text' => $edit_reason_text,
             ]);
         }
     }
