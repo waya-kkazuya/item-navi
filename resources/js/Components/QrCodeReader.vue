@@ -14,32 +14,23 @@ const startScan = () => {
   }
 }
 
-const onDetect = content => {
-  // QRコードの内容を取得し、特定のURLに遷移
-  // alert(`QRコードの内容stringify: ${JSON.stringify(content)}`)
-
+// QRコードに記録された備品のitemIdを取得し、消耗品管理画面の該当の備品のモーダルを開く
+const onDetect = content => {  
   // vue-qrcode-readerは複数のバーコードを同時に読み込めるので配列形式
-  if (Array.isArray(content) && content.length > 0) {
-    const firstItem = content[0];
-    const itemId = firstItem.rawValue;
-    // alert(`QRコードのidデータ: ${itemId}`);
-    try {
-      router.visit(route('consumable_items', { item_id: itemId }), {
-        onSuccess: (page) => {
-          // alert('成功しました！')
-          // console.log('成功時のページデータ:', page);
-        },
-        onError: (errors) => {
-          // alert('エラーが発生しました。')
-          console.log('エラー内容:', errors);
-        }
-      })
-    } catch (e) {
-      // alert(`画面の遷移時にエラーが発生しました: ${e.message}`)
+  try {
+    if (Array.isArray(content) && content.length > 0) {
+      const firstItem = content[0];
+      const itemId = firstItem.rawValue;
+      router.visit(route('consumable_items', { item_id: itemId }))
+    } else {
+      alert('QRコードの内容を取得できませんでした')
     }
-
-  } else {
-    alert('QRコードの内容を取得できませんでした')
+  } catch (e) {
+    axios.post('/api/log-error', {
+      error: e.toString(),
+      component: 'QrCodeReader.vue onDetect method',
+    })
+    alert('エラーが発生しました、もう一度お試しください')
   }
   scannerActive.value = false // スキャンが完了したらカメラを停止
 }
