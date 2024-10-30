@@ -21,10 +21,6 @@ class ItemFactory extends Factory
      */
     public function definition(): array
     {
-        // $words1 = ['未使用', '使用中'];
-        // $imagePath =['no_image.jpg', 'sample1.jpg', 'sample2.jpg', 'sample3.jpg', 'sample4.jpg', 'sample5.jpg',
-        // 'sample6.jpg', 'sample7.jpg', 'sample8.jpg', 'sample9.jpg', 'sample10.jpg',];
-
         return [
             'management_id'=> $this->faker->regexify('[A-Za-z0-9]{7}'),
             'name' => $this->faker->name(),
