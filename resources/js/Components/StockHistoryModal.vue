@@ -6,76 +6,31 @@ import { ref, onMounted, watch, getCurrentInstance } from 'vue';
 const props = defineProps({
   item: Object
 })
-
 const item = ref(props.item);
 
-// const isShow = ref(false)
-// const toggleStatus = () => { isShow.value = !isShow.value}
-
-
-// API通信で、where(item_id. item->id)でレコードを取ってくる
-// APIのルート、StockTransactionのコントローラー
 const stockTransactions = ref([])
+// 入出庫履歴情報を取得
 const fetchStockTransactions = async item => {
   try {
-    // await axios.get('api/stock_transactions', { item })
     const res = await axios.get(`/api/stock_transactions?item_id=${item.id}`)
-    console.log('res.data')
-    console.log(res.data)
     stockTransactions.value = res.data.stockTransactions
-    console.log('stockTransactions')
-    console.log(stockTransactions)
-    
-    // 明示的に更新
-    // const instance = getCurrentInstance();
-    // if (instance) {
-    //   instance.proxy.$forceUpdate();
-    // }
-
   } catch (e) {
-    console.log('エラーメッセージです', e.message)
-    if (e.response) {
-      console.error('ステータスコード:', e.response.status);
-      console.error('レスポンスデータ:', e.response.data);
-    }
+    axios.post('/api/log-error', {
+      error: e.toString(),
+      component: 'StockHistoryModal.vue fetchStockTransactions method',
+    })
   }
 }
 
-
-// モーダルが開かなくてもonMountedが動いてしまう
-onMounted(() => {
-  console.log('StockHistoryModalのonMounted')
-  console.log('props.item')
-  console.log(props.item)
-})
-
 watch(() => props.item, (newItem) => {
-  console.log('newItem')
-  console.log(newItem)
   if (newItem) {
     fetchStockTransactions(newItem);
   }
 }, { immediate: true });
 
-
-
 const emit = defineEmits(['close'])
 const closeModal = () => {
-  // console.log('イベント打ち上げ')
-  emit('close') // 閉じるイベント発火
-}
-
-
-
-// 日付フォーマット関数
-const formatDate = (timestamp) => {
-  const date = new Date(timestamp);
-  const year = date.getFullYear();
-  const month = ('0' + (date.getMonth() + 1)).slice(-2);
-  const day = ('0' + date.getDate()).slice(-2);
-  const hours = ('0' + date.getHours()).slice(-2);
-  const minutes = ('0' + date.getMinutes()).slice(-2);
-  return `${year}/${month}/${day} ${hours}:${minutes}`;
+  emit('close') // StockHistoryModalを閉じるイベント打ち上げ
 }
 </script>
 
@@ -130,10 +85,4 @@ const formatDate = (timestamp) => {
       </div>
     </div>
   </div>
-  <!-- item.idを親から子へ渡す、async await axiosの変数として渡される -->
-  <!-- <button @click="fetchStockTransactions(props.item)" type="button" data-micromodal-trigger="modal-1"
-  class="flex items-center text-white text-sm bg-gray-500 border-0 py-2 px-4 mx-auto focus:outline-none hover:bg-gray-600 rounded">
-    <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
-    履歴
-  </button> -->
 </template>
