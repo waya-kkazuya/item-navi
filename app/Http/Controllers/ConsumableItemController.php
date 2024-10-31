@@ -10,7 +10,6 @@ use App\Models\Location;
 use App\Models\Edithistory;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
-use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use App\Services\ImageService;
@@ -33,9 +32,7 @@ class ConsumableItemController extends Controller
 
         try {
             $search = $request->query('search', '');
-
             $sortOrder = $request->query('sortOrder', 'desc');
-
             // プルダウンの数値、第2引数は初期値で0
             $location_of_use_id = $request->query('locationOfUseId', 0);
             $storage_location_id = $request->query('storageLocationId', 0);
