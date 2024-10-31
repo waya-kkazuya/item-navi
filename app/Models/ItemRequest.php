@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class ItemRequest extends Model
 {
@@ -21,19 +22,27 @@ class ItemRequest extends Model
         'price',
     ];
 
-    public function category() 
+    /**
+     * @return BelongsTo
+     */
+    public function category(): BelongsTo
     {
         return $this->belongsTo(Category::class);
     }
 
-    public function locationOfUse()
+    /**
+     * @return BelongsTo
+     */
+    public function locationOfUse(): BelongsTo
     {
         return $this->belongsTo(Location::class, 'location_of_use_id');
     }
 
-    public function requestStatus()
+    /**
+     * @return BelongsTo
+     */
+    public function requestStatus(): BelongsTo
     {
         return $this->belongsTo(RequestStatus::class);       
     }
-
 }

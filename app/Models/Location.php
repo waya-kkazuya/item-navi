@@ -5,18 +5,26 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Item;
+use App\Models\ItemRequest;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Location extends Model
 {
     use HasFactory;
 
-    public function item()
+    /**
+     * @return HasOne
+     */
+    public function item(): HasOne
     {
         return $this->hasOne(Item::class);
     }
 
-    public function itemRequest()
+    /**
+     * @return HasOne
+     */
+    public function itemRequest(): HasOne
     {
-        return $this->hasOne(Wish::class);
+        return $this->hasOne(ItemRequest::class);
     }
 }

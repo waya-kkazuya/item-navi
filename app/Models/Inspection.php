@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Inspection extends Model
 {
@@ -18,7 +19,11 @@ class Inspection extends Model
         'details',
     ];
 
-    public function item()
+
+    /**
+     * @return BelongsTo
+     */
+    public function item(): BelongsTo
     {
         return $this->belongsTo(Item::class)->withTrashed();
     }

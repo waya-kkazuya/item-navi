@@ -8,9 +8,11 @@ use App\Models\Category;
 use App\Models\Location;
 use App\Models\Unit;
 use App\Models\Disposal;
-use App\Models\InventoryPlan;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Item extends Model
 {
@@ -39,47 +41,75 @@ class Item extends Model
         'qrcode',
     ];
 
-    public function category()
+    
+    /**
+     * @return BelongsTo
+     */
+    public function category(): BelongsTo
     {
         return $this->belongsTo(Category::class);
     }
 
-    public function unit()
+    /**
+     * @return BelongsTo
+     */
+    public function unit(): BelongsTo
     {
         return $this->belongsTo(Unit::class);       
     }
 
-    public function usageStatus()
+    /**
+     * @return BelongsTo
+     */
+    public function usageStatus(): BelongsTo
     {
         return $this->belongsTo(UsageStatus::class);       
     }
 
-    public function locationOfUse()
+    /**
+     * @return BelongsTo
+     */
+    public function locationOfUse(): BelongsTo
     {
         return $this->belongsTo(Location::class, 'location_of_use_id');
     }
 
-    public function storageLocation()
+    /**
+     * @return BelongsTo
+     */
+    public function storageLocation(): BelongsTo
     {
         return $this->belongsTo(Location::class, 'storage_location_id');
     }
 
-    public function acquisitionMethod()
+    /**
+     * @return BelongsTo
+     */
+    public function acquisitionMethod(): BelongsTo
     {
         return $this->belongsTo(AcquisitionMethod::class);       
     }
 
-    public function inspections()
+    /**
+     * @return HasMany
+     */
+    public function inspections(): HasMany
     {
         return $this->hasMany(Inspection::class);
     }
 
-    public function disposal()
+    /**
+     * @return HasOne
+     */
+    public function disposal(): HasOne
     {
         return $this->hasOne(Disposal::class);
     }
 
-    public function stockTransactions()
+    /**
+     * @return HasMany
+     */
+    public function stockTransactions(): HasMany
     {
         return $this->hasMany(StockTransaction::class);
     }
