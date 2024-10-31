@@ -4,7 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+
 
 class Edithistory extends Model
 {
@@ -22,12 +23,18 @@ class Edithistory extends Model
         'edit_reason_text'
     ];
 
-    public function item()
+    /**
+     * @return BelongsTo
+     */
+    public function item(): BelongsTo
     {
         return $this->belongsTo(Item::class)->withTrashed();
     }
 
-    public function editReason()
+    /**
+     * @return BelongsTo
+     */
+    public function editReason(): BelongsTo
     {
         return $this->belongsTo(EditReason::class);
     }
