@@ -25,61 +25,47 @@ use App\Http\Controllers\VueErrorController;
 |
 */
 
-Route::middleware('auth:sanctum')
-->get('/user', function (Request $request) {
-  return $request->user();
-});
 
-// 廃棄備品のトグルボタンでの通信用API
-// apiはprefixでURLに付いているはず
+// トグルボタンでの廃棄備品データを取得する
 Route::middleware(['auth:sanctum', 'verified', 'can:staff-higher'])
 ->get('/items', [ItemController::class, 'index']);
 
-
-// 対象の備品の編集履歴を取得するためのAPI
+// 対象の備品の編集履歴を取得する
 Route::middleware(['auth:sanctum', 'verified', 'can:staff-higher'])
 ->get('/edithistory', [EdithistoryController::class, 'index']);
 
-
-// 消耗品の入出庫で更新した際、在庫数を反映するためのAPI
-// 以前作成したConsumableItemsController Itemsの複数形があるので後で処理する
-Route::middleware(['auth:sanctum', 'verified', 'can:staff-higher'])
-->get('/consumable_items', [ConsumableItemController::class, 'index']);
-
-
-// 在庫数の入出庫履歴を取得するためのAPI
+// 在庫数の入出庫履歴を取得する
 Route::middleware('auth:sanctum', 'verified', 'can:user-higher')
 ->get('/stock_transactions', [StockTransactionController::class, 'stockTransaction'])
 ->name('stock_transactions');
 
+// 消耗品の入出・出庫モーダルで更新処理をした際、在庫数をリアルタイムに反映する
+Route::middleware(['auth:sanctum', 'verified', 'can:staff-higher'])
+->get('/consumable_items', [ConsumableItemController::class, 'index']);
 
-// 通知画面用
-Route::middleware('auth:sanctum', 'verified', 'can:staff-higher')
-->get('/notifications', [NotificationController::class, 'index'])
-->name('notifications.index');
+// 通知を表示したら既読にする
+Route::middleware(['auth:sanctum', 'verified', 'can:staff-higher'])->group(function () {
+  Route::patch('/notifications/{id}/read', [NotificationController::class, 'markAsRead']);
+});
 
-// ベルに未読通知数を表示するためのAPI
+// ベルに未読通知数を表示する
 Route::middleware('auth:sanctum', 'verified', 'can:staff-higher')
 ->get('/notifications_count', function () {
   return auth()->user()->unreadNotifications;
 });
 
-// 通知を既読にする
-Route::middleware(['auth:sanctum', 'verified', 'can:staff-higher'])->group(function () {
-  Route::patch('/notifications/{id}/read', [NotificationController::class, 'markAsRead']);
-});
 
-
-// リクエストのステータスのプルダウンをadmin,staffが変更するためのAPI
+// リクエストのステータスのプルダウンを変更する
 Route::middleware(['auth:sanctum', 'verified', 'can:staff-higher', 'RestrictGuestAccess'])
 ->post('item-requests/{id}/update-status', [ItemRequestController::class, 'updateStatus'])
 ->name('item-requests.update-status');
-
-// リクエスト一覧画面でユーザーの権限情報を取得するためのAPI
+// リクエスト一覧画面でユーザーの権限情報を取得する
 Route::middleware(['auth:sanctum', 'verified', 'can:user-higher'])
 ->get('/user-role', function (Request $request) {
   return auth()->user()->role;
 });
 
+
 // Vue側のエラーをAPIでログに書き込む
-Route::post('/log-error', [VueErrorController::class, 'logError']);
+Route::middleware(['auth:sanctum', 'verified', 'can:user-higher'])
+->post('/log-error', [VueErrorController::class, 'logError']);
