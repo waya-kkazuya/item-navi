@@ -54,6 +54,11 @@ class NotificationController extends Controller
             return $notification->type === 'App\Notifications\RequestedItemNotification';
         })->take(20);
 
+        // タブの右上に表示する丸の判定基準のため、それぞれの未読の通知数を所得
+        $unreadLowStockNotifications = $lowStockNotifications->where('read_at', null)->count();
+        $unreadDisposalAndInspectionNotifications = $disposalAndInspectionNotifications->where('read_at', null)->count();
+        $unreadRequestedItemNotifications = $requestedItemNotifications->where('read_at', null)->count();
+
         Log::info('NotificationController index method succeeded');
 
         return Inertia::render('Notification', [
@@ -61,6 +66,9 @@ class NotificationController extends Controller
             'lowStockNotifications' => $lowStockNotifications,
             'disposalAndInspectionNotifications' => $disposalAndInspectionNotifications,
             'requestedItemNotifications' => $requestedItemNotifications,
+            'unreadLowStockNotifications' => $unreadLowStockNotifications,
+            'unreadDisposalAndInspectionNotifications' => $unreadDisposalAndInspectionNotifications,
+            'unreadRequestedItemNotifications' => $unreadRequestedItemNotifications,
         ]);
     }
 

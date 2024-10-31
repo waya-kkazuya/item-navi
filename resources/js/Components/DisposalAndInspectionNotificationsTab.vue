@@ -44,7 +44,7 @@ const markAsRead = async id => {
         点検と廃棄へ
       </Link>
     </div>
-    <!-- <div>{{ disposalAndInspectionNotifications }}</div> -->
+
     <div class="min-w-full overflow-auto flex justify-center">
       <table v-if="disposalAndInspectionNotifications.length > 0" class="table-fixed text-left whitespace-no-wrap">
         <thead>
