@@ -5,7 +5,6 @@ import FlashMessage from '@/Components/FlashMessage.vue';
 import Pagination from '@/Components/Pagination.vue';
 import { ref, onMounted, watch } from 'vue';
 import EditHistoryModal from '@/Components/EditHistoryModal.vue';
-import { stringify } from 'postcss';
 import { useWindowSize } from '@/hooks/useWindowSize';
 
 const props = defineProps({
@@ -276,7 +275,7 @@ const restoreItem = (id) => {
                           
                           <div class="mb-4 flex justify-end items-end space-x-2">
                             <div class="font-medium text-xs md:text-sm">備品合計 {{ totalCount }}件</div>
-                            <Pagination class="" :links="localItems.links"></Pagination>
+                            <Pagination class="" :links="localItems.links" />
                           </div>
 
                          
@@ -433,7 +432,7 @@ const restoreItem = (id) => {
                           </div>
 
                           <div class="mb-4 flex justify-end">
-                            <Pagination class="mt-6" :links="localItems.links"></Pagination>
+                            <Pagination class="mt-6" :links="localItems.links" />
                           </div>
                       </section>
                     </div>
