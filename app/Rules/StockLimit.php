@@ -7,7 +7,7 @@ use Illuminate\Contracts\Validation\ValidationRule;
 
 class StockLimit implements ValidationRule
 {
-    protected $itemId;
+    protected $item;
 
     public function __construct($item)
     {
