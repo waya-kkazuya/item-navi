@@ -34,10 +34,10 @@ class RequestedItemNotification extends Notification
     /**
      * Get the mail representation of the notification.
      */
-    public function toMail(object $notifiable): MailMessage
-    {
+    // public function toMail(object $notifiable): MailMessage
+    // {
         //
-    }
+    // }
 
     /**
      * Get the array representation of the notification.
