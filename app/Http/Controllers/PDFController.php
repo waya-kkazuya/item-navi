@@ -6,9 +6,9 @@ use App\Http\Controllers\Controller;
 use App\Models\Item;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
-// use PDF;
-use Barryvdh\Snappy\Facades\SnappyPdf as PDF; // snappy pdfを使用する
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Gate;
+use Barryvdh\Snappy\Facades\SnappyPdf as PDF; // snappy pdfを使用する
 
 class PDFController extends Controller
 {
