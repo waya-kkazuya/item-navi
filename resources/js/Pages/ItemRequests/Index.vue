@@ -10,12 +10,12 @@ const props = defineProps({
   sortOrder: String,
   totalCount: Number,
   requestStatuses: Array
-})
+});
 
 // 作成日でソート
-const sortOrder = ref(props.sortOrder ?? 'desc')
+const sortOrder = ref(props.sortOrder ?? 'desc');
 // リクエスト合計件数
-const totalCount = ref(props.totalCount)
+const totalCount = ref(props.totalCount);
 
 // すべてのフィルターをまとめる
 const fetchAndFilterItems = () => {
@@ -23,12 +23,12 @@ const fetchAndFilterItems = () => {
     sortOrder: sortOrder.value,
   }), {
     method: 'get'
-  })
-}
+  });
+};
 
 const toggleSortOrder = () => {
-  sortOrder.value = sortOrder.value === 'asc' ? 'desc' : 'asc'
-  fetchAndFilterItems()
+  sortOrder.value = sortOrder.value === 'asc' ? 'desc' : 'asc';
+  fetchAndFilterItems();
 };
 
 const updateStatus = async request => {
@@ -38,14 +38,14 @@ const updateStatus = async request => {
     axios.post('/api/log-error', {
       error: e.toString(),
       component: 'ItemRequests/Index.vue updateStatus method',
-    })
+    });
     // フラッシュメッセージの代わりにアラートを表示する
     alert('ステータスの変更に失敗しました、もう一度お試しください。');
 
   } finally {
-    window.location.reload() // ページをリロード
+    window.location.reload(); // ページをリロード
   }
-}
+};
 
 
 const loginUserRole = ref(null);
@@ -58,13 +58,13 @@ const getUserRole = async () => {
     axios.post('/api/log-error', {
       error: e.toString(),
       component: 'ItemRequests/Index.vue getUserRole method',
-    })
+    });
   }
 };
 
 onMounted(() => {
   getUserRole()
-})
+});
 
 
 const deleteItemRequest = request => {
@@ -72,15 +72,15 @@ const deleteItemRequest = request => {
     if (confirm('本当に削除しますか？')) {
       router.visit(route('item_requests.destroy', request), {
         method: 'delete'
-      })
+      });
     }
   } catch (e) {
     axios.post('/api/log-error', {
       error: e.toString(),
       component: 'ItemRequests/Index.vue deleteItemRequest method',
-    })
+    });
   }
-}
+};
 </script>
 
 <template>

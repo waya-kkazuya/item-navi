@@ -1,22 +1,22 @@
 <script setup>
-import { router, useForm } from '@inertiajs/vue3';
+import { useForm } from '@inertiajs/vue3';
 import { ref } from 'vue'
 
 
-const isShow = ref(false)
-const toggleStatus = () => { isShow.value = !isShow.value}
+const isShow = ref(false);
+const toggleStatus = () => { isShow.value = !isShow.value};
 
 const props = defineProps({
   item: Object,
   userName: String,
   errors: Object
-})
+});
 
 const form = useForm({
     disposal_date: new Date().toISOString().substr(0, 10),
     disposal_person: props.userName,
     details: null,
-})
+});
 
 // disposalsテーブルに保存する関数
 const saveDisposal = item => {
@@ -24,19 +24,19 @@ const saveDisposal = item => {
     if (confirm('本当に削除しますか？')) {
       form.put(`/dispose_item/${item.id}`, {
         onSuccess: () => {
-          toggleStatus()
+          toggleStatus();
         },
-      })
+      });
     }
   } catch (e) {
     axios.post('/api/log-error', {
       error: e.toString(),
       component: 'DisposalModal.vue saveDisposal method',
-    })
+    });
   }
-}
-
+};
 </script>
+
 <template>
   <div v-show="isShow" class="modal fixed inset-0 bg-gray-600 bg-opacity-50 flex items-end md:items-center md:justify-center z-50" id="modal-1" >
     <div class="modal__overlay" tabindex="-1" data-micromodal-close>

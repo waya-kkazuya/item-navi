@@ -16,7 +16,7 @@ const props = defineProps({
     manufacturer: String,
     price: Number,
     errors: Object
-})
+});
 
 const form = useForm({
     id: null,
@@ -40,10 +40,10 @@ const form = useForm({
     inspection_scheduled_date: null, // 初期値null
     disposal_scheduled_date: null, // 初期値null
     remarks: null,
-})
+});
 
 
-const file_preview_src = ref('')
+const file_preview_src = ref('');
 
 const handleFileUpload = (event) => {
     form.image_file = event.target.files[0];
@@ -56,14 +56,14 @@ const handleFileUpload = (event) => {
 // form.postなら入力値保持機能(old関数))が使える
 const storeItem = () => {
     try {
-        form.post('/items')
+        form.post('/items');
     } catch (e) {
         axios.post('/api/log-error', {
             error: e.toString(),
             component: 'Items/Create.vue storeItem method',
-        })
+        });
     }
-}
+};
 
 
 // 「×」ボタンで日付リセット

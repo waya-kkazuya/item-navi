@@ -1,6 +1,6 @@
 <script setup>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import { Head, Link, router } from '@inertiajs/vue3';
+import { Head } from '@inertiajs/vue3';
 import { ref, onMounted, watch } from 'vue';
 import LowStockNotificationsTab from '@/Components/LowStockNotificationsTab.vue';
 import DisposalAndInspectionNotificationsTab from '@/Components/DisposalAndInspectionNotificationsTab.vue';
@@ -14,20 +14,20 @@ const props = defineProps({
   unreadLowStockNotifications: Number,
   unreadDisposalAndInspectionNotifications: Number,
   unreadRequestedItemNotifications: Number
-})
+});
 
-const activeTab = ref(sessionStorage.getItem('activeTab') ?? 'consumableItems')
+const activeTab = ref(sessionStorage.getItem('activeTab') ?? 'consumableItems');
 
 watch(activeTab, (newValue) => {
-  sessionStorage.setItem('activeTab', newValue)
-})
+  sessionStorage.setItem('activeTab', newValue);
+});
 
 onMounted(() => {
   if (sessionStorage.getItem('activeTab') === null) {
-    activeTab.value = 'consumableItems'
-    sessionStorage.setItem('activeTab', 'consumableItems')
+    activeTab.value = 'consumableItems';
+    sessionStorage.setItem('activeTab', 'consumableItems');
   }
-})
+});
 </script>
 
 <template>

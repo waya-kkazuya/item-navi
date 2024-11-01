@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted, ref, computed } from 'vue';
+import { ref, computed } from 'vue';
 import ApplicationLogo from '@/Components/ApplicationLogo.vue';
 import Dropdown from '@/Components/Dropdown.vue';
 import DropdownLink from '@/Components/DropdownLink.vue';
@@ -11,14 +11,13 @@ import BellNotification from '@/Components/BellNotification.vue';
 const showingNavigationDropdown = ref(false);
 
 
-const page = usePage()
+const page = usePage();
 
 const profileImageUrl = computed(() =>{
     return page.props.auth.user.profile_image
     ? `${import.meta.env.VITE_APP_URL}/storage/profile/${page.props.auth.user.profile_image}`
     : `${import.meta.env.VITE_APP_URL}/storage/profile/profile_default_image.png`
-})
-
+});
 </script>
 
 <template>
@@ -40,9 +39,6 @@ const profileImageUrl = computed(() =>{
 
                             <!-- Navigation Links -->
                             <div class="items-center hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                                <!-- <NavLink :href="route('dashboard')" :active="route().current('dashboard')">
-                                    Dashboard
-                                </NavLink>         -->
                                 <NavLink v-if="$page.props.auth.user_role <= 5" :href="route('items.index')" :active="route().current('items.index')">
                                     備品管理
                                 </NavLink>

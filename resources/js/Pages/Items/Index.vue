@@ -17,21 +17,21 @@ const props = defineProps({
   locationOfUseId: Number,
   storageLocationId: Number,
   totalCount: Number,
-})
+});
 
 // 読み取り専用のitemsを変更出来るようスプレッド構文でコピーする
 const localItems = ref({...props.items});
 
 // 検索フォーム
-const search = ref(props.search)
+const search = ref(props.search);
 // 作成日でソート
-const sortOrder = ref(props.sortOrder ?? 'asc')
+const sortOrder = ref(props.sortOrder ?? 'asc');
 // カテゴリプルダウン用(初期値は0)
-const categoryId = ref(props.categoryId)
-const locationOfUseId = ref(props.locationOfUseId ?? 0)
-const storageLocationId = ref(props.storageLocationId ?? 0)
+const categoryId = ref(props.categoryId);
+const locationOfUseId = ref(props.locationOfUseId ?? 0);
+const storageLocationId = ref(props.storageLocationId ?? 0);
 // 備品の合計件数
-const totalCount = ref(props.totalCount)
+const totalCount = ref(props.totalCount);
 
 // プルダウンや検索フォームの条件を適用して備品情報を再取得
 const fetchAndFilterItems = () => {
@@ -43,36 +43,35 @@ const fetchAndFilterItems = () => {
     storageLocationId: storageLocationId.value,
   }), {
     method: 'get'
-  })
-}
+  });
+};
 
 // プルダウンや検索フォームをすべてリセット
 const resetState = () => {
-  search.value = ''
-  sortOrder.value = 'asc'
-  categoryId.value = 0
-  locationOfUseId.value = 0
-  storageLocationId.value = 0
-
-  fetchAndFilterItems()
-}
+  search.value = '';
+  sortOrder.value = 'asc';
+  categoryId.value = 0;
+  locationOfUseId.value = 0;
+  storageLocationId.value = 0;
+  fetchAndFilterItems();
+};
 
 // 行表示・タイル表示の切替 セッションにisTableViewを保存
-const isTableView = ref(sessionStorage.getItem('isTableView') !== 'false')
+const isTableView = ref(sessionStorage.getItem('isTableView') !== 'false');
 // watchでisTableViewを監視
 watch(isTableView, (newValue) => {
-  sessionStorage.setItem('isTableView', newValue)
-})
+  sessionStorage.setItem('isTableView', newValue);
+});
 onMounted(() => {
   if (sessionStorage.getItem('isTableView') === null) {
-    isTableView.value = true
-    sessionStorage.setItem('isTableView', 'true')
+    isTableView.value = true;
+    sessionStorage.setItem('isTableView', 'true');
   }
-})
+});
 
 const toggleSortOrder = () => {
-  sortOrder.value = sortOrder.value === 'asc' ? 'desc' : 'asc'
-  fetchAndFilterItems()
+  sortOrder.value = sortOrder.value === 'asc' ? 'desc' : 'asc';
+  fetchAndFilterItems();
 };
 
 // 備品と廃棄済み備品の表示切り替え
@@ -80,14 +79,14 @@ const showDisposal = ref(false);
 const toggleItems = async () => {
   const url = showDisposal.value ? 'api/items?disposal=true' : 'api/items?disposal=false';
   try {
-    const res = await axios.get(url)
-    localItems.value = res.data.items
-    totalCount.value = res.data.total_count
+    const res = await axios.get(url);
+    localItems.value = res.data.items;
+    totalCount.value = res.data.total_count;
   } catch (e) {
     axios.post('/api/log-error', {
       error: e.toString(),
       component: 'Items/Index.vue toggleItems method',
-    })
+    });
   }
 };
 
@@ -98,16 +97,16 @@ watch(() => props.items, (newItems) => {
 const restoreItem = (id) => {
   try {
     if (confirm('本当に備品を復元をしますか？')) {
-      router.post(`/items/${id}/restore`)
+      router.post(`/items/${id}/restore`);
     }
   } catch (e) {
     axios.post('/api/log-error', {
       error: e.toString(),
       component: 'Items/Index.vue restoreItem method',
-    })
+    });
   }
   showDisposal.value = false;
-}
+};
 </script>
 
 <template>

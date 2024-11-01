@@ -5,7 +5,7 @@ import { Link } from '@inertiajs/vue3';
 
 const props = defineProps({
   lowStockNotifications: Object
-})
+});
 
 const localNotifications = ref(Object.values(props.lowStockNotifications));
 
@@ -19,20 +19,20 @@ onMounted(() => {
     if (!notification.read_at) {
       markAsRead(notification.id);
     }
-  })
-})
+  });
+});
 
 // 画面を開いたら既読にする処理、次回アクセスもしくは更新でオレンジの新着マークが消える
 const markAsRead = async id => {
   try {
-    await axios.patch(`/api/notifications/${id}/read`)
+    await axios.patch(`/api/notifications/${id}/read`);
   } catch (e) {
     axios.post('/api/log-error', {
       error: e.toString(),
       component: 'LowStockNotificationsTab.vue markAsRead method',
-    })  
+    });
   }
-}
+};
 </script>
 
 <template>

@@ -1,7 +1,6 @@
 <script setup>
 import { Link } from '@inertiajs/vue3';
 import { ref, onMounted } from 'vue';
-import axios from 'axios';
 
 // 通常のNavLinkの場合はリンクとして、ResponsiveNavLinkの場合はただのアイコンとして使用
 defineProps({
@@ -9,7 +8,7 @@ defineProps({
     type: Boolean,
     required: true
   },
-})
+});
 
 const notifications = ref([]);
 
@@ -17,13 +16,13 @@ onMounted(async () => {
   try {
     await axios.get('/api/notifications_count')
     .then(res => {
-      notifications.value = res.data
-    })
+      notifications.value = res.data;
+    });
   } catch (e) {
     axios.post('/api/log-error', {
       error: e.toString(),
       component: 'BellNotification.vue onMounted axios.get',
-    })
+    });
   }
 });
 </script>

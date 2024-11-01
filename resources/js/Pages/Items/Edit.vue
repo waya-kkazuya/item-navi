@@ -14,7 +14,7 @@ const props = defineProps({
     acquisitionMethods: Array,
     editReasons: Array,
     errors: Object
-})
+});
 
 const form = useForm({
     id: props.item.id,
@@ -41,29 +41,29 @@ const form = useForm({
     edit_reason_id: 0,
     edit_reason_text: null,
     _method: 'PUT'
-})
+});
 
 // router.visitではuseFormの入力値保持機能は使えない
 // form.postなら入力値保持機能(old関数))が使える
 const updateItem = id => {
     try {
         // putメソッドが使えないため、useForm内に「_method: 'PUT'」を記述
-        form.post(`/items/${id}`)
+        form.post(`/items/${id}`);
     } catch (e) {
         axios.post('/api/log-error', {
             error: e.toString(),
             component: 'Item/Edit.vue updateItem method',
-        })
+        });
     }
-}
+};
 
-const file_preview_src = ref(props.item.image_path1)
+const file_preview_src = ref(props.item.image_path1);
 const handleFileUpload = (event) => {
-    form.image_file = event.target.files[0]
+    form.image_file = event.target.files[0];
     if (form.image_file) {
-        file_preview_src.value = URL.createObjectURL(form.image_file)
+        file_preview_src.value = URL.createObjectURL(form.image_file);
     }
-}
+};
 </script>
 
 <template>
