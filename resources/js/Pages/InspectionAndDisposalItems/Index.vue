@@ -1,11 +1,8 @@
 <script setup>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import { Head, Link, router } from '@inertiajs/vue3';
+import { Head, Link } from '@inertiajs/vue3';
 import FlashMessage from '@/Components/FlashMessage.vue';
-import Pagination from '@/Components/Pagination.vue';
 import { ref, onMounted, watch } from 'vue';
-import { stringify } from 'postcss';
-import EditHistoryModal from '@/Components/EditHistoryModal.vue';
 
 
 const props = defineProps({
@@ -13,9 +10,9 @@ const props = defineProps({
   scheduledDisposals: Array,
   historyInspections: Array,
   historyDisposals: Array
-})
+});
 
-const activeTab = ref('schedule')
+const activeTab = ref('schedule');
 </script>
 
 <template>
