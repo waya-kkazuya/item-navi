@@ -1,26 +1,25 @@
 <script setup>
-import axios from 'axios';
-import { ref, onMounted, watch, getCurrentInstance } from 'vue';
+import { ref, watch } from 'vue';
 
 // 親コンポーネントから受け取る
 const props = defineProps({
   item: Object
-})
+});
 const item = ref(props.item);
 
-const stockTransactions = ref([])
+const stockTransactions = ref([]);
 // 入出庫履歴情報を取得
 const fetchStockTransactions = async item => {
   try {
-    const res = await axios.get(`/api/stock_transactions?item_id=${item.id}`)
-    stockTransactions.value = res.data.stockTransactions
+    const res = await axios.get(`/api/stock_transactions?item_id=${item.id}`);
+    stockTransactions.value = res.data.stockTransactions;
   } catch (e) {
     axios.post('/api/log-error', {
       error: e.toString(),
       component: 'StockHistoryModal.vue fetchStockTransactions method',
-    })
+    });
   }
-}
+};
 
 watch(() => props.item, (newItem) => {
   if (newItem) {
@@ -28,10 +27,10 @@ watch(() => props.item, (newItem) => {
   }
 }, { immediate: true });
 
-const emit = defineEmits(['close'])
+const emit = defineEmits(['close']);
 const closeModal = () => {
   emit('close') // StockHistoryModalを閉じるイベント打ち上げ
-}
+};
 </script>
 
 <template>
