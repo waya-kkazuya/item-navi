@@ -25,7 +25,7 @@ class ItemRequest extends Model
     /**
      * @return BelongsTo
      */
-    public function category(): BelongsTo
+    public function category()
     {
         return $this->belongsTo(Category::class);
     }
@@ -33,7 +33,7 @@ class ItemRequest extends Model
     /**
      * @return BelongsTo
      */
-    public function locationOfUse(): BelongsTo
+    public function locationOfUse()
     {
         return $this->belongsTo(Location::class, 'location_of_use_id');
     }
@@ -41,7 +41,7 @@ class ItemRequest extends Model
     /**
      * @return BelongsTo
      */
-    public function requestStatus(): BelongsTo
+    public function requestStatus()
     {
         return $this->belongsTo(RequestStatus::class);       
     }

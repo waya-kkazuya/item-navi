@@ -21,7 +21,7 @@ class Disposal extends Model
     /**
      * @return BelongsTo
      */
-    public function item(): BelongsTo
+    public function item()
     {
         return $this->belongsTo(Item::class)->withTrashed();
     }
