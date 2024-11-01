@@ -4,15 +4,15 @@ import { ref } from 'vue'
 import { router } from '@inertiajs/vue3'
 
 
-const emits = defineEmits(['qrDetected'])
+const emits = defineEmits(['qrDetected']);
 
-const scannerActive = ref(false)
+const scannerActive = ref(false);
 
 const startScan = () => {
   if (confirm('QRコードのスキャンを開始しますか？')) {
-    scannerActive.value = true
+    scannerActive.value = true;
   }
-}
+};
 
 // QRコードに記録された備品のitemIdを取得し、消耗品管理画面の該当の備品のモーダルを開く
 const onDetect = content => {  
@@ -21,23 +21,23 @@ const onDetect = content => {
     if (Array.isArray(content) && content.length > 0) {
       const firstItem = content[0];
       const itemId = firstItem.rawValue;
-      router.visit(route('consumable_items', { item_id: itemId }))
+      router.visit(route('consumable_items', { item_id: itemId }));
     } else {
-      alert('QRコードの内容を取得できませんでした')
+      alert('QRコードの内容を取得できませんでした');
     }
   } catch (e) {
     axios.post('/api/log-error', {
       error: e.toString(),
       component: 'QrCodeReader.vue onDetect method',
-    })
-    alert('エラーが発生しました、もう一度お試しください')
+    });
+    alert('エラーが発生しました、もう一度お試しください');
   }
-  scannerActive.value = false // スキャンが完了したらカメラを停止
-}
+  scannerActive.value = false; // スキャンが完了したらカメラを停止
+};
 
 const stopScan = () => {
   scannerActive.value = false;
-}
+};
 </script>
 
 <template>
