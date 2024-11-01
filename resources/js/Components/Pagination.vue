@@ -2,7 +2,7 @@
 import { Link } from '@inertiajs/vue3';
 import DOMPurify from 'dompurify';
 
-defineProps({ links: Array })
+defineProps({ links: Array });
 
 // サニタイズ関数
 const sanitizedHTML = (label) => DOMPurify.sanitize(label);
