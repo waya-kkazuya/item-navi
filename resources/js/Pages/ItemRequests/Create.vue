@@ -9,7 +9,7 @@ const props = defineProps({
     categories: Array,
     locations: Array,
     errors: Object
-})
+});
 
 const form = useForm({
     id: null,
@@ -22,20 +22,20 @@ const form = useForm({
     manufacturer: null,
     reference: null,
     price: 0,
-})
+});
 
 // router.visitではuseFormの入力値保持機能は使えない
 // form.postなら入力値保持機能(old関数))が使える
 const storeItemRequest = () => {
     try {
-        form.post('/item-requests')
+        form.post('/item-requests');
     } catch (e) {
         axios.post('/api/log-error', {
             error: e.toString(),
             component: 'ItemRequests/Create.vue storeItemRequest method',
-        })
+        });
     }
-}
+};
 </script>
 
 <template>
