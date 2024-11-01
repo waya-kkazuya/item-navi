@@ -6,27 +6,27 @@ import apiClient from '@/apiClient';
 const props = defineProps({
   item: Object,
   isTableView: Boolean
-})
+});
 
 const editHistoriesData = ref([]);
 
-const isShow = ref(false)
-const toggleStatus = () => { isShow.value = !isShow.value}
+const isShow = ref(false);
+const toggleStatus = () => { isShow.value = !isShow.value};
 
 const editHistories = async item => {
   try {
     await apiClient.get(`api/edithistory?item_id=${item.id}`)
     .then( res => {
       editHistoriesData.value = res.data.edithistories
-    })
-    toggleStatus()
+    });
+    toggleStatus();
   } catch(e) {
     axios.post('/api/log-error', {
       error: e.toString(),
       component: 'EditHistoryModal.vue editHistories method',
-    })
+    });
   }
-}
+};
 
 // 日付フォーマット関数
 const formatDate = (timestamp) => {
@@ -37,7 +37,7 @@ const formatDate = (timestamp) => {
   const hours = ('0' + date.getHours()).slice(-2);
   const minutes = ('0' + date.getMinutes()).slice(-2);
   return `${year}/${month}/${day} ${hours}:${minutes}`;
-}
+};
 </script>
 
 <template>
