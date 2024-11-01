@@ -19,7 +19,7 @@ defineProps({
     },
     userName: String,
     errors: Object
-})
+});
 </script>
 
 <template>
