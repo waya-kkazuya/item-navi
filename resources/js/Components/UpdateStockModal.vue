@@ -1,6 +1,5 @@
 <script setup>
-import axios from 'axios';
-import { router, useForm } from '@inertiajs/vue3';
+import { useForm } from '@inertiajs/vue3';
 import { computed, ref, watch, onMounted } from 'vue'
 
 
@@ -9,7 +8,7 @@ const props = defineProps({
   item: Object,
   userName: String,
   errors: Object
-})
+});
 
 // errorsを編集できるようにする
 const localErrors = ref({...props.errors});
@@ -20,77 +19,77 @@ watch(() => props.errors, (newErrors) => {
 }, { deep: true });
 
 
-const activeTab = ref('出庫')
+const activeTab = ref('出庫');
 const activateDecreaseTab = () => {
-  localErrors.value = {} // タブ切り替えでバリデーションエラーエラーメッセージをリセット
-  activeTab.value = '出庫'
-}
+  localErrors.value = {}; // タブ切り替えでバリデーションエラーエラーメッセージをリセット
+  activeTab.value = '出庫';
+};
 const activateIncreaseTab = () => {
-  localErrors.value = {} // タブ切り替えでバリデーションエラーエラーメッセージをリセット
-  activeTab.value = '入庫'
-}
+  localErrors.value = {}; // タブ切り替えでバリデーションエラーエラーメッセージをリセット
+  activeTab.value = '入庫';
+};
 
 
-const emit = defineEmits(['close'])
+const emit = defineEmits(['close']);
 const closeModal = () => {
-  localErrors.value = {} // バリデーションエラーメッセージをリセット
-  emit('close') // モーダルウィンドウを閉じるイベント打ち上げ
-}
+  localErrors.value = {}; // バリデーションエラーメッセージをリセット
+  emit('close'); // モーダルウィンドウを閉じるイベント打ち上げ
+};
 
 // 出庫タブの在庫数自動計算
-const stockAfterDecrease = computed(() => props.item.stock - decreaseForm.quantity)
+const stockAfterDecrease = computed(() => props.item.stock - decreaseForm.quantity);
 // 入庫タブの在庫数自動計算
-const stockAfterIncrease = computed(() => props.item.stock + increaseForm.quantity)
+const stockAfterIncrease = computed(() => props.item.stock + increaseForm.quantity);
 
 const decreaseForm = useForm({
   transaction_date: new Date().toISOString().substr(0, 10),
   operator_name: props.userName,
   quantity: 1,
   transaction_type: '出庫',　// enum型で入庫か出庫のみ
-})
+});
 
 const decreaseStock = item => {
   try {
     if (confirm('本当に出庫処理をしますか？')) {
-        const response = decreaseForm.put(`/decreaseStock/${item.id}`, {
+        decreaseForm.put(`/decreaseStock/${item.id}`, {
           onSuccess: () => {
-            closeModal() // 成功したらモーダルを閉じる
-            decreaseForm.quantity = 1 // モーダルのquantityをリセット
+            closeModal(); // 成功したらモーダルを閉じる
+            decreaseForm.quantity = 1; // モーダルのquantityをリセット
           },
-        })
+        });
     }
   } catch (e) {
     axios.post('/api/log-error', {
       error: e.toString(),
       component: 'UpdateStockModal.vue decreaseStock method',
-    })
+    });
   }
-}
+};
 
 const increaseForm = useForm({
     transaction_date: new Date().toISOString().substr(0, 10),
     operator_name: props.userName,
     quantity: 1,
     transaction_type: '入庫',　// enum型で入庫か出庫のみ
-})
+});
 
 const increaseStock = item => {
   try {
     if (confirm('本当に入庫処理をしますか？')) {
-        const response = increaseForm.put(`/increaseStock/${item.id}`, {
+        increaseForm.put(`/increaseStock/${item.id}`, {
           onSuccess: () => {
-            closeModal()
-            increaseForm.quantity = 1 // モーダルのquantityをリセット
+            closeModal();
+            increaseForm.quantity = 1; // モーダルのquantityをリセット
           },
-        })
+        });
     }
   } catch (e) {
     axios.post('/api/log-error', {
       error: e.toString(),
       component: 'UpdateStockModal.vue increaseStock method',
-    })
+    });
   }
-}
+};
 </script>
 
 <template>
