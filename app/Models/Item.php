@@ -45,7 +45,7 @@ class Item extends Model
     /**
      * @return BelongsTo
      */
-    public function category(): BelongsTo
+    public function category()
     {
         return $this->belongsTo(Category::class);
     }
@@ -53,7 +53,7 @@ class Item extends Model
     /**
      * @return BelongsTo
      */
-    public function unit(): BelongsTo
+    public function unit()
     {
         return $this->belongsTo(Unit::class);       
     }
@@ -61,7 +61,7 @@ class Item extends Model
     /**
      * @return BelongsTo
      */
-    public function usageStatus(): BelongsTo
+    public function usageStatus()
     {
         return $this->belongsTo(UsageStatus::class);       
     }
@@ -69,7 +69,7 @@ class Item extends Model
     /**
      * @return BelongsTo
      */
-    public function locationOfUse(): BelongsTo
+    public function locationOfUse()
     {
         return $this->belongsTo(Location::class, 'location_of_use_id');
     }
@@ -77,7 +77,7 @@ class Item extends Model
     /**
      * @return BelongsTo
      */
-    public function storageLocation(): BelongsTo
+    public function storageLocation()
     {
         return $this->belongsTo(Location::class, 'storage_location_id');
     }
@@ -85,7 +85,7 @@ class Item extends Model
     /**
      * @return BelongsTo
      */
-    public function acquisitionMethod(): BelongsTo
+    public function acquisitionMethod()
     {
         return $this->belongsTo(AcquisitionMethod::class);       
     }
@@ -93,7 +93,7 @@ class Item extends Model
     /**
      * @return HasMany
      */
-    public function inspections(): HasMany
+    public function inspections()
     {
         return $this->hasMany(Inspection::class);
     }
@@ -101,7 +101,7 @@ class Item extends Model
     /**
      * @return HasOne
      */
-    public function disposal(): HasOne
+    public function disposal()
     {
         return $this->hasOne(Disposal::class);
     }
@@ -109,7 +109,7 @@ class Item extends Model
     /**
      * @return HasMany
      */
-    public function stockTransactions(): HasMany
+    public function stockTransactions()
     {
         return $this->hasMany(StockTransaction::class);
     }
@@ -126,5 +126,4 @@ class Item extends Model
     {
         return Carbon::parse($value)->format('Y-m-d');
     }
-    
 }

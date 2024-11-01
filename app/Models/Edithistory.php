@@ -26,7 +26,7 @@ class Edithistory extends Model
     /**
      * @return BelongsTo
      */
-    public function item(): BelongsTo
+    public function item()
     {
         return $this->belongsTo(Item::class)->withTrashed();
     }
@@ -34,7 +34,7 @@ class Edithistory extends Model
     /**
      * @return BelongsTo
      */
-    public function editReason(): BelongsTo
+    public function editReason()
     {
         return $this->belongsTo(EditReason::class);
     }
