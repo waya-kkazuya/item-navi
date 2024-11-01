@@ -4,11 +4,9 @@ import { Head, Link, router } from '@inertiajs/vue3';
 import FlashMessage from '@/Components/FlashMessage.vue';
 import Pagination from '@/Components/Pagination.vue';
 import { ref, onMounted, watch } from 'vue';
-import { stringify } from 'postcss';
 import StockHistoryModal from '@/Components/StockHistoryModal.vue';
 import UpdateStockModal from '@/Components/UpdateStockModal.vue';
 import QrCodeReader from '@/Components/QrCodeReader.vue';
-import ToolTip from '@/Components/ToolTip.vue';
 import { isMobile } from '@/utils/device';
 
 const props = defineProps({
@@ -22,64 +20,64 @@ const props = defineProps({
   userName: String,
   linkedItem: Object, // 指定した備品のモーダルを開くために使用
   errors: Object
-})
+});
 
 
 // 読み取り専用のitemsを変更出来るようスプレッド構文でコピーする
-const localConsumableItems = ref({...props.consumableItems})
+const localConsumableItems = ref({...props.consumableItems});
 // 合計件数
-const totalCount = ref(props.totalCount)
+const totalCount = ref(props.totalCount);
 // 検索フォーム
-const search = ref(props.search)
+const search = ref(props.search);
 // 作成日でソート
-const sortOrder = ref(props.sortOrder ?? 'asc')
+const sortOrder = ref(props.sortOrder ?? 'asc');
 // カテゴリプルダウン用(初期値は0)、更新したらその値
-const locationOfUseId = ref(props.locationOfUseId ?? 0)
-const storageLocationId = ref(props.storageLocationId ?? 0)
+const locationOfUseId = ref(props.locationOfUseId ?? 0);
+const storageLocationId = ref(props.storageLocationId ?? 0);
 
 // デバイスがPCかスマホ・タブレットか判定する
-const isMobileDevice = ref(false)
+const isMobileDevice = ref(false);
 
 onMounted(() => {
-  isMobileDevice.value = isMobile()
+  isMobileDevice.value = isMobile();
 
   // 通知画面の消耗品在庫数タブのリンクからの画面遷移、linkedItemの可否でモーダルウィンドウを開く
   if (props.linkedItem) {
-    openUpdateStockModal(props.linkedItem)
+    openUpdateStockModal(props.linkedItem);
   }
-})
+});
 
 watch(() => props.linkedItem, (newVal) => {
   if (newVal) {
     openStockHistoryModal(newVal);
   }
-})
+});
 
 // 入出庫履歴モーダル
-const isStockHistoryModalOpen = ref(false)
-const selectedStockHistoryItem = ref(null)
+const isStockHistoryModalOpen = ref(false);
+const selectedStockHistoryItem = ref(null);
 
 const openStockHistoryModal = (item) => {
-  selectedStockHistoryItem.value = item
-  isStockHistoryModalOpen.value = true
-}
+  selectedStockHistoryItem.value = item;
+  isStockHistoryModalOpen.value = true;
+};
 const closeStockHistoryModal = () => {
-  isStockHistoryModalOpen.value = false
-}
+  isStockHistoryModalOpen.value = false;
+};
 
 
 // 入出庫モーダル
-const isUpdateStockModalOpen = ref(false)
-const selectedUpdateStockItem = ref(null)
+const isUpdateStockModalOpen = ref(false);
+const selectedUpdateStockItem = ref(null);
 
 const openUpdateStockModal = item => {
-  selectedUpdateStockItem .value = item
-  isUpdateStockModalOpen.value = true
-}
+  selectedUpdateStockItem .value = item;
+  isUpdateStockModalOpen.value = true;
+};
 const closeUpdateStockModal = () => {
-  isUpdateStockModalOpen.value = false
-  fetchConsumableItems()
-}
+  isUpdateStockModalOpen.value = false;
+  fetchConsumableItems();
+};
 
 
 // プルダウンや検索フォームを反映
@@ -91,37 +89,36 @@ const fetchAndFilterItems = () => {
     storageLocationId: storageLocationId.value,
   }), {
     method: 'get'
-  })
-}
+  });
+};
 
 const toggleSortOrder = () => {
-  sortOrder.value = sortOrder.value === 'asc' ? 'desc' : 'asc'
-  fetchAndFilterItems()
+  sortOrder.value = sortOrder.value === 'asc' ? 'desc' : 'asc';
+  fetchAndFilterItems();
 };
 
 //プルダウンや検索フォームをリセット
 const resetState = () => {
-  search.value = ''
-  sortOrder.value = 'asc'
-  locationOfUseId.value = 0
-  storageLocationId.value = 0
-
-  fetchAndFilterItems()
-}
+  search.value = '';
+  sortOrder.value = 'asc';
+  locationOfUseId.value = 0;
+  storageLocationId.value = 0;
+  fetchAndFilterItems();
+};
 
 // 入出庫処理をした後に画面の情報を更新する
 const fetchConsumableItems = async () => {
   try {
     const res = await axios.get('/api/consumable_items?reload=true');
-    localConsumableItems.value = res.data.items
-    totalCount.value = res.data.total_count
+    localConsumableItems.value = res.data.items;
+    totalCount.value = res.data.total_count;
   } catch (e){
     axios.post('/api/log-error', {
       error: e.toString(),
       component: 'ConsumableItems/Index.vue fetchConsumableItems method',
-    })
+    });
   }
-}
+};
 </script>
 
 <template>
