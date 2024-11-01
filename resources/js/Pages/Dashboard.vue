@@ -9,10 +9,10 @@ const props = defineProps({
     itemsByType: Object,
     groupedEdithistories: Array,
     type: String
-})
+});
 
 // 登録件数をプルダウンで切り替え
-const type = ref(props.type ?? 'category')
+const type = ref(props.type ?? 'category');
 
 const switchViewMode = () => {
   router.visit(route('dashboard', {
@@ -20,7 +20,7 @@ const switchViewMode = () => {
   }), {
     method: 'get'
   })
-}
+};
 </script>
 
 <template>
