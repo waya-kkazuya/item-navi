@@ -5,10 +5,10 @@ import { reactive, computed } from "vue"
 
 const props = defineProps({
   data : Object
-})
+});
 
-const labels = computed(() => props.data.labels)
-const stocks = computed(() => props.data.stocks)
+const labels = computed(() => props.data.labels);
+const stocks = computed(() => props.data.stocks);
 
 Chart.register(...registerables);
 const lineData = reactive({
@@ -30,7 +30,7 @@ const lineData = reactive({
     responsive: true, // レスポンシブにする
     maintainAspectRatio: false, // アスペクト比を維持しない（これにより、グラフの大きさを固定できます）
   }
-})
+});
 
 </script>
 
