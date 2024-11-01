@@ -1,24 +1,23 @@
 <script setup>
-import axios from 'axios';
-import { router, useForm } from '@inertiajs/vue3';
-import { ref } from 'vue'
+import { useForm } from '@inertiajs/vue3';
+import { ref } from 'vue';
 
 
-const isShow = ref(false)
-const toggleStatus = () => { isShow.value = !isShow.value}
+const isShow = ref(false);
+const toggleStatus = () => { isShow.value = !isShow.value};
 
 const props = defineProps({
   item: Object,
   uncompleted_inspection: Object,
   userName: String,
   errors: Object
-})
+});
 
 const form = useForm({
     inspection_date: new Date().toISOString().substr(0, 10),
     inspection_person: props.userName,
     details: null,
-})
+});
 
 const saveInspection = item => {
   try {
@@ -27,15 +26,15 @@ const saveInspection = item => {
         onSuccess: () => {
           toggleStatus();
         },
-      })
+      });
     }
   } catch (e) {
     axios.post('/api/log-error', {
       error: e.toString(),
       component: 'InspectionModal.vue saveInspection method',
-    })
+    });
   }
-}
+};
 </script>
 
 <template>
