@@ -8,7 +8,7 @@ const props = defineProps({
 });
 
 // disposalAndInspectionNotificationsはコントローラで加工して配列になっているので注意
-const localNotifications = ref([...props.disposalAndInspectionNotifications]);
+const localNotifications = ref(Object.values(props.disposalAndInspectionNotifications));
 // プロパティが変更された場合にローカル変数を更新(※自動では更新されない)
 watch(() => props.disposalAndInspectionNotifications, (newNotifications) => {
   localNotifications.value = [...newNotifications];
@@ -44,9 +44,9 @@ const markAsRead = async id => {
         点検と廃棄へ
       </Link>
     </div>
-
+    
     <div class="min-w-full overflow-auto flex justify-center">
-      <table v-if="disposalAndInspectionNotifications.length > 0" class="table-fixed text-left whitespace-no-wrap">
+      <table v-if="Object.keys(disposalAndInspectionNotifications).length > 0" class="table-fixed text-left whitespace-no-wrap">
         <thead>
           <tr>
             <th class="min-w-32 md:min-w-26 px-4 py-3 title-font tracking-wider font-medium text-center text-gray-900 text-xs md:text-base bg-gray-100">通知</th>

@@ -47,7 +47,11 @@ class NotificationController extends Controller
             return $notification->type === 'App\Notifications\InspectionScheduleNotification';
         });
         // disposalScheduleNotificationsとinspectionScheduleNotificationsを1つの配列にまとめる
-        $disposalAndInspectionNotifications = $disposalScheduleNotifications->merge($inspectionScheduleNotifications)->take(20);
+        $disposalAndInspectionNotifications = $disposalScheduleNotifications
+            ->merge($inspectionScheduleNotifications)
+            ->sortByDesc('created_at')
+            ->values()
+            ->take(20);
         
         // リクエストが追加されたときの通知
         $requestedItemNotifications = $notifications->filter(function ($notification) {
