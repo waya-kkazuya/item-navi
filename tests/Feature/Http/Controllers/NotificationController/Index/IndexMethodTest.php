@@ -63,7 +63,7 @@ class IndexMethodTest extends TestCase
             ->component('Notification')
                 ->has('notifications')
                 ->has('lowStockNotifications', 1)
-                ->has('disposalAndInspectionNotifications', 2)
+                ->has('inspectionAndDisposalNotifications', 2)
                 ->has('requestedItemNotifications', 1)
         );
     }    
