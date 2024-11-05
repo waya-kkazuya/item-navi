@@ -42,9 +42,9 @@ const markAsRead = async id => {
         リクエスト一覧へ
       </Link>
     </div>
-
+    
     <div class="min-w-full overflow-auto flex justify-center">
-      <table v-if="requestedItemNotifications.length > 0" class="table-fixed text-left whitespace-no-wrap">
+      <table v-if="Object.keys(requestedItemNotifications).length > 0" class="table-fixed text-left whitespace-no-wrap">
         <thead>
           <tr>
             <th class="min-w-32 md:min-w-26 px-4 py-3 title-font tracking-wider font-medium text-center text-gray-900 text-xs md:text-base bg-gray-100">通知</th>
