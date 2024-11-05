@@ -3,16 +3,16 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head } from '@inertiajs/vue3';
 import { ref, onMounted, watch } from 'vue';
 import LowStockNotificationsTab from '@/Components/LowStockNotificationsTab.vue';
-import DisposalAndInspectionNotificationsTab from '@/Components/DisposalAndInspectionNotificationsTab.vue';
+import InspectionAndDisposalNotificationsTab from '@/Components/InspectionAndDisposalNotificationsTab.vue';
 import RequestedItemNotificationsTab from '@/Components/RequestedItemNotificationsTab.vue';
 
 const props = defineProps({
   notifications: Object,
   lowStockNotifications: Object,
-  disposalAndInspectionNotifications: Object,
+  inspectionAndDisposalNotifications: Object,
   requestedItemNotifications: Object,
   unreadLowStockNotifications: Number,
-  unreadDisposalAndInspectionNotifications: Number,
+  unreadInspectionAndDisposalNotifications: Number,
   unreadRequestedItemNotifications: Number
 });
 
@@ -59,7 +59,7 @@ onMounted(() => {
                     <li class="relative flex-grow">
                       <a @click="activeTab = 'inspectionAndDisposalSchedule'" :class="['block text-center px-4 py-2 rounded-full font-bold text-xs md:text-md lg:text-lg', activeTab === 'inspectionAndDisposalSchedule' ? 'bg-blue-500 text-white' : 'bg-white text-black border']">
                         点検・廃棄予定
-                        <span v-if="unreadDisposalAndInspectionNotifications > 0" class="absolute top-0 right-0 text-orange-500 bg-orange-500 rounded-full w-2 h-2 flex items-center justify-center">
+                        <span v-if="unreadInspectionAndDisposalNotifications > 0" class="absolute top-0 right-0 text-orange-500 bg-orange-500 rounded-full w-2 h-2 flex items-center justify-center">
                           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-6">
                             <path fill-rule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12ZM12 8.25a.75.75 0 0 1 .75.75v3.75a.75.75 0 0 1-1.5 0V9a.75.75 0 0 1 .75-.75Zm0 8.25a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Z" clip-rule="evenodd" />
                           </svg>
@@ -79,7 +79,7 @@ onMounted(() => {
                   </ul>
                 </div>
                 <LowStockNotificationsTab v-if="activeTab === 'consumableItems'" :lowStockNotifications="lowStockNotifications" />
-                <DisposalAndInspectionNotificationsTab v-if="activeTab === 'inspectionAndDisposalSchedule'" :disposalAndInspectionNotifications="disposalAndInspectionNotifications" />
+                <InspectionAndDisposalNotificationsTab v-if="activeTab === 'inspectionAndDisposalSchedule'" :inspectionAndDisposalNotifications="inspectionAndDisposalNotifications" />
                 <RequestedItemNotificationsTab v-if="activeTab === 'request'" :requestedItemNotifications="requestedItemNotifications" />
               </div>
             </div>

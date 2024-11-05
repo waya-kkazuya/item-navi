@@ -47,8 +47,8 @@ class NotificationController extends Controller
             return $notification->type === 'App\Notifications\InspectionScheduleNotification';
         });
         // disposalScheduleNotificationsとinspectionScheduleNotificationsを1つの配列にまとめる
-        $disposalAndInspectionNotifications = $disposalScheduleNotifications
-            ->merge($inspectionScheduleNotifications)
+        $inspectionAndDisposalNotifications = $inspectionScheduleNotifications
+            ->merge($disposalScheduleNotifications)
             ->sortByDesc('created_at')
             ->values()
             ->take(20);
@@ -60,7 +60,7 @@ class NotificationController extends Controller
 
         // タブの右上に表示する丸の判定基準のため、それぞれの未読の通知数を所得
         $unreadLowStockNotifications = $lowStockNotifications->where('read_at', null)->count();
-        $unreadDisposalAndInspectionNotifications = $disposalAndInspectionNotifications->where('read_at', null)->count();
+        $unreadInspectionAndDisposalNotifications = $inspectionAndDisposalNotifications->where('read_at', null)->count();
         $unreadRequestedItemNotifications = $requestedItemNotifications->where('read_at', null)->count();
 
         Log::info('NotificationController index method succeeded');
@@ -68,10 +68,10 @@ class NotificationController extends Controller
         return Inertia::render('Notification', [
             'notifications' => $notifications,
             'lowStockNotifications' => $lowStockNotifications,
-            'disposalAndInspectionNotifications' => $disposalAndInspectionNotifications,
+            'inspectionAndDisposalNotifications' => $inspectionAndDisposalNotifications,
             'requestedItemNotifications' => $requestedItemNotifications,
             'unreadLowStockNotifications' => $unreadLowStockNotifications,
-            'unreadDisposalAndInspectionNotifications' => $unreadDisposalAndInspectionNotifications,
+            'unreadInspectionAndDisposalNotifications' => $unreadInspectionAndDisposalNotifications,
             'unreadRequestedItemNotifications' => $unreadRequestedItemNotifications,
         ]);
     }
