@@ -1,55 +1,61 @@
-<script setup>
+<script setup lang="ts">
+import axios from 'axios';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import { Head, router, useForm } from '@inertiajs/vue3';
-import { reactive, ref } from 'vue';
+import { Head, useForm } from '@inertiajs/vue3';
+import { ref } from 'vue';
 import FlashMessage from '@/Components/FlashMessage.vue';
+import type { ItemType, CategoryType, LocationType, UnitType, UsageStatusType, AcquisitionMethodType, InspectionType, EditReasonType } from '@/@types/model';
+import type { ValidationErrors } from '@/@types/types';
 
-const props = defineProps({
-    item: Object,
-    uncompleted_inspection_scheduled_date: Object,
-    categories: Array,
-    locations: Array,
-    units: Array,
-    usageStatuses: Array,
-    acquisitionMethods: Array,
-    editReasons: Array,
-    errors: Object
-});
+
+type Props = {
+    item: ItemType;
+    uncompleted_inspection_scheduled_date: InspectionType | null;
+    categories: CategoryType[];
+    locations: LocationType[];
+    units: UnitType[];
+    usageStatuses: UsageStatusType[];
+    acquisitionMethods: AcquisitionMethodType[];
+    editReasons: EditReasonType[];
+    errors: ValidationErrors;
+};
+
+const props = defineProps<Props>();
 
 const form = useForm({
-    id: props.item.id,
-    image_file: null,
-    name: props.item.name,
-    category_id: props.item.category_id,
-    stock: props.item.stock,
-    unit_id: props.item.unit_id,
-    minimum_stock: props.item.minimum_stock,
-    notification: props.item.notification,
-    usage_status_id: props.item.usage_status_id,
-    end_user: props.item.end_user,
-    location_of_use_id: props.item.location_of_use_id,
-    storage_location_id: props.item.storage_location_id,
-    acquisition_method_id: props.item.acquisition_method_id,
-    acquisition_source: props.item.acquisition_source,
-    price: props.item.price,
-    date_of_acquisition: props.item.date_of_acquisition,
-    manufacturer: props.item.manufacturer,
-    product_number: props.item.product_number,
-    inspection_scheduled_date: props.uncompleted_inspection_scheduled_date ?? null,
-    disposal_scheduled_date: props.item.disposal ? props.item.disposal.disposal_scheduled_date : null ,
-    remarks: props.item.remarks,
-    edit_reason_id: 0,
-    edit_reason_text: null,
+    id: props.item.id as number,
+    image_file: null as File | null,
+    name: props.item.name as string,
+    category_id: props.item.category_id as number,
+    stock: props.item.stock as number,
+    unit_id: props.item.unit_id as number,
+    minimum_stock: props.item.minimum_stock as number,
+    notification: props.item.notification as boolean,
+    usage_status_id: props.item.usage_status_id as number,
+    end_user: props.item.end_user as string | null,
+    location_of_use_id: props.item.location_of_use_id as number,
+    storage_location_id: props.item.storage_location_id as number,
+    acquisition_method_id: props.item.acquisition_method_id as number,
+    acquisition_source: props.item.acquisition_source as string,
+    price: props.item.price as number,
+    date_of_acquisition: props.item.date_of_acquisition as Date,
+    manufacturer: props.item.manufacturer as string | null,
+    product_number: props.item.product_number as string | null,
+    inspection_scheduled_date: props.uncompleted_inspection_scheduled_date ?? null as Date | null,
+    disposal_scheduled_date: props.item.disposal ? props.item.disposal.disposal_scheduled_date : null as Date | null,
+    remarks: props.item.remarks as string,
+    edit_reason_id: 0 as number,
+    edit_reason_text: null as string | null,
     _method: 'PUT'
 });
 
 // router.visitではuseFormの入力値保持機能は使えない
 // form.postなら入力値保持機能(old関数))が使える
-const updateItem = id => {
+const updateItem = (id: number) => {
     try {
         // putメソッドが使えないため、useForm内に「_method: 'PUT'」を記述
         form.post(`/items/${id}`);
-    } catch (e) {
+    } catch (e: any) {
         axios.post('/api/log-error', {
             error: e.toString(),
             component: 'Item/Edit.vue updateItem method',
@@ -58,11 +64,22 @@ const updateItem = id => {
 };
 
 const file_preview_src = ref(props.item.image_path1);
-const handleFileUpload = (event) => {
-    form.image_file = event.target.files[0];
-    if (form.image_file) {
+const handleFileUpload = (event: Event) => {
+    const target = event.target as HTMLInputElement;
+
+    // nullチェックを厳密に行う
+    if (target && target.files && target.files[0]) {
+        form.image_file = target.files[0];
         file_preview_src.value = URL.createObjectURL(form.image_file);
     }
+};
+
+// 「×」ボタンで日付リセット
+const clearInspectionSchedule = () => {
+    form.inspection_scheduled_date = null;
+};
+const clearDisposalSchedule = () => {
+    form.disposal_scheduled_date = null;
 };
 </script>
 
@@ -257,7 +274,6 @@ const handleFileUpload = (event) => {
                                                             </label>
                                                             <div class="relative">
                                                                 <input type="date" id="date_of_acquisition" name="date_of_acquisition" v-model="form.date_of_acquisition" class="md:mt-1 w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-xs md:text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
-                                                                <button type="button" @click="clearDateOfAcquisition" class="absolute right-12 top-1/2 transform -translate-y-1/2 text-gray-500" text-lg>×</button>
                                                             </div>
                                                             <div v-if="errors.date_of_acquisition" class="font-medium text-red-600 text-xs md:text-base">{{ errors.date_of_acquisition }}</div>
                                                         </div>
