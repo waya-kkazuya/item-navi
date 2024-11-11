@@ -1,18 +1,19 @@
-<script setup>
+<script setup lang="ts">
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head, Link } from '@inertiajs/vue3';
-import FlashMessage from '@/Components/FlashMessage.vue';
-import { ref, onMounted, watch } from 'vue';
+import { ref } from 'vue';
+import type { Ref } from 'vue';
+import type { InspectionType, DisposalType } from '@/@types/model';
 
 
-const props = defineProps({
-  scheduledInspections: Array,
-  scheduledDisposals: Array,
-  historyInspections: Array,
-  historyDisposals: Array
-});
+defineProps<{
+  scheduledInspections: InspectionType[];
+  scheduledDisposals: DisposalType[];
+  historyInspections: InspectionType[];
+  historyDisposals: DisposalType[];
+}>();
 
-const activeTab = ref('schedule');
+const activeTab: Ref<string> = ref('schedule');
 </script>
 
 <template>
