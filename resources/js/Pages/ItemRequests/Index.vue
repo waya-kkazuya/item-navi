@@ -1,24 +1,30 @@
-<script setup>
+<script setup lang="ts">
+import axios from 'axios';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head, Link, router } from '@inertiajs/vue3';
 import FlashMessage from '@/Components/FlashMessage.vue';
 import Pagination from '@/Components/Pagination.vue';
 import { ref, onMounted, watch } from 'vue';
+import type { Ref } from 'vue'
+import type { Paginator } from '@/@types/types';
+import type { ItemRequestType, RequestStatusType } from '@/@types/model';
 
-const props = defineProps({
-  itemRequests: Object,
-  sortOrder: String,
-  totalCount: Number,
-  requestStatuses: Array
-});
+type Props = {
+  itemRequests: Paginator<ItemRequestType>;
+  sortOrder: string;
+  totalCount: number;
+  requestStatuses: RequestStatusType[];
+};
+
+const props = defineProps<Props>();
 
 // 作成日でソート
-const sortOrder = ref(props.sortOrder ?? 'desc');
+const sortOrder: Ref<string> = ref(props.sortOrder ?? 'desc');
 // リクエスト合計件数
-const totalCount = ref(props.totalCount);
+const totalCount: Ref<number> = ref(props.totalCount);
 
 // すべてのフィルターをまとめる
-const fetchAndFilterItems = () => {
+const fetchAndFilterItems = (): void => {
   router.visit(route('item_requests.index', {
     sortOrder: sortOrder.value,
   }), {
@@ -26,15 +32,15 @@ const fetchAndFilterItems = () => {
   });
 };
 
-const toggleSortOrder = () => {
+const toggleSortOrder = (): void => {
   sortOrder.value = sortOrder.value === 'asc' ? 'desc' : 'asc';
   fetchAndFilterItems();
 };
 
-const updateStatus = async request => {
+const updateStatus = async (request: ItemRequestType) => {
   try {
     await axios.post(`/api/item-requests/${request.id}/update-status`, { requestStatusId: request.request_status_id });
-  } catch (e) {
+  } catch (e: any) {
     axios.post('/api/log-error', {
       error: e.toString(),
       component: 'ItemRequests/Index.vue updateStatus method',
@@ -48,13 +54,13 @@ const updateStatus = async request => {
 };
 
 
-const loginUserRole = ref(null);
+const loginUserRole: Ref<number | null> = ref(null);
 // ログインユーザー情報取得
 const getUserRole = async () => {
   try {
     const res = await axios.get('/api/user-role');
     loginUserRole.value = res.data;
-  } catch (e) {
+  } catch (e: any) {
     axios.post('/api/log-error', {
       error: e.toString(),
       component: 'ItemRequests/Index.vue getUserRole method',
@@ -67,14 +73,14 @@ onMounted(() => {
 });
 
 
-const deleteItemRequest = request => {
+const deleteItemRequest = (request: ItemRequestType) => {
   try {
     if (confirm('本当に削除しますか？')) {
       router.visit(route('item_requests.destroy', request), {
         method: 'delete'
       });
     }
-  } catch (e) {
+  } catch (e: any) {
     axios.post('/api/log-error', {
       error: e.toString(),
       component: 'ItemRequests/Index.vue deleteItemRequest method',
@@ -143,7 +149,7 @@ const deleteItemRequest = request => {
                           <table v-if="itemRequests.data && itemRequests.data.length > 0" class="table-fixed min-w-full text-left whitespace-no-wrap">
                             <thead>
                               <tr>
-                                <th v-if="loginUserRole <= 5" class="min-w-32 md:min-w-32 px-4 py-3 title-font tracking-wider font-medium text-center text-white text-xs md:text-base bg-sky-700">登録</th>
+                                <th v-if="loginUserRole !== null && loginUserRole <= 5" class="min-w-32 md:min-w-32 px-4 py-3 title-font tracking-wider font-medium text-center text-white text-xs md:text-base bg-sky-700">登録</th>
                                 <th class="min-w-32 md:min-w-32 px-4 py-3 title-font tracking-wider font-medium text-center text-white text-xs md:text-base bg-sky-700">ステータス</th>
                                 <th class="min-w-48 md:min-w-36 px-4 py-3 title-font tracking-wider font-medium text-center text-white text-xs md:text-base bg-sky-700">登録日</th>
                                 <th class="min-w-28 md:min-w-40 px-4 py-3 title-font tracking-wider font-medium text-center text-white text-xs md:text-base bg-sky-700">商品名</th>
@@ -154,12 +160,12 @@ const deleteItemRequest = request => {
                                 <th class="min-w-24 md:min-w-32 px-4 py-3 title-font tracking-wider font-medium text-center text-white text-xs md:text-base bg-sky-700">価格</th>
                                 <th class="min-w-24 md:min-w-32 px-4 py-3 title-font tracking-wider font-medium text-center text-white text-xs md:text-base bg-sky-700">申請者</th>
                                 <th class="min-w-36 md:min-w-36 px-4 py-3 title-font tracking-wider font-medium text-center text-white text-xs md:text-base bg-sky-700">申請理由</th>
-                                <th v-if="loginUserRole <= 5" class="min-w-36 md:min-w-36 px-4 py-3 title-font tracking-wider font-medium text-center text-white text-xs md:text-base bg-sky-700"></th>
+                                <th v-if="loginUserRole !== null && loginUserRole <= 5" class="min-w-36 md:min-w-36 px-4 py-3 title-font tracking-wider font-medium text-center text-white text-xs md:text-base bg-sky-700"></th>
                               </tr>
                             </thead>
                             <tbody>
                               <tr v-for="request in itemRequests.data" :key="request.id">
-                                <td v-if="loginUserRole <= 5" class="border-b-2 border-gray-200 text-center text-xs md:text-base px-4 py-3">
+                                <td v-if="loginUserRole !== null && loginUserRole <= 5" class="border-b-2 border-gray-200 text-center text-xs md:text-base px-4 py-3">
                                   <Link as="button" 
                                     :href="route('items.create', {
                                       name: request.name, 
@@ -176,7 +182,7 @@ const deleteItemRequest = request => {
                                   </Link>
                                 </td>
                                 <td class="border-b-2 border-gray-200 text-center text-xs md:text-base px-4 py-3">
-                                  <template v-if="loginUserRole <= 5">
+                                  <template v-if="loginUserRole !== null && loginUserRole <= 5">
                                     <select name="reqeustStatusId" id="reqeustStatusId" v-model="request.request_status_id" @change="updateStatus(request)" 
                                     :class="[
                                       'w-full bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-xs md:text-base outline-none text-gray-700 py-0 md:py-1 md:px-3 leading-8 transition-colors duration-200 ease-in-out',
@@ -214,7 +220,7 @@ const deleteItemRequest = request => {
                                 <td class="border-b-2 border-gray-200 text-center text-xs md:text-base px-4 py-2">{{ request.price }}</td>
                                 <td class="border-b-2 border-gray-200 text-center text-xs md:text-base px-4 py-2">{{ request.requestor }}</td>
                                 <td class="border-b-2 border-gray-200 text-center text-xs md:text-base px-4 py-2">{{ request.remarks_from_requestor ?? '' }}</td>
-                                <td v-if="loginUserRole <= 5" class="border-b-2 border-gray-200 text-center text-xs md:text-base px-4 py-2">
+                                <td v-if="loginUserRole !== null && loginUserRole <= 5" class="border-b-2 border-gray-200 text-center text-xs md:text-base px-4 py-2">
                                   <button @click="deleteItemRequest(request)"  class="w-28 flex justify-center items-center text-white text-xs bg-red-500 border-0 py-2 px-8 focus:outline-none hover:bg-red-600 rounded">
                                     削除
                                   </button>
