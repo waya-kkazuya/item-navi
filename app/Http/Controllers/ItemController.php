@@ -274,7 +274,7 @@ class ItemController extends Controller
                     'item_id' => $item->id,
                     'disposal_scheduled_date' => $request->disposal_scheduled_date,
                     'disposal_date' => null,
-                    'disposal_person' => '',
+                    'disposal_person' => null,
                     'details' => null, 
                 ]);
             }
