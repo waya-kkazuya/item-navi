@@ -11,17 +11,6 @@ import type { Ref } from 'vue'
 import type { Paginator } from '@/@types/types';
 import type { ItemType, CategoryType, LocationType } from '@/@types/model';
 
-// const props = defineProps({
-//   items: Object,
-//   categories: Array,
-//   locations: Array,
-//   search: String,
-//   sortOrder: String,
-//   categoryId: Number,
-//   locationOfUseId: Number,
-//   storageLocationId: Number,
-//   totalCount: Number,
-// });
 
 type Props = {
   items: Paginator<ItemType>;
