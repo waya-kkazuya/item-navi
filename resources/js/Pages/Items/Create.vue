@@ -1,16 +1,13 @@
 <script setup lang="ts">
 import axios from 'axios';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import { Head, router, useForm, usePage } from '@inertiajs/vue3';
-import { onMounted, watch, reactive, ref } from 'vue';
+import { Head, useForm } from '@inertiajs/vue3';
+import { ref } from 'vue';
 import FlashMessage from '@/Components/FlashMessage.vue';
 import type { Ref } from 'vue'
 import type { CategoryType, LocationType, UnitType, UsageStatusType, AcquisitionMethodType } from '@/@types/model';
+import type { ValidationErrors } from '@/@types/types';
 
-
-type ValidationErrors = {
-    [key: string]: string[]
-};
 
 type Props = {
     categories: CategoryType[];
@@ -43,7 +40,7 @@ const form = useForm({
     acquisition_method_id: 0 as number,
     acquisition_source: null as string | null,
     price: props.price ?? 0 as number,
-    date_of_acquisition: new Date().toISOString().substr(0, 10) as string,
+    date_of_acquisition: new Date().toISOString().substr(0, 10) as string, //初期値は当日の日付
     manufacturer: props.manufacturer ?? null as string | null,
     product_number: null as string | null,
     inspection_scheduled_date: null as Date | null, // 初期値null
@@ -78,9 +75,6 @@ const storeItem = (): void => {
 
 
 // 「×」ボタンで日付リセット
-const clearDateOfAcquisition = () => {
-    form.date_of_acquisition = '';
-};
 const clearInspectionSchedule = () => {
     form.inspection_scheduled_date = null;
 };
@@ -278,7 +272,6 @@ const clearDisposalSchedule = () => {
                                                             </label>
                                                             <div class="relative">
                                                                 <input type="date" id="date_of_acquisition" name="date_of_acquisition" v-model="form.date_of_acquisition" class="md:mt-1 w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-xs md:text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
-                                                                <button type="button" @click="clearDateOfAcquisition" class="absolute right-12 top-1/2 transform -translate-y-1/2 text-gray-500" text-lg>×</button>
                                                             </div>
                                                             <div v-if="errors.date_of_acquisition" class="font-medium text-red-600 text-xs md:text-base">{{ errors.date_of_acquisition }}</div>
                                                         </div>
