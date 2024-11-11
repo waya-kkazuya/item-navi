@@ -1,4 +1,5 @@
-<script setup>
+<script setup lang="ts">
+import axios from 'axios';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head, Link, router } from '@inertiajs/vue3';
 import FlashMessage from '@/Components/FlashMessage.vue';
@@ -6,35 +7,56 @@ import Pagination from '@/Components/Pagination.vue';
 import { ref, onMounted, watch } from 'vue';
 import EditHistoryModal from '@/Components/EditHistoryModal.vue';
 import { useWindowSize } from '@/hooks/useWindowSize';
+import type { Ref } from 'vue'
+import type { Paginator } from '@/@types/types';
+import type { ItemType, CategoryType, LocationType } from '@/@types/model';
 
-const props = defineProps({
-  items: Object,
-  categories: Array,
-  locations: Array,
-  search: String,
-  sortOrder: String,
-  categoryId: Number,
-  locationOfUseId: Number,
-  storageLocationId: Number,
-  totalCount: Number,
-});
+// const props = defineProps({
+//   items: Object,
+//   categories: Array,
+//   locations: Array,
+//   search: String,
+//   sortOrder: String,
+//   categoryId: Number,
+//   locationOfUseId: Number,
+//   storageLocationId: Number,
+//   totalCount: Number,
+// });
+
+type Props = {
+  items: Paginator<ItemType>;
+  categories: CategoryType[];
+  locations: LocationType[];
+  search: string;
+  sortOrder: string;
+  categoryId: number;
+  locationOfUseId: number;
+  storageLocationId: number;
+  totalCount: number;
+};
+
+const props = defineProps<Props>();
 
 // 読み取り専用のitemsを変更出来るようスプレッド構文でコピーする
-const localItems = ref({...props.items});
+const localItems: Ref<Paginator<ItemType>> = ref({...props.items});
+
+// watch(() => props.items, (newItems: Paginator<ItemType>) => {
+//   localItems.value = {...newItems};
+// });
 
 // 検索フォーム
-const search = ref(props.search);
+const search: Ref<string> = ref(props.search);
 // 作成日でソート
-const sortOrder = ref(props.sortOrder ?? 'asc');
+const sortOrder: Ref<string> = ref(props.sortOrder ?? 'asc');
 // カテゴリプルダウン用(初期値は0)
-const categoryId = ref(props.categoryId);
-const locationOfUseId = ref(props.locationOfUseId ?? 0);
-const storageLocationId = ref(props.storageLocationId ?? 0);
+const categoryId: Ref<number> = ref(props.categoryId);
+const locationOfUseId: Ref<number> = ref(props.locationOfUseId ?? 0);
+const storageLocationId: Ref<number> = ref(props.storageLocationId ?? 0);
 // 備品の合計件数
-const totalCount = ref(props.totalCount);
+const totalCount: Ref<number> = ref(props.totalCount);
 
 // プルダウンや検索フォームの条件を適用して備品情報を再取得
-const fetchAndFilterItems = () => {
+const fetchAndFilterItems = (): void => {
   router.visit(route('items.index', {
     search: search.value,
     sortOrder: sortOrder.value,
@@ -47,7 +69,7 @@ const fetchAndFilterItems = () => {
 };
 
 // プルダウンや検索フォームをすべてリセット
-const resetState = () => {
+const resetState = (): void => {
   search.value = '';
   sortOrder.value = 'asc';
   categoryId.value = 0;
@@ -57,10 +79,10 @@ const resetState = () => {
 };
 
 // 行表示・タイル表示の切替 セッションにisTableViewを保存
-const isTableView = ref(sessionStorage.getItem('isTableView') !== 'false');
+const isTableView: Ref<boolean> = ref(sessionStorage.getItem('isTableView') !== 'false');
 // watchでisTableViewを監視
-watch(isTableView, (newValue) => {
-  sessionStorage.setItem('isTableView', newValue);
+watch(isTableView, (newValue: boolean) => {
+  sessionStorage.setItem('isTableView', newValue.toString());
 });
 onMounted(() => {
   if (sessionStorage.getItem('isTableView') === null) {
@@ -69,20 +91,20 @@ onMounted(() => {
   }
 });
 
-const toggleSortOrder = () => {
+const toggleSortOrder = (): void => {
   sortOrder.value = sortOrder.value === 'asc' ? 'desc' : 'asc';
   fetchAndFilterItems();
 };
 
 // 備品と廃棄済み備品の表示切り替え
-const showDisposal = ref(false);
-const toggleItems = async () => {
+const showDisposal: Ref<boolean> = ref(false);
+const toggleItems = async (): Promise<void> => {
   const url = showDisposal.value ? 'api/items?disposal=true' : 'api/items?disposal=false';
   try {
     const res = await axios.get(url);
     localItems.value = res.data.items;
     totalCount.value = res.data.total_count;
-  } catch (e) {
+  } catch (e: any) {
     axios.post('/api/log-error', {
       error: e.toString(),
       component: 'Items/Index.vue toggleItems method',
@@ -90,16 +112,12 @@ const toggleItems = async () => {
   }
 };
 
-watch(() => props.items, (newItems) => {
-  localItems.value = {...newItems};
-});
-
-const restoreItem = (id) => {
+const restoreItem = (id: number) => {
   try {
     if (confirm('本当に備品を復元をしますか？')) {
       router.post(`/items/${id}/restore`);
     }
-  } catch (e) {
+  } catch (e: any) {
     axios.post('/api/log-error', {
       error: e.toString(),
       component: 'Items/Index.vue restoreItem method',
