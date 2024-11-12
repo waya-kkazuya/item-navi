@@ -1,34 +1,28 @@
-<script setup>
+<script setup lang="ts">
 import { Head, useForm, router } from '@inertiajs/vue3';
 import GuestLayout from '@/Layouts/GuestLayout.vue';
 import InputError from '@/Components/InputError.vue';
 import InputLabel from '@/Components/InputLabel.vue';
 import TextInput from '@/Components/TextInput.vue';
-import PrimaryButton from '@/Components/PrimaryButton.vue';
 
-defineProps({
-    canResetPassword: {
-        type: Boolean,
-    },
-    status: {
 
-        type: String,
-    },
-});
+defineProps<{
+    canResetPassword: boolean;
+    status: string;
+}>();
 
 const form = useForm({
-    email: '',
-    password: '',
-    remember: false,
+    email: '' as string,
+    password: '' as string,
 });
 
-const submit = () => {
+const submit = (): void => {
     form.post(route('login'), {
         onFinish: () => form.reset('password'),
     });
 };
 
-const guestLogin = () => {
+const guestLogin = (): void => {
     router.post(route('guest.login'));
 };
 </script>
