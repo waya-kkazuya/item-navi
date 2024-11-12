@@ -16,7 +16,7 @@ const localNotifications: Ref<NotificationType[]> = ref(props.lowStockNotificati
 
 // プロパティが変更された場合にローカル変数を更新(※自動では更新されない)
 watch(() => props.lowStockNotifications, (newNotifications: NotificationType[]) => {
-  localNotifications.value = Object.values(newNotifications);
+  localNotifications.value = newNotifications;
 });
 
 onMounted(() => {
