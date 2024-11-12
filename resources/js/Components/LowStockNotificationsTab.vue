@@ -1,21 +1,26 @@
-<script setup>
+<script setup lang="ts">
+import axios from 'axios';
 import { ref, onMounted, watch } from 'vue';
 import { Link } from '@inertiajs/vue3';
+import type { Ref } from 'vue';
+import type { NotificationType } from '@/@types/model';
 
 
-const props = defineProps({
-  lowStockNotifications: Object
-});
+type Props = {
+  lowStockNotifications: NotificationType[];
+}
 
-const localNotifications = ref(Object.values(props.lowStockNotifications));
+const props = defineProps<Props>();
+
+const localNotifications: Ref<NotificationType[]> = ref(props.lowStockNotifications);
 
 // プロパティが変更された場合にローカル変数を更新(※自動では更新されない)
-watch(() => props.lowStockNotifications, (newNotifications) => {
+watch(() => props.lowStockNotifications, (newNotifications: NotificationType[]) => {
   localNotifications.value = Object.values(newNotifications);
 });
 
 onMounted(() => {
-  Object.values(localNotifications.value).forEach(notification => {
+  Object.values(localNotifications.value).forEach((notification: NotificationType) => {
     if (!notification.read_at) {
       markAsRead(notification.id);
     }
@@ -23,10 +28,10 @@ onMounted(() => {
 });
 
 // 画面を開いたら既読にする処理、次回アクセスもしくは更新でオレンジの新着マークが消える
-const markAsRead = async id => {
+const markAsRead = async (id: string): Promise<void> => {
   try {
     await axios.patch(`/api/notifications/${id}/read`);
-  } catch (e) {
+  } catch (e: any) {
     axios.post('/api/log-error', {
       error: e.toString(),
       component: 'LowStockNotificationsTab.vue markAsRead method',
