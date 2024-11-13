@@ -1,21 +1,26 @@
-<script setup>
+<script setup lang="ts">
+import axios from 'axios';
 import { QrcodeStream } from 'vue-qrcode-reader'
 import { ref } from 'vue'
 import { router } from '@inertiajs/vue3'
+import type { Ref } from 'vue';
 
+type QrCodeContent = {
+  rawValue: string;
+}
 
-const emits = defineEmits(['qrDetected']);
+const emits = defineEmits<{(e: 'qrDetected'): void}>();
 
-const scannerActive = ref(false);
+const scannerActive: Ref<boolean> = ref(false);
 
-const startScan = () => {
+const startScan = (): void => {
   if (confirm('QRコードのスキャンを開始しますか？')) {
     scannerActive.value = true;
   }
 };
 
 // QRコードに記録された備品のitemIdを取得し、消耗品管理画面の該当の備品のモーダルを開く
-const onDetect = content => {  
+const onDetect = (content: QrCodeContent[]) => {  
   // vue-qrcode-readerは複数のバーコードを同時に読み込めるので配列形式
   try {
     if (Array.isArray(content) && content.length > 0) {
@@ -25,7 +30,7 @@ const onDetect = content => {
     } else {
       alert('QRコードの内容を取得できませんでした');
     }
-  } catch (e) {
+  } catch (e: any) {
     axios.post('/api/log-error', {
       error: e.toString(),
       component: 'QrCodeReader.vue onDetect method',
@@ -35,7 +40,7 @@ const onDetect = content => {
   scannerActive.value = false; // スキャンが完了したらカメラを停止
 };
 
-const stopScan = () => {
+const stopScan = (): void => {
   scannerActive.value = false;
 };
 </script>
@@ -48,13 +53,6 @@ const stopScan = () => {
         <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 6.75h.75v.75h-.75v-.75ZM6.75 16.5h.75v.75h-.75v-.75ZM16.5 6.75h.75v.75h-.75v-.75ZM13.5 13.5h.75v.75h-.75v-.75ZM13.5 19.5h.75v.75h-.75v-.75ZM19.5 13.5h.75v.75h-.75v-.75ZM19.5 19.5h.75v.75h-.75v-.75ZM16.5 16.5h.75v.75h-.75v-.75Z" />
       </svg>
     </button>
-
-    <!-- <qrcode-stream v-if="scannerActive" @detect="onDetect" class="scanner"></qrcode-stream>
-    <button v-if="scannerActive" @click="stopScan" class="stop-scan-button">
-      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
-        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
-      </svg>
-    </button> -->
 
     <div v-show="scannerActive" class="modal fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center z-50" id="modal-1" aria-hidden="true">
       <div class="modal__overlay" tabindex="-1" data-micromodal-close>
