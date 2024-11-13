@@ -243,7 +243,6 @@ const fetchConsumableItems = async (): Promise<void> => {
                             <div class="font-medium text-xs md:text-sm">備品合計 {{ totalCount }}件</div>
                             <Pagination class="" :links="localConsumableItems.links"></Pagination>
                           </div>
-                         
 
                           <!-- タイル表示 -->
                           <div class="mt-4">
@@ -307,7 +306,7 @@ const fetchConsumableItems = async (): Promise<void> => {
                                 </div>
                               </template>
                               <StockHistoryModal v-show="isStockHistoryModalOpen" :item="selectedStockHistoryItem" @close="closeStockHistoryModal" />
-                              <UpdateStockModal v-show="isUpdateStockModalOpen" :item="selectedUpdateStockItem" :userName="userName" :errors="errors" @close="closeUpdateStockModal" />
+                              <UpdateStockModal v-if="selectedUpdateStockItem" v-show="isUpdateStockModalOpen" :item="selectedUpdateStockItem" :userName="userName" :errors="errors" @close="closeUpdateStockModal" />
                             </div>
                             <div v-else>
                               <div class="flex items-center justify-center">
