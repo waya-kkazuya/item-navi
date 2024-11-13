@@ -1,4 +1,4 @@
-type Link = { 
+export type LinkType = { 
     url: string | null;
     label: string;
     active: boolean;
@@ -7,8 +7,8 @@ type Link = {
 type Paginator<T> = {
     current_page: number;
     data: T[];
-    first_page_url: string;
     from: number;
+    first_page_url: string;
     last_page: number;
     last_page_url: string;
     next_page_url: string | null;
@@ -17,7 +17,11 @@ type Paginator<T> = {
     prev_page_url: string | null;
     to: number;
     total: number;
-    links: Link[];
+    links: LinkType[];
 }
   
 export type { Paginator };
+
+export type ValidationErrors = {
+    [key: string]: string[]
+};
