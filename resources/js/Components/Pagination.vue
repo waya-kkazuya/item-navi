@@ -1,11 +1,13 @@
-<script setup>
+<script setup lang="ts">
 import { Link } from '@inertiajs/vue3';
 import DOMPurify from 'dompurify';
+import type { LinkType } from '@/@types/types';
 
-defineProps({ links: Array });
+
+defineProps<{ links: LinkType[] }>();
 
 // サニタイズ関数
-const sanitizedHTML = (label) => DOMPurify.sanitize(label);
+const sanitizedHTML = (label: string) => DOMPurify.sanitize(label);
 </script>
 
 <template>
