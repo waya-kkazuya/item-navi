@@ -125,6 +125,8 @@ export type EditHistoryType = {
     day_of_week: string;
     time: string;
     operation_description: string;
+    operation_type_for_display: string;
+    edited_field_for_display: string;
 };
 
 export type NotificationType = {
@@ -156,4 +158,4 @@ export type StockTransactionType = {
     transaction_date: string;
     created_at: string;
     current_stock: number;
-}
+};
