@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import axios from 'axios';
 import { useForm } from '@inertiajs/vue3';
-import { computed, ref, watch } from 'vue'
-import type { Ref, ComputedRef } from 'vue'
+import { computed, ref, watch } from 'vue';
+import type { Ref, ComputedRef } from 'vue';
 import type { ItemType } from '@/@types/model';
 import type { ValidationErrors } from '@/@types/types';
 
