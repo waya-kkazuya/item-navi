@@ -6,7 +6,7 @@ import type { Ref, ComputedRef } from 'vue';
 
 type Props = {
     href: string;
-    active: boolean;
+    active?: boolean;
 };
 
 const props = defineProps<Props>();
