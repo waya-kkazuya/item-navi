@@ -1,35 +1,52 @@
-<script setup>
+<script setup lang="ts">
+import axios from 'axios';
 import InputError from '@/Components/InputError.vue';
 import InputLabel from '@/Components/InputLabel.vue';
-import PrimaryButton from '@/Components/PrimaryButton.vue';
 import TextInput from '@/Components/TextInput.vue';
 import { useForm, usePage } from '@inertiajs/vue3';
-import { onMounted, ref, watch } from 'vue';
+import { ref, watch } from 'vue';
 import FlashMessage from '@/Components/FlashMessage.vue';
+import type { Ref } from 'vue';
+import type { ValidationErrors } from '@/@types/types';
+import type { UserType } from '@/@types/model';
 
-const props = defineProps({
-    mustVerifyEmail: Boolean,
-    status: String,
-    profile_image_path: String,
-    errors: Object
-})
 
-const user = usePage().props.auth.user;
+type Props = {
+    mustVerifyEmail: boolean;
+    status: string;
+    profile_image_path: string;
+    errors: ValidationErrors;
+}
+
+const props = defineProps<Props>();
+
+type AuthType = {
+    user: UserType;
+    user_role: number;
+};
+
+type PageType = {
+    props: {
+        auth: AuthType;
+    };
+};
+
+const page: PageType = usePage();
 
 const form = useForm({
-    name: user.name,
-    email: user.email,
-    profile_image_file: null,
+    name: page.props.auth.user.name as string,
+    email: page.props.auth.user.email as string,
+    profile_image_file: null as File | null,
     _method: 'PATCH'
 });
 
-const save = () => {
+const save = (): void => {
     try {
         form.processing = true; // 送信開始時にtrueに設定
         form.post('/profile', {
             onFinish: () => form.processing = false, // 送信完了時にfalseに戻す
         });
-    } catch (e) {
+    } catch (e: any) {
         axios.post('/api/log-error', {
             error: e.toString(),
             component: 'UpdateProfileInformationForm.vue save method',
@@ -37,15 +54,19 @@ const save = () => {
     }
 };
 
-const profileImagePreview = ref(props.profile_image_path);
+const profileImagePreview: Ref<string> = ref(props.profile_image_path);
 
-watch(() => props.profile_image_path, (newPath) => {
+watch(() => props.profile_image_path, (newPath: string) => {
     profileImagePreview.value = newPath;
 });
 
-const handleFileUpload = (event) => {
-  form.profile_image_file = event.target.files[0];
-  profileImagePreview.value = URL.createObjectURL(form.profile_image_file);
+const handleFileUpload = (event: Event) => {
+    const target = event.target as HTMLInputElement;
+
+    if (target && target.files && target.files[0]) {
+        form.profile_image_file = target.files[0];
+        profileImagePreview.value = URL.createObjectURL(form.profile_image_file);
+    }
 };
 </script>
 
