@@ -1,3 +1,5 @@
+export {};
+
 import { Config, RouteParam, RouteParams, Router } from "ziggy-js";
 
 declare global {
@@ -16,6 +18,7 @@ declare global {
     ): string;
     declare const Ziggy: any;
 }
+
 declare module "vue" {
     interface ComponentCustomProperties {
         route: ((
