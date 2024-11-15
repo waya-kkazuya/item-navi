@@ -1,3 +1,5 @@
+export {};
+
 import type { AxiosInstance } from "axios";
 
 declare module '@/apiClient' {
