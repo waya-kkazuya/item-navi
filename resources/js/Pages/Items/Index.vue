@@ -6,8 +6,7 @@ import FlashMessage from '@/Components/FlashMessage.vue';
 import Pagination from '@/Components/Pagination.vue';
 import { ref, onMounted, watch } from 'vue';
 import EditHistoryModal from '@/Components/EditHistoryModal.vue';
-import { useWindowSize } from '@/hooks/useWindowSize';
-import type { Ref } from 'vue'
+import type { Ref } from 'vue';
 import type { Paginator } from '@/@types/types';
 import type { ItemType, CategoryType, LocationType } from '@/@types/model';
 
@@ -28,10 +27,6 @@ const props = defineProps<Props>();
 
 // 読み取り専用のitemsを変更出来るようスプレッド構文でコピーする
 const localItems: Ref<Paginator<ItemType>> = ref({...props.items});
-
-// watch(() => props.items, (newItems: Paginator<ItemType>) => {
-//   localItems.value = {...newItems};
-// });
 
 // 検索フォーム
 const search: Ref<string> = ref(props.search);

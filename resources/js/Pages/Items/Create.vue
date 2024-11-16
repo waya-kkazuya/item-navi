@@ -4,7 +4,7 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head, useForm } from '@inertiajs/vue3';
 import { ref } from 'vue';
 import FlashMessage from '@/Components/FlashMessage.vue';
-import type { Ref } from 'vue'
+import type { Ref } from 'vue';
 import type { CategoryType, LocationType, UnitType, UsageStatusType, AcquisitionMethodType } from '@/@types/model';
 import type { ValidationErrors } from '@/@types/types';
 
