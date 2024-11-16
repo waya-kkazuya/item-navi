@@ -1,54 +1,60 @@
-<script setup>
+<script setup lang="ts">
+import axios from 'axios';
 import { useForm } from '@inertiajs/vue3';
-import { computed, ref, watch, onMounted } from 'vue'
-
+import { computed, ref, watch } from 'vue';
+import type { Ref, ComputedRef } from 'vue';
+import type { ItemType } from '@/@types/model';
+import type { ValidationErrors } from '@/@types/types';
 
 // 親コンポーネントから、itemオブジェクトを受け取る
-const props = defineProps({
-  item: Object,
-  userName: String,
-  errors: Object
-});
+type Props = {
+  item: ItemType;
+  userName: string;
+  errors: ValidationErrors;
+};
 
-// errorsを編集できるようにする
-const localErrors = ref({...props.errors});
+const props = defineProps<Props>();
+
+// errorsを更新できるようにする
+const localErrors: Ref<ValidationErrors> = ref({...props.errors});
 
 // props.errorsの変更を監視し、localErrorsに反映
-watch(() => props.errors, (newErrors) => {
+watch(() => props.errors, (newErrors: ValidationErrors) => {
   localErrors.value = { ...newErrors };
 }, { deep: true });
 
 
-const activeTab = ref('出庫');
-const activateDecreaseTab = () => {
+const activeTab: Ref<string> = ref('出庫');
+const activateDecreaseTab = (): void => {
   localErrors.value = {}; // タブ切り替えでバリデーションエラーエラーメッセージをリセット
   activeTab.value = '出庫';
 };
-const activateIncreaseTab = () => {
+const activateIncreaseTab = (): void => {
   localErrors.value = {}; // タブ切り替えでバリデーションエラーエラーメッセージをリセット
   activeTab.value = '入庫';
 };
 
 
-const emit = defineEmits(['close']);
-const closeModal = () => {
+const emit = defineEmits<{(e: 'close') : void}>();
+
+const closeModal = (): void => {
   localErrors.value = {}; // バリデーションエラーメッセージをリセット
   emit('close'); // モーダルウィンドウを閉じるイベント打ち上げ
 };
 
-// 出庫タブの在庫数自動計算
-const stockAfterDecrease = computed(() => props.item.stock - decreaseForm.quantity);
-// 入庫タブの在庫数自動計算
-const stockAfterIncrease = computed(() => props.item.stock + increaseForm.quantity);
+// 出庫タブの出庫後在庫数の表示自動計算
+const stockAfterDecrease: ComputedRef<number> = computed(() => props.item.stock - decreaseForm.quantity);
+// 入庫タブの入庫後在庫数の表示自動計算
+const stockAfterIncrease: ComputedRef<number> = computed(() => props.item.stock + increaseForm.quantity);
 
 const decreaseForm = useForm({
-  transaction_date: new Date().toISOString().substr(0, 10),
-  operator_name: props.userName,
-  quantity: 1,
-  transaction_type: '出庫',　// enum型で入庫か出庫のみ
+  transaction_date: new Date().toISOString().substr(0, 10) as string,
+  operator_name: props.userName as string,
+  quantity: 1 as number,
+  transaction_type: '出庫' as string,　// enum型で入庫か出庫のみ
 });
 
-const decreaseStock = item => {
+const decreaseStock = (item: ItemType): void => {
   try {
     if (confirm('本当に出庫処理をしますか？')) {
         decreaseForm.put(`/decreaseStock/${item.id}`, {
@@ -58,7 +64,7 @@ const decreaseStock = item => {
           },
         });
     }
-  } catch (e) {
+  } catch (e: any) {
     axios.post('/api/log-error', {
       error: e.toString(),
       component: 'UpdateStockModal.vue decreaseStock method',
@@ -67,13 +73,13 @@ const decreaseStock = item => {
 };
 
 const increaseForm = useForm({
-    transaction_date: new Date().toISOString().substr(0, 10),
-    operator_name: props.userName,
-    quantity: 1,
-    transaction_type: '入庫',　// enum型で入庫か出庫のみ
+    transaction_date: new Date().toISOString().substr(0, 10) as string,
+    operator_name: props.userName as string,
+    quantity: 1 as number,
+    transaction_type: '入庫' as string,　// enum型で入庫か出庫のみ
 });
 
-const increaseStock = item => {
+const increaseStock = (item: ItemType): void => {
   try {
     if (confirm('本当に入庫処理をしますか？')) {
         increaseForm.put(`/increaseStock/${item.id}`, {
@@ -83,7 +89,7 @@ const increaseStock = item => {
           },
         });
     }
-  } catch (e) {
+  } catch (e: any) {
     axios.post('/api/log-error', {
       error: e.toString(),
       component: 'UpdateStockModal.vue increaseStock method',

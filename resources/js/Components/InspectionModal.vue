@@ -1,17 +1,23 @@
-<script setup>
+<script setup lang="ts">
+import axios from 'axios';
 import { useForm } from '@inertiajs/vue3';
 import { ref } from 'vue';
+import type { Ref } from 'vue';
+import type { ItemType, InspectionType } from '@/@types/model';
+import type { ValidationErrors } from '@/@types/types';
 
 
-const isShow = ref(false);
-const toggleStatus = () => { isShow.value = !isShow.value};
+const isShow: Ref<boolean> = ref(false);
+const toggleStatus = (): void => { isShow.value = !isShow.value};
 
-const props = defineProps({
-  item: Object,
-  uncompleted_inspection: Object,
-  userName: String,
-  errors: Object
-});
+type Props = {
+  item: ItemType;
+  uncompleted_inspection: InspectionType;
+  userName: string;
+  errors: ValidationErrors;
+};
+
+const props = defineProps<Props>();
 
 const form = useForm({
     inspection_date: new Date().toISOString().substr(0, 10),
@@ -19,7 +25,7 @@ const form = useForm({
     details: null,
 });
 
-const saveInspection = item => {
+const saveInspection = (item: ItemType): void => {
   try {
     if (confirm('本当に点検しますか？')) {
       form.put(`/inspect_item/${item.id}`, {
@@ -28,7 +34,7 @@ const saveInspection = item => {
         },
       });
     }
-  } catch (e) {
+  } catch (e: any) {
     axios.post('/api/log-error', {
       error: e.toString(),
       component: 'InspectionModal.vue saveInspection method',

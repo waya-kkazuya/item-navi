@@ -1,6 +1,9 @@
-<script setup>
+<script setup lang="ts">
+import axios from 'axios';
 import { Link } from '@inertiajs/vue3';
 import { ref, onMounted } from 'vue';
+import type { Ref } from 'vue';
+import type { NotificationType } from '@/@types/model';
 
 // 通常のNavLinkの場合はリンクとして、ResponsiveNavLinkの場合はただのアイコンとして使用
 defineProps({
@@ -10,15 +13,15 @@ defineProps({
   },
 });
 
-const notifications = ref([]);
+const notifications: Ref<NotificationType[]> = ref([]);
 
-onMounted(async () => {
+onMounted(async (): Promise<void> => {
   try {
     await axios.get('/api/notifications_count')
     .then(res => {
       notifications.value = res.data;
     });
-  } catch (e) {
+  } catch (e: any) {
     axios.post('/api/log-error', {
       error: e.toString(),
       component: 'BellNotification.vue onMounted axios.get',

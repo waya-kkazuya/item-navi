@@ -1,5 +1,6 @@
-<script setup>
+<script setup lang="ts">
 import { computed, onMounted, onUnmounted, ref } from 'vue';
+import type { Ref, ComputedRef } from 'vue';
 
 const props = defineProps({
     align: {
@@ -16,7 +17,7 @@ const props = defineProps({
     },
 });
 
-const closeOnEscape = (e) => {
+const closeOnEscape = (e: KeyboardEvent): void => {
     if (open.value && e.key === 'Escape') {
         open.value = false;
     }
@@ -25,13 +26,13 @@ const closeOnEscape = (e) => {
 onMounted(() => document.addEventListener('keydown', closeOnEscape));
 onUnmounted(() => document.removeEventListener('keydown', closeOnEscape));
 
-const widthClass = computed(() => {
+const widthClass: ComputedRef<string | undefined> = computed(() => {
     return {
         48: 'w-48',
     }[props.width.toString()];
 });
 
-const alignmentClasses = computed(() => {
+const alignmentClasses: ComputedRef<string> = computed(() => {
     if (props.align === 'left') {
         return 'ltr:origin-top-left rtl:origin-top-right start-0';
     } else if (props.align === 'right') {
@@ -41,7 +42,7 @@ const alignmentClasses = computed(() => {
     }
 });
 
-const open = ref(false);
+const open: Ref<boolean> = ref(false);
 </script>
 
 <template>

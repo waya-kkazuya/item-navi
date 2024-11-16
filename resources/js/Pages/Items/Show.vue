@@ -1,25 +1,21 @@
-<script setup>
+<script setup lang="ts">
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head, Link, router } from '@inertiajs/vue3';
 import InspectionModal  from '@/Components/InspectionModal.vue';
 import DisposalModal from '@/Components/DisposalModal.vue';
 import FlashMessage from '@/Components/FlashMessage.vue';
 import EditHistoryModal from '@/Components/EditHistoryModal.vue';
+import type { ItemType, InspectionType } from '@/@types/model';
+import type { ValidationErrors } from '@/@types/types';
 
 
-defineProps({
-    item: Object,
-    uncompleted_inspection: {
-        type: Object,
-        default: null
-    },
-    last_completed_inspection: {
-        type: Object,
-        default: null
-    },
-    userName: String,
-    errors: Object
-});
+defineProps<{
+    item: ItemType,
+    uncompleted_inspection: InspectionType | null,
+    last_completed_inspection: InspectionType | null,
+    userName: string,
+    errors: ValidationErrors
+}>();
 </script>
 
 <template>

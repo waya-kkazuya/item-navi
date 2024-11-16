@@ -1,4 +1,5 @@
-<script setup>
+<script setup lang="ts">
+import axios from 'axios';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head, Link, router } from '@inertiajs/vue3';
 import FlashMessage from '@/Components/FlashMessage.vue';
@@ -8,35 +9,40 @@ import StockHistoryModal from '@/Components/StockHistoryModal.vue';
 import UpdateStockModal from '@/Components/UpdateStockModal.vue';
 import QrCodeReader from '@/Components/QrCodeReader.vue';
 import { isMobile } from '@/utils/device';
+import type { Ref } from 'vue'
+import type { Paginator } from '@/@types/types';
+import type { ItemType, CategoryType, LocationType } from '@/@types/model';
+import type { ValidationErrors } from '@/@types/types';
 
-const props = defineProps({
-  consumableItems: Object,
-  locations: Array,
-  search: String,
-  sortOrder: String,
-  locationOfUseId: Number,
-  storageLocationId: Number,
-  totalCount: Number,
-  userName: String,
-  linkedItem: Object, // 指定した備品のモーダルを開くために使用
-  errors: Object
-});
+type Props = {
+  consumableItems: Paginator<ItemType>;
+  locations: LocationType[];
+  search: string;
+  sortOrder: string;
+  locationOfUseId: number;
+  storageLocationId: number;
+  totalCount: number;
+  userName: string;
+  linkedItem: ItemType; // 指定した備品のモーダルを開くために使用
+  errors: ValidationErrors;
+}
 
+const props = defineProps<Props>();
 
 // 読み取り専用のitemsを変更出来るようスプレッド構文でコピーする
-const localConsumableItems = ref({...props.consumableItems});
+const localConsumableItems: Ref<Paginator<ItemType>> = ref({...props.consumableItems});
 // 合計件数
-const totalCount = ref(props.totalCount);
+const totalCount: Ref<number> = ref(props.totalCount);
 // 検索フォーム
-const search = ref(props.search);
+const search: Ref<string> = ref(props.search);
 // 作成日でソート
-const sortOrder = ref(props.sortOrder ?? 'asc');
+const sortOrder: Ref<string> = ref(props.sortOrder ?? 'asc');
 // カテゴリプルダウン用(初期値は0)、更新したらその値
-const locationOfUseId = ref(props.locationOfUseId ?? 0);
-const storageLocationId = ref(props.storageLocationId ?? 0);
+const locationOfUseId: Ref<number> = ref(props.locationOfUseId ?? 0);
+const storageLocationId: Ref<number> = ref(props.storageLocationId ?? 0);
 
 // デバイスがPCかスマホ・タブレットか判定する
-const isMobileDevice = ref(false);
+const isMobileDevice: Ref<boolean> = ref(false);
 
 onMounted(() => {
   isMobileDevice.value = isMobile();
@@ -47,41 +53,41 @@ onMounted(() => {
   }
 });
 
-watch(() => props.linkedItem, (newVal) => {
+watch(() => props.linkedItem, (newVal: ItemType) => {
   if (newVal) {
     openStockHistoryModal(newVal);
   }
 });
 
 // 入出庫履歴モーダル
-const isStockHistoryModalOpen = ref(false);
-const selectedStockHistoryItem = ref(null);
+const isStockHistoryModalOpen: Ref<boolean> = ref(false);
+const selectedStockHistoryItem: Ref<ItemType | null> = ref(null);
 
-const openStockHistoryModal = (item) => {
+const openStockHistoryModal = (item: ItemType): void => {
   selectedStockHistoryItem.value = item;
   isStockHistoryModalOpen.value = true;
 };
-const closeStockHistoryModal = () => {
+const closeStockHistoryModal = (): void => {
   isStockHistoryModalOpen.value = false;
 };
 
 
 // 入出庫モーダル
-const isUpdateStockModalOpen = ref(false);
-const selectedUpdateStockItem = ref(null);
+const isUpdateStockModalOpen: Ref<boolean> = ref(false);
+const selectedUpdateStockItem: Ref<ItemType | null> = ref(null);
 
-const openUpdateStockModal = item => {
-  selectedUpdateStockItem .value = item;
+const openUpdateStockModal = (item: ItemType): void => {
+  selectedUpdateStockItem.value = item;
   isUpdateStockModalOpen.value = true;
 };
-const closeUpdateStockModal = () => {
+const closeUpdateStockModal = (): void => {
   isUpdateStockModalOpen.value = false;
   fetchConsumableItems();
 };
 
 
 // プルダウンや検索フォームを反映
-const fetchAndFilterItems = () => {
+const fetchAndFilterItems = (): void => {
   router.visit(route('consumable_items', {
     search: search.value,
     sortOrder: sortOrder.value,
@@ -92,13 +98,13 @@ const fetchAndFilterItems = () => {
   });
 };
 
-const toggleSortOrder = () => {
+const toggleSortOrder = (): void => {
   sortOrder.value = sortOrder.value === 'asc' ? 'desc' : 'asc';
   fetchAndFilterItems();
 };
 
 //プルダウンや検索フォームをリセット
-const resetState = () => {
+const resetState = (): void => {
   search.value = '';
   sortOrder.value = 'asc';
   locationOfUseId.value = 0;
@@ -107,12 +113,12 @@ const resetState = () => {
 };
 
 // 入出庫処理をした後に画面の情報を更新する
-const fetchConsumableItems = async () => {
+const fetchConsumableItems = async (): Promise<void> => {
   try {
     const res = await axios.get('/api/consumable_items?reload=true');
     localConsumableItems.value = res.data.items;
     totalCount.value = res.data.total_count;
-  } catch (e){
+  } catch (e: any){
     axios.post('/api/log-error', {
       error: e.toString(),
       component: 'ConsumableItems/Index.vue fetchConsumableItems method',
@@ -237,7 +243,6 @@ const fetchConsumableItems = async () => {
                             <div class="font-medium text-xs md:text-sm">備品合計 {{ totalCount }}件</div>
                             <Pagination class="" :links="localConsumableItems.links"></Pagination>
                           </div>
-                         
 
                           <!-- タイル表示 -->
                           <div class="mt-4">
@@ -301,7 +306,7 @@ const fetchConsumableItems = async () => {
                                 </div>
                               </template>
                               <StockHistoryModal v-show="isStockHistoryModalOpen" :item="selectedStockHistoryItem" @close="closeStockHistoryModal" />
-                              <UpdateStockModal v-show="isUpdateStockModalOpen" :item="selectedUpdateStockItem" :userName="userName" :errors="errors" @close="closeUpdateStockModal" />
+                              <UpdateStockModal v-if="selectedUpdateStockItem" v-show="isUpdateStockModalOpen" :item="selectedUpdateStockItem" :userName="userName" :errors="errors" @close="closeUpdateStockModal" />
                             </div>
                             <div v-else>
                               <div class="flex items-center justify-center">

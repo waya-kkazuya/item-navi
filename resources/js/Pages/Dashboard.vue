@@ -1,20 +1,39 @@
-<script setup>
+<script setup lang="ts">
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head, Link, router } from '@inertiajs/vue3';
 import { ref } from 'vue';
+import type { Ref } from 'vue'
+import type { Paginator } from '@/@types/types';
+import type { ItemType, CategoryType, LocationType, EditHistoryType } from '@/@types/model';
 
 
-const props = defineProps({
-    allItems: Array,
-    itemsByType: Object,
-    groupedEdithistories: Array,
-    type: String
-});
+type CategoryGroupedItems = {
+    category_id: number;
+    items: ItemType[];
+}
+
+type LocationGroupedItems = {
+    location_of_use_id: number;
+    items: ItemType[];
+}
+
+type ItemsByType = Record<string, CategoryGroupedItems | LocationGroupedItems>
+
+type GroupedEditHistoriesType = Record<string, EditHistoryType[]>;
+
+type Props = {
+    allItems: ItemType[];
+    itemsByType: ItemsByType;
+    groupedEdithistories: GroupedEditHistoriesType;
+    type: string;
+}
+
+const props = defineProps<Props>();
 
 // 登録件数をプルダウンで切り替え
-const type = ref(props.type ?? 'category');
+const type: Ref<string> = ref(props.type ?? 'category');
 
-const switchViewMode = () => {
+const switchViewMode = (): void => {
   router.visit(route('dashboard', {
     type: type.value,
   }), {
@@ -77,12 +96,12 @@ const switchViewMode = () => {
                                         </tr>
                                         <tr v-for="(group, categoryName) in itemsByType" :key="categoryName">
                                             <td class="border-b-2 border-gray-200 px-4 py-3">
-                                                <Link :href="route('items.index', { categoryId: group.category_id})" class="text-blue-500 hover:text-blue-700 underline block">
-                                                {{ categoryName }}
+                                                <Link v-if="('category_id' in group)" :href="route('items.index', { categoryId: group.category_id})" class="text-blue-500 hover:text-blue-700 underline block">
+                                                    {{ categoryName }}
                                                 </Link>
                                             </td>
                                             <td class="border-b-2 border-gray-200 px-4 py-3 text-center">
-                                                <Link :href="route('items.index', { categoryId: group.category_id})" class="text-blue-500 hover:text-blue-700 underline block">
+                                                <Link v-if="('category_id' in group)" :href="route('items.index', { categoryId: group.category_id})" class="text-blue-500 hover:text-blue-700 underline block">
                                                     {{ group.items.length }}件
                                                 </Link>
                                             </td>
@@ -103,12 +122,12 @@ const switchViewMode = () => {
                                         </tr>
                                         <tr v-for="(group, locationOfUseName) in itemsByType" :key="locationOfUseName">
                                             <td class="border-b-2 border-gray-200 px-4 py-3">
-                                                <Link :href="route('items.index', { locationOfUseId: group.location_of_use_id})" class="text-blue-500 hover:text-blue-700 underline block">
+                                                <Link v-if="('location_of_use_id' in group)" :href="route('items.index', { locationOfUseId: group.location_of_use_id})" class="text-blue-500 hover:text-blue-700 underline block">
                                                     {{ locationOfUseName }}
                                                 </Link>
                                             </td>
                                             <td class="border-b-2 border-gray-200 px-4 py-3 text-center">
-                                                <Link :href="route('items.index', { locationOfUseId: group.location_of_use_id})" class="text-blue-500 hover:text-blue-700 underline block">
+                                                <Link v-if="('location_of_use_id' in group)" :href="route('items.index', { locationOfUseId: group.location_of_use_id})" class="text-blue-500 hover:text-blue-700 underline block">
                                                     {{ group.items.length }}件
                                                 </Link>
                                             </td>

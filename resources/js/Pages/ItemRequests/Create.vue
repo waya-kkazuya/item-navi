@@ -1,27 +1,28 @@
-<script setup>
+<script setup lang="ts">
+import axios from 'axios';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import { Head, router, useForm } from '@inertiajs/vue3';
-import { reactive, ref } from 'vue';
+import { Head, useForm } from '@inertiajs/vue3';
 import FlashMessage from '@/Components/FlashMessage.vue';
+import type { CategoryType, LocationType } from '@/@types/model';
+import type { ValidationErrors } from '@/@types/types';
 
 
-const props = defineProps({
-    categories: Array,
-    locations: Array,
-    errors: Object
-});
+defineProps<{
+    categories: CategoryType[];
+    locations: LocationType[];
+    errors: ValidationErrors;
+}>();
 
 const form = useForm({
-    id: null,
-    name: null,
-    category_id: 0, 
-    location_of_use_id: 0,
-    requestor: null,
-    remarks_from_requestor: null,
-    request_status_id: null,
-    manufacturer: null,
-    reference: null,
-    price: 0,
+    name: null as string | null,
+    category_id: 0 as number, 
+    location_of_use_id: 0 as number,
+    requestor: null as string | null,
+    remarks_from_requestor: null as string | null,
+    request_status_id: null as number | null,
+    manufacturer: null as string | null,
+    reference: null as string | null,
+    price: 0 as number,
 });
 
 // router.visitではuseFormの入力値保持機能は使えない
@@ -29,7 +30,7 @@ const form = useForm({
 const storeItemRequest = () => {
     try {
         form.post('/item-requests');
-    } catch (e) {
+    } catch (e: any) {
         axios.post('/api/log-error', {
             error: e.toString(),
             component: 'ItemRequests/Create.vue storeItemRequest method',

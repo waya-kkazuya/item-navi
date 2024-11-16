@@ -1,19 +1,25 @@
-<script setup>
+<script setup lang="ts">
+import axios from 'axios';
 import { ref, watch } from 'vue';
+import type { Ref } from 'vue';
+import type { ItemType, StockTransactionType } from '@/@types/model';
 
 // 親コンポーネントから受け取る
-const props = defineProps({
-  item: Object
-});
-const item = ref(props.item);
+type Props = {
+  item: ItemType;
+};
 
-const stockTransactions = ref([]);
+const props = defineProps<Props>();
+
+const item: Ref<ItemType> = ref(props.item);
+
+const stockTransactions: Ref<StockTransactionType[]> = ref([]);
 // 入出庫履歴情報を取得
-const fetchStockTransactions = async item => {
+const fetchStockTransactions = async (item: ItemType): Promise<void> => {
   try {
     const res = await axios.get(`/api/stock_transactions?item_id=${item.id}`);
     stockTransactions.value = res.data.stockTransactions;
-  } catch (e) {
+  } catch (e: any) {
     axios.post('/api/log-error', {
       error: e.toString(),
       component: 'StockHistoryModal.vue fetchStockTransactions method',
@@ -21,14 +27,15 @@ const fetchStockTransactions = async item => {
   }
 };
 
-watch(() => props.item, (newItem) => {
+// 別な備品Itemが選択された問いに
+watch(() => props.item, (newItem: ItemType) => {
   if (newItem) {
     fetchStockTransactions(newItem);
   }
 }, { immediate: true });
 
-const emit = defineEmits(['close']);
-const closeModal = () => {
+const emit = defineEmits<{(e: 'close') : void}>();
+const closeModal = (): void => {
   emit('close') // StockHistoryModalを閉じるイベント打ち上げ
 };
 </script>
@@ -45,7 +52,6 @@ const closeModal = () => {
         </header>
         <main class="modal__content" id="modal-1-content">
           <div class="min-w-full overflow-auto">
-            <!-- <div>{{ stockTransactions }}</div> -->
             <table v-if="stockTransactions.length > 0" class="table-fixed min-w-full text-left whitespace-no-wrap">
               <thead>
                 <tr>

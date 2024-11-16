@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import { Chart, registerables } from "chart.js";
 import { BarChart, LineChart } from "vue-chart-3";
 import { reactive, computed } from "vue"

@@ -1,26 +1,30 @@
-<script setup>
+<script setup lang="ts">
 import axios from 'axios';
-import { ref, reactive, onMounted, defineProps } from 'vue';
+import { ref } from 'vue';
 import apiClient from '@/apiClient';
+import type { Ref } from 'vue'
+import type { ItemType, EditHistoryType } from '@/@types/model';
 
-const props = defineProps({
-  item: Object,
-  isTableView: Boolean
-});
+type Props = {
+  item: ItemType;
+  isTableView: boolean;
+}
 
-const editHistoriesData = ref([]);
+const props = defineProps<Props>();
 
-const isShow = ref(false);
-const toggleStatus = () => { isShow.value = !isShow.value};
+const editHistoriesData: Ref<EditHistoryType[]> = ref([]);
 
-const editHistories = async item => {
+const isShow: Ref<boolean> = ref(false);
+const toggleStatus = (): void => { isShow.value = !isShow.value};
+
+const editHistories = async (item: ItemType): Promise<void> => {
   try {
     await apiClient.get(`api/edithistory?item_id=${item.id}`)
     .then( res => {
       editHistoriesData.value = res.data.edithistories
     });
     toggleStatus();
-  } catch(e) {
+  } catch(e: any) {
     axios.post('/api/log-error', {
       error: e.toString(),
       component: 'EditHistoryModal.vue editHistories method',
@@ -29,7 +33,7 @@ const editHistories = async item => {
 };
 
 // 日付フォーマット関数
-const formatDate = (timestamp) => {
+const formatDate = (timestamp: string) => {
   const date = new Date(timestamp);
   const year = date.getFullYear();
   const month = ('0' + (date.getMonth() + 1)).slice(-2);

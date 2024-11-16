@@ -1,16 +1,22 @@
-<script setup>
+<script setup lang="ts">
+import axios from 'axios';
 import { ref, onMounted, watch } from 'vue';
 import { Link } from '@inertiajs/vue3';
+import type { Ref } from 'vue';
+import type { NotificationType } from '@/@types/model';
 
-const props = defineProps({
-  requestedItemNotifications: Object
-});
 
-const localNotifications = ref(Object.values(props.requestedItemNotifications));
+type Props = {
+  requestedItemNotifications: NotificationType[];
+}
+
+const props = defineProps<Props>();
+
+const localNotifications: Ref<NotificationType[]> = ref(props.requestedItemNotifications);
 
 // プロパティが変更された場合にローカル変数を更新(※自動では更新されない)
-watch(() => props.requestedItemNotifications, (newNotifications) => {
-  localNotifications.value = Object.values(newNotifications);
+watch(() => props.requestedItemNotifications, (newNotifications: NotificationType[]) => {
+  localNotifications.value = newNotifications;
 });
 
 onMounted(() => {
@@ -22,10 +28,10 @@ onMounted(() => {
 });
 
 // 画面を開いたら既読にする処理、次回アクセスもしくは更新でオレンジの新着マークが消える
-const markAsRead = async id => {
+const markAsRead = async (id: string): Promise<void> => {
   try {
     await axios.patch(`/api/notifications/${id}/read`);
-  } catch (e) {
+  } catch (e: any) {
     axios.post('/api/log-error', {
       error: e.toString(),
       component: 'RequestedItemNotificationsTab.vue markAsRead method',

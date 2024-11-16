@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import { ref, computed } from 'vue';
 import ApplicationLogo from '@/Components/ApplicationLogo.vue';
 import Dropdown from '@/Components/Dropdown.vue';
@@ -7,13 +7,25 @@ import NavLink from '@/Components/NavLink.vue';
 import ResponsiveNavLink from '@/Components/ResponsiveNavLink.vue';
 import { Link, usePage } from '@inertiajs/vue3';
 import BellNotification from '@/Components/BellNotification.vue';
+import type { Ref, ComputedRef } from 'vue';
+import type { UserType } from '@/@types/model';
 
-const showingNavigationDropdown = ref(false);
+const showingNavigationDropdown: Ref<boolean> = ref(false);
 
+type AuthType = {
+    user: UserType;
+    user_role: number;
+};
 
-const page = usePage();
+type PageType = {
+    props: {
+        auth: AuthType;
+    };
+};
 
-const profileImageUrl = computed(() =>{
+const page: PageType = usePage();
+
+const profileImageUrl: ComputedRef<string> = computed(() =>{
     return page.props.auth.user.profile_image
     ? `${import.meta.env.VITE_APP_URL}/storage/profile/${page.props.auth.user.profile_image}`
     : `${import.meta.env.VITE_APP_URL}/storage/profile/profile_default_image.png`
@@ -39,13 +51,13 @@ const profileImageUrl = computed(() =>{
 
                             <!-- Navigation Links -->
                             <div class="items-center hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                                <NavLink v-if="$page.props.auth.user_role <= 5" :href="route('items.index')" :active="route().current('items.index')">
+                                <NavLink v-if="page.props.auth.user_role <= 5" :href="route('items.index')" :active="route().current('items.index')">
                                     備品管理
                                 </NavLink>
                                 <NavLink :href="route('consumable_items')" :active="route().current('consumable_items')">
                                     消耗品管理
                                 </NavLink>
-                                <NavLink v-if="$page.props.auth.user_role <= 5" :href="route('inspection_and_disposal_items')" :active="route().current('inspection_and_disposal_items')">
+                                <NavLink v-if="page.props.auth.user_role <= 5" :href="route('inspection_and_disposal_items')" :active="route().current('inspection_and_disposal_items')">
                                     点検と廃棄
                                 </NavLink>
                                 <NavLink :href="route('item_requests.index')" :active="route().current('item_requests.index')">
@@ -53,7 +65,7 @@ const profileImageUrl = computed(() =>{
                                 </NavLink>
                                 
                                 <!-- profile側にまとめるべきか -->
-                                <BellNotification :isLink="true" v-if="$page.props.auth.user_role <= 5" />
+                                <BellNotification :isLink="true" v-if="page.props.auth.user_role <= 5" />
                             </div>
                         </div>
 
@@ -72,7 +84,7 @@ const profileImageUrl = computed(() =>{
                                                 <img :src="profileImageUrl" alt="ProfileImage"
                                                 class="mr-4 w-9 h-9 rounded-full border border-black object-cover">
 
-                                                {{ $page.props.auth.user.name }}
+                                                {{ page.props.auth.user.name }}
 
                                                 <svg
                                                     class="ms-2 -me-0.5 h-4 w-4"
@@ -142,13 +154,13 @@ const profileImageUrl = computed(() =>{
                         <ResponsiveNavLink :href="route('dashboard')" :active="route().current('dashboard')">
                             ダッシュボード
                         </ResponsiveNavLink>
-                        <ResponsiveNavLink v-if="$page.props.auth.user_role <= 5" :href="route('items.index')" :active="route().current('items.index')">
+                        <ResponsiveNavLink v-if="page.props.auth.user_role <= 5" :href="route('items.index')" :active="route().current('items.index')">
                             備品管理
                         </ResponsiveNavLink>
                         <ResponsiveNavLink :href="route('consumable_items')" :active="route().current('consumable_items')">
                             消耗品管理
                         </ResponsiveNavLink>
-                        <ResponsiveNavLink v-if="$page.props.auth.user_role <= 5" :href="route('inspection_and_disposal_items')" :active="route().current('inspection_and_disposal_items')">
+                        <ResponsiveNavLink v-if="page.props.auth.user_role <= 5" :href="route('inspection_and_disposal_items')" :active="route().current('inspection_and_disposal_items')">
                             点検と廃棄
                         </ResponsiveNavLink>
                         <ResponsiveNavLink :href="route('item_requests.index')" :active="route().current('item_requests.index')">
@@ -157,7 +169,7 @@ const profileImageUrl = computed(() =>{
                         <ResponsiveNavLink :href="route('notifications.index')" :active="route().current('notifications.index')">
                             <div class="flex">
                                 <div class="mr-2">通知</div>
-                                <BellNotification :isLink="false" v-if="$page.props.auth.user_role <= 5" class="flex" />
+                                <BellNotification :isLink="false" v-if="page.props.auth.user_role <= 5" class="flex" />
                             </div>
                         </ResponsiveNavLink>
                     </div>
@@ -172,9 +184,9 @@ const profileImageUrl = computed(() =>{
                                     </div>
                                     <div>
                                         <div class="font-medium text-base text-gray-800">
-                                            {{ $page.props.auth.user.name }}
+                                            {{ page.props.auth.user.name }}
                                         </div>
-                                        <div class="font-medium text-sm text-gray-500">{{ $page.props.auth.user.email }}</div>
+                                        <div class="font-medium text-sm text-gray-500">{{ page.props.auth.user.email }}</div>
                                     </div>
                                 </div>
                                  <!-- Profile  -->

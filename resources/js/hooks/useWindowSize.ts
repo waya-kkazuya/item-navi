@@ -1,5 +1,3 @@
-// src/hooks/useWindowSize.js
-
 import { ref, onMounted, onUnmounted } from 'vue';
 
 export function useWindowSize() {

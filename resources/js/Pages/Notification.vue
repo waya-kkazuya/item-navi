@@ -1,24 +1,29 @@
-<script setup>
+<script setup lang="ts">
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head } from '@inertiajs/vue3';
 import { ref, onMounted, watch } from 'vue';
 import LowStockNotificationsTab from '@/Components/LowStockNotificationsTab.vue';
 import InspectionAndDisposalNotificationsTab from '@/Components/InspectionAndDisposalNotificationsTab.vue';
 import RequestedItemNotificationsTab from '@/Components/RequestedItemNotificationsTab.vue';
+import type { Ref } from 'vue';
+import type { NotificationType } from '@/@types/model';
 
-const props = defineProps({
-  notifications: Object,
-  lowStockNotifications: Object,
-  inspectionAndDisposalNotifications: Object,
-  requestedItemNotifications: Object,
-  unreadLowStockNotifications: Number,
-  unreadInspectionAndDisposalNotifications: Number,
-  unreadRequestedItemNotifications: Number
-});
 
-const activeTab = ref(sessionStorage.getItem('activeTab') ?? 'consumableItems');
+type Props = {
+  notifications: NotificationType[];
+  lowStockNotifications: NotificationType[];
+  inspectionAndDisposalNotifications: NotificationType[];
+  requestedItemNotifications: NotificationType[];
+  unreadLowStockNotifications: number;
+  unreadInspectionAndDisposalNotifications: number;
+  unreadRequestedItemNotifications: number;
+}
 
-watch(activeTab, (newValue) => {
+const props = defineProps<Props>();
+
+const activeTab: Ref<string> = ref(sessionStorage.getItem('activeTab') ?? 'consumableItems');
+
+watch(activeTab, (newValue: string) => {
   sessionStorage.setItem('activeTab', newValue);
 });
 

@@ -1,25 +1,30 @@
-<script setup>
+<script setup lang="ts">
+import axios from 'axios';
 import { useForm } from '@inertiajs/vue3';
-import { ref } from 'vue'
+import { ref } from 'vue';
+import type { Ref } from 'vue';
+import type { ItemType } from '@/@types/model';
+import type { ValidationErrors } from '@/@types/types';
 
+const isShow: Ref<boolean> = ref(false);
+const toggleStatus = (): void => { isShow.value = !isShow.value};
 
-const isShow = ref(false);
-const toggleStatus = () => { isShow.value = !isShow.value};
+type Props = {
+  item: ItemType;
+  userName: string;
+  errors: ValidationErrors;
+}
 
-const props = defineProps({
-  item: Object,
-  userName: String,
-  errors: Object
-});
+const props = defineProps<Props>();
 
 const form = useForm({
-    disposal_date: new Date().toISOString().substr(0, 10),
-    disposal_person: props.userName,
-    details: null,
+    disposal_date: new Date().toISOString().substr(0, 10) as string,
+    disposal_person: props.userName as string,
+    details: null as string | null,
 });
 
 // disposalsテーブルに保存する関数
-const saveDisposal = item => {
+const saveDisposal = (item: ItemType): void => {
   try {
     if (confirm('本当に削除しますか？')) {
       form.put(`/dispose_item/${item.id}`, {
@@ -28,7 +33,7 @@ const saveDisposal = item => {
         },
       });
     }
-  } catch (e) {
+  } catch (e: any) {
     axios.post('/api/log-error', {
       error: e.toString(),
       component: 'DisposalModal.vue saveDisposal method',

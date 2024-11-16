@@ -1,63 +1,71 @@
-<script setup>
+<script setup lang="ts">
+import axios from 'axios';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import { Head, router, useForm, usePage } from '@inertiajs/vue3';
-import { onMounted, watch, reactive, ref } from 'vue';
+import { Head, useForm } from '@inertiajs/vue3';
+import { ref } from 'vue';
 import FlashMessage from '@/Components/FlashMessage.vue';
+import type { Ref } from 'vue';
+import type { CategoryType, LocationType, UnitType, UsageStatusType, AcquisitionMethodType } from '@/@types/model';
+import type { ValidationErrors } from '@/@types/types';
 
-const props = defineProps({
-    categories: Array,
-    locations: Array,
-    units: Array,
-    usageStatuses: Array,
-    acquisitionMethods: Array,
-    name: String,
-    category_id: Number,
-    location_of_use_id: Number,
-    manufacturer: String,
-    price: Number,
-    errors: Object
-});
+
+type Props = {
+    categories: CategoryType[];
+    locations: LocationType[];
+    units: UnitType[];
+    usageStatuses: UsageStatusType[];
+    acquisitionMethods: AcquisitionMethodType[];
+    name: String; //リクエスト画面から新規登録画面を開く場合に使用
+    category_id: Number;
+    location_of_use_id: Number;
+    manufacturer: String;
+    price: Number;
+    errors: ValidationErrors;
+};
+
+const props = defineProps<Props>();
 
 const form = useForm({
-    id: null,
-    image_file: null,
-    name: props.name ?? null,
-    category_id: props.category_id ?? 0, 
-    stock: 1, // 初期値=1
-    unit_id: 1,
-    minimum_stock: 0,
-    notification: true,
-    usage_status_id: 0,
-    end_user: null,
-    location_of_use_id: props.location_of_use_id ?? 0,
-    storage_location_id: 0,
-    acquisition_method_id: 0,
-    acquisition_source: null,
-    price: props.price ?? 0,
-    date_of_acquisition: new Date().toISOString().substr(0, 10),
-    manufacturer: props.manufacturer ?? null,
-    product_number: null,
-    inspection_scheduled_date: null, // 初期値null
-    disposal_scheduled_date: null, // 初期値null
-    remarks: null,
+    image_file: null as File | null,
+    name: props.name ?? null as string | null,
+    category_id: props.category_id ?? 0 as number | null, 
+    stock: 1 as number, // 初期値=1
+    unit_id: 1 as number,
+    minimum_stock: 0 as number,
+    notification: true as boolean,
+    usage_status_id: 0 as number,
+    end_user: null as string | null,
+    location_of_use_id: props.location_of_use_id ?? 0 as number,
+    storage_location_id: 0 as number,
+    acquisition_method_id: 0 as number,
+    acquisition_source: null as string | null,
+    price: props.price ?? 0 as number,
+    date_of_acquisition: new Date().toISOString().substr(0, 10) as string, //初期値は当日の日付
+    manufacturer: props.manufacturer ?? null as string | null,
+    product_number: null as string | null,
+    inspection_scheduled_date: null as Date | null, // 初期値null
+    disposal_scheduled_date: null as Date | null, // 初期値null
+    remarks: null as string | null,
 });
 
 
-const file_preview_src = ref('');
+const file_preview_src: Ref<string> = ref('');
+const handleFileUpload = (event: Event) => {
+    const target = event.target as HTMLInputElement;
 
-const handleFileUpload = (event) => {
-    form.image_file = event.target.files[0];
-    if (form.image_file) {
+    // nullチェックを厳密に行う
+    if (target && target.files && target.files[0]) {
+        form.image_file = target.files[0];
         file_preview_src.value = URL.createObjectURL(form.image_file);
     }
 };
 
 // router.visitではuseFormの入力値保持機能は使えない
 // form.postなら入力値保持機能(old関数))が使える
-const storeItem = () => {
+const storeItem = (): void => {
     try {
         form.post('/items');
-    } catch (e) {
+    } catch (e: any) {
         axios.post('/api/log-error', {
             error: e.toString(),
             component: 'Items/Create.vue storeItem method',
@@ -67,14 +75,11 @@ const storeItem = () => {
 
 
 // 「×」ボタンで日付リセット
-const clearDateOfAcquisition = () => {
-    form.date_of_acquisition = '';
-};
 const clearInspectionSchedule = () => {
-    form.inspection_schedule_date = '';
+    form.inspection_scheduled_date = null;
 };
 const clearDisposalSchedule = () => {
-    form.disposal_scheduled_date = '';
+    form.disposal_scheduled_date = null;
 };
 </script>
 
@@ -267,7 +272,6 @@ const clearDisposalSchedule = () => {
                                                             </label>
                                                             <div class="relative">
                                                                 <input type="date" id="date_of_acquisition" name="date_of_acquisition" v-model="form.date_of_acquisition" class="md:mt-1 w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-xs md:text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
-                                                                <button type="button" @click="clearDateOfAcquisition" class="absolute right-12 top-1/2 transform -translate-y-1/2 text-gray-500" text-lg>×</button>
                                                             </div>
                                                             <div v-if="errors.date_of_acquisition" class="font-medium text-red-600 text-xs md:text-base">{{ errors.date_of_acquisition }}</div>
                                                         </div>
@@ -305,15 +309,15 @@ const clearDisposalSchedule = () => {
 
                                                     <div class="p-4 border mb-8">
                                                         <div class="p-2 w-full">
-                                                            <label for="inspection_schedule_date" class="leading-7 text-xs md:text-base text-blue-900">
+                                                            <label for="inspection_scheduled_date" class="leading-7 text-xs md:text-base text-blue-900">
                                                                 点検予定日
                                                                 <span class="ml-1 mr-2 bg-gray-400 text-white text-xs md:text-base lg:text-xs py-1 px-2 rounded-md">任意</span>
                                                             </label>
                                                             <div class="relative">
-                                                                <input type="date" id="inspection_schedule_date" name="inspection_schedule_date" v-model="form.inspection_schedule_date" class="md:mt-1 w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-xs md:text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
+                                                                <input type="date" id="inspection_scheduled_date" name="inspection_scheduled_date" v-model="form.inspection_scheduled_date" class="md:mt-1 w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-xs md:text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
                                                                 <button type="button" @click="clearInspectionSchedule" class="absolute right-12 top-1/2 transform -translate-y-1/2 text-gray-500">×</button>
                                                             </div>
-                                                            <div v-if="errors.inspection_schedule_date" class="font-medium text-red-600 text-xs md:text-base">{{ errors.inspection_schedule_date }}</div>
+                                                            <div v-if="errors.inspection_scheduled_date" class="font-medium text-red-600 text-xs md:text-base">{{ errors.inspection_scheduled_date }}</div>
                                                         </div>
 
                                                         <div class="p-2 w-full">
