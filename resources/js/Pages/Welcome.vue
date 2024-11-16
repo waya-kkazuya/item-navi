@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import { Head, Link } from '@inertiajs/vue3';
 import { onMounted } from 'vue';
 
@@ -22,7 +22,6 @@ defineProps({
 onMounted(() => {
   console.log(Ziggy.namedRoutes);
 });
-
 </script>
 
 <template>

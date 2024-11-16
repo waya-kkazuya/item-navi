@@ -1,10 +1,10 @@
-<script setup>
+<script setup lang="ts">
+import axios from 'axios';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head } from '@inertiajs/vue3';
 import { reactive, onMounted, ref } from 'vue';
-import { getToday } from '@/common';
-import axios from 'axios';
 import Chart from '@/Components/Chart.vue'
+import { getToday } from '@/common';
 
 const props = defineProps({
     data: Object,
