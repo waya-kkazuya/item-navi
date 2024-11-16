@@ -128,7 +128,7 @@ const clearDisposalSchedule = () => {
                                                                     </template>
                                                                 </div>     
                                                             </label>
-                                                            <div v-if="errors.image_file" class="font-medium text-red-600 text-xs md:text-base text-xs md:text-base">{{ errors.image_file }}</div>
+                                                            <div v-if="errors.image_file" class="font-medium text-red-600 text-xs md:text-base">{{ errors.image_file }}</div>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -316,7 +316,11 @@ const clearDisposalSchedule = () => {
                                                             </label>
                                                             <div class="relative">
                                                                 <input type="date" id="inspection_scheduled_date" name="inspection_scheduled_date" v-model="form.inspection_scheduled_date" class="md:mt-1 w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-xs md:text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
-                                                                <button type="button" @click="clearInspectionSchedule" class="absolute right-12 top-1/2 transform -translate-y-1/2 text-gray-500">×</button>
+                                                                <button type="button" @click="clearInspectionSchedule" class="absolute right-12 inset-y-0 flex items-center text-gray-500">
+                                                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="size-5">
+                                                                        <path d="M6.28 5.22a.75.75 0 0 0-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 1 0 1.06 1.06L10 11.06l3.72 3.72a.75.75 0 1 0 1.06-1.06L11.06 10l3.72-3.72a.75.75 0 0 0-1.06-1.06L10 8.94 6.28 5.22Z" />
+                                                                    </svg>
+                                                                </button>
                                                             </div>
                                                             <div v-if="errors.inspection_scheduled_date" class="font-medium text-red-600 text-xs md:text-base">{{ errors.inspection_scheduled_date }}</div>
                                                         </div>
@@ -328,7 +332,11 @@ const clearDisposalSchedule = () => {
                                                             </label>
                                                             <div class="relative">
                                                                 <input type="date" id="disposal_scheduled_date" name="disposal_scheduled_date" v-model="form.disposal_scheduled_date" class="md:mt-1 w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-xs md:text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
-                                                                <button type="button" @click="clearDisposalSchedule" class="absolute right-12 top-1/2 transform -translate-y-1/2 text-gray-500">×</button>
+                                                                <button type="button" @click="clearDisposalSchedule" class="absolute right-12 inset-y-0 flex items-center text-gray-500">
+                                                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="size-5">
+                                                                        <path d="M6.28 5.22a.75.75 0 0 0-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 1 0 1.06 1.06L10 11.06l3.72 3.72a.75.75 0 1 0 1.06-1.06L11.06 10l3.72-3.72a.75.75 0 0 0-1.06-1.06L10 8.94 6.28 5.22Z" />
+                                                                    </svg>
+                                                                </button>
                                                             </div>
                                                             <div v-if="errors.disposal_scheduled_date" class="font-medium text-red-600 text-xs md:text-base">{{ errors.disposal_scheduled_date }}</div>
                                                         </div>
