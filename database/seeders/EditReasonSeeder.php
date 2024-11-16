@@ -15,19 +15,13 @@ class EditReasonSeeder extends Seeder
     {
         DB::table('edit_reasons')->insert([
             [
-                'reason' => '入力の修正'
+                'reason' => '入力内容に変更があったため'
             ],
             [
-                'reason' => '在庫数の修正'
+                'reason' => '入力内容にミスがあったため'
             ],
             [
-                'reason' => '画像の変更'
-            ],
-            [
-                'reason' => '日付の変更'
-            ],
-            [
-                'reason' => 'その他'
+                'reason' => 'その他（理由詳細に記載）'
             ],
         ]);
     }
