@@ -1,51 +1,46 @@
-<script setup>
+<script setup lang="ts">
 import { ref } from 'vue';
+import type { Ref } from 'vue';
 
-const isTooltipVisible = ref(false);
+const props = defineProps({
+  text: {
+    type: String,
+    required: true
+  }
+});
 
-const toggleTooltip = () => {
-  isTooltipVisible.value = !isTooltipVisible.value;
-};
-
-const hideTooltip = () => {
-  isTooltipVisible.value = false;
-};
-
+const show: Ref<boolean> = ref(false);
 </script>
 
 <template>
-  <div class="tooltip" @click="toggleTooltip" @mouseleave="hideTooltip">
-    Hover or Tab over me
-    <span class="tooltiptext" :class="{ visible: isTooltipVisible }">Tooltip text</span>
+  <div class="tooltip-container" @mouseover="show = true" @mouseleave="show = false">
+    <slot></slot>
+    <div v-if="show" class="tooltip-content">
+      {{ text }}
+    </div>
   </div>
 </template>
 
 <style scoped>
-.tooltip {
+.tooltip-container {
   position: relative;
   display: inline-block;
-  cursor: pointer;
 }
 
-.tooltip .tooltiptext {
-  visibility: hidden;
-  width: 120px;
+.tooltip-content {
+  position: absolute;
+  bottom: 125%; /* ツールチップの位置を調整 */
+  left: 50%;
+  transform: translateX(-50%);
   background-color: black;
   color: #fff;
-  text-align: center;
-  border-radius: 6px;
-  padding: 5px 0;
-  position: absolute;
+  padding: 5px;
+  border-radius: 5px;
+  white-space: nowrap;
   z-index: 1;
-  bottom: 125%; /* ツールチップの位置 */
-  left: 50%;
-  margin-left: -60px;
-  opacity: 0;
-  transition: opacity 0.3s;
 }
 
-.tooltip:hover .tooltiptext {
+.tooltip-container:hover .tooltip-content {
   visibility: visible;
-  opacity: 1;
 }
 </style>
