@@ -2,6 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 use App\Models\Item;
 use App\Models\Category;
 use App\Models\Unit;
@@ -10,32 +17,15 @@ use App\Models\Inspection;
 use App\Models\Disposal;
 use App\Models\UsageStatus;
 use App\Models\AcquisitionMethod;
-use App\Models\Edithistory;
 use App\Models\EditReason;
+use App\Models\StockTransaction;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreItemRequest;
 use App\Http\Requests\UpdateItemRequest;
-use App\Http\Requests\CombinedRequest;
-use App\Models\StockTransaction;
-use Illuminate\Http\Request;    
-use Inertia\Inertia;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\Gate;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Session;
-use SimpleSoftwareIO\QrCode\Facades\QrCode;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Validator;
-use Intervention\Image\ImageManager;
-// use Intervention\Image\Drivers\Gd\Driver;
-use Intervention\Image\Drivers\Imagick\Driver;
-use Intervention\Image\Encoders\JpegEncoder;
-use Carbon\Carbon;
 use App\Services\ManagementIdService;
 use App\Services\ImageService;
 use App\Services\QrCodeService;
-use Intervention\Image\Typography\FontFactory;
-use Illuminate\Support\Facades\Auth;
+use Inertia\Inertia;
 
 class ItemController extends Controller
 {
