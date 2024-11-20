@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import axios from 'axios';
-import { ref, watch } from 'vue';
+import { reactive, ref, watch } from 'vue';
+import Chart from '@/Components/Chart.vue';
 import type { Ref } from 'vue';
 import type { ItemType, StockTransactionType } from '@/@types/model';
 
@@ -14,11 +15,16 @@ const props = defineProps<Props>();
 const item: Ref<ItemType> = ref(props.item);
 
 const stockTransactions: Ref<StockTransactionType[]> = ref([]);
+
+const graphData = reactive({});
+
 // 入出庫履歴情報を取得
 const fetchStockTransactions = async (item: ItemType): Promise<void> => {
   try {
     const res = await axios.get(`/api/stock_transactions?item_id=${item.id}`);
     stockTransactions.value = res.data.stockTransactions;
+    graphData.labels = res.data.labels;
+    graphData.stocks = res.data.stocks;
   } catch (e: any) {
     axios.post('/api/log-error', {
       error: e.toString(),
@@ -52,6 +58,9 @@ const closeModal = (): void => {
         </header>
         <main class="modal__content" id="modal-1-content">
           <div class="min-w-full overflow-auto">
+            <div v-show="graphData.labels.length > 0">
+              <Chart :graphData="graphData" />
+            </div>
             <table v-if="stockTransactions.length > 0" class="table-fixed min-w-full text-left whitespace-no-wrap">
               <thead>
                 <tr>
@@ -65,7 +74,7 @@ const closeModal = (): void => {
               </thead>
               <tbody>
                 <tr v-for="stockTransaction in stockTransactions" :key="stockTransaction.id">
-                  <td class="border-b-2 border-gray-200 px-4 py-3 text-xs md:text-sm lg:text-base text-center">{{ stockTransaction.transaction_date }}</td>
+                  <td class="border-b-2 border-gray-200 px-4 py-3 text-xs md:text-sm lg:text-base text-center">{{ stockTransaction.formatted_created_at }}</td>
                   <td class="border-b-2 border-gray-200 px-4 py-3 text-xs md:text-sm lg:text-base text-center">{{ stockTransaction.transaction_type }}</td>
                   <td class="border-b-2 border-gray-200 px-4 py-3 text-xs md:text-sm lg:text-base text-center">{{ stockTransaction.transaction_type === '入庫' ? stockTransaction.quantity : ''}}</td>
                   <td class="border-b-2 border-gray-200 px-4 py-3 text-xs md:text-sm lg:text-base text-center">{{ stockTransaction.transaction_type === '出庫' ? stockTransaction.quantity : '' }}</td>

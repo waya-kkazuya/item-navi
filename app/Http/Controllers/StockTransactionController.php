@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Item;
 use App\Models\StockTransaction ;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
 
 class StockTransactionController extends Controller
@@ -37,12 +38,20 @@ class StockTransactionController extends Controller
             } elseif ($transaction->transaction_type === '入庫') {
                 $current_stock -= $transaction->quantity;
             }
+
+            $transaction->formatted_created_at = Carbon::parse($transaction->created_at)->format('Y-m-d H:i');
         });
+
+        // グラフ用のデータを準備、時系列を左から右にするため配列を逆順にする
+        $labels = array_reverse($stock_transactions->pluck('formatted_created_at')->toArray());
+        $stocks = array_reverse($stock_transactions->pluck('current_stock')->toArray());
 
         Log::info('StockTransactionController API stockTransaction method succeeded');
 
         return [
-            'stockTransactions' => $stock_transactions
+            'stockTransactions' => $stock_transactions,
+            'labels' => $labels,
+            'stocks' => $stocks
         ];
     }
 }
