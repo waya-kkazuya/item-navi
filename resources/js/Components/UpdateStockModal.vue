@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import axios from 'axios';
 import { useForm } from '@inertiajs/vue3';
-import { computed, ref, watch } from 'vue';
+import { computed, ref, watch, onMounted } from 'vue';
 import type { Ref, ComputedRef } from 'vue';
 import type { ItemType } from '@/@types/model';
 import type { ValidationErrors } from '@/@types/types';
@@ -48,7 +48,6 @@ const stockAfterDecrease: ComputedRef<number> = computed(() => props.item.stock 
 const stockAfterIncrease: ComputedRef<number> = computed(() => props.item.stock + increaseForm.quantity);
 
 const decreaseForm = useForm({
-  transaction_date: new Date().toISOString().substr(0, 10) as string,
   operator_name: props.userName as string,
   quantity: 1 as number,
   transaction_type: '出庫' as string,　// enum型で入庫か出庫のみ
@@ -73,7 +72,6 @@ const decreaseStock = (item: ItemType): void => {
 };
 
 const increaseForm = useForm({
-    transaction_date: new Date().toISOString().substr(0, 10) as string,
     operator_name: props.userName as string,
     quantity: 1 as number,
     transaction_type: '入庫' as string,　// enum型で入庫か出庫のみ
@@ -96,6 +94,24 @@ const increaseStock = (item: ItemType): void => {
     });
   }
 };
+
+const getCurrentFormattedDate = (): string => {
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = String(now.getMonth() + 1).padStart(2, '0');
+  const day = String(now.getDate()).padStart(2, '0');
+  const hours = String(now.getHours()).padStart(2, '0');
+  const minutes = String(now.getMinutes()).padStart(2, '0');
+  return `${year}/${month}/${day} ${hours}時${minutes}分`;
+}
+
+const formattedDate: Ref<string> = ref(getCurrentFormattedDate());
+
+onMounted(() => {
+    setInterval(() => {
+      formattedDate.value = getCurrentFormattedDate(); 
+    }, 60000); // 毎分更新
+ });
 </script>
 
 <template>
@@ -134,12 +150,13 @@ const increaseStock = (item: ItemType): void => {
                 </div>
                 <div class="p-2 w-full">
                     <label for="transaction_date" class="leading-7 text-xs md:text-base text-blue-900">
-                      出庫日
+                      出庫日時
                     </label>
                     <div class="relative">
-                        <input type="date" id="transaction_date" name="transaction_date" v-model="decreaseForm.transaction_date" class="w-full md:w-full lg:w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-xs md:text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
+                        <div id="transaction_date" name="transaction_date" class="w-full md:w-full lg:w-full bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-xs md:text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
+                          {{ formattedDate }}
+                        </div>
                     </div>
-                    <div v-if="localErrors.transaction_date" class="font-medium text-xs md:text-base text-red-600">{{ localErrors.transaction_date }}</div>
                 </div>
                 <div class="p-2 w-full">
                   <label for="operator_name" class="leading-7 text-xs md:text-base text-blue-900">実施者</label>
@@ -222,12 +239,13 @@ const increaseStock = (item: ItemType): void => {
                 </div>
                 <div class="p-2 w-full">
                   <label for="transaction_date" class="leading-7 text-xs md:text-base text-blue-900">
-                    入庫日
+                    入庫日時
                   </label>
                   <div class="relative">
-                      <input type="date" id="transaction_date" name="transaction_date" v-model="increaseForm.transaction_date" class="w-full md:w-full lg:w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-xs md:text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
+                      <div id="transaction_date" name="transaction_date" class="w-full md:w-full lg:w-full bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-xs md:text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
+                        {{ formattedDate }}
+                      </div>
                   </div>
-                  <div v-if="localErrors.transaction_date" class="font-medium text-xs md:text-base text-red-600">{{ localErrors.transaction_date }}</div>
                 </div>
                 <div class="p-2 w-full">
                   <label for="operator_name" class="leading-7 text-xs md:text-base text-blue-900">

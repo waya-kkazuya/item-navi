@@ -44,10 +44,9 @@ class UpdateStockController extends Controller
             $stockTransaction->transaction_type = $request->transaction_type;
             $stockTransaction->quantity = $request->quantity;
             $stockTransaction->operator_name = $request->operator_name;
-            $stockTransaction->transaction_date = $request->transaction_date;
             $stockTransaction->save();
 
-            // itemsテーブルのstockカラムの値を更新
+            // itemsテーブルのstockカラムの値を更新=>ItemObserverが反応
             $item->stock -= $request->quantity;
             $item->save();
 
@@ -121,7 +120,6 @@ class UpdateStockController extends Controller
             $stockTransaction->transaction_type = $request->transaction_type;
             $stockTransaction->quantity = $request->quantity;
             $stockTransaction->operator_name = $request->operator_name;
-            $stockTransaction->transaction_date = $request->transaction_date;
             $stockTransaction->save();
 
             // itemsテーブルのstockカラムの値を更新
