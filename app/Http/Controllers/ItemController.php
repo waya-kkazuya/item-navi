@@ -16,6 +16,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreItemRequest;
 use App\Http\Requests\UpdateItemRequest;
 use App\Http\Requests\CombinedRequest;
+use App\Models\StockTransaction;
 use Illuminate\Http\Request;    
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Storage;
@@ -236,7 +237,6 @@ class ItemController extends Controller
             $management_id = $this->managementIdService->generate($request->category_id);
 
             $item = Item::create([
-                'id' => $request->id,
                 'management_id' => $management_id,
                 'name' => $request->name,
                 'category_id' => $request->category_id ,
@@ -257,6 +257,15 @@ class ItemController extends Controller
                 'remarks' => $request->remarks ?: null,
                 'qrcode' => null,
             ]);
+
+            if($request->category_id == self::CATEGORY_ID_FOR_CONSUMABLE_ITME){
+                StockTransaction::create([
+                    'item_id' => $item->id,
+                    'transaction_type' => '登録',
+                    'quantity' => $item->stock,
+                    'operator_name' => Auth::user()->name,
+                ]);
+            }
 
             if ($request->inspection_scheduled_date !== null) {
                 Inspection::create([
