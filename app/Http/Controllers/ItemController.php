@@ -448,7 +448,19 @@ class ItemController extends Controller
 
         DB::beginTransaction();
         
-        try {            
+        try {
+            if(
+                $request->category_id == self::CATEGORY_ID_FOR_CONSUMABLE_ITME &&
+                $item->stock != $request->stock
+            ){
+                StockTransaction::create([
+                    'item_id' => $item->id,
+                    'transaction_type' => '修正',
+                    'quantity' => $request->stock - $item->stock, //差分を保存
+                    'operator_name' => Auth::user()->name,
+                ]);
+            }
+
             $item->name = $request->name;
             $item->category_id = $request->category_id;
             $item->stock = $request->stock;
