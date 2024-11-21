@@ -4,6 +4,7 @@ import { reactive, ref, watch } from 'vue';
 import Chart from '@/Components/Chart.vue';
 import type { Ref } from 'vue';
 import type { ItemType, StockTransactionType } from '@/@types/model';
+import type { GraphData } from '@/@types/graph-data';
 
 // 親コンポーネントから受け取る
 type Props = {
@@ -16,7 +17,7 @@ const item: Ref<ItemType> = ref(props.item);
 
 const stockTransactions: Ref<StockTransactionType[]> = ref([]);
 
-const graphData = reactive({});
+const graphData = reactive({} as GraphData);
 
 // 入出庫履歴情報を取得
 const fetchStockTransactions = async (item: ItemType): Promise<void> => {

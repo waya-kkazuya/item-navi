@@ -305,7 +305,7 @@ const fetchConsumableItems = async (): Promise<void> => {
                                   </div>
                                 </div>
                               </template>
-                              <StockHistoryModal v-show="isStockHistoryModalOpen" :item="selectedStockHistoryItem" @close="closeStockHistoryModal" />
+                              <StockHistoryModal v-if="selectedStockHistoryItem" v-show="isStockHistoryModalOpen" :item="selectedStockHistoryItem" @close="closeStockHistoryModal" />
                               <UpdateStockModal v-if="selectedUpdateStockItem" v-show="isUpdateStockModalOpen" :item="selectedUpdateStockItem" :userName="userName" :errors="errors" @close="closeUpdateStockModal" />
                             </div>
                             <div v-else>

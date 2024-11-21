@@ -2,26 +2,31 @@
 import { Chart, registerables } from "chart.js";
 import { LineChart } from "vue-chart-3";
 import { reactive, computed } from "vue";
+import type { ComputedRef } from "vue";
+import type { ChartData, ChartOptions } from "chart.js";
+import type { GraphData } from "@/@types/graph-data";
 
 
-const props = defineProps({
-  graphData: Object
-});
+Chart.register(...registerables);
 
-const labels = computed(() => props.graphData.labels);
-const stocks = computed(() => props.graphData.stocks);
-const transaction_types = computed(() => props.graphData.transaction_types);
+type Props = {
+  graphData: GraphData;
+};
 
-const pointColors = computed(() => { 
+const props = defineProps<Props>();
+
+const labels: ComputedRef<string[]> = computed(() => props.graphData.labels);
+const stocks: ComputedRef<number[]> = computed(() => props.graphData.stocks);
+const transaction_types: ComputedRef<string[]> = computed(() => props.graphData.transaction_types);
+
+const pointColors: ComputedRef<string[]> = computed(() => { 
   return transaction_types.value.map((type) => {
     return type === '修正' ? 'rgba(255, 206, 86, 1)' : 'rgba(54, 162, 235, 1)'; 
   }); 
 });
 
-Chart.register(...registerables);
-
-const lineData = reactive({
-labels: labels,
+const lineData: ChartData<'line'> = reactive({
+  labels: labels,
   datasets: [
     {
       label: '在庫数',
@@ -34,7 +39,7 @@ labels: labels,
   ]
 });
 
-const options = reactive({
+const options: ChartOptions<'line'> = reactive({
   maintainAspectRatio: false, //指定した高さに収まるようにする
   scales: { 
     y: {
