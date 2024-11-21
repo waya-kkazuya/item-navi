@@ -35,6 +35,7 @@ labels: labels,
 });
 
 const options = reactive({
+  maintainAspectRatio: false, //指定した高さに収まるようにする
   scales: { 
     y: {
       min: 0 // 縦軸の最小値を0に固定
