@@ -33,11 +33,7 @@ class StockTransactionController extends Controller
             $transaction->current_stock = $current_stock;
         
             // 次のレコードの在庫数を計算、次に持ち越し
-            if ($transaction->transaction_type === '出庫') {
-                $current_stock += $transaction->quantity;
-            } elseif ($transaction->transaction_type === '入庫') {
-                $current_stock -= $transaction->quantity;
-            }
+            $current_stock -= $transaction->quantity; //過去に遡るからマイナス
 
             $transaction->formatted_created_at = Carbon::parse($transaction->created_at)->format('Y-m-d H:i');
         });

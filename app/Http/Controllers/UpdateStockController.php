@@ -42,7 +42,7 @@ class UpdateStockController extends Controller
             $stockTransaction = new StockTransaction();
             $stockTransaction->item_id = $item->id;
             $stockTransaction->transaction_type = $request->transaction_type;
-            $stockTransaction->quantity = $request->quantity;
+            $stockTransaction->quantity = -$request->quantity; //出庫なので数量をマイナスにして保存
             $stockTransaction->operator_name = $request->operator_name;
             $stockTransaction->save();
 
