@@ -30,7 +30,7 @@ const fetchStockTransactions = async (item: ItemType): Promise<void> => {
   } catch (e: any) {
     axios.post('/api/log-error', {
       error: e.toString(),
-      component: 'StockHistoryModal.vue fetchStockTransactions method',
+      component: 'StockTransactionModal.vue fetchStockTransactions method',
     });
   }
 };
@@ -44,7 +44,7 @@ watch(() => props.item, (newItem: ItemType) => {
 
 const emit = defineEmits<{(e: 'close') : void}>();
 const closeModal = (): void => {
-  emit('close') // StockHistoryModalを閉じるイベント打ち上げ
+  emit('close') // StockTransactionModalを閉じるイベント打ち上げ
 };
 </script>
 
