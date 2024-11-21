@@ -2,6 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 use App\Models\Item;
 use App\Models\Category;
 use App\Models\Unit;
@@ -10,31 +17,15 @@ use App\Models\Inspection;
 use App\Models\Disposal;
 use App\Models\UsageStatus;
 use App\Models\AcquisitionMethod;
-use App\Models\Edithistory;
 use App\Models\EditReason;
+use App\Models\StockTransaction;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreItemRequest;
 use App\Http\Requests\UpdateItemRequest;
-use App\Http\Requests\CombinedRequest;
-use Illuminate\Http\Request;    
-use Inertia\Inertia;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\Gate;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Session;
-use SimpleSoftwareIO\QrCode\Facades\QrCode;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Validator;
-use Intervention\Image\ImageManager;
-// use Intervention\Image\Drivers\Gd\Driver;
-use Intervention\Image\Drivers\Imagick\Driver;
-use Intervention\Image\Encoders\JpegEncoder;
-use Carbon\Carbon;
 use App\Services\ManagementIdService;
 use App\Services\ImageService;
 use App\Services\QrCodeService;
-use Intervention\Image\Typography\FontFactory;
-use Illuminate\Support\Facades\Auth;
+use Inertia\Inertia;
 
 class ItemController extends Controller
 {
@@ -236,7 +227,6 @@ class ItemController extends Controller
             $management_id = $this->managementIdService->generate($request->category_id);
 
             $item = Item::create([
-                'id' => $request->id,
                 'management_id' => $management_id,
                 'name' => $request->name,
                 'category_id' => $request->category_id ,
@@ -257,6 +247,15 @@ class ItemController extends Controller
                 'remarks' => $request->remarks ?: null,
                 'qrcode' => null,
             ]);
+
+            if($request->category_id == self::CATEGORY_ID_FOR_CONSUMABLE_ITME){
+                StockTransaction::create([
+                    'item_id' => $item->id,
+                    'transaction_type' => '登録',
+                    'quantity' => $item->stock,
+                    'operator_name' => Auth::user()->name,
+                ]);
+            }
 
             if ($request->inspection_scheduled_date !== null) {
                 Inspection::create([
@@ -439,7 +438,19 @@ class ItemController extends Controller
 
         DB::beginTransaction();
         
-        try {            
+        try {
+            if(
+                $request->category_id == self::CATEGORY_ID_FOR_CONSUMABLE_ITME &&
+                $item->stock != $request->stock
+            ){
+                StockTransaction::create([
+                    'item_id' => $item->id,
+                    'transaction_type' => '修正',
+                    'quantity' => $request->stock - $item->stock, //差分を保存
+                    'operator_name' => Auth::user()->name,
+                ]);
+            }
+
             $item->name = $request->name;
             $item->category_id = $request->category_id;
             $item->stock = $request->stock;

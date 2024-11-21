@@ -287,7 +287,6 @@ return [
         'details' => '詳細情報',
         'inspection_date' => '点検実施日',
         'inspection_person' => '点検実施者',
-        'transaction_date' => '入出庫日',
         'operator_name' => '実施者',
         'quantity' => '数量',
         'edit_reason_id' => '編集理由',

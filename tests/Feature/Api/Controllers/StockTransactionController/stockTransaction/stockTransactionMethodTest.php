@@ -72,13 +72,15 @@ class stockTransactionMethodTest extends TestCase
                 ->has('stockTransactions', fn ($json) => 
                     $json->each(fn ($json) => 
                         $json->where('item_id', $item->id)
-                            ->where('transaction_type', fn($type) => in_array($type, ['入庫', '出庫']))
+                            ->where('transaction_type', fn($type) => in_array($type, ['入庫', '出庫', '登録', '修正']))
                             ->where('quantity', fn($quantity) => is_int($quantity))
                             ->where('operator_name', fn($name) => is_string($name))
-                            ->where('transaction_date', fn($date) => strtotime($date) !== false)
                             ->etc()
                 )
             )
+            ->has('labels', 10)
+            ->has('stocks', 10)
+            ->has('transaction_types', 10)
         );
     }
 

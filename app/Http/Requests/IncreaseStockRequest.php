@@ -23,7 +23,6 @@ class IncreaseStockRequest extends FormRequest
     {
         return [
             'transaction_type' => ['required', 'in:入庫'],
-            'transaction_date' => ['required', 'date'], // 1ヵ月前まで
             'operator_name' => ['required', 'max:10'] ,
             'quantity' => ['required', 'integer',  'min:1', 'max:100'],
         ];

@@ -27,7 +27,6 @@ class DecreaseStockRequest extends FormRequest
 
         return [
             'transaction_type' => ['required', 'in:出庫'],
-            'transaction_date' => ['required', 'date'],
             'operator_name' => ['required', 'max:10'] ,
             'quantity' => ['required', 'integer',  'min:1', new StockLimit($item)], // 出庫数の上限は在庫数まで　
         ];

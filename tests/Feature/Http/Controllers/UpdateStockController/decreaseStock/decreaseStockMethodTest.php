@@ -72,7 +72,6 @@ class decreaseStockMethodTest extends TestCase
         $validData = [
             'item_id' => $item->id,
             'transaction_type' => '出庫',
-            'transaction_date' => '2024-9-3',
             'operator_name' => $user->name,
             'quantity' => 3,
         ];
@@ -89,9 +88,8 @@ class decreaseStockMethodTest extends TestCase
         $this->assertDatabaseHas('stock_transactions', [
             'item_id' => $item->id,
             'transaction_type' => '出庫',
-            'transaction_date' => '2024-9-3',
             'operator_name' => $user->name,
-            'quantity' => 3,
+            'quantity' => -3, //出庫はマイナスの数値で保存する
         ]);
     }
 }

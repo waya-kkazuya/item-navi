@@ -155,7 +155,7 @@ export type StockTransactionType = {
     transaction_type: string;
     quantity: number;
     operator_name: string;
-    transaction_date: string;
     created_at: string;
     current_stock: number;
+    formatted_created_at: string;
 };

@@ -5,7 +5,7 @@ import { Head, Link, router } from '@inertiajs/vue3';
 import FlashMessage from '@/Components/FlashMessage.vue';
 import Pagination from '@/Components/Pagination.vue';
 import { ref, onMounted, watch } from 'vue';
-import StockHistoryModal from '@/Components/StockHistoryModal.vue';
+import StockTransactionModal from '@/Components/StockTransactionModal.vue';
 import UpdateStockModal from '@/Components/UpdateStockModal.vue';
 import QrCodeReader from '@/Components/QrCodeReader.vue';
 import { isMobile } from '@/utils/device';
@@ -55,20 +55,20 @@ onMounted(() => {
 
 watch(() => props.linkedItem, (newVal: ItemType) => {
   if (newVal) {
-    openStockHistoryModal(newVal);
+    openStockTransactionModal(newVal);
   }
 });
 
 // 入出庫履歴モーダル
-const isStockHistoryModalOpen: Ref<boolean> = ref(false);
-const selectedStockHistoryItem: Ref<ItemType | null> = ref(null);
+const isStockTransactionModalOpen: Ref<boolean> = ref(false);
+const selectedStockTransactionItem: Ref<ItemType | null> = ref(null);
 
-const openStockHistoryModal = (item: ItemType): void => {
-  selectedStockHistoryItem.value = item;
-  isStockHistoryModalOpen.value = true;
+const openStockTransactionModal = (item: ItemType): void => {
+  selectedStockTransactionItem.value = item;
+  isStockTransactionModalOpen.value = true;
 };
-const closeStockHistoryModal = (): void => {
-  isStockHistoryModalOpen.value = false;
+const closeStockTransactionModal = (): void => {
+  isStockTransactionModalOpen.value = false;
 };
 
 
@@ -289,7 +289,7 @@ const fetchConsumableItems = async (): Promise<void> => {
                                     </div>
                                     <div class="mt-2 flex justify-center space-x-4 md:space-x-1 lg:space-x-2 items-center max-h-20 ">
                                       <!-- 親コンポーネントからモーダルを開くボタン -->
-                                      <button @click="openStockHistoryModal(item)" type="button" data-micromodal-trigger="modal-1" class="flex items-center text-white text-sm bg-gray-500 border-0 py-2 px-4 focus:outline-none hover:bg-gray-600 rounded">
+                                      <button @click="openStockTransactionModal(item)" type="button" data-micromodal-trigger="modal-1" class="flex items-center text-white text-sm bg-gray-500 border-0 py-2 px-4 focus:outline-none hover:bg-gray-600 rounded">
                                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-5">
                                           <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 6 9 12.75l4.286-4.286a11.948 11.948 0 0 1 4.306 6.43l.776 2.898m0 0 3.182-5.511m-3.182 5.51-5.511-3.181" />
                                         </svg>
@@ -305,7 +305,7 @@ const fetchConsumableItems = async (): Promise<void> => {
                                   </div>
                                 </div>
                               </template>
-                              <StockHistoryModal v-show="isStockHistoryModalOpen" :item="selectedStockHistoryItem" @close="closeStockHistoryModal" />
+                              <StockTransactionModal v-if="selectedStockTransactionItem" v-show="isStockTransactionModalOpen" :item="selectedStockTransactionItem" @close="closeStockTransactionModal" />
                               <UpdateStockModal v-if="selectedUpdateStockItem" v-show="isUpdateStockModalOpen" :item="selectedUpdateStockItem" :userName="userName" :errors="errors" @close="closeUpdateStockModal" />
                             </div>
                             <div v-else>
