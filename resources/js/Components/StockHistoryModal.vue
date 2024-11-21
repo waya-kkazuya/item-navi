@@ -25,6 +25,7 @@ const fetchStockTransactions = async (item: ItemType): Promise<void> => {
     stockTransactions.value = res.data.stockTransactions;
     graphData.labels = res.data.labels;
     graphData.stocks = res.data.stocks;
+    graphData.transaction_types = res.data.transaction_types;
   } catch (e: any) {
     axios.post('/api/log-error', {
       error: e.toString(),
@@ -58,7 +59,7 @@ const closeModal = (): void => {
         </header>
         <main class="modal__content" id="modal-1-content">
           <div class="min-w-full overflow-auto">
-            <div v-show="graphData.labels.length > 0">
+            <div v-show="graphData.labels.length > 0" class="mb-2">
               <Chart :graphData="graphData" />
             </div>
             <table v-if="stockTransactions.length > 0" class="table-fixed min-w-full text-left whitespace-no-wrap">
@@ -68,7 +69,8 @@ const closeModal = (): void => {
                   <th class="min-w-24 md:min-w-12 px-4 py-3 title-font tracking-wider font-medium text-white text-xs md:text-sm text-center bg-sky-700">更新区分</th>
                   <th class="min-w-20 md:min-w-8 px-4 py-3 title-font tracking-wider font-medium text-white text-xs md:text-sm text-center bg-sky-700">入庫数</th>
                   <th class="min-w-20 md:min-w-8 px-4 py-3 title-font tracking-wider font-medium text-white text-xs md:text-sm text-center bg-sky-700">出庫数</th>
-                  <th class="min-w-24 md:min-w-8 px-4 py-3 title-font tracking-wider font-medium text-white text-xs md:text-sm text-center bg-sky-700">残在庫数</th>
+                  <th class="min-w-20 md:min-w-8 px-4 py-3 title-font tracking-wider font-medium text-white text-xs md:text-sm text-center bg-sky-700">修正数</th>
+                  <th class="min-w-24 md:min-w-8 px-4 py-3 title-font tracking-wider font-medium text-white text-xs md:text-sm text-center bg-sky-700">在庫数</th>
                   <th class="min-w-28 md:min-w-8 px-4 py-3 title-font tracking-wider font-medium text-white text-xs md:text-sm text-center bg-sky-700">記録者</th>
                 </tr>
               </thead>
@@ -78,6 +80,7 @@ const closeModal = (): void => {
                   <td class="border-b-2 border-gray-200 px-4 py-3 text-xs md:text-sm lg:text-base text-center">{{ stockTransaction.transaction_type }}</td>
                   <td class="border-b-2 border-gray-200 px-4 py-3 text-xs md:text-sm lg:text-base text-center">{{ stockTransaction.transaction_type === '入庫' ? stockTransaction.quantity : ''}}</td>
                   <td class="border-b-2 border-gray-200 px-4 py-3 text-xs md:text-sm lg:text-base text-center">{{ stockTransaction.transaction_type === '出庫' ? stockTransaction.quantity : '' }}</td>
+                  <td class="border-b-2 border-gray-200 px-4 py-3 text-xs md:text-sm lg:text-base text-center">{{ stockTransaction.transaction_type === '修正' ? stockTransaction.quantity : '' }}</td>
                   <td class="border-b-2 border-gray-200 px-4 py-3 text-xs md:text-sm lg:text-base text-center">{{ stockTransaction.current_stock }}</td>
                   <td class="border-b-2 border-gray-200 px-4 py-3 text-xs md:text-sm lg:text-base text-center">{{ stockTransaction.operator_name }}</td>
                 </tr>

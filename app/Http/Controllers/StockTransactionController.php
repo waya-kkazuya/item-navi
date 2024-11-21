@@ -41,13 +41,15 @@ class StockTransactionController extends Controller
         // グラフ用のデータを準備、時系列を左から右にするため配列を逆順にする
         $labels = array_reverse($stock_transactions->pluck('formatted_created_at')->toArray());
         $stocks = array_reverse($stock_transactions->pluck('current_stock')->toArray());
+        $transaction_types = array_reverse($stock_transactions->pluck('transaction_type')->toArray());
 
         Log::info('StockTransactionController API stockTransaction method succeeded');
 
         return [
             'stockTransactions' => $stock_transactions,
             'labels' => $labels,
-            'stocks' => $stocks
+            'stocks' => $stocks,
+            'transaction_types' => $transaction_types
         ];
     }
 }
