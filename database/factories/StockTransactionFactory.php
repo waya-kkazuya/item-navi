@@ -19,10 +19,9 @@ class StockTransactionFactory extends Factory
     {
         return [
             'item_id' => Item::factory(),
-            'transaction_type' => $this->faker->randomElement(['入庫', '出庫']),
+            'transaction_type' => $this->faker->randomElement(['入庫', '出庫', '登録', '修正']),
             'quantity' => $this->faker->numberBetween(1, 10), //整合性のあるように作るのは難しい
             'operator_name' => $this->faker->name(),
-            'transaction_date' => $this->faker->date(),
         ];
     }
 }
