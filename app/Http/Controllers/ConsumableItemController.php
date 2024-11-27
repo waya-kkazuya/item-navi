@@ -110,8 +110,12 @@ class ConsumableItemController extends Controller
             // 入出庫モーダルで処理をした後、在庫数を更新するAPI通信
             if ($request->has('reload')) {
                 return [
-                    'items' => $consumableItems,
-                    'total_count' => $total_count
+                    'consumableItems' => $consumableItems,
+                    'search' => $search,
+                    'sortOrder' => $sortOrder,
+                    'locationOfUseId' => $location_of_use_id,
+                    'storageLocationId' => $storage_location_id,
+                    'totalCount' => $total_count,
                 ];
             }
 

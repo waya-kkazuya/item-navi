@@ -21,6 +21,9 @@ class EditReasonSeeder extends Seeder
                 'reason' => '入力内容にミスがあったため'
             ],
             [
+                'reason' => '新しく判明した情報があったため'
+            ],
+            [
                 'reason' => 'その他（理由詳細に記載）'
             ],
         ]);

@@ -82,7 +82,7 @@ const increaseStock = (item: ItemType): void => {
     if (confirm('本当に入庫処理をしますか？')) {
         increaseForm.put(`/increaseStock/${item.id}`, {
           onSuccess: () => {
-            closeModal();
+            closeModal(); // 成功したらモーダルを閉じる
             increaseForm.quantity = 1; // モーダルのquantityをリセット
           },
         });
