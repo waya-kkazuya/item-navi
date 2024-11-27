@@ -15,28 +15,52 @@ class ItemRequestSeeder extends Seeder
     {
         DB::table('item_requests')->insert([
             [
-                'name' => 'ペーパータオルA',
-                'category_id' => 2,
-                'location_of_use_id' => 4,
-                'requestor' => '田中',
-                'remarks_from_requestor' => 'なくなったため',
                 'request_status_id' => 1,
-                'manufacturer' => 'テスト',
+                'name' => '空気清浄機',
+                'category_id' => 4,
+                'location_of_use_id' => 1,
+                'requestor' => '田中',
+                'remarks_from_requestor' => '空気が乾燥しているため',
+                'manufacturer' => 'シャープ',
                 'reference' => 'Amazon',
-                'price' => 500,
-                'created_at' => '2021/01/01 11:11:11'
+                'price' => 21000,
+                'created_at' => '2024/10/05 10:05:00'
             ],
             [
-                'name' => 'ペーパータオルB',
-                'category_id' => 2,
-                'location_of_use_id' => 4,
-                'requestor' => '田中',
-                'remarks_from_requestor' => 'なくなったため',
                 'request_status_id' => 2,
-                'manufacturer' => 'テスト',
+                'name' => '延長コード',
+                'category_id' => 11,
+                'location_of_use_id' => 2,
+                'requestor' => '鈴木',
+                'remarks_from_requestor' => '観葉植物',
+                'manufacturer' => '',
                 'reference' => 'Amazon',
-                'price' => 500,
-                'created_at' => '2021/01/01 11:11:11'
+                'price' => 10000,
+                'created_at' => '2024/10/15 13:11:00'
+            ],
+            [
+                'request_status_id' => 2,
+                'name' => '使い捨て手袋',
+                'category_id' => 1,
+                'location_of_use_id' => 5,
+                'requestor' => '井上',
+                'remarks_from_requestor' => 'なくなったため',
+                'manufacturer' => 'NEOTRIL',
+                'reference' => 'Amazon',
+                'price' => 1700,
+                'created_at' => '2024/11/10 11:11:00'
+            ],
+            [
+                'request_status_id' => 2,
+                'name' => '付箋（ポストイット）',
+                'category_id' => 1,
+                'location_of_use_id' => 1,
+                'requestor' => '清水',
+                'remarks_from_requestor' => 'あると便利なため',
+                'manufacturer' => 'スリーエム(3M)',
+                'reference' => 'Amazon',
+                'price' => 930,
+                'created_at' => '2021/11/25 15:20:00'
             ],
         ]);
     }
