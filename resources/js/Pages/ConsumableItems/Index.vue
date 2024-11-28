@@ -68,6 +68,7 @@ const openStockTransactionModal = (item: ItemType): void => {
   isStockTransactionModalOpen.value = true;
 };
 const closeStockTransactionModal = (): void => {
+  selectedStockTransactionItem.value = null;
   isStockTransactionModalOpen.value = false;
 };
 
@@ -81,6 +82,7 @@ const openUpdateStockModal = (item: ItemType): void => {
   isUpdateStockModalOpen.value = true;
 };
 const closeUpdateStockModal = (): void => {
+  selectedUpdateStockItem.value = null;
   isUpdateStockModalOpen.value = false;
   fetchConsumableItems();
 };
@@ -316,8 +318,8 @@ const fetchConsumableItems = async (): Promise<void> => {
                                   </div>
                                 </div>
                               </template>
-                              <StockTransactionModal v-if="selectedStockTransactionItem" v-show="isStockTransactionModalOpen" :item="selectedStockTransactionItem" @close="closeStockTransactionModal" />
-                              <UpdateStockModal v-if="selectedUpdateStockItem" v-show="isUpdateStockModalOpen" :item="selectedUpdateStockItem" :userName="userName" :errors="errors" @close="closeUpdateStockModal()" />
+                              <StockTransactionModal v-if="selectedStockTransactionItem && isStockTransactionModalOpen" :item="selectedStockTransactionItem" @close="closeStockTransactionModal" />
+                              <UpdateStockModal v-if="selectedUpdateStockItem && isUpdateStockModalOpen" :item="selectedUpdateStockItem" :userName="userName" :errors="errors" @close="closeUpdateStockModal" />
                             </div>
                             <div v-else>
                               <div class="flex items-center justify-center">
