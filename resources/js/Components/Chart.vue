@@ -44,6 +44,12 @@ const options: ChartOptions<'line'> = reactive({
   scales: { 
     y: {
       min: 0, // 縦軸の最小値を0に固定
+      ticks: {
+        callback: function(value) {
+          //整数ならティック値＝メモリの数を返す
+          return Number.isInteger(value) ? value : null;
+        }
+      }
     }
   }
 });
