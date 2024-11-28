@@ -25,7 +25,7 @@ class EdithistoryFactory extends Factory
      */
     public function definition(): array
     {
-        $operation_types = ['store', 'update', 'stock_in', 'stock_out', 'soft_delete', 'restore'];
+        $operation_types = ['store', 'update', 'soft_delete', 'restore'];
         $operation_type = $this->faker->randomElement($operation_types);
 
         $editedFields = $this->getEditableFields();

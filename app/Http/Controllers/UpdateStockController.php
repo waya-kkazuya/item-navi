@@ -46,22 +46,11 @@ class UpdateStockController extends Controller
             $stockTransaction->operator_name = $request->operator_name;
             $stockTransaction->save();
 
-            // itemsテーブルのstockカラムの値を更新=>ItemObserverが反応
-            $item->stock -= $request->quantity;
-            $item->save();
-
-            // 編集履歴Edithistoryにも保存
-            Edithistory::create([
-                'edit_mode' => 'normal' ,
-                'operation_type' => 'stock_out',
-                'item_id' => $item->id,
-                'edited_field' => null,
-                'old_value' => null,
-                'new_value' => null,
-                'edit_user' => Auth()->user ?? null,
-                'edit_reason_id' => null,
-                'edit_reason_text' => null
-            ]);
+            // ItemObserverを無効化して在庫数を更新
+            Item::withoutEvents(function () use ($item, $request) {
+                $item->stock -= $request->quantity;
+                $item->save();
+            });
 
             // 通知がオンになっている、かつ、在庫数が通知在庫数以下になったら通知を送る
             if($item->notification && $item->stock <= $item->minimum_stock) {
@@ -122,9 +111,11 @@ class UpdateStockController extends Controller
             $stockTransaction->operator_name = $request->operator_name;
             $stockTransaction->save();
 
-            // itemsテーブルのstockカラムの値を更新
-            $item->stock += $request->quantity;
-            $item->save();
+            // ItemObserverを無効化して在庫数を更新
+            Item::withoutEvents(function () use ($item, $request) {
+                $item->stock += $request->quantity;
+                $item->save();
+            });
             
             DB::commit();
 
