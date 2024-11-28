@@ -27,8 +27,6 @@ class EdithistoryController extends Controller
                 $edithistory->operation_type_for_display = match ($edithistory->operation_type) {
                     'store' => '新規登録',
                     'update' => '編集更新',
-                    'stock_out' => '出庫',
-                    'stock_in' => '入庫',
                     'soft_delete' => '廃棄',
                     'restore' => '復元',
                     'inspection' => '点検',

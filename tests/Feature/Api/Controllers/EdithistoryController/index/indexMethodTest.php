@@ -77,7 +77,7 @@ class indexMethodTest extends TestCase
                             ->where('edit_mode', 'normal')
                             ->where('operation_type', function($operation_type) {
                                 \Log::info('Operation Type: ' . $operation_type); // デバッグ出力
-                                return in_array($operation_type, ['store', 'update', 'stock_in', 'stock_out', 'soft_delete', 'restore']);
+                                return in_array($operation_type, ['store', 'update', 'soft_delete', 'restore']);
                             })
                             ->has('edited_field')
                             ->has('old_value')

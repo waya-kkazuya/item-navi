@@ -43,8 +43,6 @@ class GroupedEditHistoriesUseCase
             $history->operation_description = match ($history->operation_type) {
                 'store' => '新規登録',
                 'update' => '更新',
-                'stock_out' => 'の在庫を出庫',
-                'stock_in' => 'の在庫を入庫',
                 'soft_delete' => '廃棄',
                 'restore' => '復元',
                 default => '不明な操作を',
