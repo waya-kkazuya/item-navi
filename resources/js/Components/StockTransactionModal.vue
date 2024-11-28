@@ -60,7 +60,7 @@ const closeModal = (): void => {
         </header>
         <main class="modal__content" id="modal-1-content">
           <div class="min-w-full overflow-auto">
-            <div v-show="graphData.labels.length > 0" class="mb-2">
+            <div v-if="stockTransactions.length > 0" class="mb-2">
               <Chart :graphData="graphData" />
             </div>
             <table v-if="stockTransactions.length > 0" class="table-fixed min-w-full text-left whitespace-no-wrap">

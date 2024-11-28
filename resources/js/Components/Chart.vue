@@ -17,7 +17,7 @@ const props = defineProps<Props>();
 
 const labels: ComputedRef<string[]> = computed(() => props.graphData.labels);
 const stocks: ComputedRef<number[]> = computed(() => props.graphData.stocks);
-const transaction_types: ComputedRef<string[]> = computed(() => props.graphData.transaction_types);
+const transaction_types: ComputedRef<string[]> = computed(() => props.graphData.transaction_types || []);
 
 const pointColors: ComputedRef<string[]> = computed(() => { 
   return transaction_types.value.map((type) => {
@@ -43,8 +43,8 @@ const options: ChartOptions<'line'> = reactive({
   maintainAspectRatio: false, //指定した高さに収まるようにする
   scales: { 
     y: {
-      min: 0 // 縦軸の最小値を0に固定
-    } 
+      min: 0, // 縦軸の最小値を0に固定
+    }
   }
 });
 </script>
