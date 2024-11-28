@@ -44,6 +44,11 @@ class ItemObserver
         foreach ($changes as $field => $newValue) {
             $oldValue = $item->getOriginal($field);
 
+            if ($field == 'image1') {
+                $oldValue = null;
+                $newValue = null;
+            }
+
             Edithistory::create([
                 'edit_mode' => $edit_mode,
                 'operation_type' => 'update',
