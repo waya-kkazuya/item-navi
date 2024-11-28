@@ -66,24 +66,24 @@ const closeModal = (): void => {
             <table v-if="stockTransactions.length > 0" class="table-fixed min-w-full text-left whitespace-no-wrap">
               <thead>
                 <tr>
-                  <th class="min-w-24 md:min-w-16 px-4 py-3 title-font tracking-wider font-medium text-white text-xs md:text-sm text-center bg-sky-700">更新日時</th>
-                  <th class="min-w-24 md:min-w-12 px-4 py-3 title-font tracking-wider font-medium text-white text-xs md:text-sm text-center bg-sky-700">更新区分</th>
-                  <th class="min-w-20 md:min-w-8 px-4 py-3 title-font tracking-wider font-medium text-white text-xs md:text-sm text-center bg-sky-700">入庫数</th>
-                  <th class="min-w-20 md:min-w-8 px-4 py-3 title-font tracking-wider font-medium text-white text-xs md:text-sm text-center bg-sky-700">出庫数</th>
-                  <th class="min-w-20 md:min-w-8 px-4 py-3 title-font tracking-wider font-medium text-white text-xs md:text-sm text-center bg-sky-700">修正数</th>
-                  <th class="min-w-24 md:min-w-8 px-4 py-3 title-font tracking-wider font-medium text-white text-xs md:text-sm text-center bg-sky-700">在庫数</th>
-                  <th class="min-w-28 md:min-w-8 px-4 py-3 title-font tracking-wider font-medium text-white text-xs md:text-sm text-center bg-sky-700">記録者</th>
+                  <th class="min-w-24 md:min-w-44 px-4 py-3 title-font tracking-wider font-medium text-white text-xs md:text-sm text-center bg-sky-700">更新日時</th>
+                  <th class="min-w-24 md:min-w-24 px-4 py-3 title-font tracking-wider font-medium text-white text-xs md:text-sm text-center bg-sky-700">更新区分</th>
+                  <th class="min-w-20 md:min-w-20 px-4 py-3 title-font tracking-wider font-medium text-white text-xs md:text-sm text-center bg-sky-700">入庫数</th>
+                  <th class="min-w-20 md:min-w-20 px-4 py-3 title-font tracking-wider font-medium text-white text-xs md:text-sm text-center bg-sky-700">出庫数</th>
+                  <th class="min-w-20 md:min-w-20 px-4 py-3 title-font tracking-wider font-medium text-white text-xs md:text-sm text-center bg-sky-700">修正数</th>
+                  <th class="min-w-24 md:min-w-20 px-4 py-3 title-font tracking-wider font-medium text-white text-xs md:text-sm text-center bg-sky-700">在庫数</th>
+                  <th class="min-w-28 md:min-w-28 px-4 py-3 title-font tracking-wider font-medium text-white text-xs md:text-sm text-center bg-sky-700">記録者</th>
                 </tr>
               </thead>
               <tbody>
                 <tr v-for="stockTransaction in stockTransactions" :key="stockTransaction.id">
-                  <td class="border-b-2 border-gray-200 px-4 py-3 text-xs md:text-sm lg:text-base text-center">{{ stockTransaction.formatted_created_at }}</td>
-                  <td class="border-b-2 border-gray-200 px-4 py-3 text-xs md:text-sm lg:text-base text-center">{{ stockTransaction.transaction_type }}</td>
-                  <td class="border-b-2 border-gray-200 px-4 py-3 text-xs md:text-sm lg:text-base text-center">{{ stockTransaction.transaction_type === '入庫' ? stockTransaction.quantity : ''}}</td>
-                  <td class="border-b-2 border-gray-200 px-4 py-3 text-xs md:text-sm lg:text-base text-center">{{ stockTransaction.transaction_type === '出庫' ? stockTransaction.quantity : '' }}</td>
-                  <td class="border-b-2 border-gray-200 px-4 py-3 text-xs md:text-sm lg:text-base text-center">{{ stockTransaction.transaction_type === '修正' ? stockTransaction.quantity : '' }}</td>
-                  <td class="border-b-2 border-gray-200 px-4 py-3 text-xs md:text-sm lg:text-base text-center">{{ stockTransaction.current_stock }}</td>
-                  <td class="border-b-2 border-gray-200 px-4 py-3 text-xs md:text-sm lg:text-base text-center">{{ stockTransaction.operator_name }}</td>
+                  <td class="border-b-2 border-gray-200 px-4 py-3 text-xs md:text-sm text-center">{{ stockTransaction.formatted_created_at }}</td>
+                  <td class="border-b-2 border-gray-200 px-4 py-3 text-xs md:text-sm text-center">{{ stockTransaction.transaction_type }}</td>
+                  <td class="border-b-2 border-gray-200 px-4 py-3 text-xs md:text-sm text-center">{{ stockTransaction.transaction_type === '入庫' ? stockTransaction.quantity : ''}}</td>
+                  <td class="border-b-2 border-gray-200 px-4 py-3 text-xs md:text-sm text-center">{{ stockTransaction.transaction_type === '出庫' ? stockTransaction.quantity : '' }}</td>
+                  <td class="border-b-2 border-gray-200 px-4 py-3 text-xs md:text-sm text-center">{{ stockTransaction.transaction_type === '修正' ? stockTransaction.quantity : '' }}</td>
+                  <td class="border-b-2 border-gray-200 px-4 py-3 text-xs md:text-sm text-center">{{ stockTransaction.current_stock }}</td>
+                  <td class="border-b-2 border-gray-200 px-4 py-3 text-xs md:text-sm text-center">{{ stockTransaction.operator_name }}</td>
                 </tr>
               </tbody>
             </table>
