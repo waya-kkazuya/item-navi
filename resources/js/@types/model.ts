@@ -127,6 +127,7 @@ export type EditHistoryType = {
     operation_description: string;
     operation_type_for_display: string;
     edited_field_for_display: string;
+    showDetails: boolean;
 };
 
 export type NotificationType = {
