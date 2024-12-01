@@ -1,9 +1,8 @@
 <script setup lang="ts">
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head, Link, router } from '@inertiajs/vue3';
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 import type { Ref } from 'vue'
-import type { Paginator } from '@/@types/types';
 import type { ItemType, CategoryType, LocationType, EditHistoryType } from '@/@types/model';
 
 
@@ -39,6 +38,23 @@ const switchViewMode = (): void => {
   }), {
     method: 'get'
   })
+};
+
+// groupedEdithistoriesをローカル用にコピー
+const localGroupedEdithistories: Ref<GroupedEditHistoriesType> = ref({});
+
+onMounted(() => { 
+    Object.keys(props.groupedEdithistories).forEach(date => { 
+        localGroupedEdithistories.value[date] = props.groupedEdithistories[date].map(history => ({ 
+            ...history, 
+            showDetails: false // 初期状態では非表示 
+        })); 
+    }); 
+});
+
+// 編集履歴のアコーディオンメニューの開閉を切り替える関数 
+const toggleDetails = (history: EditHistoryType) => {
+    history.showDetails = !history.showDetails;
 };
 </script>
 
@@ -141,48 +157,57 @@ const switchViewMode = (): void => {
                         <!-- 右側のテーブル -->
                         <div class="w-full md:w-3/5 p-4">
                             <table class="w-full border border-gray-200 text-xs md:text-base">
-                            <thead>
-                                <tr>
-                                    <th class="border-b-2 border-gray-200 px-4 py-3 text-left text-white bg-sky-700" colspan="2">備品の編集履歴</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <template  v-for="(histories, date) in groupedEdithistories" :key="date">
+                                <thead>
                                     <tr>
-                                        <td class="border-b-2 p-2 border-gray-200 text-left bg-gray-200" colspan="2">
-                                            {{ date }} ({{ histories[0].day_of_week }})
-                                        </td>
+                                        <th class="border-b-2 border-gray-200 px-4 py-3 text-left text-white bg-sky-700" colspan="2">備品の編集履歴</th>
                                     </tr>
-                                    <template v-for="history in histories" :key="history.id">
+                                </thead>
+                                <tbody>
+                                    <template  v-for="(histories, date) in localGroupedEdithistories" :key="date">
                                         <tr>
-                                            <td class="border-b-2 p-2">{{ history.time }}</td>
-                                            <td class="border-b-2 p-2">
-                                                <template v-if="history.operation_type === 'soft_delete'">
-                                                    【管理ID{{ history.item.management_id }}】{{ history.item.name }}
-                                                </template>
-                                                <template v-else>
-                                                    <Link as="button" :href="route('items.show', { item: history.item_id })" class="text-blue-500 hover:text-blue-700 underline md:text-base">
-                                                        【管理ID{{ history.item.management_id }}】{{ history.item.name }}
-                                                    </Link>
-                                                </template>
-                                                を<span class="font-medium">{{ history.operation_description }}</span>しました
+                                            <td class="border-b-2 p-2 border-gray-200 text-left bg-gray-200" colspan="2">
+                                                {{ date }} ({{ histories[0].day_of_week }})
                                             </td>
                                         </tr>
-                                        <tr v-if="history.edit_reason_id">
-                                            <td></td>
-                                            <td class="p-2">
-                                                <div class="relative bg-indigo-50 md:text-base p-2 rounded">
-                                                    <div class="arrow-up"></div>
-                                                    <span>{{ history.edit_reason.reason }}</span>
-                                                    <span v-if="history.edit_reason_text" class="ml-3">
-                                                        {{ history.edit_reason_text }}
-                                                    </span>
-                                                </div>
-                                            </td>
-                                        </tr>
+                                        <template v-for="history in histories" :key="history.id">
+                                            <tr>
+                                                <td class="border-b-2 p-2 align-top">{{ history.time }}</td>
+                                                <td class="border-b-2 p-2">
+                                                    <div class="flex items-center">
+                                                        <button v-if="history.operation_type == 'update' && history.edit_reason.reason" @click="toggleDetails(history)" class="text-sm text-gray-500 ml-2">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-5">
+                                                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                                                            </svg>
+                                                        </button>
+                                                        <div>
+                                                            <span class="">{{ history.edit_user }}</span>が
+                                                            <template v-if="history.operation_type === 'soft_delete'">
+                                                                <span class="underline md:text-base">【管理ID{{ history.item.management_id }}】{{ history.item.name }}</span>
+                                                            </template>
+                                                            <template v-else>
+                                                                <Link as="button" :href="route('items.show', { item: history.item_id })" class="text-blue-500 hover:text-blue-700 underline md:text-base">
+                                                                    【管理ID{{ history.item.management_id }}】{{ history.item.name }}
+                                                                </Link>
+                                                            </template>
+                                                            <span v-if="history.operation_type == 'update'">の{{ history.edited_field_for_display }}</span>
+                                                            を{{ history.operation_description }}しました
+                                                        </div>
+                                                    </div>
+                                                    <!-- アコーディオンメニュー部分 -->
+                                                    <div v-if="history.showDetails && history.operation_type == 'update' && history.edit_reason.reason" class="relative bg-indigo-50 md:text-base p-2 mt-1 rounded">
+                                                        <div class="arrow-up"></div>
+                                                        <span class="font-semibold">編集理由 </span><span>{{ history.edit_reason.reason }}</span>
+                                                        <span v-if="history.edit_reason_text" class="ml-3">
+                                                            {{ history.edit_reason_text }}
+                                                        </span>
+                                                        <div><span class="font-semibold">編集後 </span>{{ history.new_value }}</div>
+                                                        <div><span class="font-semibold">編集前 </span>{{ history.old_value }}</div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </template>
                                     </template>
-                                </template>
-                            </tbody>
+                                </tbody>
                             </table>
                         </div>
                     </div>
