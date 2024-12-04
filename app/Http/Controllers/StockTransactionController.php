@@ -35,7 +35,11 @@ class StockTransactionController extends Controller
             // 次のレコードの在庫数を計算、次に持ち越し
             $current_stock -= $transaction->quantity; //過去に遡るからマイナス
 
-            $transaction->formatted_created_at = Carbon::parse($transaction->created_at)->format('Y-m-d H:i');
+            // 曜日は日本語で表示する
+            $daysOfWeek = ['日', '月', '火', '水', '木', '金', '土'];
+            $created_at = Carbon::parse($transaction->created_at);
+            $japaneseDayOfWeek = $daysOfWeek[$created_at->dayOfWeek];
+            $transaction->formatted_created_at = $created_at->format('Y-m-d') . " ({$japaneseDayOfWeek}) " . $created_at->format('H:i');
         });
 
         // グラフ用のデータを準備、時系列を左から右にするため配列を逆順にする
@@ -49,7 +53,8 @@ class StockTransactionController extends Controller
             'stockTransactions' => $stock_transactions,
             'labels' => $labels,
             'stocks' => $stocks,
-            'transaction_types' => $transaction_types
+            'transaction_types' => $transaction_types,
+            'minimum_stock' => $item->minimum_stock
         ];
     }
 }

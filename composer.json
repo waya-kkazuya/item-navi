@@ -20,6 +20,7 @@
         "laravel/framework": "^10.0",
         "laravel/sanctum": "^3.2",
         "laravel/tinker": "^2.8",
+        "league/csv": "^9.18",
         "monolog/monolog": "^3.7",
         "simplesoftwareio/simple-qrcode": "^4.2",
         "tightenco/ziggy": "^2.0",
@@ -35,7 +36,7 @@
         "laravel/sail": "^1.18",
         "mockery/mockery": "^1.4.4",
         "nunomaduro/collision": "^7.0",
-        "nunomaduro/larastan": "^2.9",
+        "nunomaduro/larastan": "^2.10",
         "phpunit/php-code-coverage": "^10.1",
         "phpunit/phpunit": "^10.0",
         "spatie/laravel-ignition": "^2.0"
@@ -83,6 +84,6 @@
             "pestphp/pest-plugin": true
         }
     },
-    "minimum-stability": "stable",
+    "minimum-stability": "dev",
     "prefer-stable": true
 }
