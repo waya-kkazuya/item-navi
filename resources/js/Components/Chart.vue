@@ -1,13 +1,15 @@
 <script setup lang="ts">
 import { Chart, registerables } from "chart.js";
+import annotationPlugin from "chartjs-plugin-annotation";
 import { LineChart } from "vue-chart-3";
 import { reactive, computed } from "vue";
 import type { ComputedRef } from "vue";
 import type { ChartData, ChartOptions } from "chart.js";
-import type { GraphData } from "@/@types/graph-data";
+import type { GraphData } from "@/@types/graph-data";;
 
 
 Chart.register(...registerables);
+Chart.register(annotationPlugin);
 
 type Props = {
   graphData: GraphData;
@@ -18,6 +20,9 @@ const props = defineProps<Props>();
 const labels: ComputedRef<string[]> = computed(() => props.graphData.labels);
 const stocks: ComputedRef<number[]> = computed(() => props.graphData.stocks);
 const transaction_types: ComputedRef<string[]> = computed(() => props.graphData.transaction_types || []);
+const minimum_stock: ComputedRef<number> = computed(() => props.graphData.minimum_stock);
+
+const minimumStockvalue = minimum_stock.value
 
 const pointColors: ComputedRef<string[]> = computed(() => { 
   return transaction_types.value.map((type) => {
@@ -35,6 +40,15 @@ const lineData: ChartData<'line'> = reactive({
       tension: 0.1,
       pointBackgroundColor: pointColors.value,
       pointBorderColor: pointColors.value
+    },
+    { 
+      label: '通知在庫数', 
+      data: Array(labels.value.length).fill(minimumStockvalue), // 通知在庫数の水平線 
+      borderColor: 'rgba(255, 99, 132, 1)',
+      borderWidth: 1, 
+      pointRadius: 0, // ポイントを非表示 
+      borderDash: [], // 点線 
+      fill: false,
     }
   ]
 });
@@ -48,6 +62,30 @@ const options: ChartOptions<'line'> = reactive({
         callback: function(value) {
           //整数ならティック値＝メモリの数を返す
           return Number.isInteger(value) ? value : null;
+        }
+      }
+    }
+  },
+  plugins: {
+    legend: { 
+      display: false //凡例を非表示
+    },
+    annotation: {
+      annotations: {
+        line1: {
+          type: 'line',
+          yMin: minimumStockvalue, // 通知在庫数
+          yMax: minimumStockvalue, // 通知在庫数
+          borderColor: 'rgba(255, 99, 132, 1)', // 黄色
+          borderWidth: 1,
+          label: {
+            content: `通知在庫数: ${minimumStockvalue}`,
+            enabled: true,
+            position: 'start',
+            backgroundColor: 'rgba(255, 99, 132, 1)',
+            // yAdjust: 10, // ラベルの位置を調整 
+            // xAdjust: -10
+          }
         }
       }
     }
