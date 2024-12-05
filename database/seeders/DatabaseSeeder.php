@@ -2,17 +2,8 @@
 
 namespace Database\Seeders;
 
-// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
-
-use App\Models\Category;
-use App\Models\Edithistory;
-use App\Models\ImageTest;
-use App\Models\InventoryPlan;
-use App\Models\Location;
-use App\Models\Unit;
 use Illuminate\Database\Seeder;
-use Carbon\Carbon;
-use Illuminate\Support\Str;
+
 
 class DatabaseSeeder extends Seeder
 {
@@ -29,9 +20,13 @@ class DatabaseSeeder extends Seeder
             LocationSeeder::class,
             UnitSeeder::class,
             EditReasonSeeder::class,
+            RequestStatusSeeder::class,
             ItemSeeder::class,
             EdithistorySeeder::class,
-            RequestStatusSeeder::class,
+            InspectionSeeder::class,
+            DisposalSeeder::class,
+            StockTransactionSeeder::class,
+            NotificationSeeder::class,
             ItemRequestSeeder::class,
         ]);
     }
