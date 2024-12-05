@@ -1,0 +1,175 @@
+﻿id,edit_mode,operation_type,item_id,edited_field,old_value,new_value,edit_user,edit_reason_id,edit_reason_text,created_at,updated_at
+1,normal,store,1,NULL,NULL,NULL,管理者大川,NULL,NULL,2024/10/1 15:03,2024/10/1 15:03
+2,normal,store,2,NULL,NULL,NULL,管理者大川,NULL,NULL,2024/10/1 15:03,2024/10/1 15:03
+3,normal,store,3,NULL,NULL,NULL,管理者大川,NULL,NULL,2024/10/1 15:03,2024/10/1 15:03
+4,normal,store,4,NULL,NULL,NULL,管理者大川,NULL,NULL,2024/10/1 15:03,2024/10/1 15:03
+5,normal,store,5,NULL,NULL,NULL,管理者大川,NULL,NULL,2024/10/1 15:03,2024/10/1 15:03
+6,normal,store,6,NULL,NULL,NULL,管理者大川,NULL,NULL,2024/10/1 15:03,2024/10/1 15:03
+7,normal,store,7,NULL,NULL,NULL,管理者大川,NULL,NULL,2024/10/1 15:03,2024/10/1 15:03
+8,normal,store,8,NULL,NULL,NULL,管理者大川,NULL,NULL,2024/10/1 15:03,2024/10/1 15:03
+9,normal,store,9,NULL,NULL,NULL,管理者大川,NULL,NULL,2024/10/1 15:03,2024/10/1 15:03
+10,normal,store,10,NULL,NULL,NULL,管理者大川,NULL,NULL,2024/10/1 15:04,2024/10/1 15:04
+11,normal,store,11,NULL,NULL,NULL,管理者大川,NULL,NULL,2024/10/1 15:04,2024/10/1 15:04
+12,normal,store,11,disposal_scheduled_date,NULL,2024-10-15,管理者大川,NULL,NULL,2024/10/1 15:04,2024/10/1 15:04
+13,normal,store,12,NULL,NULL,NULL,管理者大川,NULL,NULL,2024/10/1 15:04,2024/10/1 15:04
+14,normal,store,13,NULL,NULL,NULL,管理者大川,NULL,NULL,2024/10/1 15:04,2024/10/1 15:04
+15,normal,store,14,NULL,NULL,NULL,管理者大川,NULL,NULL,2024/10/1 15:04,2024/10/1 15:04
+16,normal,store,15,NULL,NULL,NULL,管理者大川,NULL,NULL,2024/10/1 15:04,2024/10/1 15:04
+17,normal,store,16,NULL,NULL,NULL,管理者大川,NULL,NULL,2024/10/1 15:04,2024/10/1 15:04
+18,normal,store,17,NULL,NULL,NULL,管理者大川,NULL,NULL,2024/10/1 15:04,2024/10/1 15:04
+19,normal,store,18,NULL,NULL,NULL,管理者大川,NULL,NULL,2024/10/1 15:04,2024/10/1 15:04
+20,normal,store,19,NULL,NULL,NULL,管理者大川,NULL,NULL,2024/10/1 15:04,2024/10/1 15:04
+21,normal,store,20,NULL,NULL,NULL,管理者大川,NULL,NULL,2024/10/1 15:05,2024/10/1 15:05
+22,normal,store,21,NULL,NULL,NULL,管理者大川,NULL,NULL,2024/10/1 15:05,2024/10/1 15:05
+23,normal,store,22,NULL,NULL,NULL,管理者大川,NULL,NULL,2024/10/1 15:05,2024/10/1 15:05
+24,normal,store,23,NULL,NULL,NULL,管理者大川,NULL,NULL,2024/10/1 15:05,2024/10/1 15:05
+25,normal,store,24,NULL,NULL,NULL,管理者大川,NULL,NULL,2024/10/1 15:05,2024/10/1 15:05
+26,normal,store,25,NULL,NULL,NULL,管理者大川,NULL,NULL,2024/10/1 15:05,2024/10/1 15:05
+27,normal,store,26,NULL,NULL,NULL,管理者大川,NULL,NULL,2024/10/1 15:05,2024/10/1 15:05
+28,normal,store,26,disposal_scheduled_date,NULL,2024-10-15,管理者大川,NULL,NULL,2024/10/1 15:05,2024/10/1 15:05
+29,normal,store,27,NULL,NULL,NULL,管理者大川,NULL,NULL,2024/10/1 15:05,2024/10/1 15:05
+30,normal,store,28,NULL,NULL,NULL,管理者大川,NULL,NULL,2024/10/1 15:05,2024/10/1 15:05
+31,normal,store,29,NULL,NULL,NULL,管理者大川,NULL,NULL,2024/10/1 15:05,2024/10/1 15:05
+32,normal,store,30,NULL,NULL,NULL,管理者大川,NULL,NULL,2024/10/1 15:06,2024/10/1 15:06
+33,normal,store,31,NULL,NULL,NULL,管理者大川,NULL,NULL,2024/10/1 15:06,2024/10/1 15:06
+34,normal,store,32,NULL,NULL,NULL,管理者大川,NULL,NULL,2024/10/1 15:06,2024/10/1 15:06
+35,normal,store,33,NULL,NULL,NULL,管理者大川,NULL,NULL,2024/10/1 15:06,2024/10/1 15:06
+36,normal,store,34,NULL,NULL,NULL,管理者大川,NULL,NULL,2024/10/1 15:06,2024/10/1 15:06
+37,normal,store,35,NULL,NULL,NULL,管理者大川,NULL,NULL,2024/10/1 15:06,2024/10/1 15:06
+38,normal,store,36,NULL,NULL,NULL,管理者大川,NULL,NULL,2024/10/1 15:06,2024/10/1 15:06
+39,normal,store,37,NULL,NULL,NULL,管理者大川,NULL,NULL,2024/10/1 15:06,2024/10/1 15:06
+40,normal,store,38,NULL,NULL,NULL,管理者大川,NULL,NULL,2024/10/1 15:06,2024/10/1 15:06
+41,normal,store,39,NULL,NULL,NULL,管理者大川,NULL,NULL,2024/10/1 15:06,2024/10/1 15:06
+42,normal,store,40,NULL,NULL,NULL,管理者大川,NULL,NULL,2024/10/1 15:07,2024/10/1 15:07
+43,normal,store,41,NULL,NULL,NULL,管理者大川,NULL,NULL,2024/10/1 15:07,2024/10/1 15:07
+44,normal,store,42,NULL,NULL,NULL,管理者大川,NULL,NULL,2024/10/1 15:07,2024/10/1 15:07
+45,normal,store,43,NULL,NULL,NULL,管理者大川,NULL,NULL,2024/10/1 15:07,2024/10/1 15:07
+46,normal,store,44,NULL,NULL,NULL,管理者大川,NULL,NULL,2024/10/1 15:07,2024/10/1 15:07
+47,normal,store,45,NULL,NULL,NULL,管理者大川,NULL,NULL,2024/10/1 15:07,2024/10/1 15:07
+48,normal,store,46,NULL,NULL,NULL,管理者大川,NULL,NULL,2024/10/1 15:07,2024/10/1 15:07
+49,normal,store,47,NULL,NULL,NULL,管理者大川,NULL,NULL,2024/10/1 15:07,2024/10/1 15:07
+50,normal,store,48,NULL,NULL,NULL,管理者大川,NULL,NULL,2024/10/1 15:07,2024/10/1 15:07
+51,normal,store,49,NULL,NULL,NULL,管理者大川,NULL,NULL,2024/10/1 15:07,2024/10/1 15:07
+52,normal,store,50,NULL,NULL,NULL,管理者大川,NULL,NULL,2024/10/1 15:07,2024/10/1 15:07
+53,normal,store,51,NULL,NULL,NULL,管理者大川,NULL,NULL,2024/10/1 15:08,2024/10/1 15:08
+54,normal,store,52,NULL,NULL,NULL,管理者大川,NULL,NULL,2024/10/1 15:08,2024/10/1 15:08
+55,normal,store,53,NULL,NULL,NULL,管理者大川,NULL,NULL,2024/10/1 15:08,2024/10/1 15:08
+56,normal,store,54,NULL,NULL,NULL,管理者大川,NULL,NULL,2024/10/1 15:08,2024/10/1 15:08
+57,normal,store,55,NULL,NULL,NULL,管理者大川,NULL,NULL,2024/10/1 15:08,2024/10/1 15:08
+58,normal,store,56,NULL,NULL,NULL,管理者大川,NULL,NULL,2024/10/1 15:08,2024/10/1 15:08
+59,normal,store,57,NULL,NULL,NULL,管理者大川,NULL,NULL,2024/10/1 15:08,2024/10/1 15:08
+60,normal,store,58,NULL,NULL,NULL,管理者大川,NULL,NULL,2024/10/1 15:08,2024/10/1 15:08
+61,normal,store,59,NULL,NULL,NULL,管理者大川,NULL,NULL,2024/10/1 15:08,2024/10/1 15:08
+62,normal,store,60,NULL,NULL,NULL,管理者大川,NULL,NULL,2024/10/1 15:08,2024/10/1 15:08
+63,normal,store,61,NULL,NULL,NULL,管理者大川,NULL,NULL,2024/10/1 15:09,2024/10/1 15:09
+64,normal,store,62,NULL,NULL,NULL,管理者大川,NULL,NULL,2024/10/1 15:09,2024/10/1 15:09
+65,normal,store,63,NULL,NULL,NULL,管理者大川,NULL,NULL,2024/10/1 15:09,2024/10/1 15:09
+66,normal,store,64,NULL,NULL,NULL,管理者大川,NULL,NULL,2024/10/1 15:09,2024/10/1 15:09
+67,normal,store,65,NULL,NULL,NULL,管理者大川,NULL,NULL,2024/10/1 15:09,2024/10/1 15:09
+68,normal,store,66,NULL,NULL,NULL,管理者大川,NULL,NULL,2024/10/1 15:09,2024/10/1 15:09
+69,normal,store,67,NULL,NULL,NULL,管理者大川,NULL,NULL,2024/10/1 15:09,2024/10/1 15:09
+70,normal,store,68,NULL,NULL,NULL,管理者大川,NULL,NULL,2024/10/1 15:09,2024/10/1 15:09
+71,normal,store,69,NULL,NULL,NULL,管理者大川,NULL,NULL,2024/10/1 15:09,2024/10/1 15:09
+72,normal,store,70,NULL,NULL,NULL,管理者大川,NULL,NULL,2024/10/1 15:09,2024/10/1 15:09
+73,normal,store,71,NULL,NULL,NULL,管理者大川,NULL,NULL,2024/10/1 15:10,2024/10/1 15:10
+74,normal,store,72,NULL,NULL,NULL,管理者大川,NULL,NULL,2024/10/1 15:10,2024/10/1 15:10
+75,normal,store,73,NULL,NULL,NULL,管理者大川,NULL,NULL,2024/10/1 15:10,2024/10/1 15:10
+76,normal,store,73,disposal_scheduled_date,NULL,2025-02-05,管理者大川,NULL,NULL,2024/10/1 15:10,2024/10/1 15:10
+77,normal,store,74,NULL,NULL,NULL,管理者大川,NULL,NULL,2024/10/1 15:10,2024/10/1 15:10
+78,normal,store,75,NULL,NULL,NULL,管理者大川,NULL,NULL,2024/10/1 15:10,2024/10/1 15:10
+79,normal,store,76,NULL,NULL,NULL,管理者大川,NULL,NULL,2024/10/1 15:10,2024/10/1 15:10
+80,normal,store,77,NULL,NULL,NULL,管理者大川,NULL,NULL,2024/10/1 15:10,2024/10/1 15:10
+81,normal,store,78,NULL,NULL,NULL,管理者大川,NULL,NULL,2024/10/1 15:10,2024/10/1 15:10
+82,normal,store,79,NULL,NULL,NULL,管理者大川,NULL,NULL,2024/10/1 15:10,2024/10/1 15:10
+83,normal,store,80,NULL,NULL,NULL,管理者大川,NULL,NULL,2024/10/1 15:10,2024/10/1 15:10
+84,normal,store,81,NULL,NULL,NULL,管理者大川,NULL,NULL,2024/10/1 15:11,2024/10/1 15:11
+85,normal,store,82,NULL,NULL,NULL,管理者大川,NULL,NULL,2024/10/1 15:11,2024/10/1 15:11
+86,normal,store,83,NULL,NULL,NULL,管理者大川,NULL,NULL,2024/10/1 15:11,2024/10/1 15:11
+87,normal,store,84,NULL,NULL,NULL,管理者大川,NULL,NULL,2024/10/1 15:11,2024/10/1 15:11
+88,normal,store,84,inspection_scheduled_date,NULL,2025-10-05,管理者大川,NULL,NULL,2024/10/1 15:11,2024/10/1 15:11
+89,normal,store,85,NULL,NULL,NULL,管理者大川,NULL,NULL,2024/10/1 15:11,2024/10/1 15:11
+90,normal,store,85,inspection_scheduled_date,NULL,2025-10-05,管理者大川,NULL,NULL,2024/10/1 15:11,2024/10/1 15:11
+91,normal,store,86,NULL,NULL,NULL,管理者大川,NULL,NULL,2024/10/1 15:11,2024/10/1 15:11
+92,normal,store,86,inspection_scheduled_date,NULL,2025-10-05,管理者大川,NULL,NULL,2024/10/1 15:11,2024/10/1 15:11
+93,normal,store,87,NULL,NULL,NULL,管理者大川,NULL,NULL,2024/10/1 15:11,2024/10/1 15:11
+94,normal,store,87,inspection_scheduled_date,NULL,2025-10-20,管理者大川,NULL,NULL,2024/10/1 15:11,2024/10/1 15:11
+95,normal,store,88,NULL,NULL,NULL,管理者大川,NULL,NULL,2024/10/1 15:11,2024/10/1 15:11
+96,normal,store,88,disposal_scheduled_date,NULL,2026-03-25,管理者大川,NULL,NULL,2024/10/1 15:11,2024/10/1 15:11
+97,normal,store,89,NULL,NULL,NULL,管理者大川,NULL,NULL,2024/10/1 15:11,2024/10/1 15:11
+98,normal,store,89,inspection_scheduled_date,NULL,2025-10-20,管理者大川,NULL,NULL,2024/10/1 15:11,2024/10/1 15:11
+99,normal,update,1,remarks,256GBモデル,"256GBモデル
+アップデート済み",管理者大川,9,NULL,2024/11/10 10:56,2024/11/10 10:56
+100,normal,update,1,acquisition_source,Amazon,楽天市場,管理者大川,2,NULL,2024/11/25 8:32,2024/11/25 8:32
+101,normal,update,2,remarks,NULL,修理中です,管理者大川,9,NULL,2024/11/18 13:54,2024/11/18 13:54
+102,normal,update,3,storage_location_id,1,2,管理者大川,5,NULL,2024/11/1 10:16,2024/11/1 10:16
+103,normal,update,3,price,80000,83000,管理者大川,2,NULL,2024/11/18 14:51,2024/11/18 14:51
+104,normal,update,4,manufacturer,ASUS,Dell,管理者大川,2,NULL,2024/10/25 15:06,2024/10/25 15:06
+105,normal,update,4,location_of_use_id,1,2,管理者大川,5,NULL,2024/11/25 11:11,2024/11/25 11:11
+106,normal,update,5,end_user,山本,神谷,管理者大川,4,NULL,2024/11/27 13:22,2024/11/27 13:22
+107,normal,update,7,manufacturer,Acer,Lenovo,管理者大川,2,NULL,2024/10/18 14:46,2024/10/18 14:46
+108,normal,update,8,acquisition_source,楽天市場,ビックカメラ,管理者大川,2,NULL,2024/10/21 8:41,2024/10/21 8:41
+109,normal,update,9,storage_location_id,2,3,管理者大川,6,NULL,2024/10/29 11:51,2024/10/29 11:51
+110,normal,update,10,remarks,NULL,修理に出しています。,管理者大川,9,NULL,2024/11/28 10:26,2024/11/28 10:26
+111,normal,update,12,remarks,動画編集用,"動画編集用
+Adobeのソフトをインストールしました",管理者大川,9,NULL,2024/11/14 11:16,2024/11/14 11:16
+112,normal,update,13,end_user,内田,木村,管理者大川,4,NULL,2024/10/23 15:47,2024/10/23 15:47
+113,normal,update,13,remarks,イラスト用,"イラスト用
+不安定になったため、初期化しました。",管理者大川,9,NULL,2024/11/22 13:31,2024/11/22 13:31
+114,normal,update,15,manufacturer,HP,Samsung,管理者大川,2,NULL,2024/10/19 8:21,2024/10/19 8:21
+115,normal,update,19,end_user,山本,神谷,管理者大川,4,NULL,2024/11/27 13:24,2024/11/27 13:24
+116,normal,update,20,remarks,NULL,調子が悪いので代わりの新しいマウスが必要です。,管理者大川,1,NULL,2024/10/29 12:51,2024/10/29 12:51
+117,normal,update,21,acquisition_source,ヨドバシカメラ,ビックカメラ,管理者大川,2,NULL,2024/10/21 10:36,2024/10/21 10:36
+118,normal,update,24,price,1500,1450,管理者大川,2,NULL,2024/10/29 8:49,2024/10/29 8:49
+119,normal,update,26,manufacturer,Elecom,Dell,管理者大川,2,NULL,2024/11/25 9:12,2024/11/25 9:12
+120,normal,update,27,end_user,NULL,木村,管理者大川,4,NULL,2024/10/23 15:47,2024/10/23 15:47
+121,normal,update,29,end_user,内田,木村,管理者大川,4,NULL,2024/10/23 15:47,2024/10/23 15:47
+122,normal,update,30,remarks,NULL,名刺カードに印刷可能です。,管理者大川,1,NULL,2024/11/12 9:14,2024/11/12 9:14
+123,normal,update,31,remarks,月額,"月額
+有線LANケーブルが必要です。",管理者大川,1,NULL,2024/11/8 13:56,2024/11/8 13:56
+124,normal,update,35,price,5000,5100,管理者大川,2,NULL,2024/10/30 9:57,2024/10/30 9:57
+125,normal,update,36,remarks,NULL,脚がぐらつくので返品交換してもらう必要がある。,管理者大川,1,NULL,2024/11/5 11:29,2024/11/5 11:29
+126,normal,update,37,manufacturer,NULL,プラス,管理者大川,2,NULL,2024/10/31 15:49,2024/10/31 15:49
+127,normal,update,38,manufacturer,NULL,プラス,管理者大川,2,NULL,2024/10/31 15:49,2024/10/31 15:49
+128,normal,update,39,price,15100,15300,管理者大川,2,NULL,2024/10/25 10:12,2024/10/25 10:12
+129,normal,update,40,remarks,NULL,単三電池4本使用,管理者大川,1,NULL,2024/11/20 12:15,2024/11/20 12:15
+130,normal,update,42,location_of_use_id,3,1,管理者大川,5,NULL,2024/11/25 10:22,2024/11/25 10:22
+131,normal,update,46,remarks,NULL,「コロコロクリーナー替え」が別に登録してあります。,管理者大川,1,NULL,2024/11/12 9:56,2024/11/12 9:56
+132,normal,update,47,remarks,年額制,"年額制
+PC5台で使用出来ます。",管理者大川,1,NULL,2024/11/5 13:18,2024/11/5 13:18
+133,normal,update,48,remarks,年額制,"年額制
+PC1台で使用出来ます。",管理者大川,1,NULL,2024/11/8 15:21,2024/11/8 15:21
+134,normal,update,49,manufacturer,NULL,Makita,管理者大川,1,NULL,2024/11/18 13:45,2024/11/18 13:45
+135,normal,update,52,name,ボールペン,ボールペン（黒）,管理者大川,1,NULL,2024/11/8 14:45,2024/11/8 14:45
+136,normal,update,53,manufacturer,NULL,ぺんてる,管理者大川,1,NULL,2024/11/18 14:27,2024/11/18 14:27
+137,normal,update,54,manufacturer,NULL,ぺんてる,管理者大川,1,NULL,2024/11/1 9:35,2024/11/1 9:35
+138,normal,update,55,manufacturer,NULL,ぺんてる,管理者大川,1,NULL,2024/10/30 15:27,2024/10/30 15:27
+139,normal,update,56,manufacturer,NULL,ぺんてる,管理者大川,1,NULL,2024/10/18 14:47,2024/10/18 14:47
+140,normal,update,57,manufacturer,NULL,サンワダイレクト,管理者大川,1,NULL,2024/11/20 13:18,2024/11/20 13:18
+141,normal,update,62,remarks,20本パック,"20本パック
+注意：使い終わったら、ビニールテープで絶縁してください。",管理者大川,1,NULL,2024/10/25 13:32,2024/10/25 13:32
+142,normal,update,63,remarks,12本入り,"12本入り
+注意：使い終わったら、ビニールテープで絶縁してください。",管理者大川,1,NULL,2024/11/25 12:08,2024/11/25 12:08
+143,normal,update,64,remarks,6パック,"6パック
+使い過ぎないように周知する",管理者大川,1,NULL,2024/11/5 9:31,2024/11/5 9:31
+144,normal,update,73,price,2000,1900,管理者大川,2,NULL,2024/10/30 15:47,2024/10/30 15:47
+145,normal,update,73,remarks,"30本入り
+賞味期限あり","30本入り
+賞味期限あり
+廃棄予定日が来たら廃棄してください。",管理者大川,1,NULL,2024/11/14 13:34,2024/11/14 13:34
+146,normal,update,79,manufacturer,NULL,Panasonic,管理者大川,1,NULL,2024/11/25 11:14,2024/11/25 11:14
+147,normal,update,80,manufacturer,NULL,Sharp,管理者大川,1,NULL,2024/11/18 15:21,2024/11/18 15:21
+148,normal,update,81,price,15000,14000,管理者大川,2,NULL,2024/10/25 9:47,2024/10/25 9:47
+149,normal,update,84,remarks,備え付け、点検が必要,"備え付け、点検が必要
+定期的に点検が必要です。",管理者大川,1,NULL,2024/10/21 9:35,2024/10/21 9:35
+150,normal,update,85,remarks,備え付け、点検が必要,"備え付け、点検が必要
+定期的に点検が必要です。",管理者大川,1,NULL,2024/10/21 9:35,2024/10/21 9:35
+151,normal,update,86,remarks,備え付け、点検が必要,"備え付け、点検が必要
+定期的に点検が必要です。",管理者大川,1,NULL,2024/10/21 9:35,2024/10/21 9:35
+152,normal,update,87,remarks,NULL,定期的に点検が必要です。,管理者大川,1,NULL,2024/10/21 9:40,2024/10/21 9:40
+153,normal,update,88,price,4800,4500,管理者大川,2,NULL,2024/10/21 14:29,2024/10/21 14:29
+154,normal,update,88,remarks,500ml×24本,"500ml×24本
+消費期限が近づいたら、新しいものを購入してください。",管理者大川,1,NULL,2024/11/5 10:17,2024/11/5 10:17
+155,normal,update,89,remarks,NULL,定期的に点検が必要です。,管理者大川,1,NULL,2024/10/21 9:47,2024/10/21 9:47
+156,normal,inspection,89,NULL,NULL,NULL,管理者大川,NULL,NULL,2024/10/20 15:50,2024/10/20 15:50
+157,normal,soft_delete,11,NULL,NULL,NULL,管理者大川,NULL,NULL,2024/10/15 15:04,2024/10/15 15:04
+158,normal,soft_delete,26,NULL,NULL,NULL,管理者大川,NULL,NULL,2024/10/15 15:05,2024/10/15 15:05
