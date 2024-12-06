@@ -296,7 +296,7 @@ onMounted(() => {
               <div class="p-2 w-full">
                   <label for="quantity" class="leading-7 text-xs md:text-base text-blue-900">入庫数</label>
                   <div class="flex items-centers">
-                    <input type="number" id="quantity" name="quantity" v-model="increaseForm.quantity" min="1" max="100" step="1" class="w-1/3 bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-xs md:text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
+                    <input type="number" id="quantity" name="quantity" v-model="increaseForm.quantity" min="1" max="500" step="1" class="w-1/3 bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-xs md:text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
                     <div id="unit" name="unit" class="w-1/2  text-xs md:text-base outline-none text-gray-700 py-1 px-3 leading-7">
                       {{ item.unit.name }}
                     </div>    
