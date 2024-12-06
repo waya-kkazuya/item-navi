@@ -26,7 +26,7 @@ const form = useForm({
 // disposalsテーブルに保存する関数
 const saveDisposal = (item: ItemType): void => {
   try {
-    if (confirm('本当に削除しますか？')) {
+    if (confirm('本当に廃棄しますか？')) {
       form.put(`/dispose_item/${item.id}`, {
         onSuccess: () => {
           toggleStatus();
@@ -101,7 +101,7 @@ const saveDisposal = (item: ItemType): void => {
                   <span class="ml-1 mr-2 bg-red-400 text-white text-xs py-1 px-2 rounded-md">必須</span>
                 </label>
                 <div>
-                  <textarea id="details" name="details" maxlength="500" v-model="form.details" class="md:mt-1 w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 h-32 text-xs md:text-base outline-none text-gray-700 py-1 px-3 resize-none leading-6 transition-colors duration-200 ease-in-out"></textarea>
+                  <textarea id="disposalDetails" name="details" maxlength="500" v-model="form.details" class="md:mt-1 w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 h-32 text-xs md:text-base outline-none text-gray-700 py-1 px-3 resize-none leading-6 transition-colors duration-200 ease-in-out"></textarea>
                   <div v-if="errors.details" class="font-medium text-xs md:text-base text-red-600">{{ errors.details }}</div>
                 </div>
               </div>
@@ -116,7 +116,7 @@ const saveDisposal = (item: ItemType): void => {
       </div>
     </div>
   </div>
-  <button @click="toggleStatus" type="button" data-micromodal-trigger="modal-1" href='javascript:;' class="flex mx-auto md:ml-4 text-xs md:text-base text-white bg-red-500 border-0 py-2 px-8 focus:outline-none hover:bg-red-600 rounded">
+  <button @click="toggleStatus" type="button" id="disposalButton" data-micromodal-trigger="modal-1" href='javascript:;' class="flex mx-auto md:ml-4 text-xs md:text-base text-white bg-red-500 border-0 py-2 px-8 focus:outline-none hover:bg-red-600 rounded">
     廃棄する
   </button>
 </template>
