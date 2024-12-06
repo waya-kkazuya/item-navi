@@ -59,14 +59,14 @@ const formatDate = (timestamp: string) => {
             <table v-if="editHistoriesData.length > 0" class="table-fixed min-w-full text-left whitespace-no-wrap">
               <thead>
                 <tr>
-                  <th class="min-w-16 px-4 py-3 title-font tracking-wider font-medium text-white text-xs md:text-sm text-center bg-sky-700">更新日時</th>
+                  <th class="min-w-36 px-4 py-3 title-font tracking-wider font-medium text-white text-xs md:text-sm text-center bg-sky-700">更新日時</th>
                   <th class="min-w-28 px-4 py-3 title-font tracking-wider font-medium text-white text-xs md:text-sm text-center bg-sky-700">更新種類</th>
-                  <th class="min-w-28 px-4 py-3 title-font tracking-wider font-medium text-white text-xs md:text-sm text-center bg-sky-700">編集者</th>
+                  <th class="min-w-32 px-4 py-3 title-font tracking-wider font-medium text-white text-xs md:text-sm text-center bg-sky-700">編集者</th>
                   <th class="min-w-36 px-4 py-3 title-font tracking-wider font-medium text-white text-xs md:text-sm text-center bg-sky-700">更新フィールド</th>
-                  <th class="min-w-40 px-4 py-3 title-font tracking-wider font-medium text-white text-xs md:text-sm text-center bg-sky-700">更新前</th>
-                  <th class="min-w-28 px-4 py-3 title-font tracking-wider font-medium text-white text-xs md:text-sm text-center bg-sky-700">更新後</th>
-                  <th class="min-w-28 px-4 py-3 title-font tracking-wider font-medium text-white text-xs md:text-sm text-center bg-sky-700">編集理由</th>
-                  <th class="min-w-28 px-4 py-3 title-font tracking-wider font-medium text-white text-xs md:text-sm text-center bg-sky-700">理由詳細</th>
+                  <th class="min-w-48 px-4 py-3 title-font tracking-wider font-medium text-white text-xs md:text-sm text-center bg-sky-700">更新前</th>
+                  <th class="min-w-48 px-4 py-3 title-font tracking-wider font-medium text-white text-xs md:text-sm text-center bg-sky-700">更新後</th>
+                  <th class="min-w-56 px-4 py-3 title-font tracking-wider font-medium text-white text-xs md:text-sm text-center bg-sky-700">編集理由</th>
+                  <th class="min-w-56 px-4 py-3 title-font tracking-wider font-medium text-white text-xs md:text-sm text-center bg-sky-700">理由詳細</th>
                 </tr>
               </thead>
               <tbody>
