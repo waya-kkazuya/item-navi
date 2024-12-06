@@ -23,17 +23,19 @@ class DisposalObserver
         $oldValue = null;
         $newValue = $disposal->disposal_scheduled_date; 
 
-        Edithistory::create([
-            'edit_mode' => $edit_mode,
-            'operation_type' => $operation_type,
-            'item_id' => $disposal->item_id,
-            'edited_field' => 'disposal_scheduled_date',
-            'old_value' => $oldValue,
-            'new_value' => $newValue,
-            'edit_user' => Auth::user()->name ?? '',
-            'edit_reason_id' => $edit_reason_id, //プルダウン
-            'edit_reason_text' => $edit_reason_text, //その他テキストエリア  
-        ]);
+        if($operation_type == 'update') {
+            Edithistory::create([
+                'edit_mode' => $edit_mode,
+                'operation_type' => $operation_type,
+                'item_id' => $disposal->item_id,
+                'edited_field' => 'disposal_scheduled_date',
+                'old_value' => $oldValue,
+                'new_value' => $newValue,
+                'edit_user' => Auth::user()->name ?? '',
+                'edit_reason_id' => $edit_reason_id, //プルダウン
+                'edit_reason_text' => $edit_reason_text, //その他テキストエリア  
+            ]);
+        }
     }
 
     /**
