@@ -22,6 +22,8 @@ type Props = {
   locationOfUseId: number;
   storageLocationId: number;
   totalCount: number;
+  startNumber: number;
+  endNumber: number;
   userName: string;
   linkedItem: ItemType; // 指定した備品のモーダルを開くために使用
   errors: ValidationErrors;
@@ -33,6 +35,8 @@ const props = defineProps<Props>();
 const localConsumableItems: Ref<Paginator<ItemType>> = ref({...props.consumableItems});
 // 合計件数
 const totalCount: Ref<number> = ref(props.totalCount);
+const startNumber: Ref<number> = ref(props.startNumber);
+const endNumber: Ref<number> = ref(props.endNumber);
 // 検索フォーム
 const search: Ref<string> = ref(props.search);
 // 作成日でソート
@@ -127,10 +131,12 @@ const fetchConsumableItems = async (): Promise<void> => {
       }
     });
     localConsumableItems.value = res.data.consumableItems;
-    totalCount.value = res.data.totalCount;
     search.value = res.data.search;
     locationOfUseId.value = res.data.locationOfUseId;
-    storageLocationId.value = res.data.storageLocationId
+    storageLocationId.value = res.data.storageLocationId;
+    totalCount.value = res.data.totalCount;
+    startNumber.value = res.data.startNumber;
+    endNumber.value =　res.data.endNumber;
   } catch (e: any){
     axios.post('/api/log-error', {
       error: e.toString(),
@@ -252,9 +258,11 @@ const fetchConsumableItems = async (): Promise<void> => {
                             </div>
                           </div>
                           
-                          <div class="my-4 flex justify-end items-end space-x-2">
-                            <div class="font-medium text-xs md:text-sm">備品合計 {{ totalCount }}件</div>
-                            <Pagination class="" :links="localConsumableItems.links"></Pagination>
+                          <div class="mt-8 mb-4 flex flex-col items-center space-y-3">
+                            <Pagination :links="localConsumableItems.links" />
+                            <div class="font-medium text-xs md:text-sm">
+                              {{ totalCount }}件中 {{ startNumber }}件目～{{ endNumber }}件目
+                            </div>
                           </div>
 
                           <!-- タイル表示 -->
