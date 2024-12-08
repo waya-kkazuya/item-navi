@@ -120,6 +120,13 @@ class ItemController extends Controller
 
             $total_count = $query->count();
             $items = $query->paginate(20);
+            $total_count = $items->total(); // 合計件数
+
+            $current_page = $items->currentPage(); // 現在のページ番号
+            $per_page = $items->perPage(); // 1ページあたりの項目数
+            $start_number = ($current_page - 1) * $per_page + 1; // 現在のページの最初の項目番号
+            $end_number = min($start_number + $items->count() - 1, $total_count); // 現在のページの最後の項目番号
+
 
             // map関数を使用するとpaginateオブジェクトの構造が変わり、ペジネーションが使えなくなる
             $items->getCollection()->transform(function ($item) {
@@ -145,7 +152,9 @@ class ItemController extends Controller
             if ($request->has('disposal')) {
                 return [
                     'items' => $items,
-                    'total_count' => $total_count
+                    'total_count' => $total_count,
+                    'startNumber' => $start_number,
+                    'endNumber' => $end_number
                 ];
             }
             
@@ -160,7 +169,9 @@ class ItemController extends Controller
                 'categoryId' => $category_id,
                 'locationOfUseId' => $location_of_use_id,
                 'storageLocationId' => $storage_location_id,
-                'totalCount' => $total_count
+                'totalCount' => $total_count,
+                'startNumber' => $start_number,
+                'endNumber' => $end_number
             ]);
         } catch (\Exception $e) {
             Log::error('ItemController index method failed', [

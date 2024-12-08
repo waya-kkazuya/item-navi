@@ -21,6 +21,8 @@ type Props = {
   locationOfUseId: number;
   storageLocationId: number;
   totalCount: number;
+  startNumber: number;
+  endNumber: number;
 };
 
 const props = defineProps<Props>();
@@ -38,6 +40,9 @@ const locationOfUseId: Ref<number> = ref(props.locationOfUseId ?? 0);
 const storageLocationId: Ref<number> = ref(props.storageLocationId ?? 0);
 // 備品の合計件数
 const totalCount: Ref<number> = ref(props.totalCount);
+const startNumber: Ref<number> = ref(props.startNumber);
+const endNumber: Ref<number> = ref(props.endNumber);
+
 
 // プルダウンや検索フォームの条件を適用して備品情報を再取得
 const fetchAndFilterItems = (): void => {
@@ -88,6 +93,8 @@ const toggleItems = async (): Promise<void> => {
     const res = await axios.get(url);
     localItems.value = res.data.items;
     totalCount.value = res.data.total_count;
+    startNumber.value = res.data.startNumber;
+    endNumber.value =　res.data.endNumber;
   } catch (e: any) {
     axios.post('/api/log-error', {
       error: e.toString(),
@@ -275,7 +282,7 @@ const restoreItem = (id: number) => {
 
                           
                           <div class="mb-4 flex justify-end items-end space-x-2">
-                            <div class="font-medium text-xs md:text-sm">備品合計 {{ totalCount }}件</div>
+                            <div class="font-medium text-xs md:text-sm">{{ totalCount }}件中 {{ startNumber }}件目～{{ endNumber }}件目</div>
                             <Pagination class="" :links="localItems.links" />
                           </div>
 
