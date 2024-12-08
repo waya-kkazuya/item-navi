@@ -258,9 +258,11 @@ const fetchConsumableItems = async (): Promise<void> => {
                             </div>
                           </div>
                           
-                          <div class="my-4 flex justify-end items-end space-x-2">
-                            <div class="font-medium text-xs md:text-sm">備品合計 {{ totalCount }}件</div>
-                            <Pagination class="" :links="localConsumableItems.links"></Pagination>
+                          <div class="mt-8 mb-4 flex flex-col items-center space-y-3">
+                            <Pagination :links="localConsumableItems.links" />
+                            <div class="font-medium text-xs md:text-sm">
+                              {{ totalCount }}件中 {{ startNumber }}件目～{{ endNumber }}件目
+                            </div>
                           </div>
 
                           <!-- タイル表示 -->
