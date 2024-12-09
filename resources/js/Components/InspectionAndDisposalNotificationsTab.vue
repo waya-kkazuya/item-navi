@@ -44,7 +44,7 @@ const markAsRead = async (id: string): Promise<void> => {
 <template>
   <div>
     <div class="flex justify-around items-center">
-      <div class="my-4 px-4 font-medium text-xs md:text-base">※毎朝6時更新</div>
+      <div class="my-4 px-4 font-medium text-xs md:text-base">※平日0時更新</div>
       <Link :href="route('inspection_and_disposal_items')" class="px-4 text-blue-600 title-font font-medium text-xs md:text-base underline">
         点検と廃棄へ
       </Link>
