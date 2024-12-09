@@ -100,9 +100,7 @@ const toggleDetails = (history: EditHistoryType) => {
                                     <template v-if="type == 'category'">
                                         <tr>
                                             <td class="border-b-2 border-gray-200 px-4 py-3">
-                                                <Link :href="route('items.index')" class="text-blue-500 hover:text-blue-700 underline block">
-                                                    全体
-                                                </Link>
+                                                全体
                                             </td>
                                             <td class="border-b-2 border-gray-200 px-4 py-3 text-center">
                                                 <Link :href="route('items.index')" class="text-blue-500 hover:text-blue-700 underline block">
@@ -112,9 +110,7 @@ const toggleDetails = (history: EditHistoryType) => {
                                         </tr>
                                         <tr v-for="(group, categoryName) in itemsByType" :key="categoryName">
                                             <td class="border-b-2 border-gray-200 px-4 py-3">
-                                                <Link v-if="('category_id' in group)" :href="route('items.index', { categoryId: group.category_id})" class="text-blue-500 hover:text-blue-700 underline block">
-                                                    {{ categoryName }}
-                                                </Link>
+                                                {{ categoryName }}
                                             </td>
                                             <td class="border-b-2 border-gray-200 px-4 py-3 text-center">
                                                 <Link v-if="('category_id' in group)" :href="route('items.index', { categoryId: group.category_id})" class="text-blue-500 hover:text-blue-700 underline block">
@@ -126,9 +122,7 @@ const toggleDetails = (history: EditHistoryType) => {
                                     <template v-else>
                                         <tr>
                                             <td class="border-b-2 border-gray-200 px-4 py-3">
-                                                <Link :href="route('items.index')" class="text-blue-500 hover:text-blue-700 underline block">
-                                                    全体
-                                                </Link>
+                                                全体
                                             </td>
                                             <td class="border-b-2 border-gray-200 px-4 py-3 text-center">
                                                 <Link :href="route('items.index')" class="text-blue-500 hover:text-blue-700 underline block">
@@ -138,9 +132,7 @@ const toggleDetails = (history: EditHistoryType) => {
                                         </tr>
                                         <tr v-for="(group, locationOfUseName) in itemsByType" :key="locationOfUseName">
                                             <td class="border-b-2 border-gray-200 px-4 py-3">
-                                                <Link v-if="('location_of_use_id' in group)" :href="route('items.index', { locationOfUseId: group.location_of_use_id})" class="text-blue-500 hover:text-blue-700 underline block">
-                                                    {{ locationOfUseName }}
-                                                </Link>
+                                                {{ locationOfUseName }}
                                             </td>
                                             <td class="border-b-2 border-gray-200 px-4 py-3 text-center">
                                                 <Link v-if="('location_of_use_id' in group)" :href="route('items.index', { locationOfUseId: group.location_of_use_id})" class="text-blue-500 hover:text-blue-700 underline block">
