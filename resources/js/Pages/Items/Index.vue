@@ -58,7 +58,7 @@ const fetchAndFilterItems = (): void => {
 };
 
 // プルダウンや検索フォームをすべてリセット
-const resetState = (): void => {
+const clearState = (): void => {
   search.value = '';
   sortOrder.value = 'asc';
   categoryId.value = 0;
@@ -250,11 +250,8 @@ const restoreItem = (id: number) => {
 
                                 <!-- 条件をすべてリセットするボタン -->
                                 <div>
-                                  <button @click="resetState" class="flex justify-center items-center w-24 md:w-32 h-9 p-2 md:ml-4 text-white text-sm bg-indigo-500 border-0 focus:outline-none hover:bg-indigo-600 rounded">
-                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-5">
-                                      <path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99" />
-                                    </svg>
-                                    <div class="ml-2 text-xs md:text-base">リセット</div>
+                                  <button @click="clearState" class="text-xs md:text-base flex justify-center items-center w-24 md:w-16 h-9 p-2 md:ml-4 text-gray-600 bg-white border border-gray-600 focus:outline-none hover:bg-blue-50 rounded">
+                                      クリア
                                   </button>
                                 </div>
                               </div>
