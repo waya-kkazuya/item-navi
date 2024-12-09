@@ -109,7 +109,7 @@ const saveInspection = (item: ItemType): void => {
               </div>
             </div>
             <div class="p-2 w-full">
-              <button class="flex mx-auto text-white text-sm bg-sky-500 border-0 py-2 px-8 focus:outline-none hover:bg-sky-600 rounded">
+              <button class="flex mx-auto text-white text-xs md:text-sm bg-sky-500 border-0 py-2 px-8 focus:outline-none hover:bg-sky-600 rounded">
                 点検を実施する
               </button>
             </div>
@@ -118,7 +118,7 @@ const saveInspection = (item: ItemType): void => {
       </div>
     </div>
   </div>
-  <button @click="toggleStatus" type="button" id="inspectionButton" data-micromodal-trigger="modal-1" href='javascript:;' class="flex mx-auto md:ml-4 text-xs md:text-base text-white bg-sky-500 border-0 py-2 px-8 focus:outline-none hover:bg-sky-600 rounded">
+  <button @click="toggleStatus" type="button" id="inspectionButton" data-micromodal-trigger="modal-1" href='javascript:;' class="flex mx-auto md:ml-4 text-xs md:text-sm text-white bg-sky-500 border-0 py-2 px-8 focus:outline-none hover:bg-sky-600 rounded">
     点検する
   </button>
 </template>
