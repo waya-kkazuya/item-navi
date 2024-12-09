@@ -39,8 +39,11 @@ defineProps<{
                             <div class="container px-5 py-8 mx-auto">                                    
                                 <div class="md:w-full mx-auto">
                                     <div class="-m-2">
-                                        <div class="mb-2 flex justify-end">
+                                        <div class="mb-2 flex justify-end space-x-1">
                                             <EditHistoryModal :item="item" :isTableView="false" />
+                                            <Link as="button" :href="route('items.edit', { item: item.id })" id="editItem" class="flex text-white bg-indigo-500 border-0 py-2 px-4 focus:outline-none hover:bg-indigo-600 rounded text-xs md:text-sm">
+                                                編集する
+                                            </Link>
                                         </div>
                                         <div class="grid grid-cols-1 md:grid-cols-3 md:gap-4">
                                             <div class="col-span-1">
