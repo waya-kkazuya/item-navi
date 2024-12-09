@@ -438,8 +438,11 @@ const restoreItem = (id: number) => {
                             </div>
                           </div>
 
-                          <div class="mb-4 flex justify-end">
-                            <Pagination class="mt-6" :links="localItems.links" />
+                          <div class="mt-4 flex flex-col items-center justify-end space-y-3">
+                            <Pagination :links="localItems.links" />
+                            <div class="font-medium text-xs md:text-sm">
+                              {{ totalCount }}件中 {{ startNumber }}件目～{{ endNumber }}件目
+                            </div>
                           </div>
                       </section>
                     </div>
