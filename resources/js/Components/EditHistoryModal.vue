@@ -92,7 +92,7 @@ const formatDate = (timestamp: string) => {
         </main>
         <footer class="modal__footer">
           <button @click="toggleStatus" type="button" class="modal__btn" data-micromodal-close aria-label="Close this dialog window">
-          <span class="text-xs md:text-sm">閉じる</span>
+            <span class="text-xs md:text-sm">閉じる</span>
           </button>
         </footer>
       </div>
@@ -104,7 +104,7 @@ const formatDate = (timestamp: string) => {
     <button v-if="props.isTableView" @click="editHistories(item)" type="button" data-micromodal-trigger="modal-1" class="h-4">
       <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
     </button>
-    <button v-else @click="editHistories(item)" type="button" data-micromodal-trigger="modal-1" class="flex items-center text-white text-sm bg-gray-500 border-0 py-2 px-4 mx-auto focus:outline-none hover:bg-gray-600 rounded">
+    <button v-else @click="editHistories(item)" type="button" data-micromodal-trigger="modal-1" class="flex items-center text-white text-xs md:text-sm bg-gray-500 border-0 py-2 px-4 mx-auto focus:outline-none hover:bg-gray-600 rounded">
       <svg class="w-4 h-4 mr-1" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
       履歴
     </button>
