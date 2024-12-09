@@ -58,7 +58,7 @@ const fetchAndFilterItems = (): void => {
 };
 
 // プルダウンや検索フォームをすべてリセット
-const resetState = (): void => {
+const clearState = (): void => {
   search.value = '';
   sortOrder.value = 'asc';
   categoryId.value = 0;
@@ -250,7 +250,7 @@ const restoreItem = (id: number) => {
 
                                 <!-- 条件をすべてリセットするボタン -->
                                 <div>
-                                  <button @click="resetState" class="text-xs md:text-base flex justify-center items-center w-24 md:w-16 h-9 p-2 md:ml-4 text-gray-600 bg-white border border-gray-600 focus:outline-none hover:bg-blue-50 rounded">
+                                  <button @click="clearState" class="text-xs md:text-base flex justify-center items-center w-24 md:w-16 h-9 p-2 md:ml-4 text-gray-600 bg-white border border-gray-600 focus:outline-none hover:bg-blue-50 rounded">
                                       クリア
                                   </button>
                                 </div>
