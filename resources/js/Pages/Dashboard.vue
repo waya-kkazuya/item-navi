@@ -52,7 +52,7 @@ onMounted(() => {
     }); 
 });
 
-// 編集履歴のアコーディオンメニューの開閉を切り替える関数 
+// 編集履歴のアコーディオンパネルの開閉を切り替える関数 
 const toggleDetails = (history: EditHistoryType) => {
     history.showDetails = !history.showDetails;
 };
@@ -175,7 +175,10 @@ const toggleDetails = (history: EditHistoryType) => {
                                                 <td class="border-b-2 p-2">
                                                     <div class="flex items-center">
                                                         <button v-if="history.operation_type == 'update' && history.edit_reason.reason" @click="toggleDetails(history)" class="text-sm text-gray-500 ml-2">
-                                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-5">
+                                                            <svg v-if="history.showDetails" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-5">
+                                                                <path stroke-linecap="round" stroke-linejoin="round" d="M15 12H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                                                            </svg>
+                                                            <svg v-else xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-5">
                                                                 <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
                                                             </svg>
                                                         </button>
@@ -190,10 +193,10 @@ const toggleDetails = (history: EditHistoryType) => {
                                                                 </Link>
                                                             </template>
                                                             <span v-if="history.operation_type == 'update'">の{{ history.edited_field_for_display }}</span>
-                                                            を{{ history.operation_description }}しました
+                                                            {{ history.operation_description }}
                                                         </div>
                                                     </div>
-                                                    <!-- アコーディオンメニュー部分 -->
+                                                    <!-- アコーディオンパネル部分 -->
                                                     <div v-if="history.showDetails && history.operation_type == 'update' && history.edit_reason.reason" class="relative bg-indigo-50 md:text-base p-2 mt-1 rounded">
                                                         <div class="arrow-up"></div>
                                                         <span class="font-semibold">編集理由 </span><span>{{ history.edit_reason.reason }}</span>
