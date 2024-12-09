@@ -243,7 +243,7 @@ defineProps<{
                                                     </div>
                                                 </div>
                                                 <div class="p-2 w-full">
-                                                    <Link as="button" :href="route('items.edit', { item: item.id })" id="editItem" class="flex mx-auto text-white bg-indigo-500 border-0 py-2 px-8 focus:outline-none hover:bg-indigo-600 rounded text-xs md:text-base">
+                                                    <Link as="button" :href="route('items.edit', { item: item.id })" id="editItem" class="flex mx-auto text-xs md:text-sm text-white bg-indigo-500 border-0 py-2 px-8 focus:outline-none hover:bg-indigo-600 rounded">
                                                         編集する
                                                     </Link>
                                                 </div>
