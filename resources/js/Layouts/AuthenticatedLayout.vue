@@ -166,10 +166,10 @@ const profileImageUrl: ComputedRef<string> = computed(() =>{
                         <ResponsiveNavLink :href="route('item_requests.index')" :active="route().current('item_requests.index')">
                             リクエスト
                         </ResponsiveNavLink>
-                        <ResponsiveNavLink :href="route('notifications.index')" :active="route().current('notifications.index')">
+                        <ResponsiveNavLink v-if="page.props.auth.user_role <= 5" :href="route('notifications.index')" :active="route().current('notifications.index')">
                             <div class="flex">
                                 <div class="mr-2">通知</div>
-                                <BellNotification :isLink="false" v-if="page.props.auth.user_role <= 5" class="flex" />
+                                <BellNotification :isLink="false" class="flex" />
                             </div>
                         </ResponsiveNavLink>
                     </div>
@@ -192,7 +192,7 @@ const profileImageUrl: ComputedRef<string> = computed(() =>{
                                  <!-- Profile  -->
                             </ResponsiveNavLink>
                             <ResponsiveNavLink :href="route('logout')" method="post" as="button">
-                                Log Out
+                                ログアウト
                             </ResponsiveNavLink>
                         </div>
                     </div>
