@@ -6,7 +6,7 @@ use App\Http\Controllers\ConsumableItemController;
 use App\Http\Controllers\Api\EdithistoryController;
 use App\Http\Controllers\ItemController;
 use App\Http\Controllers\ItemRequestController;
-use App\Http\Controllers\StockTransactionController;
+use App\Http\Controllers\Api\StockTransactionController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\VueErrorController;
 
