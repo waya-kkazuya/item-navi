@@ -85,8 +85,8 @@ class ConsumableItemController extends Controller
             }
 
             // 消耗品の合計件数
-            $consumableItems = $query->paginate(20);
             $total_count = $query->count();
+            $consumableItems = $query->paginate(20);
 
             $current_page = $consumableItems->currentPage(); // 現在のページ番号
             $per_page = $consumableItems->perPage(); // 1ページあたりの項目数
