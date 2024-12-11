@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Log;
 
 class StockTransactionController extends Controller
 {
-    public function stockTransaction(Request $request)
+    public function index(Request $request)
     {
         Log::info('StockTransactionController API stockTransaction method called');
 

@@ -32,7 +32,7 @@ Route::middleware(['auth:sanctum', 'verified', 'can:staff-higher'])
 
 // 在庫数の入出庫履歴を取得する
 Route::middleware('auth:sanctum', 'verified', 'can:user-higher')
-->get('/stock_transactions', [StockTransactionController::class, 'stockTransaction'])
+->get('/stock_transactions', [StockTransactionController::class, 'index'])
 ->name('stock_transactions');
 
 // 消耗品の入出・出庫モーダルで更新処理をした際、在庫数をリアルタイムに反映する
