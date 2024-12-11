@@ -2,15 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use Illuminate\Notifications\Notification;
-use Inertia\Inertia;
-use App\Models\SystemNotification;
-use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
+use Inertia\Inertia;
+use App\Http\Controllers\Controller;
 
 class NotificationController extends Controller
 {
@@ -19,12 +16,12 @@ class NotificationController extends Controller
         Gate::authorize('staff-higher');
 
         Log::info('NotificationController index method called');
-
-        // ログイン中のユーザーに向けた通知を取得
-        // $notifications = Auth::user()->notifications; ログイン中の通知
-        // $notifications = SystemNotification::all(); 全ての通知
+        
+        // Auth::user()->notifications; ログイン中ユーザーへの通知
+        // SystemNotification::all(); 全ての通知
         // ※情報がない場合、nullではなく空のコレクションとして扱われる
 
+        // ログイン中のユーザーに向けた通知を取得
         $notifications = Auth::user()->notifications->map(function ($notification) {
             $notification->id = (string) $notification->id; // UUIDを文字列として扱う、明示的に文字列としないと挙動がおかしくなる
             $notification->relative_time = Carbon::parse($notification->created_at)->diffForHumans(); // 相対的な時間を追加
@@ -74,21 +71,5 @@ class NotificationController extends Controller
             'unreadInspectionAndDisposalNotifications' => $unreadInspectionAndDisposalNotifications,
             'unreadRequestedItemNotifications' => $unreadRequestedItemNotifications,
         ]);
-    }
-
-    // 既読にするためのAPIエンドポイント
-    public function markAsRead($id)
-    {
-        Gate::authorize('staff-higher');
-
-        Log::info('NotificationController API markAsRead method called');
-
-        $notification = Auth::user()->notifications()->find($id);
-        if ($notification) {
-            $notification->markAsRead();
-            return response()->noContent(); // 204 レスポンスにコンテンツ含まれないｓ
-        }
-
-        return response()->json(['status' => 'error'], 404);
     }
 }
