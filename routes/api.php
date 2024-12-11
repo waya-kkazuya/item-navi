@@ -2,12 +2,8 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Api\AnalysisController;
-use App\Http\Controllers\Api\ConsumableItemsController;
 use App\Http\Controllers\ConsumableItemController;
-use App\Http\Controllers\EdithistoryController;
-use App\Models\Edithistory;
-use App\Models\StockTransaction;
+use App\Http\Controllers\Api\EdithistoryController;
 use App\Http\Controllers\ItemController;
 use App\Http\Controllers\ItemRequestController;
 use App\Http\Controllers\StockTransactionController;
@@ -59,6 +55,7 @@ Route::middleware('auth:sanctum', 'verified', 'can:staff-higher')
 Route::middleware(['auth:sanctum', 'verified', 'can:staff-higher', 'RestrictGuestAccess'])
 ->post('item-requests/{id}/update-status', [ItemRequestController::class, 'updateStatus'])
 ->name('item-requests.update-status');
+
 // リクエスト一覧画面でユーザーの権限情報を取得する
 Route::middleware(['auth:sanctum', 'verified', 'can:user-higher'])
 ->get('/user-role', function (Request $request) {
