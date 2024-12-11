@@ -8,7 +8,7 @@ use App\Http\Controllers\ItemController;
 use App\Http\Controllers\Api\ItemRequestController;
 use App\Http\Controllers\Api\StockTransactionController;
 use App\Http\Controllers\Api\NotificationController;
-use App\Http\Controllers\VueErrorController;
+use App\Http\Controllers\Api\VueErrorController;
 
 /*
 |--------------------------------------------------------------------------
