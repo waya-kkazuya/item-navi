@@ -5,7 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ConsumableItemController;
 use App\Http\Controllers\Api\EdithistoryController;
 use App\Http\Controllers\ItemController;
-use App\Http\Controllers\ItemRequestController;
+use App\Http\Controllers\Api\ItemRequestController;
 use App\Http\Controllers\Api\StockTransactionController;
 use App\Http\Controllers\Api\NotificationController;
 use App\Http\Controllers\VueErrorController;
