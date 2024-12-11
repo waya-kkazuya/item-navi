@@ -2,18 +2,19 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Log;
+use Inertia\Inertia;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreItemRequestRequest;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Gate;
 use App\Models\ItemRequest;
 use App\Models\Category;
 use App\Models\Location;
 use App\Models\RequestStatus;
-use Illuminate\Support\Facades\Log;
-use Inertia\Inertia;
 use App\Events\RequestedItemDetectEvent;
-use Illuminate\Support\Facades\DB;
+
 
 class ItemRequestController extends Controller
 {
@@ -68,23 +69,6 @@ class ItemRequestController extends Controller
         ]); 
     }
     
-    // API通信用
-    public function updateStatus(Request $request, $id)
-    {
-        Gate::authorize('staff-higher');
-
-        Log::info('ItemRequestController updateStatus api method called');
-
-        // $idはURLパラメータから取得される
-        $itemRequest = ItemRequest::findOrFail($id);
-        $itemRequest->request_status_id = $request->requestStatusId;
-        $itemRequest->save();
-
-        Log::info('ItemRequestController updateStatus api method succeeded');
-
-        return response()->json(['message' => 'Status updated successfully'], 200);
-    }
-
     public function create()
     {
         Gate::authorize('user-higher');
