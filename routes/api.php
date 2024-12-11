@@ -2,7 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\ConsumableItemController;
+use App\Http\Controllers\Api\ConsumableItemController;
 use App\Http\Controllers\Api\EdithistoryController;
 use App\Http\Controllers\ItemController;
 use App\Http\Controllers\Api\ItemRequestController;

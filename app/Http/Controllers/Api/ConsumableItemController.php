@@ -1,9 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
-use Inertia\Inertia;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
@@ -101,30 +100,18 @@ class ConsumableItemController extends Controller
                 return $consumableItem;
             });
 
-            // プルダウン用データ
-            $locations = Location::all();
-            $user = auth()->user();
+            Log::info('Api\ConsumableItemController index method succeeded');
 
-            // Notification.vueのリンククリックで送られてきたItemのid
-            $linkedItem = Item::with($withRelations)
-                ->select($selectFields)
-                ->find($item_id);
-
-            Log::info('ConsumableItemController index method succeeded');
-
-            return Inertia::render('ConsumableItems/Index', [
+            return [
                 'consumableItems' => $consumableItems,
-                'locations' => $locations,
                 'search' => $search,
                 'sortOrder' => $sortOrder,
                 'locationOfUseId' => $location_of_use_id,
                 'storageLocationId' => $storage_location_id,
                 'totalCount' => $total_count,
-                'userName' => $user->name,
-                'linkedItem' => $linkedItem,
                 'startNumber' => $start_number,
                 'endNumber' => $end_number
-            ]);
+            ];
         } catch (\Exception $e) {
             Log::error('ConsumableItemController index method failed', [
                 'error' => $e->getMessage(),

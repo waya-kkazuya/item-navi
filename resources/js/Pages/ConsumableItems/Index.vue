@@ -123,7 +123,6 @@ const fetchConsumableItems = async (): Promise<void> => {
   try {
     const res = await axios.get('/api/consumable_items', {
       params: {
-        reload: true,
         search: search.value,
         sortOrder: sortOrder.value,
         locationOfUseId: locationOfUseId.value,
