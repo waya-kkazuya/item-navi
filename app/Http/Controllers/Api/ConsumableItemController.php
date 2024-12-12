@@ -3,9 +3,10 @@
 namespace App\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
+use Inertia\Inertia;
+use App\Http\Controllers\Controller;
 use App\Models\Item;
 use App\Models\Location;
 use App\Services\ImageService;
@@ -20,7 +21,7 @@ class ConsumableItemController extends Controller
         $this->imageService = $imageService;
     }
 
-    public function index(Request $request, $item_id = null)
+    public function index(Request $request)
     {
         Gate::authorize('user-higher');
 
@@ -102,7 +103,9 @@ class ConsumableItemController extends Controller
 
             Log::info('Api\ConsumableItemController index method succeeded');
 
-            return [
+            Log::info($consumableItems);
+
+            return response()->json([
                 'consumableItems' => $consumableItems,
                 'search' => $search,
                 'sortOrder' => $sortOrder,
@@ -111,7 +114,17 @@ class ConsumableItemController extends Controller
                 'totalCount' => $total_count,
                 'startNumber' => $start_number,
                 'endNumber' => $end_number
-            ];
+            ]);
+            // return Inertia::render('ConsumableItems/Index', [
+            //     'consumableItems' => $consumableItems,
+            //     'search' => $search,
+            //     'sortOrder' => $sortOrder,
+            //     'locationOfUseId' => $location_of_use_id,
+            //     'storageLocationId' => $storage_location_id,
+            //     'totalCount' => $total_count,
+            //     'startNumber' => $start_number,
+            //     'endNumber' => $end_number
+            // ]);
         } catch (\Exception $e) {
             Log::error('ConsumableItemController index method failed', [
                 'error' => $e->getMessage(),
