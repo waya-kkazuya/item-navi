@@ -2,16 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
-use App\Models\Item;
-use App\Models\Location;
-use App\Models\Edithistory;
-use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Storage;
+use App\Models\Item;
+use App\Models\Location;
 use App\Services\ImageService;
 
 
@@ -92,6 +89,12 @@ class ConsumableItemController extends Controller
             $total_count = $query->count();
             $consumableItems = $query->paginate(20);
 
+            $current_page = $consumableItems->currentPage(); // 現在のページ番号
+            $per_page = $consumableItems->perPage(); // 1ページあたりの項目数
+            $start_number = ($current_page - 1) * $per_page + 1; // 現在のページの最初の項目番号
+            $end_number = min($start_number + $consumableItems->count() - 1, $total_count); // 現在のページの最後の項目番号
+
+
             // map関数を使用するとpaginateオブジェクトの構造が変わり、ペジネーションが使えなくなる
             $consumableItems->getCollection()->transform(function ($consumableItem) {
                 $this->imageService->setImagePathToObject($consumableItem);
@@ -107,18 +110,6 @@ class ConsumableItemController extends Controller
                 ->select($selectFields)
                 ->find($item_id);
 
-            // 入出庫モーダルで処理をした後、在庫数を更新するAPI通信
-            if ($request->has('reload')) {
-                return [
-                    'consumableItems' => $consumableItems,
-                    'search' => $search,
-                    'sortOrder' => $sortOrder,
-                    'locationOfUseId' => $location_of_use_id,
-                    'storageLocationId' => $storage_location_id,
-                    'totalCount' => $total_count,
-                ];
-            }
-
             Log::info('ConsumableItemController index method succeeded');
 
             return Inertia::render('ConsumableItems/Index', [
@@ -130,7 +121,9 @@ class ConsumableItemController extends Controller
                 'storageLocationId' => $storage_location_id,
                 'totalCount' => $total_count,
                 'userName' => $user->name,
-                'linkedItem' => $linkedItem
+                'linkedItem' => $linkedItem,
+                'startNumber' => $start_number,
+                'endNumber' => $end_number
             ]);
         } catch (\Exception $e) {
             Log::error('ConsumableItemController index method failed', [

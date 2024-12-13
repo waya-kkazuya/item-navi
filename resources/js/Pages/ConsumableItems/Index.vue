@@ -63,35 +63,6 @@ watch(() => props.linkedItem, (newVal: ItemType) => {
   }
 });
 
-// 入出庫履歴モーダル
-const isStockTransactionModalOpen: Ref<boolean> = ref(false);
-const selectedStockTransactionItem: Ref<ItemType | null> = ref(null);
-
-const openStockTransactionModal = (item: ItemType): void => {
-  selectedStockTransactionItem.value = item;
-  isStockTransactionModalOpen.value = true;
-};
-const closeStockTransactionModal = (): void => {
-  selectedStockTransactionItem.value = null;
-  isStockTransactionModalOpen.value = false;
-};
-
-
-// 入出庫モーダル
-const isUpdateStockModalOpen: Ref<boolean> = ref(false);
-const selectedUpdateStockItem: Ref<ItemType | null> = ref(null);
-
-const openUpdateStockModal = (item: ItemType): void => {
-  selectedUpdateStockItem.value = item;
-  isUpdateStockModalOpen.value = true;
-};
-const closeUpdateStockModal = (): void => {
-  selectedUpdateStockItem.value = null;
-  isUpdateStockModalOpen.value = false;
-  fetchConsumableItems();
-};
-
-
 // 同期処理でプルダウンや検索フォームを反映
 const fetchAndFilterItems = (): void => {
   router.visit(route('consumable_items', {
@@ -118,31 +89,49 @@ const clearState = (): void => {
   fetchAndFilterItems();
 };
 
-// 非同期処理で、入出庫処理をした後に画面の情報を更新する
-const fetchConsumableItems = async (): Promise<void> => {
-  try {
-    const res = await axios.get('/api/consumable_items', {
-      params: {
-        reload: true,
-        search: search.value,
-        sortOrder: sortOrder.value,
-        locationOfUseId: locationOfUseId.value,
-        storageLocationId: storageLocationId.value
-      }
-    });
-    localConsumableItems.value = res.data.consumableItems;
-    search.value = res.data.search;
-    locationOfUseId.value = res.data.locationOfUseId;
-    storageLocationId.value = res.data.storageLocationId;
-    totalCount.value = res.data.totalCount;
-    startNumber.value = res.data.startNumber;
-    endNumber.value =　res.data.endNumber;
-  } catch (e: any){
-    axios.post('/api/log-error', {
-      error: e.toString(),
-      component: 'ConsumableItems/Index.vue fetchConsumableItems method',
-    });
-  }
+
+// 入出庫履歴モーダル
+const isStockTransactionModalOpen: Ref<boolean> = ref(false);
+const selectedStockTransactionItem: Ref<ItemType | null> = ref(null);
+
+const openStockTransactionModal = (item: ItemType): void => {
+  selectedStockTransactionItem.value = item;
+  isStockTransactionModalOpen.value = true;
+};
+const closeStockTransactionModal = (): void => {
+  selectedStockTransactionItem.value = null;
+  isStockTransactionModalOpen.value = false;
+};
+
+// 入出庫処理モーダル
+const isUpdateStockModalOpen: Ref<boolean> = ref(false);
+const selectedUpdateStockItem: Ref<ItemType | null> = ref(null);
+
+const openUpdateStockModal = (item: ItemType): void => {
+  selectedUpdateStockItem.value = item;
+  isUpdateStockModalOpen.value = true;
+};
+const closeUpdateStockModal = (itemId: number): void => {
+  selectedUpdateStockItem.value = null;
+  isUpdateStockModalOpen.value = false;
+  fetchStock(itemId);
+};
+
+
+// 入出庫処理をした後に非同期で在庫数を更新する
+const fetchStock = async (itemId: number): Promise<void> => {
+  try { 
+    const res = await axios.get(`/api/consumable_items/${itemId}/stock`);
+    const updatedItem = localConsumableItems.value.data.find(item => item.id === itemId); 
+    if (updatedItem) { 
+      updatedItem.stock = res.data.stock; 
+    }
+  } catch (e: any) { 
+    await axios.post('/api/log-error', {
+      error: e.toString(), 
+      component: 'ConsumableItems/Index.vue fetchStock method',
+    }); 
+  } 
 };
 </script>
 
@@ -324,7 +313,7 @@ const fetchConsumableItems = async (): Promise<void> => {
                                 </div>
                               </template>
                               <StockTransactionModal v-if="selectedStockTransactionItem && isStockTransactionModalOpen" :item="selectedStockTransactionItem" @close="closeStockTransactionModal" />
-                              <UpdateStockModal v-if="selectedUpdateStockItem && isUpdateStockModalOpen" :item="selectedUpdateStockItem" :userName="userName" :errors="errors" @close="closeUpdateStockModal" />
+                              <UpdateStockModal v-if="selectedUpdateStockItem && isUpdateStockModalOpen" :item="selectedUpdateStockItem" :userName="userName" :errors="errors" @updateStockModalClosed="closeUpdateStockModal" />
                             </div>
                             <div v-else>
                               <div class="flex items-center justify-center">
