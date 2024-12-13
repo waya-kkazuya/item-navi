@@ -23,6 +23,7 @@ type Props = {
   totalCount: number;
   startNumber: number;
   endNumber: number;
+  disposal: boolean;
 };
 
 const props = defineProps<Props>();
@@ -42,7 +43,8 @@ const storageLocationId: Ref<number> = ref(props.storageLocationId ?? 0);
 const totalCount: Ref<number> = ref(props.totalCount);
 const startNumber: Ref<number> = ref(props.startNumber);
 const endNumber: Ref<number> = ref(props.endNumber);
-
+// 廃棄済みの備品
+const isDisposal: Ref<boolean> = ref(false);
 
 // プルダウンや検索フォームの条件を適用して備品情報を再取得
 const fetchAndFilterItems = (): void => {
@@ -52,6 +54,7 @@ const fetchAndFilterItems = (): void => {
     categoryId: categoryId.value,
     locationOfUseId: locationOfUseId.value,
     storageLocationId: storageLocationId.value,
+    disposal: isDisposal.value ? 'true' : 'false', //パラメータを文字列にしてコントローラーに渡す
   }), {
     method: 'get'
   });
@@ -73,12 +76,16 @@ const isTableView: Ref<boolean> = ref(sessionStorage.getItem('isTableView') !== 
 watch(isTableView, (newValue: boolean) => {
   sessionStorage.setItem('isTableView', newValue.toString());
 });
+
 onMounted(() => {
   if (sessionStorage.getItem('isTableView') === null) {
     isTableView.value = true;
     sessionStorage.setItem('isTableView', 'true');
   }
+  isDisposal.value = props.disposal === 'true';
+  console.log('onMounted',isDisposal.value);
 });
+
 
 const toggleSortOrder = (): void => {
   sortOrder.value = sortOrder.value === 'asc' ? 'desc' : 'asc';
@@ -86,23 +93,15 @@ const toggleSortOrder = (): void => {
 };
 
 // 備品と廃棄済み備品の表示切り替え
-const showDisposal: Ref<boolean> = ref(false);
-const toggleItems = async (): Promise<void> => {
-  const url = showDisposal.value ? 'api/items?disposal=true' : 'api/items?disposal=false';
-  try {
-    const res = await axios.get(url);
-    localItems.value = res.data.items;
-    totalCount.value = res.data.total_count;
-    startNumber.value = res.data.startNumber;
-    endNumber.value =　res.data.endNumber;
-  } catch (e: any) {
-    axios.post('/api/log-error', {
-      error: e.toString(),
-      component: 'Items/Index.vue toggleItems method',
-    });
-  }
+const toggleItems = (): void => {
+  console.log(isDisposal.value);
+  // isDisposal.value = isDisposal.value === 'true' ? 'false' : 'true'; //isDisposalを文字列として扱う場合
+  isDisposal.value = !isDisposal.value
+  console.log(isDisposal.value);
+  fetchAndFilterItems();
 };
 
+// 備品の復元
 const restoreItem = (id: number) => {
   try {
     if (confirm('本当に備品を復元をしますか？')) {
@@ -114,7 +113,7 @@ const restoreItem = (id: number) => {
       component: 'Items/Index.vue restoreItem method',
     });
   }
-  showDisposal.value = false;
+  isDisposal.value = false;
 };
 </script>
 
@@ -264,7 +263,7 @@ const restoreItem = (id: number) => {
                             <label for="toggle" class="flex items-center cursor-pointer">
                               <div class="relative">
                                   <!-- Input -->
-                                  <input id="toggle" type="checkbox" v-model="showDisposal" @change="toggleItems" class="sr-only">
+                                  <input id="toggle" type="checkbox" v-model="isDisposal" @input="toggleItems" class="sr-only">
                                   <!-- 背景 -->
                                   <div class="block bg-gray-300 w-10 h-6 md:w-14 md:h-8 rounded-full "></div>
                                   <!-- 丸 -->
@@ -290,7 +289,7 @@ const restoreItem = (id: number) => {
                               <table v-if="localItems.data && localItems.data.length > 0" class="table-fixed min-w-full text-left whitespace-no-wrap">
                                 <thead>
                                   <tr>
-                                    <th v-if="showDisposal" class="min-w-16 md:min-w-24 px-4 py-3 title-font tracking-wider font-medium text-center text-white text-xs md:text-base bg-sky-700">復元</th>
+                                    <th v-if="isDisposal" class="min-w-16 md:min-w-24 px-4 py-3 title-font tracking-wider font-medium text-center text-white text-xs md:text-base bg-sky-700">復元</th>
                                     <th class="min-w-16 md:min-w-20 px-4 py-3 title-font tracking-wider font-medium text-center text-white text-xs md:text-base bg-sky-700">履歴</th>
                                     <th class="min-w-28 md:min-w-32 px-4 py-3 title-font tracking-wider font-medium text-center text-white text-xs md:text-base bg-sky-700">管理ID</th>
                                     <th class="min-w-28 md:min-w-36 px-4 py-3 title-font tracking-wider font-medium text-center text-white text-xs md:text-base bg-sky-700">登録日</th>
@@ -315,7 +314,7 @@ const restoreItem = (id: number) => {
                                 </thead>
                                 <tbody>
                                   <tr v-for="item in localItems.data" :key="item.id" class="">
-                                    <td v-if="showDisposal" class="border-b-2 border-gray-200 px-4 py-3 " :class="showDisposal ? 'bg-red-100' : ''">
+                                    <td v-if="isDisposal" class="border-b-2 border-gray-200 px-4 py-3" :class="isDisposal ? 'bg-red-100' : ''">
                                       <button type="button" @click="restoreItem(item.id)" class="text-blue-400 flex justify-center" >
                                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
                                           <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 9V5.25A2.25 2.25 0 0 1 10.5 3h6a2.25 2.25 0 0 1 2.25 2.25v13.5A2.25 2.25 0 0 1 16.5 21h-6a2.25 2.25 0 0 1-2.25-2.25V15m-3 0-3-3m0 0 3-3m-3 3H15" />
@@ -324,13 +323,13 @@ const restoreItem = (id: number) => {
                                       </button>
                                     </td>
                                     <!-- マイクロモーダル -->
-                                    <td class="border-b-2 border-gray-200 px-4 py-2" :class="showDisposal ? 'bg-red-100' : ''">
+                                    <td class="border-b-2 border-gray-200 px-4 py-2" :class="isDisposal ? 'bg-red-100' : ''">
                                       <div class="flex justify-center items-center">
                                         <EditHistoryModal :item="item" :isTableView="isTableView" />
                                       </div>
                                     </td>
-                                    <td class="border-b-2 border-gray-200 px-4 py-2 text-center text-xs md:text-base" :class="showDisposal ? 'bg-red-100' : ''">
-                                      <template v-if="!showDisposal">
+                                    <td class="border-b-2 border-gray-200 px-4 py-2 text-center text-xs md:text-base" :class="isDisposal ? 'bg-red-100' : ''">
+                                      <template v-if="!isDisposal">
                                         <Link class="text-blue-400" :href="route('items.show', { item: item.id })" id="managementId">
                                           {{ item.management_id }}
                                         </Link>
@@ -339,28 +338,28 @@ const restoreItem = (id: number) => {
                                         {{ item.management_id }}
                                       </template>
                                     </td>
-                                    <td class="border-b-2 border-gray-200 px-4 py-2 text-center text-xs md:text-base" :class="showDisposal ? 'bg-red-100' : ''">{{ item.created_at }}</td>
-                                    <td class="border-b-2 border-gray-200 px-4 py-2 text-center text-xs md:text-base" :class="showDisposal ? 'bg-red-100' : ''">{{ item.name }}</td>
-                                    <td class="border-b-2 border-gray-200 px-4 py-2 text-center text-xs md:text-base max-w-full h-auto" :class="showDisposal ? 'bg-red-100' : ''">
+                                    <td class="border-b-2 border-gray-200 px-4 py-2 text-center text-xs md:text-base" :class="isDisposal ? 'bg-red-100' : ''">{{ item.created_at }}</td>
+                                    <td class="border-b-2 border-gray-200 px-4 py-2 text-center text-xs md:text-base" :class="isDisposal ? 'bg-red-100' : ''">{{ item.name }}</td>
+                                    <td class="border-b-2 border-gray-200 px-4 py-2 text-center text-xs md:text-base max-w-full h-auto" :class="isDisposal ? 'bg-red-100' : ''">
                                       <div class="flex justify-center">
                                         <img :src="item.image_path1" alt="画像" class="h-8">
                                       </div>
                                     </td>
-                                    <td class="border-b-2 border-gray-200 px-4 py-2 text-center text-xs md:text-base" :class="showDisposal ? 'bg-red-100' : ''">{{ item.category.name }}</td>
-                                    <td class="border-b-2 border-gray-200 px-4 py-2 text-center text-xs md:text-base" :class="showDisposal ? 'bg-red-100' : ''"><span>{{ item.stock }}{{ item.unit.name }}</span></td>
-                                    <td class="border-b-2 border-gray-200 px-4 py-2 text-center text-xs md:text-base" :class="showDisposal ? 'bg-red-100' : ''">{{ item.usage_status.name }}</td>
-                                    <td class="border-b-2 border-gray-200 px-4 py-2 text-center text-xs md:text-base" :class="showDisposal ? 'bg-red-100' : ''">{{ item.end_user }}</td>
-                                    <td class="border-b-2 border-gray-200 px-4 py-2 text-center text-xs md:text-base" :class="showDisposal ? 'bg-red-100' : ''">{{ item.location_of_use.name }}</td>
-                                    <td class="border-b-2 border-gray-200 px-4 py-2 text-center text-xs md:text-base" :class="showDisposal ? 'bg-red-100' : ''">{{ item.storage_location.name }}</td>
-                                    <td class="border-b-2 border-gray-200 px-4 py-2 text-center text-xs md:text-base" :class="showDisposal ? 'bg-red-100' : ''">{{ item.acquisition_method ? item.acquisition_method.name : '' }}</td>
-                                    <td class="border-b-2 border-gray-200 px-4 py-2 text-center text-xs md:text-base" :class="showDisposal ? 'bg-red-100' : ''">{{ item.acquisition_source }}</td>
-                                    <td class="border-b-2 border-gray-200 px-4 py-2 text-center text-xs md:text-base" :class="showDisposal ? 'bg-red-100' : ''">{{ item.price }}円</td>
-                                    <td class="border-b-2 border-gray-200 px-4 py-2 text-center text-xs md:text-base" :class="showDisposal ? 'bg-red-100' : ''">{{ item.date_of_acquisition }}</td>
-                                    <td class="border-b-2 border-gray-200 px-4 py-2 text-center text-xs md:text-base" :class="showDisposal ? 'bg-red-100' : ''">{{ item.inspection_scheduled_date ?? '予定なし'  }}</td>
-                                    <td class="border-b-2 border-gray-200 px-4 py-2 text-center text-xs md:text-base" :class="showDisposal ? 'bg-red-100' : ''">{{ item.disposal ? item.disposal.disposal_scheduled_date : '予定なし' }}</td>
-                                    <td class="border-b-2 border-gray-200 px-4 py-2 text-center text-xs md:text-base" :class="showDisposal ? 'bg-red-100' : ''">{{ item.manufacturer }}</td>
-                                    <td class="border-b-2 border-gray-200 px-4 py-2 text-center text-xs md:text-base" :class="showDisposal ? 'bg-red-100' : ''">{{ item.product_number }}</td>
-                                    <td class="border-b-2 border-gray-200 px-4 py-2 text-center text-xs md:text-base" :class="showDisposal ? 'bg-red-100' : ''">{{ item.remarks ?? '' }}</td>
+                                    <td class="border-b-2 border-gray-200 px-4 py-2 text-center text-xs md:text-base" :class="isDisposal ? 'bg-red-100' : ''">{{ item.category.name }}</td>
+                                    <td class="border-b-2 border-gray-200 px-4 py-2 text-center text-xs md:text-base" :class="isDisposal ? 'bg-red-100' : ''"><span>{{ item.stock }}{{ item.unit.name }}</span></td>
+                                    <td class="border-b-2 border-gray-200 px-4 py-2 text-center text-xs md:text-base" :class="isDisposal ? 'bg-red-100' : ''">{{ item.usage_status.name }}</td>
+                                    <td class="border-b-2 border-gray-200 px-4 py-2 text-center text-xs md:text-base" :class="isDisposal ? 'bg-red-100' : ''">{{ item.end_user }}</td>
+                                    <td class="border-b-2 border-gray-200 px-4 py-2 text-center text-xs md:text-base" :class="isDisposal ? 'bg-red-100' : ''">{{ item.location_of_use.name }}</td>
+                                    <td class="border-b-2 border-gray-200 px-4 py-2 text-center text-xs md:text-base" :class="isDisposal ? 'bg-red-100' : ''">{{ item.storage_location.name }}</td>
+                                    <td class="border-b-2 border-gray-200 px-4 py-2 text-center text-xs md:text-base" :class="isDisposal ? 'bg-red-100' : ''">{{ item.acquisition_method ? item.acquisition_method.name : '' }}</td>
+                                    <td class="border-b-2 border-gray-200 px-4 py-2 text-center text-xs md:text-base" :class="isDisposal ? 'bg-red-100' : ''">{{ item.acquisition_source }}</td>
+                                    <td class="border-b-2 border-gray-200 px-4 py-2 text-center text-xs md:text-base" :class="isDisposal ? 'bg-red-100' : ''">{{ item.price }}円</td>
+                                    <td class="border-b-2 border-gray-200 px-4 py-2 text-center text-xs md:text-base" :class="isDisposal ? 'bg-red-100' : ''">{{ item.date_of_acquisition }}</td>
+                                    <td class="border-b-2 border-gray-200 px-4 py-2 text-center text-xs md:text-base" :class="isDisposal ? 'bg-red-100' : ''">{{ item.inspection_scheduled_date ?? '予定なし'  }}</td>
+                                    <td class="border-b-2 border-gray-200 px-4 py-2 text-center text-xs md:text-base" :class="isDisposal ? 'bg-red-100' : ''">{{ item.disposal ? item.disposal.disposal_scheduled_date : '予定なし' }}</td>
+                                    <td class="border-b-2 border-gray-200 px-4 py-2 text-center text-xs md:text-base" :class="isDisposal ? 'bg-red-100' : ''">{{ item.manufacturer }}</td>
+                                    <td class="border-b-2 border-gray-200 px-4 py-2 text-center text-xs md:text-base" :class="isDisposal ? 'bg-red-100' : ''">{{ item.product_number }}</td>
+                                    <td class="border-b-2 border-gray-200 px-4 py-2 text-center text-xs md:text-base" :class="isDisposal ? 'bg-red-100' : ''">{{ item.remarks ?? '' }}</td>
                                   </tr>
                                 </tbody>
                               </table>
@@ -377,7 +376,7 @@ const restoreItem = (id: number) => {
                           <div v-else>
                             <div v-if="localItems.data && localItems.data.length > 0" class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-0">
                               <template v-for="item in localItems.data" :key="item.id">
-                                <div class="w-full p-2 border" :class="showDisposal ? 'bg-red-100' : ''">
+                                <div class="w-full p-2 border" :class="isDisposal ? 'bg-red-100' : ''">
                                   
                                     <a class="mb-2 block relative h-48">
                                       <Link :href="route('items.show', { item: item.id })">
@@ -412,7 +411,7 @@ const restoreItem = (id: number) => {
                                       <div class="flex-shrink-0">
                                         <EditHistoryModal v-bind:item="item" :isTableView="isTableView" />
                                       </div>
-                                      <Link v-if="!showDisposal" as="button" :href="route('items.show', { item: item.id })" class="flex items-center text-white text-sm bg-blue-800 border-0 py-2 px-4 focus:outline-none hover:bg-blue-900 rounded flex-shrink-0">
+                                      <Link v-if="!isDisposal" as="button" :href="route('items.show', { item: item.id })" class="flex items-center text-white text-sm bg-blue-800 border-0 py-2 px-4 focus:outline-none hover:bg-blue-900 rounded flex-shrink-0">
                                         詳細を見る
                                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h13M12 5l7 7-7 7"/></svg>
                                       </Link>

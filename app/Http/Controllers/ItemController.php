@@ -63,6 +63,9 @@ class ItemController extends Controller
             $category_id = $request->query('categoryId', 0);
             $location_of_use_id = $request->query('locationOfUseId', 0);
             $storage_location_id = $request->query('storageLocationId', 0);
+            $disposal = $request->query('disposal', 'false');
+
+            Log::debug($disposal);
 
             $withRelations = ['category', 'unit', 'usageStatus', 'locationOfUse', 'storageLocation', 'acquisitionMethod', 'inspections', 'disposal'];
             $selectFields = [
@@ -91,8 +94,10 @@ class ItemController extends Controller
                 'created_at'
             ];
 
+            
+            Log::info($request->query('disposal'));
             // 通常の備品か廃棄済みの備品かの分岐
-            if ($request->disposal === 'true') {
+            if ($disposal === 'true') {
                 $query = Item::onlyTrashed();
             } else {
                 $query = Item::whereNull('deleted_at');
@@ -120,7 +125,6 @@ class ItemController extends Controller
 
             $total_count = $query->count();
             $items = $query->paginate(20);
-            $total_count = $items->total(); // 合計件数
 
             $current_page = $items->currentPage(); // 現在のページ番号
             $per_page = $items->perPage(); // 1ページあたりの項目数
@@ -147,16 +151,6 @@ class ItemController extends Controller
             $categories = Category::all();
             $locations = Location::all();
 
-
-            // 廃棄済み備品用API情報
-            if ($request->has('disposal')) {
-                return [
-                    'items' => $items,
-                    'total_count' => $total_count,
-                    'startNumber' => $start_number,
-                    'endNumber' => $end_number
-                ];
-            }
             
             Log::info('ItemController index method succeeded');
 
@@ -171,13 +165,20 @@ class ItemController extends Controller
                 'storageLocationId' => $storage_location_id,
                 'totalCount' => $total_count,
                 'startNumber' => $start_number,
-                'endNumber' => $end_number
+                'endNumber' => $end_number,
+                'disposal' => $disposal
             ]);
         } catch (\Exception $e) {
             Log::error('ItemController index method failed', [
                 'error' => $e->getMessage(),
                 'stack' => $e->getTraceAsString(),
                 'request' => $request->all()
+            ]);
+
+            return redirect()->back()
+            ->with([
+                'message' => '予期しないエラーが発生しました',
+                'status' => 'danger'
             ]);
         }
     }
