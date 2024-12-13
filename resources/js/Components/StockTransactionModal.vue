@@ -43,9 +43,9 @@ watch(() => props.item, (newItem: ItemType) => {
   }
 }, { immediate: true });
 
-const emit = defineEmits<{(e: 'close') : void}>();
+const emit = defineEmits<{(e: 'stockTransactionModalClosed') : void}>();
 const closeModal = (): void => {
-  emit('close') // StockTransactionModalを閉じるイベント打ち上げ
+  emit('stockTransactionModalClosed') // StockTransactionModalを閉じるイベント打ち上げ
 };
 </script>
 

@@ -312,7 +312,7 @@ const fetchStock = async (itemId: number): Promise<void> => {
                                   </div>
                                 </div>
                               </template>
-                              <StockTransactionModal v-if="selectedStockTransactionItem && isStockTransactionModalOpen" :item="selectedStockTransactionItem" @close="closeStockTransactionModal" />
+                              <StockTransactionModal v-if="selectedStockTransactionItem && isStockTransactionModalOpen" :item="selectedStockTransactionItem" @stockTransactionModalClosed="closeStockTransactionModal" />
                               <UpdateStockModal v-if="selectedUpdateStockItem && isUpdateStockModalOpen" :item="selectedUpdateStockItem" :userName="userName" :errors="errors" @updateStockModalClosed="closeUpdateStockModal" />
                             </div>
                             <div v-else>
