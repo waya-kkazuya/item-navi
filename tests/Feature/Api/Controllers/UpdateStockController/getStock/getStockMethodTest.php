@@ -20,7 +20,7 @@ class getStockMethodTest extends TestCase
     }
 
     /** @test */
-    function API通信で備品の在庫数を取得できる()
+    function API通信で存在する備品の在庫数を取得できる()
     {
         // 世界の構築
         $user = User::factory()->role(1)->create(); // adminユーザーを作成
@@ -37,7 +37,7 @@ class getStockMethodTest extends TestCase
     }
 
     /** @test */
-    function 存在しないIDではAPI通信で備品の在庫数を取得できない()
+    function API通信で存在しないIDでは備品の在庫数を取得できない()
     {
         // 世界の構築
         $user = User::factory()->role(1)->create(); // adminユーザーを作成
