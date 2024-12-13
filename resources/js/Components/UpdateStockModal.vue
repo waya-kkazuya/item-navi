@@ -35,11 +35,11 @@ const activateIncreaseTab = (): void => {
 };
 
 
-const emit = defineEmits<{(e: 'close') : void}>();
+const emit = defineEmits<{(e: 'updateStockModalClosed') : void}>();
 
-const closeModal = (): void => {
+const closeModal = (itemId: number): void => {
   localErrors.value = {}; // バリデーションエラーメッセージをリセット
-  emit('close'); // モーダルウィンドウを閉じるイベント打ち上げ
+  emit('updateStockModalClosed', itemId); // モーダルウィンドウを閉じるイベント打ち上げ
 };
 
 // 出庫タブの出庫後在庫数の表示自動計算
@@ -58,7 +58,7 @@ const decreaseStock = (item: ItemType): void => {
     if (confirm('本当に出庫処理をしますか？')) {
         decreaseForm.put(`/decreaseStock/${item.id}`, {
           onSuccess: () => {
-            closeModal(); // 成功したらモーダルを閉じる
+            closeModal(item.id); // 成功したらモーダルを閉じる
             decreaseForm.quantity = 1; // モーダルのquantityをリセット
           },
         });
@@ -82,7 +82,7 @@ const increaseStock = (item: ItemType): void => {
     if (confirm('本当に入庫処理をしますか？')) {
         increaseForm.put(`/increaseStock/${item.id}`, {
           onSuccess: () => {
-            closeModal(); // 成功したらモーダルを閉じる
+            closeModal(item.id); // 成功したらモーダルを閉じる
             increaseForm.quantity = 1; // モーダルのquantityをリセット
           },
         });
@@ -95,6 +95,7 @@ const increaseStock = (item: ItemType): void => {
   }
 };
 
+// 操作日時を取得する関数
 const getCurrentFormattedDate = (): string => {
   const now = new Date();
   const year = now.getFullYear();
@@ -107,7 +108,9 @@ const getCurrentFormattedDate = (): string => {
 
 const formattedDate: Ref<string> = ref(getCurrentFormattedDate());
 
+
 onMounted(() => {
+    // 操作日時を1分単位で更新する
     setInterval(() => {
       formattedDate.value = getCurrentFormattedDate(); 
     }, 60000); // 毎分更新

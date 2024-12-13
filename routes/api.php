@@ -8,6 +8,7 @@ use App\Http\Controllers\ItemController;
 use App\Http\Controllers\Api\ItemRequestController;
 use App\Http\Controllers\Api\StockTransactionController;
 use App\Http\Controllers\Api\NotificationController;
+use App\Http\Controllers\Api\UpdateStockController;
 use App\Http\Controllers\Api\VueErrorController;
 
 /*
@@ -37,7 +38,8 @@ Route::middleware('auth:sanctum', 'verified', 'can:user-higher')
 
 // 消耗品の入出・出庫モーダルで更新処理をした際、在庫数をリアルタイムに反映する
 Route::middleware(['auth:sanctum', 'verified', 'can:staff-higher'])
-->get('/consumable_items', [ConsumableItemController::class, 'index']);
+->get('/consumable_items/{itemId}/stock', [UpdateStockController::class, 'getStock']);
+
 
 // 通知を表示したら既読にする
 Route::middleware(['auth:sanctum', 'verified', 'can:staff-higher'])->group(function () {
