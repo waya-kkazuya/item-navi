@@ -30,21 +30,29 @@ const props = defineProps<Props>();
 
 // 読み取り専用のitemsを変更出来るようスプレッド構文でコピーする
 const localItems: Ref<Paginator<ItemType>> = ref({...props.items});
-
-// 検索フォーム
-const search: Ref<string> = ref(props.search);
-// 作成日でソート
-const sortOrder: Ref<string> = ref(props.sortOrder ?? 'asc');
-// カテゴリプルダウン用(初期値は0)
-const categoryId: Ref<number> = ref(props.categoryId);
-const locationOfUseId: Ref<number> = ref(props.locationOfUseId ?? 0);
-const storageLocationId: Ref<number> = ref(props.storageLocationId ?? 0);
-// 備品の合計件数
-const totalCount: Ref<number> = ref(props.totalCount);
+const search: Ref<string> = ref(props.search); // 検索フォーム
+const sortOrder: Ref<string> = ref(props.sortOrder ?? 'asc'); // 作成日でソート
+const categoryId: Ref<number> = ref(props.categoryId ?? 0); // カテゴリプルダウン(初期値は0)
+const locationOfUseId: Ref<number> = ref(props.locationOfUseId ?? 0); // 利用場所プルダウン(初期値は0)
+const storageLocationId: Ref<number> = ref(props.storageLocationId ?? 0); // 保管場所プルダウン(初期値は0)
+const totalCount: Ref<number> = ref(props.totalCount); // 備品の合計件数
 const startNumber: Ref<number> = ref(props.startNumber);
 const endNumber: Ref<number> = ref(props.endNumber);
-// 廃棄済みの備品
-const isDisposal: Ref<boolean> = ref(false);
+const isDisposal: Ref<boolean> = ref(false); // 廃棄済みの備品との状態切り替え
+const isTableView: Ref<boolean> = ref(sessionStorage.getItem('isTableView') !== 'false');　// 行表示・タイル表示の切替 セッションにisTableViewを保存
+
+  // watchでisTableViewを監視
+watch(isTableView, (newValue: boolean) => {
+  sessionStorage.setItem('isTableView', newValue.toString());
+});
+
+onMounted(() => {
+  if (sessionStorage.getItem('isTableView') === null) {
+    isTableView.value = true;
+    sessionStorage.setItem('isTableView', 'true');
+  }
+  isDisposal.value = props.disposal === 'true';
+});
 
 // プルダウンや検索フォームの条件を適用して備品情報を再取得
 const fetchAndFilterItems = (): void => {
@@ -70,23 +78,6 @@ const clearState = (): void => {
   fetchAndFilterItems();
 };
 
-// 行表示・タイル表示の切替 セッションにisTableViewを保存
-const isTableView: Ref<boolean> = ref(sessionStorage.getItem('isTableView') !== 'false');
-// watchでisTableViewを監視
-watch(isTableView, (newValue: boolean) => {
-  sessionStorage.setItem('isTableView', newValue.toString());
-});
-
-onMounted(() => {
-  if (sessionStorage.getItem('isTableView') === null) {
-    isTableView.value = true;
-    sessionStorage.setItem('isTableView', 'true');
-  }
-  isDisposal.value = props.disposal === 'true';
-  console.log('onMounted',isDisposal.value);
-});
-
-
 const toggleSortOrder = (): void => {
   sortOrder.value = sortOrder.value === 'asc' ? 'desc' : 'asc';
   fetchAndFilterItems();
@@ -95,17 +86,24 @@ const toggleSortOrder = (): void => {
 // 備品と廃棄済み備品の表示切り替え
 const toggleItems = (): void => {
   console.log(isDisposal.value);
-  // isDisposal.value = isDisposal.value === 'true' ? 'false' : 'true'; //isDisposalを文字列として扱う場合
   isDisposal.value = !isDisposal.value
   console.log(isDisposal.value);
   fetchAndFilterItems();
 };
 
 // 備品の復元
-const restoreItem = (id: number) => {
+const restoreItem = async (itemId: number): Promise<void> => {
   try {
     if (confirm('本当に備品を復元をしますか？')) {
-      router.post(`/items/${id}/restore`);
+      const res = await axios.post(`api/items/${itemId}/restore`);
+      console.log(res);
+      console.log(res.data.status);
+      if (res.data.status === 'success') {
+        fetchAndFilterItems(); // 成功時にリストを更新 
+        alert(res.data.message);
+      } else {
+        alert(res.data.message);
+      }
     }
   } catch (e: any) {
     axios.post('/api/log-error', {
@@ -113,7 +111,6 @@ const restoreItem = (id: number) => {
       component: 'Items/Index.vue restoreItem method',
     });
   }
-  isDisposal.value = false;
 };
 </script>
 

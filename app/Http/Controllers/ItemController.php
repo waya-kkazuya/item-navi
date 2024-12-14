@@ -128,8 +128,14 @@ class ItemController extends Controller
 
             $current_page = $items->currentPage(); // 現在のページ番号
             $per_page = $items->perPage(); // 1ページあたりの項目数
-            $start_number = ($current_page - 1) * $per_page + 1; // 現在のページの最初の項目番号
-            $end_number = min($start_number + $items->count() - 1, $total_count); // 現在のページの最後の項目番号
+            if ($total_count !== 0) {
+                $start_number = ($current_page - 1) * $per_page + 1; // 現在のページの最初の項目番号
+                $end_number = min($start_number + $items->count() - 1, $total_count); // 現在のページの最後の項目番号
+            } else {
+                $start_number = 0;
+                $end_number = 0;
+            }
+            
 
 
             // map関数を使用するとpaginateオブジェクトの構造が変わり、ペジネーションが使えなくなる
@@ -607,34 +613,6 @@ class ItemController extends Controller
     // {
     
     // }
-
-    public function restore($id)
-    {
-        Gate::authorize('staff-higher');
-
-        Log::info('ItemController restore method called');
-
-        $item = Item::withTrashed()->find($id);
-        if ($item) {
-            $item->restore();
-
-            Log::info('ItemController restore method succeeded');
-
-            return to_route('items.index')
-            ->with([
-                'message' => '備品を復元しました',
-                'status' => 'success'
-            ]);
-        }
-
-        Log::warning('ItemController restore method failed');
-
-        return to_route('items.index')
-        ->with([
-            'message' => '該当の備品が存在しませんでした',
-            'status' => 'danger'
-        ]);
-    }
 
     // public function forceDelete($id)
     // {
