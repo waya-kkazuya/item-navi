@@ -145,15 +145,15 @@ class IndexMethodTest extends TestCase
     }
 
     /** @test */
-    function API_備品一覧画面表示用の廃棄済み備品のpaginateオブジェクトのデータを渡す()
+    function 廃棄済みの備品一覧画面表示用のpaginateオブジェクトのデータを渡す()
     {
-        // トグルボタンで切り替えたときに廃棄済みの備品データを渡す
+        // リレーションのダミーデータを作成
+        // $categories = Category::all(); all()は使えない
         $categories = Category::factory()->count(11)->create();
         $units = Unit::factory()->count(10)->create();
         $usage_statuses = UsageStatus::factory()->count(2)->create();
         $locations = Location::factory()->count(12)->create();
         $aquisition_methods = AcquisitionMethod::factory()->count(6)->create();
-
 
         // 各コレクションの要素数を出力
         echo 'Categories count: ' . $categories->count() . PHP_EOL;
@@ -162,8 +162,7 @@ class IndexMethodTest extends TestCase
         echo 'Locations count: ' . $locations->count() . PHP_EOL;
         echo 'Acquisition Methods count: ' . $aquisition_methods->count() . PHP_EOL;
 
-
-        $items = Item::factory()->count(3)->create([
+        $items = Item::factory()->count(20)->create([
             'management_id' => $this->faker->regexify('[A-Za-z0-9]{7}'),
             // 'name' => 'テストアイテム', // nameを上書きできる
             'category_id' => $categories->random()->id,
@@ -175,18 +174,17 @@ class IndexMethodTest extends TestCase
             'deleted_at' => $this->faker->date() //ソフトデリートされた（廃棄された）
         ]);
 
-
+        // adminユーザーを作成
         $user = User::factory()->role(1)->create();
         $this->actingAs($user);
- 
-         $response = $this->get('api/items?disposal=true')
-             ->assertOk();
 
-        // dd($response->json());
+        $response = $this->get('/items?disposal=true')
+            ->assertOk();
 
-        $response->assertJson(fn (AssertableJson $json) => 
-            $json->has('items.data', 3)
-                ->has('items.data', fn ($data) => $data
+        $response->assertInertia(fn (Assert $page) => $page
+            ->component('Items/Index')
+            ->has('items.data', 20)
+            ->has('items.data', fn ($data) => $data
                 ->each(fn ($item)=> $item
                     ->hasAll([
                         'id',
@@ -223,6 +221,7 @@ class IndexMethodTest extends TestCase
                         'inspections',
                         'disposal',
                     ])
+                    ->where('deleted_at', fn ($deletedAt) => (bool)strtotime($deletedAt)) // `deleted_at` が有効な日付であることを確認
                     ->has('category', fn ($category) => $category
                         ->hasAll(['id', 'name', 'created_at', 'updated_at'])
                     )
@@ -243,10 +242,6 @@ class IndexMethodTest extends TestCase
                     )
                 )
             )
-            ->has('total_count')
-            ->where('total_count', 3)
         );
     }
-
-
 }
