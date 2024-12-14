@@ -2,7 +2,6 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Api\ConsumableItemController;
 use App\Http\Controllers\Api\EdithistoryController;
 use App\Http\Controllers\Api\ItemController;
 use App\Http\Controllers\Api\ItemRequestController;
@@ -25,7 +24,7 @@ use App\Http\Controllers\Api\VueErrorController;
 // 備品の廃棄
 Route::middleware(['auth:sanctum', 'verified', 'can:staff-higher'])
 ->post('/items/{id}/restore', [ItemController::class, 'restore'])
-->name('items.restore');
+->name('api.items.restore');
 
 
 // 対象の備品の編集履歴を取得する
