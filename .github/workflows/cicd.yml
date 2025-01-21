@@ -1,0 +1,55 @@
+name: EMS Deploy Pipeline
+on:
+  pull_request:  #プルリク時自動テスト、マージ時自動デプロイ
+    types: [closed]
+    branches: 
+      - main
+    paths:
+      - '**'
+
+env:
+  AWS_REGION: ap-northeast-1
+  ECS_CLUSTER: my-portfolio-cluster
+  ECS_SERVICE: my-portfolio
+  ECS_REPOSITORY: my-portfolio
+  ECS_TASK_DEFINITION_API: .aws/task-def-api.json
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+# Test
+# Build
+  Build:
+    if: github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: .
+    steps:
+      # Checkout code
+      - uses: actions/checkout@v4
+
+      - name: (Run Tests Feature Test ここは別jobに分離) Build Image
+        run: docker image build -t temp_portfolio_image:latest .
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-region: ${{ env.AWS_REGION }}
+          role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME }}
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Push the image to Amazon ECR
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+        run: |
+          docker image tag temp_portfolio_image:latest $ECR_REGISTRY/$ECS_REPOSITORY:${{ github.sha }}
+          docker image push $ECR_REGISTRY/$ECS_REPOSITORY:${{ github.sha }}
+
+
+# Deploy
