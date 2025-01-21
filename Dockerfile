@@ -17,11 +17,17 @@ RUN apt-get update && apt-get install -y \
     libvpx-dev \
     libzip-dev \
     libmagickwand-dev \
+    default-mysql-client \
+    iputils-ping \
     && docker-php-ext-configure gd --with-freetype --with-jpeg --with-webp --with-xpm \
     && docker-php-ext-install -j$(nproc) gd \
     && docker-php-ext-install pdo pdo_mysql zip \
     && pecl install imagick \
     && docker-php-ext-enable imagick
+
+# viおよびnanoエディタのインストールを分けて実行
+RUN apt-get update && apt-get install -y vim
+RUN apt-get update && apt-get install -y nano
 
 # Node.jsのインストール (バージョン22.xを指定)
 RUN curl -sL https://deb.nodesource.com/setup_22.x | bash - \
@@ -45,3 +51,10 @@ RUN composer install
 
 # アプリケーションのビルド
 RUN npm run build
+
+# ログディレクトリの所有者と権限を設定 
+RUN chown -R www-data:www-data /var/www/html/storage \
+    && chmod -R 775 /var/www/html/storage
+
+# コンテナのポートを公開
+EXPOSE 80

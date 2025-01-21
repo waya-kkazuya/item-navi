@@ -1,5 +1,6 @@
 services:
     my-laravel-app:
+        container_name: EMS
         build:
             context: .
             dockerfile: Dockerfile
@@ -19,21 +20,13 @@ services:
             IGNITION_LOCAL_SITES_PATH: '${PWD}'
         volumes:
             - '.:/var/www/html'
-        command: >
-            sh -c " 
-            chown -R www-data:www-data /var/www/html/storage && 
-            chmod -R 775 /var/www/html/storage && 
-            chown -R www-data:www-data /var/www/html/public && 
-            chmod -R 775 /var/www/html/public && 
-            rm -rf /var/www/html/public/storage &&
-            ln -s /var/www/html/storage/app/public /var/www/html/public/storage &&
-            apache2-foreground 
-            "
+        command: "sh -c \"  chown -R www-data:www-data /var/www/html/storage &&  chmod -R 775 /var/www/html/storage &&  chown -R www-data:www-data /var/www/html/public &&  chmod -R 775 /var/www/html/public &&  rm -rf /var/www/html/public/storage && ln -s /var/www/html/storage/app/public /var/www/html/public/storage && apache2-foreground  \"\n"
         networks:
             - sail
         depends_on:
             - mysql
     mysql:
+        container_name: mysql
         image: 'mysql/mysql-server:8.0'
         ports:
             - '${FORWARD_DB_PORT:-3306}:3306'
@@ -58,17 +51,20 @@ services:
             retries: 3
             timeout: 5s
     phpMyAdmin:
+        container_name: phpMyAdmin
         image: phpmyadmin/phpmyadmin
         links:
-            - mysql:mysql
+            - 'mysql:mysql'
         ports:
-            - 8080:80
+            - '8080:80'
         environment:
             MYSQL_USERNAME: '${DB_USERNAME}'
             MYSQL_ROOT_PASSWORD: '${DB_PASSWORD}'
             PMA_HOST: mysql
         networks:
             - sail
+        depends_on:
+            - mysql
 networks:
     sail:
         driver: bridge

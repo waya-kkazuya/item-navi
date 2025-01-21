@@ -1,0 +1,13 @@
+{
+    "name": "EMS",
+    "service": "my-laravel-app",
+    "workspaceFolder": "/var/www/html",
+    "dockerComposeFile": "../docker-compose.yml",
+    "customizations": {
+        "vscode": {
+            "extensions": [    
+                "ms-ceintl.vscode-language-pack-ja"
+            ]
+        }
+    }
+}
