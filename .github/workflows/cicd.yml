@@ -1,6 +1,9 @@
 name: EMS Deploy Pipeline
 on:
-  push:  #プルリク時自動テスト、マージ時自動デプロイ
+  pull_request:  #プルリク時自動テスト、マージ時自動デプロイ
+    types: [closed]
+    branches: 
+      - main
     paths:
       - '**'
 
@@ -19,6 +22,7 @@ jobs:
 # Test
 # Build
   Build:
+    if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
     defaults:
       run:
