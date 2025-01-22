@@ -1,6 +1,6 @@
 name: EMS Deploy Pipeline
 on:
-  pull_request:  #プルリク時自動テスト、マージ時自動デプロイ
+  pull_request:  #プルリクのマージ時自動デプロイ
     types: [closed]
     branches: 
       - main
@@ -12,7 +12,7 @@ env:
   ECS_CLUSTER: my-portfolio-cluster
   ECS_SERVICE: my-portfolio
   ECS_REPOSITORY: my-portfolio
-  ECS_TASK_DEFINITION_API: .aws/task-def-api.json
+  ECS_TASK_DEFINITION_API: .aws/task-def-portfolio.json
 
 permissions:
   id-token: write
@@ -37,8 +37,9 @@ jobs:
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ env.AWS_REGION }}
-          role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME }}
 
       - name: Login to Amazon ECR
         id: login-ecr
