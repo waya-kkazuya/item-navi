@@ -83,7 +83,7 @@ jobs:
 
       - name: Define the image URI
         run: |
-          echo "API_IMAGE_URI=${cat artifacts/portfolio-image-uri.txt}" >> $GITHUB_ENV
+          echo "API_IMAGE_URI=$(cat artifacts/portfolio-image-uri.txt)" >> $GITHUB_ENV
 
       - name: Fill in the new image URI in the amazon ECS task definition
         id: render-task-def
@@ -99,4 +99,4 @@ jobs:
           task-definition: ${{ steps.render-task-def.outputs.task-definition }}
           service: ${{ env.ECS_SERVICE }}
           cluster: ${{ env.ECS_CLUSTER }}
-          wait-for-service-stability:
+          wait-for-service-stability: true
