@@ -34,6 +34,7 @@ jobs:
       - name: Create .env file
         run: |
           cp .env.example .env
+          
           echo "APP_NAME=EMS" >> .env
           # APP_KEYは、イメージビルド時に「php artisan key:generate」を行う
           echo "APP_ENV=production" >> .env
@@ -41,11 +42,11 @@ jobs:
           echo "APP_URL=${{ secrets.PROD_APP_URL }}" >> .env
           echo "APP_PORT=80" >> .env
 
-          echo "SESSION_DOMAIN=${{ secrets.PROD_SESSION_DOMAIN }}" >> .env
           echo "DB_HOST=${{ secrets.PROD_DB_HOST }}" >> .env 
           echo "DB_DATABASE=${{ secrets.PROD_DB_DATABASE }}" >> .env
           echo "DB_USERNAME=${{ secrets.PROD_DB_USERNAME }}" >> .env
           echo "DB_PASSWORD=${{ secrets.PROD_DB_PASSWORD }}" >> .env
+
           echo "SESSION_DOMAIN=${{ secrets.PROD_SESSION_DOMAIN }}" >> .env
 
       - name: (Run Tests Feature Test ここは別jobに分離) Build Image
