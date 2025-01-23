@@ -49,6 +49,9 @@ COPY . /var/www/html
 # Composerの依存関係をインストール
 RUN composer install
 
+# アプリケーションキーの生成
+RUN php artisan key:generate
+
 # アプリケーションのビルド
 RUN npm run build
 
