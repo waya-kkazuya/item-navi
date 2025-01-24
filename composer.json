@@ -8,6 +8,7 @@
         "php": "^8.1",
         "ext-gd": "*",
         "ext-imagick": "*",
+        "aws/aws-sdk-php": "^3.338",
         "barryvdh/laravel-debugbar": "^3.13",
         "barryvdh/laravel-dompdf": "^3.0",
         "barryvdh/laravel-snappy": "^1.0",
