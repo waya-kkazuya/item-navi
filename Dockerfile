@@ -37,6 +37,12 @@ RUN curl -sL https://deb.nodesource.com/setup_22.x | bash - \
 COPY package*.json ./
 RUN npm install
 
+# AWS CLIのインストール
+RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" \
+    && unzip awscliv2.zip \
+    && ./aws/install \
+    && rm -rf awscliv2.zip aws
+
 # Apacheのmod_rewriteを有効化
 RUN a2enmod rewrite
 
