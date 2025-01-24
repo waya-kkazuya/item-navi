@@ -47,6 +47,8 @@ COPY ./docker-config/apache2.conf /etc/apache2/sites-available/000-default.conf
 COPY . /var/www/html
 
 # Composerの依存関係をインストール
+RUN composer require aws/aws-sdk-php
+RUN composer require league/flysystem-aws-s3-v3 "^1.0"
 RUN composer install
 
 # アプリケーションキーの生成
