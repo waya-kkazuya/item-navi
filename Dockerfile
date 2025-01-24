@@ -19,6 +19,7 @@ RUN apt-get update && apt-get install -y \
     libmagickwand-dev \
     default-mysql-client \
     iputils-ping \
+    unzip \
     && docker-php-ext-configure gd --with-freetype --with-jpeg --with-webp --with-xpm \
     && docker-php-ext-install -j$(nproc) gd \
     && docker-php-ext-install pdo pdo_mysql zip \
