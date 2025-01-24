@@ -54,6 +54,10 @@ jobs:
 
           # ファイルシステムをs3に変更する設定
           echo "FILESYSTEM_DISK=s3" >> .env
+          echo "AWS_DEFAULT_REGION=${{ secrets.PROD_AWS_DEFAULT_REGION }}" >> .env
+          echo "AWS_BUCKET=${{ secrets.PROD_AWS_BUCKET }}" >> .env
+          echo "AWS_URL=${{ secrets.PROD_AWS_URL }}" >> .env
+          echo "AWS_ENDPOINT=${{ secrets.PROD_AWS_ENDPOINT }}" >> .env
 
       - name: (Run Tests Feature Test ここは別jobに分離) Build Image
         run: docker image build -t temp_portfolio_image:latest .
