@@ -56,7 +56,6 @@ jobs:
           echo "FILESYSTEM_DISK=s3" >> .env
           echo "AWS_DEFAULT_REGION=${{ secrets.PROD_AWS_DEFAULT_REGION }}" >> .env
           echo "AWS_BUCKET=${{ secrets.PROD_AWS_BUCKET }}" >> .env
-          echo "AWS_URL=${{ secrets.PROD_AWS_URL }}" >> .env
           echo "AWS_ENDPOINT=${{ secrets.PROD_AWS_ENDPOINT }}" >> .env
 
           # ログの設定
