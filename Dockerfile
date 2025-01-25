@@ -62,9 +62,6 @@ RUN php artisan key:generate
 # アプリケーションのビルド
 RUN npm run build
 
-# シンボリックリンクの作成
-RUN php artisan storage:link
-
 # ログディレクトリの所有者と権限を設定 
 RUN chown -R www-data:www-data /var/www/html/storage \
     && chmod -R 775 /var/www/html/storage
