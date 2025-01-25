@@ -59,6 +59,16 @@ jobs:
           echo "AWS_URL=${{ secrets.PROD_AWS_URL }}" >> .env
           echo "AWS_ENDPOINT=${{ secrets.PROD_AWS_ENDPOINT }}" >> .env
 
+          # ログの設定
+          echo "LOG_SLACK_WEBHOOK_URL=${{ secrets.PROD_LOG_SLACK_WEBHOOK_URL }}" >> .env
+
+          # VITEの環境変数の設定URL
+          echo "VITE_API_BASE_URL=${{ secrets.PROD_VITE_API_BASE_URL }}" >> .env
+          echo "VITE_APP_URL=${{ secrets.PROD_VITE_APP_URL }}" >> .env
+
+          # SANCTUMの設定
+          echo "SANCTUM_STATEFUL_DOMAINS=${{ secrets.PROD_SANCTUM_STATEFUL_DOMAINS }}" >> .env
+
       - name: (Run Tests Feature Test ここは別jobに分離) Build Image
         run: docker image build -t temp_portfolio_image:latest .
 
