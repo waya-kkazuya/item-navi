@@ -57,6 +57,7 @@ jobs:
           echo "AWS_DEFAULT_REGION=${{ secrets.PROD_AWS_DEFAULT_REGION }}" >> .env
           echo "AWS_BUCKET=${{ secrets.PROD_AWS_BUCKET }}" >> .env
           echo "AWS_ENDPOINT=${{ secrets.PROD_AWS_ENDPOINT }}" >> .env
+          echo "AWS_USE_PATH_STYLE_ENDPOINT=${{ secrets.PROD_AWS_USE_PATH_STYLE_ENDPOINT }}" >> .env
 
           # ログの設定
           echo "LOG_SLACK_WEBHOOK_URL=${{ secrets.PROD_LOG_SLACK_WEBHOOK_URL }}" >> .env
