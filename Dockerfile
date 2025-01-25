@@ -66,5 +66,8 @@ RUN npm run build
 RUN chown -R www-data:www-data /var/www/html/storage \
     && chmod -R 775 /var/www/html/storage
 
+# 本番環境でシンボリックリンクを削除
+RUN rm -f /var/www/html/public/storage
+
 # コンテナのポートを公開
 EXPOSE 80
