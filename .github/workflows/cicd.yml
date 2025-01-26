@@ -36,8 +36,8 @@ jobs:
           cp .env.example .env
           
           # APPの設定
-          echo "APP_NAME=EMS" >> .env
           # APP_KEYは、イメージビルド時に「php artisan key:generate」を行う
+          echo "APP_NAME=EMS" >> .env
           echo "APP_ENV=production" >> .env
           echo "APP_DEBUG=false" >> .env
           echo "APP_URL=${{ secrets.PROD_APP_URL }}" >> .env
@@ -69,7 +69,7 @@ jobs:
           # SANCTUMの設定
           echo "SANCTUM_STATEFUL_DOMAINS=${{ secrets.PROD_SANCTUM_STATEFUL_DOMAINS }}" >> .env
 
-      - name: (Run Tests Feature Test ここは別jobに分離) Build Image
+      - name: Build Image
         run: docker image build -t temp_portfolio_image:latest .
 
       - name: Configure AWS credentials
