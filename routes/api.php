@@ -66,6 +66,11 @@ Route::middleware(['auth:sanctum', 'verified', 'can:user-higher'])
 });
 
 
+// AuthenticatedLayout.vueのプロフィール画像URLを取得する
+Route::middleware(['auth:sanctum', 'verified', 'can:user-higher'])
+->get('/profile-image', [ProfileController::class, 'getProfileImage']);
+
+
 // Vue側のエラーをAPIでログに書き込む
 Route::middleware(['auth:sanctum', 'verified', 'can:user-higher'])
 ->post('/log-error', [VueErrorController::class, 'logError']);
