@@ -18,11 +18,11 @@ class QrCodeService
     Log::info('QrCodeService upload method called');
 
     try {
-      // $item->idを元にQRコードを生成する
-      $qrCode = QrCode::format('png')->size(300)->generate($item->id);
+      
+      $qrCode = QrCode::format('png')->size(300)->generate($item->id); // $item->idを元にQRコードを生成
       $qrCodeNameToStore = 'QR-' . uniqid(rand().'_') . '.png';
-      Storage::disk('public')->put('qrcode/'.$qrCodeNameToStore, $qrCode);
-      $qrCodefilePath = Storage::disk('public')->path('qrcode/'.$qrCodeNameToStore);
+      Storage::disk()->put('qrcode/'.$qrCodeNameToStore, $qrCode);
+      $qrCodefilePath = Storage::disk()->path('qrcode/'.$qrCodeNameToStore);
 
       $qrManager = new ImageManager(new Driver());
       $qrImage = $qrManager->read($qrCodefilePath);
@@ -47,7 +47,7 @@ class QrCodeService
       });
 
       $labelNameToStore = 'label-'.uniqid(rand().'_') .'.jpg';
-      Storage::disk('public')->put('labels/'.$labelNameToStore, $label->encode(new JpegEncoder()));
+      Storage::disk()->put('labels/'.$labelNameToStore, $label->encode(new JpegEncoder()));
 
       Log::info('QrCodeService upload method succeed');
 

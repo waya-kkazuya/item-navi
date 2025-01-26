@@ -48,15 +48,17 @@ class DisposalScheduleNotification extends Notification
     public function toArray(object $notifiable): array
     {
         // 画像パスの設定
-        $imagePath = 'storage/items/' . $this->disposal->item->image1;
-        if (!$this->disposal->item->image1 || !Storage::disk('public')->exists('items/' . $this->disposal->item->image1)) {
-            $imagePath = 'storage/items/No_Image.jpg';
+        $defaultDisk = Storage::disk();
+        
+        $imagePath = $defaultDisk->url('items/' . $this->disposal->item->image1);
+        if (!$this->disposal->item->image1 || !$defaultDisk->exists('items/' . $this->disposal->item->image1)) {
+            $imagePath = $defaultDisk->url('items/No_Image.jpg');
         }
 
         return [
             'id' => $this->disposal->item->id,
             'management_id' => $this->disposal->item->management_id,
-            'image_path1' => asset($imagePath),
+            'image_path1' => $imagePath, //絶対URL
             'item_name' => $this->disposal->item->name,
             'scheduled_date' => $this->disposal ? $this->disposal->disposal_scheduled_date : null,
             'message' => '廃棄予定日が近づいています'

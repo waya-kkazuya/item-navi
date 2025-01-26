@@ -48,16 +48,18 @@ class InspectionScheduleNotification extends Notification
     public function toArray(object $notifiable): array
     {
         // 画像パスの設定
-        $imagePath = 'storage/items/' . $this->inspection->item->image1;
-        if (!$this->inspection->item->image1 || !Storage::disk('public')->exists('items/' . $this->inspection->item->image1)) {
-            $imagePath = 'storage/items/No_Image.jpg';
+        $defaultDisk = Storage::disk();
+    
+        $imagePath = $defaultDisk->url('items/' . $this->inspection->item->image1);
+        if (!$this->inspection->item->image1 || !$defaultDisk->exists('items/' . $this->inspection->item->image1)) {
+            $imagePath = $defaultDisk->url('items/No_Image.jpg');
         }
 
         // ここで表示するのに必要な情報を詰め込む
         return [
             'id' => $this->inspection->item->id,
             'management_id' => $this->inspection->item->management_id,
-            'image_path1' => asset($imagePath),
+            'image_path1' => $imagePath, //絶対URL
             'item_name' => $this->inspection->item->name,
             'scheduled_date' => $this->inspection ? $this->inspection->inspection_scheduled_date : null,
             'message' => '点検予定日が近づいています'
