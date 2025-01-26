@@ -9,6 +9,7 @@ use App\Http\Controllers\Api\StockTransactionController;
 use App\Http\Controllers\Api\NotificationController;
 use App\Http\Controllers\Api\UpdateStockController;
 use App\Http\Controllers\Api\VueErrorController;
+use App\Http\Controllers\Api\ProfileController;
 
 /*
 |--------------------------------------------------------------------------
