@@ -9,6 +9,9 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 # 必要なPHP拡張をインストール
 RUN apt-get update && apt-get install -y \
+    wget \
+    vim \
+    nano \
     libfreetype6-dev \
     libjpeg62-turbo-dev \
     libpng-dev \
@@ -29,11 +32,6 @@ RUN apt-get update && apt-get install -y \
     && docker-php-ext-install pdo pdo_mysql zip \
     && pecl install imagick \
     && docker-php-ext-enable imagick
-
-# viおよびnanoエディタのインストールを分けて実行
-RUN apt-get update && apt-get install -y vim
-RUN apt-get update && apt-get install -y nano
-RUN apt-get update && apt-get install -y wget
 
 # Node.jsのインストール (バージョン22.xを指定)
 RUN curl -sL https://deb.nodesource.com/setup_22.x | bash - \
