@@ -24,17 +24,15 @@ RUN apt-get update && apt-get install -y \
     iputils-ping \
     unzip
 
-# 別のRUNコマンドで追加の依存関係をインストール
-RUN apt-get update && apt-get install -y \  
-    libssl1.1 \
-    libxrender1 \
-    libfontconfig1 \
-    libxext6 \
-    libx11-6 \
-    libjpeg62-turbo-dev \
-    libpng-dev \
-    libfreetype6-dev \
-    wkhtmltopdf
+# ライブラリファイルを取得
+RUN wget http://archive.ubuntu.com/ubuntu/pool/main/o/openssl/libssl1.1_1.1.0g-2ubuntu4_amd64.deb && \
+    wget wget http://archive.ubuntu.com/ubuntu/pool/main/libj/libjpeg-turbo/libjpeg-turbo8_2.0.3-0ubuntu1_amd64.deb && \
+    wget https://github.com/wkhtmltopdf/packaging/releases/download/0.12.6-1/wkhtmltox_0.12.6-1.bionic_amd64.deb
+
+# ライブラリをインストール
+RUN dpkg -i libssl1.1_1.1.0g-2ubuntu4_amd64.deb && \
+    dpkg -i libjpeg-turbo8_2.0.3-0ubuntu1_amd64.deb && \
+    dpkg -i wkhtmltox_0.12.6-1.bionic_amd64.deb
 
 # GDライブラリの設定とインストール   
 RUN docker-php-ext-configure gd --with-freetype --with-jpeg --with-webp --with-xpm \
