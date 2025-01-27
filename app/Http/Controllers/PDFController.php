@@ -49,10 +49,11 @@ class PDFController extends Controller
             ->setOption('margin-top', '10mm')
             ->setOption('margin-bottom', '10mm')
             ->setOption('footer-center', '[page] / [topage]') // フッター中央に現在のページ番号と総ページ数を表示
-            ->setOption('footer-font-size', 10);
+            ->setOption('footer-font-size', 10)
+            ->setOption('enable-local-file-access', true);
 
         Log::info('PDFController generatePDF method succeeded');
-            
+        
         return $pdf->inline('消耗品QRコード.pdf');
     }
 }

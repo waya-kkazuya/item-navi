@@ -26,8 +26,7 @@
         "league/flysystem-aws-s3-v3": "^3.0",
         "monolog/monolog": "^3.7",
         "simplesoftwareio/simple-qrcode": "^4.2",
-        "tightenco/ziggy": "^2.0",
-        "wemersonjanuario/wkhtmltopdf-windows": "0.12.2.3"
+        "tightenco/ziggy": "^2.0"
     },
     "require-dev": {
         "askdkc/breezejp": "^1.8",

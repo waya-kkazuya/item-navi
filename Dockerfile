@@ -20,6 +20,10 @@ RUN apt-get update && apt-get install -y \
     default-mysql-client \
     iputils-ping \
     unzip \
+    libssl1.1 \
+    libxrender1 \
+    libfontconfig1 \
+    wkhtmltopdf \
     && docker-php-ext-configure gd --with-freetype --with-jpeg --with-webp --with-xpm \
     && docker-php-ext-install -j$(nproc) gd \
     && docker-php-ext-install pdo pdo_mysql zip \
@@ -29,6 +33,7 @@ RUN apt-get update && apt-get install -y \
 # viおよびnanoエディタのインストールを分けて実行
 RUN apt-get update && apt-get install -y vim
 RUN apt-get update && apt-get install -y nano
+RUN apt-get update && apt-get install -y wget
 
 # Node.jsのインストール (バージョン22.xを指定)
 RUN curl -sL https://deb.nodesource.com/setup_22.x | bash - \
