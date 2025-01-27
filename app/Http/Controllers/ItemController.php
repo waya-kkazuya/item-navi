@@ -339,20 +339,20 @@ class ItemController extends Controller
 
             // アップロードした備品の画像の削除
             $imagePath = 'items/' . $fileNameToStore;
-            if (Storage::disk('public')->exists($imagePath)) {
-                Storage::disk('public')->delete($imagePath);
+            if (Storage::disk()->exists($imagePath)) {
+                Storage::disk()->delete($imagePath);
             }
 
             // qrCodeService内で保存したQRコードを削除
             $qrImagePath = 'qrcode/' . $qrCodeNameToStore;
-            if (Storage::disk('public')->exists($qrImagePath)) {
-                Storage::disk('public')->delete($qrImagePath);            
+            if (Storage::disk()->exists($qrImagePath)) {
+                Storage::disk()->delete($qrImagePath);            
             }
 
             // 保存したQRコードラベルを削除
             $labelImagePath = 'labels/' . $labelNameToStore;
-            if (Storage::disk('public')->exists($labelImagePath)) {
-                Storage::disk('public')->delete($labelImagePath);            
+            if (Storage::disk()->exists($labelImagePath)) {
+                Storage::disk()->delete($labelImagePath);            
             }
 
             return redirect()->back()
@@ -438,8 +438,8 @@ class ItemController extends Controller
         Log::info('ItemController update method called');
 
         // ロールバックした時の備品画像を元に戻す準備
-        if (!Storage::disk('public')->exists('temp')) {
-            Storage::disk('public')->makeDirectory('temp');
+        if (!Storage::disk()->exists('temp')) {
+            Storage::disk()->makeDirectory('temp');
         }
 
         // 編集理由はItemObserverのメソッド内でセッションから取得し、edithistoriesに保存
@@ -527,8 +527,8 @@ class ItemController extends Controller
                 if ($fileNameOfOldImage) {
                     $temporaryBackupPath = 'temp/'.$fileNameOfOldImage;
                     // 一時的な退避フォルダ(temp)に変更前の画像をコピーでバックアップ
-                    Storage::disk('public')->copy('items/'.$fileNameOfOldImage, $temporaryBackupPath);
-                    Storage::disk('public')->delete('items/'.$fileNameOfOldImage);
+                    Storage::disk()->copy('items/'.$fileNameOfOldImage, $temporaryBackupPath);
+                    Storage::disk()->delete('items/'.$fileNameOfOldImage);
                 }
 
                 // 画像ファイルのアップロードとDBのimage1のファイル名更新
@@ -573,25 +573,25 @@ class ItemController extends Controller
             ]);
 
             // アップロードしたプロフィール画像を削除
-            if (Storage::disk('public')->exists('items/' . $fileNameToStore)) {
-                Storage::disk('public')->delete('items/' . $fileNameToStore);
+            if (Storage::disk()->exists('items/' . $fileNameToStore)) {
+                Storage::disk()->delete('items/' . $fileNameToStore);
             }
 
             // バックアップした変更前の画像を元の場所に保存
             if ($temporaryBackupPath) {
-                Storage::disk('public')->move($temporaryBackupPath, 'items/'.$fileNameOfOldImage);
+                Storage::disk()->move($temporaryBackupPath, 'items/'.$fileNameOfOldImage);
             }
 
             // qrCodeService内で保存したQRコードを削除
             $qrImagePath = 'qrcode/' . $qrCodeNameToStore;
-            if (Storage::disk('public')->exists($qrImagePath)) {
-                Storage::disk('public')->delete($qrImagePath);            
+            if (Storage::disk()->exists($qrImagePath)) {
+                Storage::disk()->delete($qrImagePath);            
             }
 
             // 保存したQRコードラベルを削除
             $labelImagePath = 'labels/' . $labelNameToStore;
-            if (Storage::disk('public')->exists($labelImagePath)) {
-                Storage::disk('public')->delete($labelImagePath);            
+            if (Storage::disk()->exists($labelImagePath)) {
+                Storage::disk()->delete($labelImagePath);            
             }
 
             return redirect()->back()
@@ -603,7 +603,7 @@ class ItemController extends Controller
         } finally {
             // 成功しても失敗しても必ず行う処理
             if ($temporaryBackupPath) {
-                Storage::disk('public')->delete($temporaryBackupPath);
+                Storage::disk()->delete($temporaryBackupPath);
             }
         }
     }
