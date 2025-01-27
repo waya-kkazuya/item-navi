@@ -28,7 +28,7 @@ class PDFController extends Controller
         // QRラベル画像のパスの配列を取得
         $qrCodes = [];
         foreach($consumableItems as $consumableItem) {
-            $qrCodes[] = Storage::path('labels/'.$consumableItem->qrcode);
+            $qrCodes[] = Storage::disk()->url('labels/'.$consumableItem->qrcode);
         }
 
         if (empty($qrCodes)) {
