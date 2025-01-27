@@ -23,7 +23,8 @@ RUN apt-get update && apt-get install -y \
     default-mysql-client \
     iputils-ping \
     unzip \
-    xfonts-75dpi
+    xfonts-75dpi \
+    xfonts-base
 
 # ライブラリファイルを取得
 RUN wget http://archive.ubuntu.com/ubuntu/pool/main/o/openssl/libssl1.1_1.1.0g-2ubuntu4_amd64.deb && \
