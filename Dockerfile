@@ -22,12 +22,22 @@ RUN apt-get update && apt-get install -y \
     libmagickwand-dev \
     default-mysql-client \
     iputils-ping \
-    unzip \
+    unzip
+
+# 別のRUNコマンドで追加の依存関係をインストール
+RUN apt-get update && apt-get install -y \  
     libssl1.1 \
     libxrender1 \
     libfontconfig1 \
-    wkhtmltopdf \
-    && docker-php-ext-configure gd --with-freetype --with-jpeg --with-webp --with-xpm \
+    libxext6 \
+    libx11-6 \
+    libjpeg62-turbo-dev \
+    libpng-dev \
+    libfreetype6-dev \
+    wkhtmltopdf
+
+# GDライブラリの設定とインストール   
+RUN docker-php-ext-configure gd --with-freetype --with-jpeg --with-webp --with-xpm \
     && docker-php-ext-install -j$(nproc) gd \
     && docker-php-ext-install pdo pdo_mysql zip \
     && pecl install imagick \
