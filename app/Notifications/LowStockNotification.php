@@ -48,16 +48,18 @@ class LowStockNotification extends Notification
     public function toArray(object $notifiable): array
     {
         // 画像パスの設定
-        $imagePath = 'storage/items/' . $this->item->image1;
-        if (!$this->item->image1 || !Storage::disk('public')->exists('items/' . $this->item->image1)) {
-            $imagePath = 'storage/items/No_Image.jpg';
+        $defaultDisk = Storage::disk();
+
+        $imagePath = $defaultDisk->url('items/' . $this->item->image1);
+        if (!$this->item->image1 || !$defaultDisk->exists('items/' . $this->item->image1)) {
+            $imagePath = $defaultDisk->url('items/No_Image.jpg');
         }
 
         // ここで表示するのに必要な情報を詰め込む
         return [
             'id' => $this->item->id,
             'management_id' => $this->item->management_id,
-            'image_path1' => asset($imagePath),
+            'image_path1' => $imagePath,
             'item_name' => $this->item->name,
             'quantity' => $this->item->stock,
             'minimum_stock' => $this->item->minimum_stock,

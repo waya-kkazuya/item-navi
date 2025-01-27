@@ -134,7 +134,7 @@ class UpdateMethodTest extends TestCase
 
     //     Storage::fake('public');
     //     // 元々の画像ファイルをストレージに追加
-    //     Storage::disk('public')->put('profile/before_profile_image.jpg', 'dummy content');
+    //     Storage::disk()->put('profile/before_profile_image.jpg', 'dummy content');
 
     //     try {
     //         $response = $this->actingAs($user)
@@ -179,8 +179,8 @@ class UpdateMethodTest extends TestCase
     //     // $response->assertStatus(500);
 
     //     // プロフィール画像の削除が行われたかを確認
-    //     Storage::disk('public')->assertMissing('profile/mocked_profile_image.jpg');
-    //     Storage::disk('public')->assertExists('profile/before_profile_image.jpg');
+    //     Storage::disk()->assertMissing('profile/mocked_profile_image.jpg');
+    //     Storage::disk()->assertExists('profile/before_profile_image.jpg');
         
     //     $this->assertDatabaseHas('users', [
     //         'name' => 'BeforeTestUser',

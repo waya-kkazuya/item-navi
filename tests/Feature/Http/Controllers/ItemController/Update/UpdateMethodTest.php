@@ -548,8 +548,8 @@ class UpdateMethodTest extends TestCase
         // $response->assertStatus(302);
 
         // 拡張子が.jpgで終わるファイルが存在するかを確認
-        // $files = Storage::disk('public')->assertExists('items/'.$fileNameToStore);
-        $files = Storage::disk('public')->files();
+        // $files = Storage::disk()->assertExists('items/'.$fileNameToStore);
+        $files = Storage::disk()->files();
         // dd($files);
         $jpgFilesExist = false;
         foreach ($files as $file) {

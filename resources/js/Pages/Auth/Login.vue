@@ -29,7 +29,7 @@ const guestLogin = (): void => {
 
 <template>
     <GuestLayout>
-        <Head title="ログログイン" />
+        <Head title="ログイン" />
 
         <div v-if="status" class="mb-4 font-medium text-sm text-green-600">
             {{ status }}
