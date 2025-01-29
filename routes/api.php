@@ -9,6 +9,7 @@ use App\Http\Controllers\Api\StockTransactionController;
 use App\Http\Controllers\Api\NotificationController;
 use App\Http\Controllers\Api\UpdateStockController;
 use App\Http\Controllers\Api\VueErrorController;
+use App\Http\Controllers\Api\ProfileController;
 
 /*
 |--------------------------------------------------------------------------
@@ -64,6 +65,11 @@ Route::middleware(['auth:sanctum', 'verified', 'can:user-higher'])
 ->get('/user-role', function (Request $request) {
   return auth()->user()->role;
 });
+
+
+// AuthenticatedLayout.vueのプロフィール画像URLを取得する
+Route::middleware(['auth:sanctum', 'verified', 'can:user-higher'])
+->get('/profile-image', [ProfileController::class, 'getProfileImage']);
 
 
 // Vue側のエラーをAPIでログに書き込む

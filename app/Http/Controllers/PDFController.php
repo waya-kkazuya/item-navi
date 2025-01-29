@@ -28,7 +28,7 @@ class PDFController extends Controller
         // QRラベル画像のパスの配列を取得
         $qrCodes = [];
         foreach($consumableItems as $consumableItem) {
-            $qrCodes[] = Storage::path('labels/'.$consumableItem->qrcode);
+            $qrCodes[] = Storage::disk()->url('labels/'.$consumableItem->qrcode);
         }
 
         if (empty($qrCodes)) {
@@ -49,10 +49,11 @@ class PDFController extends Controller
             ->setOption('margin-top', '10mm')
             ->setOption('margin-bottom', '10mm')
             ->setOption('footer-center', '[page] / [topage]') // フッター中央に現在のページ番号と総ページ数を表示
-            ->setOption('footer-font-size', 10);
+            ->setOption('footer-font-size', 10)
+            ->setOption('enable-local-file-access', true);
 
         Log::info('PDFController generatePDF method succeeded');
-            
+        
         return $pdf->inline('消耗品QRコード.pdf');
     }
 }
