@@ -10,7 +10,7 @@ use App\Observers\InspectionObserver;
 use App\Observers\DisposalObserver;
 use Illuminate\Support\ServiceProvider;
 use Inertia\Inertia;
-
+use Illuminate\Support\Facades\URL;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -30,8 +30,14 @@ class AppServiceProvider extends ServiceProvider
         Item::observe(ItemObserver::class);
         Inspection::observe(InspectionObserver::class);
         Disposal::observe(DisposalObserver::class);
+
         Inertia::share('errors', function () {
             return session()->get('errors') ? session()->get('errors')->getBag('default')->getMessages() : (object) [];
         });
+
+        // 本番環境でURLをHTTPSに強制する
+        if ($this->app->environment('production')) {
+            URL::forceScheme('https');
+        }
     }
 }
