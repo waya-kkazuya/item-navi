@@ -26,7 +26,7 @@ services:
         depends_on:
             - mysql
             - mysql-test
-            
+        
     mysql:
         container_name: mysql
         image: 'mysql:8.0'

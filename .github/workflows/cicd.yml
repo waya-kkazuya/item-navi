@@ -67,6 +67,9 @@ jobs:
           # SANCTUMの設定
           echo "SANCTUM_STATEFUL_DOMAINS=${{ secrets.PROD_SANCTUM_STATEFUL_DOMAINS }}" >> .env
 
+          # s3
+          echo "S3_BUCKET_URL=${{ secrets.PROD_S3_BUCKET_URL }}" >> .env
+
       - name: Build Image
         run: docker image build -t temp_portfolio_image:latest .
 
