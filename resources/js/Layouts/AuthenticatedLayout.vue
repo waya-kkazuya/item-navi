@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue';
+import { ref, onMounted } from 'vue';
 import ApplicationLogo from '@/Components/ApplicationLogo.vue';
 import Dropdown from '@/Components/Dropdown.vue';
 import DropdownLink from '@/Components/DropdownLink.vue';
@@ -7,6 +7,7 @@ import NavLink from '@/Components/NavLink.vue';
 import ResponsiveNavLink from '@/Components/ResponsiveNavLink.vue';
 import { Link, usePage } from '@inertiajs/vue3';
 import BellNotification from '@/Components/BellNotification.vue';
+import axios from 'axios';
 import type { Ref, ComputedRef } from 'vue';
 import type { UserType } from '@/@types/model';
 
@@ -25,10 +26,19 @@ type PageType = {
 
 const page: PageType = usePage();
 
-const profileImageUrl: ComputedRef<string> = computed(() =>{
-    return page.props.auth.user.profile_image
-    ? `${import.meta.env.VITE_APP_URL}/storage/profile/${page.props.auth.user.profile_image}`
-    : `${import.meta.env.VITE_APP_URL}/storage/profile/profile_default_image.png`
+const profileImageUrl: Ref<string> = ref('');
+
+onMounted(() => {
+    axios.get('/api/profile-image')
+        .then(res => {
+            profileImageUrl.value = res.data.profile_image_url;
+        })
+        .catch(e => {
+            axios.post('/api/log-error', {
+                error: e.toString(),
+                component: 'AuthenticatedLayout.vue get profile_image_url',
+            });
+        });
 });
 </script>
 
