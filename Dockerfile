@@ -9,6 +9,9 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 # 必要なPHP拡張をインストール
 RUN apt-get update && apt-get install -y \
+    wget \
+    vim \
+    nano \
     libfreetype6-dev \
     libjpeg62-turbo-dev \
     libpng-dev \
@@ -20,15 +23,25 @@ RUN apt-get update && apt-get install -y \
     default-mysql-client \
     iputils-ping \
     unzip \
-    && docker-php-ext-configure gd --with-freetype --with-jpeg --with-webp --with-xpm \
+    xfonts-75dpi \
+    xfonts-base
+
+# ライブラリファイルを取得
+RUN wget http://archive.ubuntu.com/ubuntu/pool/main/o/openssl/libssl1.1_1.1.0g-2ubuntu4_amd64.deb && \
+    wget http://archive.ubuntu.com/ubuntu/pool/main/libj/libjpeg-turbo/libjpeg-turbo8_2.0.3-0ubuntu1_amd64.deb && \
+    wget https://github.com/wkhtmltopdf/packaging/releases/download/0.12.6-1/wkhtmltox_0.12.6-1.bionic_amd64.deb
+
+# ライブラリをインストール
+RUN dpkg -i libssl1.1_1.1.0g-2ubuntu4_amd64.deb && \
+    dpkg -i libjpeg-turbo8_2.0.3-0ubuntu1_amd64.deb && \
+    dpkg -i wkhtmltox_0.12.6-1.bionic_amd64.deb
+
+# GDライブラリの設定とインストール   
+RUN docker-php-ext-configure gd --with-freetype --with-jpeg --with-webp --with-xpm \
     && docker-php-ext-install -j$(nproc) gd \
     && docker-php-ext-install pdo pdo_mysql zip \
     && pecl install imagick \
     && docker-php-ext-enable imagick
-
-# viおよびnanoエディタのインストールを分けて実行
-RUN apt-get update && apt-get install -y vim
-RUN apt-get update && apt-get install -y nano
 
 # Node.jsのインストール (バージョン22.xを指定)
 RUN curl -sL https://deb.nodesource.com/setup_22.x | bash - \
