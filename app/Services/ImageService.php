@@ -39,7 +39,7 @@ class ImageService
 
       $resizedImage = $image->encode();
 
-      Storage::disk('public')->put('items/' . $fileNameToStore, $resizedImage);
+      Storage::disk()->put('items/' . $fileNameToStore, $resizedImage);
 
       Log::info('ImageService resizeUpload method succeed');
 
@@ -79,21 +79,23 @@ class ImageService
 
     $resizedImage = $image->encode();
 
-    Storage::disk('public')->put('profile/' . $fileNameToStore, $resizedImage);
+    Storage::disk()->put('profile/' . $fileNameToStore, $resizedImage);
 
     return $fileNameToStore;
   }
 
   public function setImagePathToObject($item)
   {
+    $defaultDisk = Storage::disk();
+
     if(is_null($item->image1)) {
-      $item->image_path1 = asset('storage/items/No_Image.jpg');
+      $item->image_path1 = $defaultDisk->url('items/No_Image.jpg');
     } else {
-        if(Storage::disk('public')->exists('items/' . $item->image1)) {
-            $item->image_path1 = asset('storage/items/' . $item->image1);
-        } else {
-            $item->image_path1 = asset('storage/items/No_Image.jpg');
-        }
+      if($defaultDisk->exists('items/' . $item->image1)) {
+        $item->image_path1 = $defaultDisk->url('items/' . $item->image1);
+      } else {
+        $item->image_path1 = $defaultDisk->url('items/No_Image.jpg');
+      }
     }
     return $item;
   }
@@ -101,13 +103,15 @@ class ImageService
   public function setImagePathInCollection($collection)
   {
     return $collection->transform(function ($record) {
+      $defaultDisk = Storage::disk();
+
       if (is_null($record->item->image1)) {
-        $record->item->image_path1 = asset('storage/items/No_Image.jpg');
+        $record->item->image_path1 = $defaultDisk->url('items/No_Image.jpg');
       } else {
-          if (Storage::disk('public')->exists('items/' . $record->item->image1)) {
-              $record->item->image_path1 = asset('storage/items/' . $record->item->image1);
+          if ($defaultDisk->exists('items/' . $record->item->image1)) {
+              $record->item->image_path1 = $defaultDisk->url('items/' . $record->item->image1);
           } else {
-              $record->item->image_path1 = asset('storage/items/No_Image.jpg');
+              $record->item->image_path1 = $defaultDisk->url('items/No_Image.jpg');
           }
       }
       return $record;

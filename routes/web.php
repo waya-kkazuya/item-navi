@@ -103,4 +103,10 @@ Route::middleware(['auth', 'verified', 'can:user-higher'])->group(function () {
     // Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
+
+// AWSのターゲットグループのヘルスチェック用
+Route::get('/health-check', function () {
+    return response()->json(['status' => 'OK']);
+});
+
 require __DIR__.'/auth.php';

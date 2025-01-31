@@ -28,7 +28,7 @@ class ImageServiceTest extends TestCase
 
         dump($fileNameToStore);
 
-        Storage::disk('public')->assertExists('items/'.$fileNameToStore);
+        Storage::disk()->assertExists('items/'.$fileNameToStore);
     }
 
     /** @test */
@@ -42,7 +42,7 @@ class ImageServiceTest extends TestCase
 
         // dd($fileNameToStore);
 
-        Storage::disk('public')->assertExists('profile/'.$fileNameToStore);
+        Storage::disk()->assertExists('profile/'.$fileNameToStore);
     }
 
     /** @test */
