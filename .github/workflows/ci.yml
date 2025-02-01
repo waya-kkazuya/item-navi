@@ -55,11 +55,10 @@ jobs:
       - name: Install dependencies
         run: composer install --prefer-dist --no-progress --no-suggest --optimize-autoloader
 
-      - name: Create .env file
+      # Set DB_HOST in .env.testing for CI environment
+      - name: Set DB_HOST in .env.testing
         run: |
-          cp .env.testing .env
-          echo "DB_HOST=mysql" >> .env
-          # (テスト用の環境変数を設定)
+          echo "DB_HOST=mysql" >> .env.testing
 
       - name: Generate application key
         run: php artisan key:generate
