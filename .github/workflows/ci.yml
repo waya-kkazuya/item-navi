@@ -60,6 +60,9 @@ jobs:
         run: |
           echo "DB_HOST=mysql" >> .env.testing
 
+      - name: Display .env.testing content
+        run: cat .env.testing
+
       - name: Generate application key
         run: php artisan key:generate --env=testing
 
