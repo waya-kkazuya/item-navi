@@ -32,7 +32,9 @@ class IndexMethodTest extends TestCase
     {
         Item::factory()->count(10)->create();
 
-        $user = User::factory()->role(1)->create();
+        $user = User::factory()->create([
+            'role' => 1
+        ]);
         $this->actingAs($user);
 
         $response = $this->get('/dashboard?type=1')
@@ -51,7 +53,9 @@ class IndexMethodTest extends TestCase
     {
         Item::factory()->count(10)->create();
 
-        $user = User::factory()->role(1)->create();
+        $user = User::factory()->create([
+            'role' => 1
+        ]);
         $this->actingAs($user);
 
         $response = $this->get('/dashboard?type=2')
@@ -76,10 +80,12 @@ class IndexMethodTest extends TestCase
             return Item::factory()->create(['category_id' => $category->id]);
         });
 
-        $user = User::factory()->role(1)->create();
+        $user = User::factory()->create([
+            'role' => 1
+        ]);
         $this->actingAs($user);
 
-        $response = $this->get('/dashboard?type=1')
+        $response = $this->get('/dashboard?type=category')
             ->assertOk();
 
         $response->assertInertia(fn (Assert $page) => $page
@@ -102,10 +108,14 @@ class IndexMethodTest extends TestCase
             return Item::factory()->create(['location_of_use_id' => $location->id]);
         });
 
-        $user = User::factory()->role(1)->create();
+        $user = User::factory()->create([
+            'role' => 1
+        ]);
         $this->actingAs($user);
 
-        $response = $this->get('/dashboard?type=2')
+        // 実際はtype=category以外(else)で判定しているため、
+        // type=locationOfUseはないがテストの便宜上
+        $response = $this->get('/dashboard?type=locationOfUse')
             ->assertOk();
 
         $response->assertInertia(fn (Assert $page) => $page
@@ -121,6 +131,11 @@ class IndexMethodTest extends TestCase
     /** @test */
     function DashboardControllerが編集履歴のデータを渡せる()
     {
+        $user = User::factory()->create([
+            'role' => 1
+        ]);
+        $this->actingAs($user);
+
         $item = Item::factory()->create();
 
         // DBに存在するデータを構築、まとめるのはコントローラ側UseCase側
@@ -147,19 +162,16 @@ class IndexMethodTest extends TestCase
             'created_at' => Carbon::now()->subDays(3)->subHour(), //1時間前
         ]);
 
-        $user = User::factory()->role(1)->create();
-        $this->actingAs($user);
-
         $response = $this->get('/dashboard')
             ->assertOk();
         
         // slackにログ送信テスト用
-        Log::critical('editHistory1 created_at: ' . $editHistory1->created_at);
-        Log::critical('editHistory1 operation_type: ' . $editHistory1->operation_type);
-        Log::info('editHistory2 created_at: ' . $editHistory2->created_at);
-        Log::info('editHistory2 operation_type: ' . $editHistory2->operation_type);
-        Log::info('editHistory3 created_at: ' . $editHistory3->created_at);
-        Log::info('editHistory4 created_at: ' . $editHistory4->created_at);
+        // Log::critical('editHistory1 created_at: ' . $editHistory1->created_at);
+        // Log::critical('editHistory1 operation_type: ' . $editHistory1->operation_type);
+        // Log::info('editHistory2 created_at: ' . $editHistory2->created_at);
+        // Log::info('editHistory2 operation_type: ' . $editHistory2->operation_type);
+        // Log::info('editHistory3 created_at: ' . $editHistory3->created_at);
+        // Log::info('editHistory4 created_at: ' . $editHistory4->created_at);
 
         $response->assertInertia(fn (Assert $page) => $page
             ->component('Dashboard')

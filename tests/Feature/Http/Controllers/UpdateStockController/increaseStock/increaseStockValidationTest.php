@@ -284,7 +284,7 @@ class increaseStockValidationTest extends TestCase
     }
 
     /** @test */
-    function 入出庫モーダルでの入庫処理バリデーションquantityが100で有効境界値な場合()
+    function 入出庫モーダルでの入庫処理バリデーションquantityが500で有効境界値な場合()
     {
         // categoriesテーブルをトランケートして連番をリセット
         DB::statement('SET FOREIGN_KEY_CHECKS=0;');
@@ -303,7 +303,7 @@ class increaseStockValidationTest extends TestCase
         ]);
 
         $response = $this->from('consumable_items')
-            ->put(route('increaseStock', $item->id), ['quantity' => 100]);
+            ->put(route('increaseStock', $item->id), ['quantity' => 500]);
         $response->assertStatus(302);
         $response->assertRedirect('consumable_items');
 
@@ -317,7 +317,7 @@ class increaseStockValidationTest extends TestCase
     }
 
     /** @test */
-    function 入出庫モーダルでの入庫処理バリデーションquantityが101で無効境界値な場合()
+    function 入出庫モーダルでの入庫処理バリデーションquantityが501で無効境界値な場合()
     {
         // categoriesテーブルをトランケートして連番をリセット
         DB::statement('SET FOREIGN_KEY_CHECKS=0;');
@@ -336,7 +336,7 @@ class increaseStockValidationTest extends TestCase
         ]);
 
         $response = $this->from('consumable_items')
-            ->put(route('increaseStock', $item->id), ['quantity' => 101]);
+            ->put(route('increaseStock', $item->id), ['quantity' => 501]);
         $response->assertStatus(302);
         $response->assertRedirect('consumable_items');
 
@@ -345,7 +345,7 @@ class increaseStockValidationTest extends TestCase
         $response->assertInertia(fn (Assert $page) => $page
             ->component('ConsumableItems/Index')
             ->has('errors.quantity')
-            ->where('errors.quantity', '数量には、100以下の数字を指定してください。')
+            ->where('errors.quantity', '数量には、500以下の数字を指定してください。')
             // ->dump()
         );
     }
