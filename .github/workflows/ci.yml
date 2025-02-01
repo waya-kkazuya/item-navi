@@ -64,6 +64,12 @@ jobs:
       - name: Display .env.testing content
         run: cat .env.testing
 
+      # Install dockerize
+      - name: Install dockerize
+        run: |
+          wget -qO- https://github.com/jwilder/dockerize/releases/download/v0.6.1/dockerize-linux-amd64-v0.6.1.tar.gz | tar xvz -C /usr/local/bin
+          dockerize --version
+
       - name: Generate application key
         run: php artisan key:generate --env=testing
 
