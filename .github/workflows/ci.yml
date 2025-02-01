@@ -61,7 +61,7 @@ jobs:
           echo "DB_HOST=mysql" >> .env.testing
 
       - name: Generate application key
-        run: php artisan key:generate
+        run: php artisan key:generate --env=testing
 
       - name: Run migrations
         run: php artisan migrate --env=testing
