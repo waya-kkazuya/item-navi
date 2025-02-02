@@ -82,8 +82,11 @@ jobs:
           sed -i '/DB_HOST/d' .env  # 既存のDB_HOST設定を削除
           echo "DB_HOST=mysql" >> .env  # 新しい設定を追加
 
-      - name: Display environment variables
-        run: printenv
+      - name: Display .env content
+        run: cat .env
+
+      # - name: Display environment variables
+      #   run: printenv
 
       - name: Test MySQL connection
         run: ping -c 4 mysql
