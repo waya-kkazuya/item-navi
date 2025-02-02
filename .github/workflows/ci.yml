@@ -77,7 +77,7 @@ jobs:
       - name: Test MySQL connection
         run: ping -c 4 mysql
 
-      - name: migrate
+      - name: migrate in .env
       run: php artisan migrate
 
       - name: Run feature tests via PHPUnit
