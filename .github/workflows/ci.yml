@@ -77,12 +77,12 @@ jobs:
       - name: Inspect services
         run: docker ps -a
 
-      - name: Set DB_HOST in .env for CI environment
-        run: |
-          sed -i '/DB_HOST/d' .env  # 既存のDB_HOST設定を削除
-          echo "" >> .env  # 改行を追加
-          echo "" >> .env  # 改行を追加
-          echo "DB_HOST=mysql" >> .env  # 新しい設定を追加
+      # - name: Set DB_HOST in .env for CI environment
+      #   run: |
+      #     sed -i '/DB_HOST/d' .env  # 既存のDB_HOST設定を削除
+      #     echo "" >> .env  # 改行を追加
+      #     echo "" >> .env  # 改行を追加
+      #     echo "DB_HOST=mysql" >> .env  # 新しい設定を追加
 
       - name: Display .env content
         run: cat .env
