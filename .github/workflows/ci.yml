@@ -71,6 +71,12 @@ jobs:
       # - name: Wait for MySQL to be ready
       #   run: dockerize -wait tcp://mysql:3306 -timeout 2m
 
+      - name: Display Docker networks
+        run: docker network ls
+
+      - name: Inspect MySQL service
+        run: docker inspect github_actions_service
+
       - name: Set DB_HOST in .env for CI environment
         run: |
           sed -i '/DB_HOST/d' .env  # 既存のDB_HOST設定を削除
