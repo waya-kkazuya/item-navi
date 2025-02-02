@@ -73,9 +73,9 @@ jobs:
       - name: Generate application key
         run: php artisan key:generate --env=testing
 
-      # Wait for MySQL to be ready
-      - name: Wait for MySQL to be ready
-        run: dockerize -wait tcp://mysql:3306 -timeout 2m
+      # # Wait for MySQL to be ready
+      # - name: Wait for MySQL to be ready
+      #   run: dockerize -wait tcp://mysql:3306 -timeout 2m
 
       - name: Run migrations
         run: php artisan migrate --env=testing
