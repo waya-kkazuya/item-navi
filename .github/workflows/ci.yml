@@ -58,15 +58,6 @@ jobs:
       - name: copy .env.testing to .env
         run: cp .env.testing .env
 
-      # Set DB_HOST in .env.testing for CI environment
-      # - name: Set DB_HOST in .env.testing
-      #   run: |
-      #     echo "" >> .env.testing  # 改行を追加
-      #     echo "DB_HOST=mysql" >> .env.testing
-
-      # - name: Display .env.testing content
-      #   run: cat .env.testing
-
       # Install dockerize
       - name: Install dockerize
         run: |
@@ -92,25 +83,5 @@ jobs:
       - name: migrate
       run: php artisan migrate
 
-      # - name: Run migrations
-      #   run: php artisan migrate --env=testing
-      #   env:
-      #     DB_CONNECTION: mysql
-      #     DB_HOST: mysql
-      #     DB_PORT: 3306
-      #     DB_DATABASE: ems_testing
-      #     DB_USERNAME: ems_testing
-      #     DB_PASSWORD: password123
-
       - name: Run feature tests via PHPUnit
         run: php artisan test
-      
-      # - name: Run feature tests
-      #   run: php artisan test --env=testing
-      #   env:
-      #     DB_CONNECTION: mysql
-      #     DB_HOST: mysql
-      #     DB_PORT: 3306
-      #     DB_DATABASE: ems_testing
-      #     DB_USERNAME: ems_testing
-      #     DB_PASSWORD: password123
