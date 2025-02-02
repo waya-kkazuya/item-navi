@@ -55,14 +55,17 @@ jobs:
       - name: Install dependencies
         run: composer install --prefer-dist --no-progress --no-suggest --optimize-autoloader
 
-      # Set DB_HOST in .env.testing for CI environment
-      - name: Set DB_HOST in .env.testing
-        run: |
-          echo "" >> .env.testing  # 改行を追加
-          echo "DB_HOST=mysql" >> .env.testing
+      - name: copy .env.testing to .env
+        run: cp .env.testing .env
 
-      - name: Display .env.testing content
-        run: cat .env.testing
+      # Set DB_HOST in .env.testing for CI environment
+      # - name: Set DB_HOST in .env.testing
+      #   run: |
+      #     echo "" >> .env.testing  # 改行を追加
+      #     echo "DB_HOST=mysql" >> .env.testing
+
+      # - name: Display .env.testing content
+      #   run: cat .env.testing
 
       # Install dockerize
       - name: Install dockerize
@@ -71,7 +74,10 @@ jobs:
           dockerize --version
 
       - name: Generate application key
-        run: php artisan key:generate --env=testing
+        run: php artisan key:generate
+
+      # - name: Generate application key
+      #   run: php artisan key:generate --env=testing
 
       # # Wait for MySQL to be ready
       # - name: Wait for MySQL to be ready
@@ -83,22 +89,28 @@ jobs:
       - name: Test MySQL connection
         run: ping -c 4 mysql
 
-      - name: Run migrations
-        run: php artisan migrate --env=testing
-        env:
-          DB_CONNECTION: mysql
-          DB_HOST: mysql
-          DB_PORT: 3306
-          DB_DATABASE: ems_testing
-          DB_USERNAME: ems_testing
-          DB_PASSWORD: password123
+      - name: migrate
+      run: php artisan migrate
 
-      - name: Run feature tests
-        run: php artisan test --env=testing
-        env:
-          DB_CONNECTION: mysql
-          DB_HOST: mysql
-          DB_PORT: 3306
-          DB_DATABASE: ems_testing
-          DB_USERNAME: ems_testing
-          DB_PASSWORD: password123
+      # - name: Run migrations
+      #   run: php artisan migrate --env=testing
+      #   env:
+      #     DB_CONNECTION: mysql
+      #     DB_HOST: mysql
+      #     DB_PORT: 3306
+      #     DB_DATABASE: ems_testing
+      #     DB_USERNAME: ems_testing
+      #     DB_PASSWORD: password123
+
+      - name: Run feature tests via PHPUnit
+        run: php artisan test
+      
+      # - name: Run feature tests
+      #   run: php artisan test --env=testing
+      #   env:
+      #     DB_CONNECTION: mysql
+      #     DB_HOST: mysql
+      #     DB_PORT: 3306
+      #     DB_DATABASE: ems_testing
+      #     DB_USERNAME: ems_testing
+      #     DB_PASSWORD: password123
