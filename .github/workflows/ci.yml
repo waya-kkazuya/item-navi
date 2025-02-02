@@ -55,17 +55,33 @@ jobs:
       - name: Install dependencies
         run: composer install --prefer-dist --no-progress --no-suggest --optimize-autoloader
 
-      - name: Create .env file
+      - name: copy .env.testing to .env
+        run: cp .env.testing .env
+
+      # Install dockerize
+      - name: Install dockerize
         run: |
-          cp .env.testing .env
-          echo "DB_HOST=mysql" >> .env
-          # (テスト用の環境変数を設定)
+          wget -qO- https://github.com/jwilder/dockerize/releases/download/v0.6.1/dockerize-linux-amd64-v0.6.1.tar.gz | tar xvz -C /usr/local/bin
+          dockerize --version
 
       - name: Generate application key
         run: php artisan key:generate
 
-      - name: Run migrations
-        run: php artisan migrate --env=testing
+      # - name: Generate application key
+      #   run: php artisan key:generate --env=testing
 
-      - name: Run feature tests
-        run: php artisan test --testsuite=Feature
+      # # Wait for MySQL to be ready
+      # - name: Wait for MySQL to be ready
+      #   run: dockerize -wait tcp://mysql:3306 -timeout 2m
+
+      - name: Display environment variables
+        run: printenv
+
+      - name: Test MySQL connection
+        run: ping -c 4 mysql
+
+      - name: migrate
+      run: php artisan migrate
+
+      - name: Run feature tests via PHPUnit
+        run: php artisan test
