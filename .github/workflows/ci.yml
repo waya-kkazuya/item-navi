@@ -77,6 +77,12 @@ jobs:
       # - name: Wait for MySQL to be ready
       #   run: dockerize -wait tcp://mysql:3306 -timeout 2m
 
+      - name: Display environment variables
+        run: printenv
+
+      - name: Test MySQL connection
+        run: ping -c 4 mysql
+
       - name: Run migrations
         run: php artisan migrate --env=testing
         env:
