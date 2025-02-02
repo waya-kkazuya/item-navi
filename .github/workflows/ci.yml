@@ -78,7 +78,7 @@ jobs:
         run: ping -c 4 mysql
 
       - name: migrate in .env
-      run: php artisan migrate
+        run: php artisan migrate
 
       - name: Run feature tests via PHPUnit
         run: php artisan test
