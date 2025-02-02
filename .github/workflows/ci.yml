@@ -75,7 +75,10 @@ jobs:
         run: docker network ls
 
       - name: Inspect MySQL service
-        run: docker inspect github_actions_service
+        run: docker inspect github_network_c8310b0712144b15a5b0e001cc32d681
+  
+      - name: Inspect services
+        run: docker ps -a
 
       - name: Set DB_HOST in .env for CI environment
         run: |
