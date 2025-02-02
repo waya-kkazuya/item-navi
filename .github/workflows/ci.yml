@@ -79,6 +79,20 @@ jobs:
 
       - name: Run migrations
         run: php artisan migrate --env=testing
+        env:
+          DB_CONNECTION: mysql
+          DB_HOST: mysql
+          DB_PORT: 3306
+          DB_DATABASE: ems_testing
+          DB_USERNAME: ems_testing
+          DB_PASSWORD: password123
 
       - name: Run feature tests
-        run: php artisan test --testsuite=Feature
+        run: php artisan test --env=testing
+        env:
+          DB_CONNECTION: mysql
+          DB_HOST: mysql
+          DB_PORT: 3306
+          DB_DATABASE: ems_testing
+          DB_USERNAME: ems_testing
+          DB_PASSWORD: password123
