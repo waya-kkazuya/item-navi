@@ -3,17 +3,31 @@ version: '3.7'
 
 services:
   my-laravel-app:
-    build: .
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      -"80:80"
+    volumes:
+      - .:/var/www/html
+    environment:
+      - APP_ENV=testing
+      - DB_HOST=mysql
+      - DB_DATABASE=ems_testing
+      - DB_USERNAME=ems_testing
+      - DB_PASSWORD=${DB_PASSWORD}
     depends_on:
       - mysql-test
     networks:
       - sail
+
   mysql-test:
     image: mysql:8.0
     environment:
-      MYSQL_ROOT_PASSWORD: password123
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
       MYSQL_DATABASE: ems_testing
-      # ...その他の設定
+      MYSQL_USER: ems_testing
+      MYSQL_PASSWORD: ${DB_PASSWORD}
     networks:
       - sail
     healthcheck:

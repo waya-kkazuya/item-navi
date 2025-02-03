@@ -12,11 +12,12 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - name: Run Docker Compose services
-        uses: docker/compose@v2
+      - uses: actions/checkout@v4
+      - name: Set up Docker Compose
+        uses: docker/setup-compose@v1
         with:
-          docker-compose-file: ./docker-compose.ci.yml
-          up-args: --build -d
+          version: latest
+      - name: Build and start services
+        run: docker-compose up -d
       - name: Run Laravel Sail tests
         run: ./vendor/bin/phpunit
