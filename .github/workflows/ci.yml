@@ -34,7 +34,7 @@ jobs:
           echo "WWWUSER=www-data" >> .env
 
       - name: Build and start services
-        run: docker-compose -f docker-compose.ci.yml up -d
+        run: docker compose -f docker-compose.ci.yml up -d
 
       # MySQLコンテナが立ち上がるまで待つ
       # - name: Wait for MySQL to be ready
