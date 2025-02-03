@@ -16,7 +16,7 @@ jobs:
 
       - name: Set up Docker Compose
         uses: docker/setup-compose-action@v1
-        with:
+        with:   
           file: ./docker-compose.ci.yml  # ここにファイル名を指定
           version: latest
 
@@ -25,6 +25,10 @@ jobs:
 
       - name: Build and start services
         run: docker compose up -d
+      
+      # 最新の依存関係を反映
+      - name: Install dependencies
+        run: docker compose exec my-laravel-app composer install --prefer-dist --no-progress --no-suggest
 
       - name: Generate application key
         run: docker compose exec my-laravel-app php artisan key:generate
