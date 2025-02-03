@@ -19,6 +19,11 @@ jobs:
         with:   
           file: ./docker-compose.ci.yml  # ここにファイル名を指定
           version: latest
+      
+      - name: Install dockerize
+        run: |
+          wget -qO- https://github.com/jwilder/dockerize/releases/download/v0.6.1/dockerize-linux-amd64-v0.6.1.tar.gz | tar xvz -C /usr/local/bin
+          dockerize --version
 
       - name: Copy .env.testing to .env
         run: cp .env.testing .env
@@ -31,9 +36,19 @@ jobs:
       - name: Build and start services
         run: docker compose up -d
 
+      # MySQLコンテナが立ち上がるまで待つ
+      - name: Wait for MySQL to be ready
+        run: dockerize -wait tcp://mysql-test:3306 -timeout 5m
+      
+      - name: Wait for Laravel App to be ready
+        run: dockerize -wait http://my-laravel-app:80 -timeout 5m
+
       - name: Inspect services
         run: docker compose ps
-        
+
+      - name: Test MySQL connection
+        run: docker compose exec my-laravel-app ping -c 4 mysql-test
+
       # 最新の依存関係を反映
       - name: Install dependencies
         run: docker compose exec my-laravel-app composer install --prefer-dist --no-progress --no-suggest
