@@ -16,6 +16,7 @@ jobs:
       - name: Set up Docker Compose
         uses: docker/setup-compose-action@v1
         with:
+          file: ./docker-compose.ci.yml  # ここにファイル名を指定
           version: latest
       - name: Build and start services
         run: docker compose up -d
