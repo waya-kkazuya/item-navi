@@ -18,6 +18,6 @@ jobs:
         with:
           version: latest
       - name: Build and start services
-        run: docker-compose up -d
+        run: docker compose up -d
       - name: Run Laravel Sail tests
         run: ./vendor/bin/phpunit
