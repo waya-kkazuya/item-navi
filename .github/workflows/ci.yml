@@ -17,7 +17,7 @@ jobs:
       - name: Set up Docker Compose
         uses: docker/setup-compose-action@v1
         with:   
-          file: ./docker-compose.ci.yml  # ここにファイル名を指定
+          file: ./docker-compose.yml  # ここにファイル名を指定
           version: latest
       
       - name: Install dockerize
@@ -34,7 +34,7 @@ jobs:
           echo "WWWUSER=www-data" >> .env
 
       - name: Build and start services
-        run: docker compose -f docker-compose.ci.yml up -d
+        run: docker compose up -d
 
       # MySQLコンテナが立ち上がるまで待つ
       # - name: Wait for MySQL to be ready
