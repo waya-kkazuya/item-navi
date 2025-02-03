@@ -13,12 +13,30 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      
+      - name: Copy .env.example to .env
+        run: cp .env.example .env
+
       - name: Set up Docker Compose
         uses: docker/setup-compose-action@v1
         with:
           file: ./docker-compose.ci.yml  # ここにファイル名を指定
           version: latest
+
       - name: Build and start services
         run: docker compose up -d
-      - name: Run Laravel Sail tests
-        run: ./vendor/bin/phpunit
+
+      - name: Generate application key
+        run: docker compose exec my-laravel-app php artisan key:generate
+
+      - name: Run migrations
+        run: docker compose exec my-laravel-app php artisan migrate
+
+      - name: Run feature tests via PHPUnit
+        run: docker compose exec my-laravel-app php artisan test
+
+      - name: Stop and remove containers
+        run: docker compose down
+
+      # - name: Run Laravel Sail tests
+      #   run: ./vendor/bin/phpunit
