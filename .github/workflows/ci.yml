@@ -49,7 +49,7 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: '8.2'
-          extensions: mbstring, exif, pcntl, bcmath
+          extensions: mbstring, exif, pcntl, bcmath, pdo_mysql
           coverage: none
           
       - name: Install dependencies
@@ -77,12 +77,12 @@ jobs:
       - name: Inspect services
         run: docker ps -a
 
-      # - name: Set DB_HOST in .env for CI environment
-      #   run: |
-      #     sed -i '/DB_HOST/d' .env  # 既存のDB_HOST設定を削除
-      #     echo "" >> .env  # 改行を追加
-      #     echo "" >> .env  # 改行を追加
-      #     echo "DB_HOST=mysql" >> .env  # 新しい設定を追加
+      - name: Set DB_HOST in .env for CI environment
+        run: |
+          sed -i '/DB_HOST/d' .env  # 既存のDB_HOST設定を削除
+          echo "" >> .env  # 改行を追加
+          echo "" >> .env  # 改行を追加
+          echo "DB_HOST=mysql" >> .env  # 新しい設定を追加
 
       - name: Display .env content
         run: cat .env
