@@ -46,6 +46,9 @@ jobs:
       - name: Inspect services
         run: docker compose ps
 
+      - name: Inspect Docker network
+        run: docker network ls
+
       - name: Test MySQL connection
         run: docker compose exec my-laravel-app ping -c 4 mysql-test
 

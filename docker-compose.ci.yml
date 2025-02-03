@@ -3,6 +3,7 @@ version: '3.7'
 
 services:
   my-laravel-app:
+    container_name: EMS
     build:
       context: .
       dockerfile: Dockerfile
