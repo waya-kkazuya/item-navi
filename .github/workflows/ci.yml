@@ -37,11 +37,11 @@ jobs:
         run: docker compose up -d
 
       # MySQLコンテナが立ち上がるまで待つ
-      # - name: Wait for MySQL to be ready
-      #   run: dockerize -wait tcp://mysql-test:3306 -timeout 5m
+      - name: Wait for MySQL to be ready
+        run: dockerize -wait tcp://mysql-test:3306 -timeout 5m
       
-      # - name: Wait for Laravel App to be ready
-      #   run: dockerize -wait http://my-laravel-app:80 -timeout 5m
+      - name: Wait for Laravel App to be ready
+        run: dockerize -wait http://my-laravel-app:80 -timeout 5m
 
       - name: Inspect services
         run: docker compose ps
