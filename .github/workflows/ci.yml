@@ -36,6 +36,12 @@ jobs:
       - name: Build and start services
         run: docker compose up -d
 
+      - name: List running containers
+        run: docker container ls
+
+      - name: Inspect MySQL logs
+        run: docker-compose logs mysql-test
+        
       # MySQLコンテナが立ち上がるまで待つ
       # - name: Wait for MySQL to be ready
       #   run: dockerize -wait tcp://mysql-test:3306 -timeout 5m
@@ -69,13 +75,13 @@ jobs:
         run: docker compose exec my-laravel-app composer install --prefer-dist --no-progress --no-suggest
 
       - name: Generate application key
-        run: docker compose exec my-laravel-app php artisan key:generate
+        run: docker compose exec my-laravel-app php artisan key:generate --env=testing
 
       - name: Run migrations
-        run: docker compose exec my-laravel-app php artisan migrate
+        run: docker compose exec my-laravel-app php artisan migrate --env=testing
 
       - name: Run feature tests via PHPUnit
-        run: docker compose exec my-laravel-app php artisan test
+        run: docker compose exec my-laravel-app php artisan test --env=testing
 
       - name: Stop and remove containers
         run: docker compose down
