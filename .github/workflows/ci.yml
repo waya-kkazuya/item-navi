@@ -49,6 +49,12 @@ jobs:
       - name: Inspect Docker network
         run: docker network ls
 
+      - name: Inspect Docker bridge network details
+        run: docker network inspect bridge
+
+      - name: Inspect Docker bridge network ems_sail details
+        run: docker network inspect ems_sail
+
       - name: Test MySQL connection
         run: docker compose exec my-laravel-app ping -c 4 mysql-test
 
