@@ -50,10 +50,10 @@ jobs:
         run: docker network ls
 
       - name: Test MySQL connection
-        run: docker-compose exec EMS ping -c 4 mysql-test
+        run: docker compose exec EMS ping -c 4 mysql-test
 
       - name: Check MySQL status
-        run: docker-compose exec mysql-test mysqladmin ping -ppassword123
+        run: docker compose exec mysql-test mysqladmin ping -ppassword123
 
       - name: Inspect Docker bridge network details
         run: docker network inspect bridge
