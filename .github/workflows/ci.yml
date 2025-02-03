@@ -31,7 +31,7 @@ jobs:
 
     steps:
       - name: Check out the repository
-      - uses: actions/checkout@v4
+        uses: actions/checkout@v4
         with:
           ref: ${{ github.head_ref }}
 
@@ -75,21 +75,11 @@ jobs:
       - name: Inspect services
         run: docker ps -a
 
-      # - name: Set DB_HOST in .env for CI environment
-      #   run: |
-      #     sed -i '/DB_HOST/d' .env  # 既存のDB_HOST設定を削除
-      #     echo "" >> .env  # 改行を追加
-      #     echo "" >> .env  # 改行を追加
-      #     echo "DB_HOST=mysql" >> .env  # 新しい設定を追加
-
       - name: Display .env content
         run: cat .env
 
-      # - name: Display environment variables
-      #   run: printenv
-
-      # - name: Test MySQL connection
-      #   run: ping -c 4 mysql
+      - name: Test MySQL connection
+        run: ping -c 4 mysql
 
       - name: migrate in .env
         run: php artisan migrate
