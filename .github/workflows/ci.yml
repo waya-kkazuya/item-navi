@@ -34,7 +34,7 @@ jobs:
           echo "WWWUSER=www-data" >> .env
 
       - name: Build and start services
-        run: docker compose up -d
+        run: docker-compose -f docker-compose.ci.yml up -d
 
       # MySQLコンテナが立ち上がるまで待つ
       # - name: Wait for MySQL to be ready
@@ -48,6 +48,12 @@ jobs:
 
       - name: Inspect Docker network
         run: docker network ls
+
+      - name: Test MySQL connection
+        run: docker-compose exec EMS ping -c 4 mysql-test
+
+      - name: Check MySQL status
+        run: docker-compose exec mysql-test mysqladmin ping -ppassword123
 
       - name: Inspect Docker bridge network details
         run: docker network inspect bridge
