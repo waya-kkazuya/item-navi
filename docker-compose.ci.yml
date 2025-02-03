@@ -16,6 +16,8 @@ services:
       - DB_DATABASE=ems_testing
       - DB_USERNAME=ems_testing
       - DB_PASSWORD=${DB_PASSWORD}
+      - WWWGROUP=${WWWGROUP}
+      - WWWUSER=${WWWUSER}
     depends_on:
       - mysql-test
     networks:

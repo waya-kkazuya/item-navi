@@ -20,12 +20,20 @@ jobs:
           file: ./docker-compose.ci.yml  # ここにファイル名を指定
           version: latest
 
-      - name: Copy .env.example to .env
+      - name: Copy .env.testing to .env
         run: cp .env.testing .env
+
+      - name: Set up environment variables
+        run: |
+          echo "WWWGROUP=www-data" >> .env
+          echo "WWWUSER=www-data" >> .env
 
       - name: Build and start services
         run: docker compose up -d
-      
+
+      - name: Inspect services
+        run: docker compose ps
+        
       # 最新の依存関係を反映
       - name: Install dependencies
         run: docker compose exec my-laravel-app composer install --prefer-dist --no-progress --no-suggest
