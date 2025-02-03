@@ -1,4 +1,4 @@
-name: EMS CI Pipeline -> Feature Test
+name: EMS CI Pipeline
 
 on:
   pull_request:
@@ -19,8 +19,8 @@ jobs:
       mysql:
         image: mysql:8.0
         env:
-          MYSQL_ROOT_PASSWORD: root
-          MYSQL_DATABASE: ems_testing
+          MYSQL_ROOT_PASSWORD: password
+          MYSQL_DATABASE: ems
         ports:
           - 3306:3306
         options: >-
@@ -30,12 +30,18 @@ jobs:
           --health-retries=3
 
     steps:
-      # Checkout code
+      - name: Check out the repository
       - uses: actions/checkout@v4
         with:
           ref: ${{ github.head_ref }}
 
-      # Cache
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          extensions: mbstring, exif, pcntl, bcmath, pdo_mysql
+          coverage: none
+
       - name: Cache composer dependencies
         uses: actions/cache@v2
         with:
@@ -43,20 +49,12 @@ jobs:
           key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
           restore-keys: |
             ${{ runner.os }}-composer-
-
-      # PHPセットアップ
-      - name: Set up PHP
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: '8.2'
-          extensions: mbstring, exif, pcntl, bcmath, pdo_mysql
-          coverage: none
           
       - name: Install dependencies
-        run: composer install --prefer-dist --no-progress --no-suggest --optimize-autoloader
+        run: composer install --prefer-dist --no-progress --no-suggest
 
-      - name: copy .env.testing to .env
-        run: cp .env.testing .env
+      - name: Create .env file
+        run: cp .env.example .env
 
       # Install dockerize
       # - name: Install dockerize
@@ -77,12 +75,12 @@ jobs:
       - name: Inspect services
         run: docker ps -a
 
-      - name: Set DB_HOST in .env for CI environment
-        run: |
-          sed -i '/DB_HOST/d' .env  # 既存のDB_HOST設定を削除
-          echo "" >> .env  # 改行を追加
-          echo "" >> .env  # 改行を追加
-          echo "DB_HOST=mysql" >> .env  # 新しい設定を追加
+      # - name: Set DB_HOST in .env for CI environment
+      #   run: |
+      #     sed -i '/DB_HOST/d' .env  # 既存のDB_HOST設定を削除
+      #     echo "" >> .env  # 改行を追加
+      #     echo "" >> .env  # 改行を追加
+      #     echo "DB_HOST=mysql" >> .env  # 新しい設定を追加
 
       - name: Display .env content
         run: cat .env
