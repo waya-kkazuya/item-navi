@@ -21,7 +21,7 @@ jobs:
           version: latest
 
       - name: Copy .env.example to .env
-        run: cp .env.example .env
+        run: cp .env.testing .env
 
       - name: Build and start services
         run: docker compose up -d
