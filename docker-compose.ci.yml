@@ -6,38 +6,52 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+      args:
+        WWWGROUP: '${WWWGROUP}'
+    image: sail-8.2/app
+    extra_hosts:
+      - 'host.docker.internal:host-gateway'
     ports:
       -"80:80"
+      - '${VITE_PORT:-5173}:${VITE_PORT:-5173}'
     volumes:
       - .:/var/www/html
     environment:
-      - APP_ENV=testing
-      - DB_HOST=mysql
-      - DB_DATABASE=ems_testing
-      - DB_USERNAME=ems_testing
-      - DB_PASSWORD=${DB_PASSWORD}
-      - WWWGROUP=${WWWGROUP}
-      - WWWUSER=${WWWUSER}
-    depends_on:
-      - mysql-test
+      WWWUSER: '${WWWUSER}'
+      LARAVEL_SAIL: 1
+      XDEBUG_MODE: '${SAIL_XDEBUG_MODE:-off}'
+      XDEBUG_CONFIG: '${SAIL_XDEBUG_CONFIG:-client_host=host.docker.internal}'
+      IGNITION_LOCAL_SITES_PATH: '${PWD}'
+    volumes:
+      - '.:/var/www/html'
+    command: "sh -c \"  chown -R www-data:www-data /var/www/html/storage &&  chmod -R 775 /var/www/html/storage &&  chown -R www-data:www-data /var/www/html/public &&  chmod -R 775 /var/www/html/public &&  rm -rf /var/www/html/public/storage && ln -s /var/www/html/storage/app/public /var/www/html/public/storage && apache2-foreground  \"\n"
     networks:
       - sail
+    depends_on:
+      - mysql-test
 
   mysql-test:
     image: mysql:8.0
     ports:
-      - "3306:3306"
+      - "3307:3306"
     environment:
       MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
       MYSQL_DATABASE: ems_testing
       MYSQL_USER: ems_testing
       MYSQL_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - './vendor/laravel/sail/database/mysql/create-testing-database.sh:/docker-entrypoint-initdb.d/10-create-testing-database.sh'
     networks:
       - sail
     healthcheck:
-      # ...
-    volumes:
-      - './vendor/laravel/sail/database/mysql/create-testing-database.sh:/docker-entrypoint-initdb.d/10-create-testing-database.sh'
+      test:
+          - CMD
+          - mysqladmin
+          - ping
+          - '-ppassword123'
+      retries: 3
+      timeout: 5s
+    
 networks:
   sail:
     driver: bridge
