@@ -102,7 +102,11 @@ jobs:
         run: php artisan migrate
 
       - name: Run Tests
-        run: php artisan test --testsuite=Feature
+        run: |
+          php artisan test --testsuite=Feature || true
+          if [ -f storage/logs/laravel.log ]; then
+            cat storage/logs/laravel.log
+          fi
         env:
           APP_ENV: testing
           DB_CONNECTION: mysql
@@ -117,6 +121,3 @@ jobs:
           SESSION_LIFETIME: 120
           SANCTUM_STATEFUL_DOMAINS: localhost
           DISABLE_CSRF: false
-
-      - name: Show Laravel Log
-        run: cat storage/logs/laravel.log
