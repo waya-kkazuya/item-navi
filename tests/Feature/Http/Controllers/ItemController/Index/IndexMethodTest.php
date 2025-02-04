@@ -181,7 +181,7 @@ class IndexMethodTest extends TestCase
 
         $response = $this->get('/items?disposal=true')
             ->assertOk();
-        \Log:('レスポンス: ' . $response->status()); // レスポンスのステータスコードをログに出力
+        \Log::info('レスポンス: ' . $response->status()); // レスポンスのステータスコードをログに出力
 
         $response->assertInertia(fn (Assert $page) => $page
             ->component('Items/Index')
