@@ -76,6 +76,8 @@ class decreaseStockMethodTest extends TestCase
             'quantity' => 3,
         ];
 
+        dd(csrf_token(), session()->token);
+
         // 備品を出庫処理
         $response = $this->put(route('decreaseStock', $item->id), $validData);
         $response->assertStatus(302); // リダイレクトを確認
