@@ -79,6 +79,7 @@ class IndexMethodTest extends TestCase
 
         $response = $this->get('/items')
             ->assertOk();
+        \Log::info('レスポンス: ' . $response->status()); // レスポンスのステータスコードをログに出力
 
         $response->assertInertia(fn (Assert $page) => $page
             ->component('Items/Index')
@@ -180,6 +181,7 @@ class IndexMethodTest extends TestCase
 
         $response = $this->get('/items?disposal=true')
             ->assertOk();
+        \Log::info('レスポンス: ' . $response->status()); // レスポンスのステータスコードをログに出力
 
         $response->assertInertia(fn (Assert $page) => $page
             ->component('Items/Index')
