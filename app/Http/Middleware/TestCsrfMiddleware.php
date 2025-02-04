@@ -10,8 +10,10 @@ class TestCsrfMiddleware
     public function handle($request, Closure $next)
     {
         if (app()->environment('testing')) {
-            $request->headers->set('X-CSRF-TOKEN', csrf_token());
-            Session::put('_token', csrf_token());
+            $csrfToken = csrf_token(); //同じセッション内なら同じ値を返す
+            $request->headers->set('X-CSRF-TOKEN', $csrfToken);
+            Session::put('_token', $csrfToken);
+            \Log::info('CSRFトークン: ' . $csrfToken); // デバッグ用のログ出力
         }
 
         return $next($request);
