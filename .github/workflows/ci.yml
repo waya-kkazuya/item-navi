@@ -120,10 +120,20 @@ jobs:
           SANCTUM_STATEFUL_DOMAINS: localhost
           # DISABLE_CSRF: false
 
+      - name: view laravel.log
+        run: cat storage/logs/laravel.log
+        if: ${{ failure() }}
+
+      - name: Current Directory
+        if: failure()
+        run: pwd
+
       - name: List Files
+        if: failure()
         run: ls
 
       - name: List Log Files
+        if: failure()
         run: ls storage/logs
 
       - name: Upload Laravel Log as Artifact
