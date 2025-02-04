@@ -112,10 +112,11 @@ jobs:
           DB_USERNAME: ems
           DB_PASSWORD: password
           SESSION_DRIVER: file
-          # SESSION_COOKIE_SECURE: false
           SESSION_LIFETIME: 120
           SESSION_DOMAIN: localhost
           SESSION_COOKIE: my_session_cookie
+          SESSION_COOKIE_SECURE: false
+          SESSION_HTTP_ONLY: true
           SANCTUM_STATEFUL_DOMAINS: localhost
           # DISABLE_CSRF: false
 
