@@ -113,4 +113,7 @@ jobs:
           DB_PASSWORD: password
           SESSION_DRIVER: array
           SESSION_COOKIE_SECURE: false
+          SESSION_DOMAIN: localhost
+          SESSION_LIFETIME: 120
+          SANCTUM_STATEFUL_DOMAINS: localhost
           DISABLE_CSRF: true

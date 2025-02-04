@@ -14,7 +14,7 @@ abstract class TestCase extends BaseTestCase
         
         // 環境変数に基づいてCSRFミドルウェアを無効にするかどうかを決定
         if (env('DISABLE_CSRF', false)) {
-            dd('csrf無効化');
+            \Log::info('CSRFミドルウェア無効化');
             $this->withoutMiddleware(\Illuminate\Foundation\Http\Middleware\VerifyCsrfToken::class);
         }
     }
