@@ -63,7 +63,7 @@ jobs:
           cp .env.example .env
           php artisan optimize
           git config --local core.fileMode false
-          chmod -R 777 storage bootstrap/cache
+          chmod -R 777 storage storage/logs bootstrap/cache
       
       - name: PHP Version
         run: php --version
