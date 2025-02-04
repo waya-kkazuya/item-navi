@@ -22,21 +22,21 @@ jobs:
     timeout-minutes: 20
     services:
       db:
-      image: mysql/mysql-server:8.0
-      ports:
-        - 3306:3306
-      env:
-          MYSQL_DATABASE: 'ems'
-          MYSQL_USER: 'ems'
-          MYSQL_PASSWORD: 'password'
-          MYSQL_ROOT_PASSWORD: 'password'
-          MYSQL_ALLOW_EMPTY_PASSWORD: 1
-        options: >-
-          --health-cmd "mysqladmin ping"
-          --health-start-period 30s
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
+        image: mysql/mysql-server:8.0
+        ports:
+          - 3306:3306
+        env:
+            MYSQL_DATABASE: 'ems'
+            MYSQL_USER: 'ems'
+            MYSQL_PASSWORD: 'password'
+            MYSQL_ROOT_PASSWORD: 'password'
+            MYSQL_ALLOW_EMPTY_PASSWORD: 1
+          options: >-
+            --health-cmd "mysqladmin ping"
+            --health-start-period 30s
+            --health-interval 10s
+            --health-timeout 5s
+            --health-retries 5
     steps:
       - uses: actions/checkout@v4
 
