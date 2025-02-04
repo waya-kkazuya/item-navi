@@ -120,6 +120,9 @@ jobs:
           SANCTUM_STATEFUL_DOMAINS: localhost
           # DISABLE_CSRF: false
 
+      - name: Show Current Directory
+        run: pwd
+
       - name: List Log Files
         run: ls storage/logs
 
