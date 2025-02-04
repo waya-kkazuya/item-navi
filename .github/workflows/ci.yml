@@ -116,4 +116,4 @@ jobs:
           SESSION_DOMAIN: localhost
           SESSION_LIFETIME: 120
           SANCTUM_STATEFUL_DOMAINS: localhost
-          DISABLE_CSRF: true
+          DISABLE_CSRF: false
