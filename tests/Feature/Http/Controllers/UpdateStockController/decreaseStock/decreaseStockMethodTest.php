@@ -76,7 +76,9 @@ class decreaseStockMethodTest extends TestCase
             'quantity' => 3,
         ];
 
-        dd(csrf_token(), session()->token);
+        \Log::info('CSRFトークン（リクエストヘッダー）: ' . csrf_token());
+        \Log::info('CSRFトークン（セッション）: ' . session()->token());
+        // dd(csrf_token(), session()->token());
 
         // 備品を出庫処理
         $response = $this->put(route('decreaseStock', $item->id), $validData);
