@@ -104,3 +104,4 @@ jobs:
           DB_PASSWORD: password
           SESSION_DRIVER: array
           SESSION_COOKIE_SECURE: false
+          DISABLE_CSRF: true
