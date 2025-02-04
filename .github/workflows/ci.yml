@@ -102,3 +102,5 @@ jobs:
           DB_DATABASE: ems
           DB_USERNAME: ems
           DB_PASSWORD: password
+          SESSION_DRIVER: array
+          SESSION_COOKIE_SECURE: false
