@@ -121,7 +121,7 @@ jobs:
           # DISABLE_CSRF: false
 
       - name: view laravel.log
-        run: cat storage/logs/laravel.log
+        run: cat storage/logs/laravel-2025-02-04.log
         if: ${{ failure() }}
 
       - name: Current Directory
