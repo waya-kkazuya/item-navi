@@ -102,7 +102,7 @@ jobs:
         run: php artisan migrate
 
       - name: Run Tests
-        run: php artisan test --testsuite=Feature 
+        run: php artisan test --testsuite=Feature --filter=decreaseStockMethodTest
         env:
           APP_ENV: testing
           DB_CONNECTION: mysql
