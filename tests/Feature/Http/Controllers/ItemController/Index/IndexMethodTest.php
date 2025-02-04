@@ -79,7 +79,7 @@ class IndexMethodTest extends TestCase
 
         $response = $this->get('/items')
             ->assertOk();
-        dd('レスポンス: ' . $response->status()); // レスポンスのステータスコードをログに出力
+        \Log::info('レスポンス: ' . $response->status()); // レスポンスのステータスコードをログに出力
 
         $response->assertInertia(fn (Assert $page) => $page
             ->component('Items/Index')

@@ -102,11 +102,7 @@ jobs:
         run: php artisan migrate
 
       - name: Run Tests
-        run: |
-          php artisan test --testsuite=Feature || true
-          if [ -f storage/logs/laravel.log ]; then
-            cat storage/logs/laravel.log
-          fi
+        run: php artisan test --testsuite=Feature 
         env:
           APP_ENV: testing
           DB_CONNECTION: mysql
@@ -115,12 +111,13 @@ jobs:
           DB_DATABASE: ems
           DB_USERNAME: ems
           DB_PASSWORD: password
-          SESSION_DRIVER: array
-          SESSION_COOKIE_SECURE: false
-          SESSION_DOMAIN: localhost
+          SESSION_DRIVER: file
+          # SESSION_COOKIE_SECURE: false
           SESSION_LIFETIME: 120
+          SESSION_DOMAIN: localhost
+          SESSION_COOKIE: my_session_cookie
           SANCTUM_STATEFUL_DOMAINS: localhost
-          DISABLE_CSRF: false
+          # DISABLE_CSRF: false
 
       - name: Upload Laravel Log as Artifact
         if: failure()
