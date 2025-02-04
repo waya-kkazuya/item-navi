@@ -74,8 +74,17 @@ jobs:
       - name: Composer Validate 
         run: composer validate
       
+      # - name: Wait for MySQL to be ready
+      #   run: sleep 60
+
       - name: Wait for MySQL to be ready
-        run: sleep 60
+        run: |
+          echo "Waiting for MySQL to be ready..."
+          for i in {1..60}; do
+            mysqladmin ping -h 127.0.0.1 --silent && break
+            echo "MySQL is unavailable - waiting..."
+            sleep 1
+          done
 
       - name: Generate Application Key
         run: php artisan key:generate
