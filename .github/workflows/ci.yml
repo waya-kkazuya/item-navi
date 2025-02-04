@@ -26,17 +26,17 @@ jobs:
         ports:
           - 3306:3306
         env:
-            MYSQL_DATABASE: 'ems'
-            MYSQL_USER: 'ems'
-            MYSQL_PASSWORD: 'password'
-            MYSQL_ROOT_PASSWORD: 'password'
-            MYSQL_ALLOW_EMPTY_PASSWORD: 1
-          options: >-
-            --health-cmd "mysqladmin ping"
-            --health-start-period 30s
-            --health-interval 10s
-            --health-timeout 5s
-            --health-retries 5
+          MYSQL_DATABASE: 'ems'
+          MYSQL_USER: 'ems'
+          MYSQL_PASSWORD: 'password'
+          MYSQL_ROOT_PASSWORD: 'password'
+          MYSQL_ALLOW_EMPTY_PASSWORD: 1
+        options: >-
+          --health-cmd "mysqladmin ping"
+          --health-start-period 30s
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
     steps:
       - uses: actions/checkout@v4
 
@@ -72,6 +72,7 @@ jobs:
       - name: Laravel Version
         run: php artisan --version
       - name: Composer Validate 
+        run: composer validate
       
       - name: Wait for MySQL to be ready
         run: sleep 60
