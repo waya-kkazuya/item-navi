@@ -58,27 +58,25 @@ class StoreMethodTest extends TestCase
             ->andReturn('mocked_image.jpg');
         // サービスコンテナにモックを登録
         $this->app->instance(ImageService::class, $this->imageService);
-
-
-        // CI環境でのQrCodeServiceのモック化
-        if (App::environment('testing')) {
-            $this->qrCodeService = Mockery::mock(QrCodeService::class);
-            $this->qrCodeService->shouldReceive('upload')
-            ->once()
-            ->with(Mockery::type(Item::class))
-            ->andReturn([
-                'labelNameToStore' => 'mocked_label.jpg',
-                'qrCodeNameToStore' => 'mocked_qrcode.png'
-            ]);
-            $this->app->instance(QrCodeService::class, $this->qrCodeService);
-        }
     }
 
     /** @test */
     function 備品新規登録画面で備品を登録できる、消耗品の時()
     {
         // 備品が新規作成された裏でItemObserverによってedithistoriesテーブルにもデータが保存される
-
+        // CI環境でのQrCodeServiceのモック化
+        if (App::environment('testing')) {
+            $mock = Mockery::mock(QrCodeService::class);
+            $mock->shouldReceive('upload')
+                ->once()
+                ->with(Mockery::type(Item::class))
+                ->andReturn([
+                    'labelNameToStore' => 'mocked_label.jpg',
+                    'qrCodeNameToStore' => 'mocked_qrcode.png'
+                ]);
+            $this->app->instance(QrCodeService::class, $mock);
+        }
+        
         $category = Category::factory()->create([
             'id' => 1,
             'name' => '消耗品'
