@@ -113,9 +113,6 @@ jobs:
         run: php artisan --version
       - name: Composer Validate 
         run: composer validate
-      
-      # - name: Wait for MySQL to be ready
-      #   run: sleep 60
 
       - name: Wait for MySQL to be ready
         run: |
@@ -153,24 +150,7 @@ jobs:
           SESSION_COOKIE_SECURE: false
           SESSION_HTTP_ONLY: true
           SANCTUM_STATEFUL_DOMAINS: localhost
-          # DISABLE_CSRF: false
 
       - name: view laravel.log
+        if: failure()
         run: cat storage/logs/laravel-$(date +'%Y-%m-%d').log
-
-      - name: Current Directory
-        run: pwd
-
-      - name: List Files
-        run: ls
-
-      - name: List Log Files
-        run: ls storage/logs
-
-      # - name: Upload Laravel Log as Artifact
-      #   if: failure()
-      #   uses: actions/upload-artifact@v4
-      #   with:
-      #     name: laravel-log
-      #     path: storage/logs/laravel.log
-      #     retention-days: 1
