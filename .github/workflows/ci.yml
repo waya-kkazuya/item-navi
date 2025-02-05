@@ -67,11 +67,12 @@ jobs:
         id: cache-npm-dependencies
         uses: actions/cache@v4
         with:
-          path: ~/.npm
+          path: ./node_modules
           key: ${{ runner.os }}-npm-${{ hashFiles('**/package-lock.json') }}
           restore-keys: ${{ runner.os }}-npm-
 
       - name: Install npm Dependencies
+        if: steps.cache-npm-dependencies.outputs.cache-hit != 'true'
         run: npm install
 
       - name: Fix npm vulnerabilities
