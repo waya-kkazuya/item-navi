@@ -142,7 +142,9 @@ jobs:
         run: php artisan migrate
 
       - name: Run Tests
-        run: php artisan test --testsuite=Feature --filter=decreaseStockMethodTest
+        run: |
+          php artisan test --testsuite=Feature --filter=decreaseStockMethodTest
+          echo "Run tests exited with status $?"
         env:
           APP_ENV: testing
           DB_CONNECTION: mysql
