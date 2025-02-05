@@ -73,7 +73,7 @@ jobs:
 
       - name: Install npm Dependencies
         if: steps.cache-npm-dependencies.outputs.cache-hit != 'true'
-        run: npm install
+        run: npm ci
 
       - name: Fix npm vulnerabilities
         run: npm audit fix
