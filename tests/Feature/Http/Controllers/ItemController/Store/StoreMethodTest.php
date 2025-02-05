@@ -118,7 +118,8 @@ class StoreMethodTest extends TestCase
         // dd($response->status()); // ステータスコード
         // dd($response->getContent()); // レスポンスの内容を確認
         
-        $response->assertStatus(302); 
+        $response->assertStatus(302);
+        \Log::debug($response);
         $response->assertRedirect('items');
 
         $this->assertDatabaseHas('items', [

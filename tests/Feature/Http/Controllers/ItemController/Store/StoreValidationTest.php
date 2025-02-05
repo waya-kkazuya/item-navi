@@ -308,6 +308,7 @@ class StoreValidationTest extends TestCase
             'inspection_scheduled_date' => '2024-09-10',
             'disposal_scheduled_date' => '2024-09-20'  
         ]);
+        \Log::debug($response);
         $response->assertRedirect('items'); //URLにリダイレクト
         $response->assertStatus(302);
 
