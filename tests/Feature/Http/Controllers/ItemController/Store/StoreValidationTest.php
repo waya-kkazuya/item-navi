@@ -33,6 +33,7 @@ use Intervention\Image\ImageManager;
 // use Intervention\Image\Drivers\Gd\Driver;
 use Intervention\Image\Drivers\Imagick\Driver;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\App;
 
 class StoreValidationTest extends TestCase
 {
