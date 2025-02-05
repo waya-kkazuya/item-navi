@@ -45,19 +45,6 @@ class StoreValidationTest extends TestCase
         parent::setUp();
 
         $this->faker = FakerFactory::create();
-
-        // CI環境でのQrCodeServiceのモック化
-        if (App::environment('testing')) {
-            $this->qrCodeService = Mockery::mock(QrCodeService::class);
-            $this->qrCodeService->shouldReceive('upload')
-            ->once()
-            ->with(Mockery::type(Item::class))
-            ->andReturn([
-                'labelNameToStore' => 'mocked_label.jpg',
-                'qrCodeNameToStore' => 'mocked_qrcode.png'
-            ]);
-            $this->app->instance(QrCodeService::class, $this->qrCodeService);
-        }
     }
 
     // 新規登録のnameのバリデーションのテスト（データプロバイダを使用）
@@ -284,6 +271,19 @@ class StoreValidationTest extends TestCase
     /** @test */
     public function 備品新規登録バリデーションカテゴリが消耗品の時はminimum_stockの値は保存される()
     {
+        // CI環境でのQrCodeServiceのモック化
+        if (App::environment('testing')) {
+            $this->qrCodeService = Mockery::mock(QrCodeService::class);
+            $this->qrCodeService->shouldReceive('upload')
+            ->once()
+            ->with(Mockery::type(Item::class))
+            ->andReturn([
+                'labelNameToStore' => 'mocked_label.jpg',
+                'qrCodeNameToStore' => 'mocked_qrcode.png'
+            ]);
+            $this->app->instance(QrCodeService::class, $this->qrCodeService);
+        }
+
         // 世界を構築
         // $categories = Category::factory()->count(11)->create();
         $category = Category::factory()->create([
