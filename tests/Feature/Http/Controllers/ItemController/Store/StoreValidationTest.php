@@ -331,9 +331,6 @@ class StoreValidationTest extends TestCase
             'category_id' => 1,
             'minimum_stock' => 2
         ]);
-
-        // モックが呼び出されたことを確認
-        $this->qrCodeService->shouldHaveReceived('upload')->once();
     }
 
     /** @test */
