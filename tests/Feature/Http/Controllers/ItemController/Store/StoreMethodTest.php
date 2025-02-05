@@ -57,6 +57,20 @@ class StoreMethodTest extends TestCase
             ->andReturn('mocked_image.jpg');
         // サービスコンテナにモックを登録
         $this->app->instance(ImageService::class, $this->imageService);
+
+
+        // CI環境でのQrCodeServiceのモック化
+        if (App::environment('testing')) {
+            $this->qrCodeService = Mockery::mock(QrCodeService::class);
+            $this->qrCodeService>shouldReceive('upload')
+            ->once()
+            ->with(Mockery::type(Item::class))
+            ->andReturn([
+                'labelNameToStore' => 'mocked_label.jpg',
+                'qrCodeNameToStore' => 'mocked_qrcode.png'
+            ]);
+            $this->app->instance(QrCodeService::class, $this->qrCodeService);
+        }
     }
 
     /** @test */
