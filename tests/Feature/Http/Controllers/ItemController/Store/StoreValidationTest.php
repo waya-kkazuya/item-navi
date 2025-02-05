@@ -21,6 +21,7 @@ use App\Services\ImageService;
 use Faker\Factory as FakerFactory;
 use Inertia\Testing\AssertableInertia as Assert;
 use Mockery;
+use App\Services\QrCodeService;
 use App\Services\ManagementIdService;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
@@ -273,15 +274,15 @@ class StoreValidationTest extends TestCase
     {
         // CI環境でのQrCodeServiceのモック化
         if (App::environment('testing')) {
-            $this->qrCodeService = Mockery::mock(QrCodeService::class);
-            $this->qrCodeService->shouldReceive('upload')
-            ->once()
-            ->with(Mockery::type(Item::class))
-            ->andReturn([
-                'labelNameToStore' => 'mocked_label.jpg',
-                'qrCodeNameToStore' => 'mocked_qrcode.png'
-            ]);
-            $this->app->instance(QrCodeService::class, $this->qrCodeService);
+            $mock = Mockery::mock(QrCodeService::class);
+            $mock->shouldReceive('upload')
+                ->once()
+                ->with(Mockery::type(Item::class))
+                ->andReturn([
+                    'labelNameToStore' => 'mocked_label.jpg',
+                    'qrCodeNameToStore' => 'mocked_qrcode.png'
+                ]);
+            $this->app->instance(QrCodeService::class, $mock);
         }
 
         // 世界を構築
