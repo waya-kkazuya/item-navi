@@ -57,7 +57,18 @@ jobs:
       - name: Install Dependencies
         if: steps.cache-vendor.outputs.cache-hit != 'true'
         run: composer install --quiet --prefer-dist --no-progress --no-interaction --no-scripts --no-ansi
-      
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install npm Dependencies
+        run: npm install
+
+      - name: Build Assets
+        run: npm run build
+
       - name: Laravel Setting
         run: |
           cp .env.example .env
