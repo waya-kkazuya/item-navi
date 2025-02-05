@@ -63,7 +63,7 @@ class StoreMethodTest extends TestCase
         // CI環境でのQrCodeServiceのモック化
         if (App::environment('testing')) {
             $this->qrCodeService = Mockery::mock(QrCodeService::class);
-            $this->qrCodeService>shouldReceive('upload')
+            $this->qrCodeService->shouldReceive('upload')
             ->once()
             ->with(Mockery::type(Item::class))
             ->andReturn([
