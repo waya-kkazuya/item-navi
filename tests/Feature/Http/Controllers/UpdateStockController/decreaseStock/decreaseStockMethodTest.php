@@ -46,6 +46,12 @@ class decreaseStockMethodTest extends TestCase
         $this->faker = FakerFactory::create();
     }
 
+    protected function tearDown(): void
+    {
+        // 子クラスでのクリーンアップ処理
+        parent::tearDown();
+    }
+
     // 在庫数以下にはquantityを出来ないバリデーションRulesがStockLimit
   
     /** @test */

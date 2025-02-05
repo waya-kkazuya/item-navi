@@ -54,6 +54,12 @@ class UpdateValidationTest extends TestCase
         // DB::statement('SET FOREIGN_KEY_CHECKS=1;');
     }
 
+    protected function tearDown(): void
+    {
+        // 子クラスでのクリーンアップ処理
+        parent::tearDown();
+    }
+
     // 編集更新のnameのバリデーションのテスト
     /** @test */
     public function 備品編集更新バリデーションnameが空欄で無効値()

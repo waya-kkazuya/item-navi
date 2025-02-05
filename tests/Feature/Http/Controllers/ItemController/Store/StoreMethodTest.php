@@ -60,6 +60,13 @@ class StoreMethodTest extends TestCase
         $this->app->instance(ImageService::class, $this->imageService);
     }
 
+    protected function tearDown(): void
+    {
+        // 子クラスでのクリーンアップ処理
+        Mockery::close();
+        parent::tearDown();
+    }
+
     /** @test */
     function 備品新規登録画面で備品を登録できる、消耗品の時()
     {
@@ -76,7 +83,7 @@ class StoreMethodTest extends TestCase
                 ]);
             $this->app->instance(QrCodeService::class, $mock);
         }
-        
+
         $category = Category::factory()->create([
             'id' => 1,
             'name' => '消耗品'

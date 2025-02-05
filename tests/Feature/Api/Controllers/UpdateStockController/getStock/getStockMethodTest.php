@@ -19,6 +19,13 @@ class getStockMethodTest extends TestCase
         $this->faker = FakerFactory::create();
     }
 
+    protected function tearDown(): void
+    {
+        // 子クラスでのクリーンアップ処理
+        parent::tearDown();
+    }
+
+
     /** @test */
     function API通信で存在する備品の在庫数を取得できる()
     {

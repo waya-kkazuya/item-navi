@@ -45,6 +45,12 @@ class diposeItemMethodTest extends TestCase
         $this->faker = FakerFactory::create();
     }
 
+    protected function tearDown(): void
+    {
+        // 子クラスでのクリーンアップ処理
+        parent::tearDown();
+    }
+
     /** @test */
     public function 備品詳細画面で廃棄モーダルで廃棄処理できる()
     {

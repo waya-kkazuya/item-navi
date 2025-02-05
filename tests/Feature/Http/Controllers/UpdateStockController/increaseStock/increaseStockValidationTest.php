@@ -46,8 +46,13 @@ class increaseStockValidationTest extends TestCase
         $this->faker = FakerFactory::create();
     }
 
-    //　IncreaseStockRequestのバリデーションのテスト
+    protected function tearDown(): void
+    {
+        // 子クラスでのクリーンアップ処理
+        parent::tearDown();
+    }
 
+    //　IncreaseStockRequestのバリデーションのテスト
     /** @test */
     function 入出庫モーダルでの入庫処理バリデーションoperator_nameがnullで無効値な場合()
     {

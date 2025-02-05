@@ -48,6 +48,12 @@ class UpdateMethodTest extends TestCase
         $this->faker = FakerFactory::create(); 
     }
 
+    protected function tearDown(): void
+    {
+        // 子クラスでのクリーンアップ処理
+        parent::tearDown();
+    }
+
     /** @test */
     function 備品編集画面で備品を編集更新できる_点検予定日のレコードが存在かつ廃棄予定日のレコードが存在_画像アップロードはモック()
     {

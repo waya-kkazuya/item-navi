@@ -27,6 +27,12 @@ class IndexMethodTest extends TestCase
         $this->faker = FakerFactory::create();
     }
 
+    protected function tearDown(): void
+    {
+        // 子クラスでのクリーンアップ処理
+        parent::tearDown();
+    }
+
     /** @test */
     function DashboardControllerがすべての備品情報を渡せる_カテゴリでまとめた時()
     {

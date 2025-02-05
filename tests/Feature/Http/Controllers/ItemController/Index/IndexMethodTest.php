@@ -42,6 +42,11 @@ class IndexMethodTest extends TestCase
         $this->faker = FakerFactory::create();
     }
 
+    protected function tearDown(): void
+    {
+        // 子クラスでのクリーンアップ処理
+        parent::tearDown();
+    }
 
     /** @test */
     function 備品一覧画面表示用のpaginateオブジェクトのデータを渡す()

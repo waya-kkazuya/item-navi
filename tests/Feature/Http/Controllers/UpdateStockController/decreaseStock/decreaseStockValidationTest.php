@@ -46,9 +46,14 @@ class decreaseStockValidationTest extends TestCase
         $this->faker = FakerFactory::create();
     }
 
+    protected function tearDown(): void
+    {
+        // 子クラスでのクリーンアップ処理
+        parent::tearDown();
+    }
+
     // DecreaseStockRequestのバリデーションのテスト
     // 在庫数以下にはquantityを出来ないバリデーションRulesがStockLimit
-    
     /** @test */
     function 入出庫モーダルでの出庫処理バリデーションoperator_nameがnullで無効値な場合()
     {

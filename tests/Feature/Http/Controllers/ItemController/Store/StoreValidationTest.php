@@ -48,6 +48,12 @@ class StoreValidationTest extends TestCase
         $this->faker = FakerFactory::create();
     }
 
+    protected function tearDown(): void
+    {
+        // 子クラスでのクリーンアップ処理
+        parent::tearDown();
+    }
+
     // 新規登録のnameのバリデーションのテスト（データプロバイダを使用）
     /**
      * @dataProvider nameValidationProvider

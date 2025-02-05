@@ -46,6 +46,12 @@ class UpdateValidationTest extends TestCase
         $this->faker = FakerFactory::create();
     }
 
+    protected function tearDown(): void
+    {
+        // 子クラスでのクリーンアップ処理
+        parent::tearDown();
+    }
+
     // nameのバリデーションのテスト
     /** @test */
     public function プロフィール編集更新バリデーションnameが空欄で無効値()

@@ -51,6 +51,11 @@ class StoreValidationTest extends TestCase
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');
     }
 
+    protected function tearDown(): void
+    {
+        // 子クラスでのクリーンアップ処理
+        parent::tearDown();
+    }
 
     // nameのバリデーションのテスト
     /** @test */

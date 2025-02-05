@@ -45,6 +45,12 @@ class inspectItemMethodTest extends TestCase
         $this->faker = FakerFactory::create();
     }
 
+    protected function tearDown(): void
+    {
+        // 子クラスでのクリーンアップ処理
+        parent::tearDown();
+    }
+
     /** @test */
     function 備品詳細画面で点検モーダルで点検処理できる_点検予定日のレコードがない場合()
     {

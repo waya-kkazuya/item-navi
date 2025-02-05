@@ -46,6 +46,12 @@ class increaseStockMethodTest extends TestCase
         $this->faker = FakerFactory::create();
     }
 
+    protected function tearDown(): void
+    {
+        // 子クラスでのクリーンアップ処理
+        parent::tearDown();
+    }
+
     /** @test */
     function 入庫モーダルで入庫処理が出来る()
     {
