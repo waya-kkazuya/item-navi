@@ -63,8 +63,19 @@ jobs:
         with:
           node-version: '22'
 
+      - name: Cache npm dependencies
+        id: cache-npm-dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-npm-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: ${{ runner.os }}-npm-
+
       - name: Install npm Dependencies
         run: npm install
+
+      - name: Fix npm vulnerabilities
+        run: npm audit fix
 
       - name: Build Assets
         run: npm run build
