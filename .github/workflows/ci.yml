@@ -82,7 +82,7 @@ jobs:
 
       - name: Laravel Setting
         run: |
-          cp .env.example .env
+          cp .env.testing .env
           php artisan optimize
           git config --local core.fileMode false
           chmod -R 777 storage storage/logs bootstrap/cache
