@@ -147,8 +147,7 @@ jobs:
       - name: Run Tests with Coverage
         run: |
           # php artisan config:clear
-          php artisan test --testsuite=Feature --stop-on-failure --coverage-text --colors=never > storage/logs/coverage.log
-          cat storage/logs/coverage.log
+          php artisan test --testsuite=Feature --stop-on-failure
 
       - name: view laravel.log
         if: failure()
