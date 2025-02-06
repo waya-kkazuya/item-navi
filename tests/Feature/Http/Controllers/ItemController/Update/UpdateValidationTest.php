@@ -50,7 +50,7 @@ class UpdateValidationTest extends TestCase
 
         // categoriesテーブルをトランケートして連番をリセット
         DB::statement('SET FOREIGN_KEY_CHECKS=0;');
-        // DB::table('categories')->truncate();
+        DB::table('categories')->truncate();
         DB::table('users')->truncate();
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');
     }
