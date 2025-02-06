@@ -12,9 +12,17 @@ env:
   DB_CONNECTION: mysql
   DB_HOST: 127.0.0.1
   DB_PORT: 3306
-  DB_DATABASE: ems
-  DB_USERNAME: ems
-  DB_PASSWORD: password
+  DB_DATABASE: ems_testing
+  DB_USERNAME: ems_testing
+  DB_PASSWORD: password123
+  APP_ENV: testing
+  SESSION_DRIVER: file
+  SESSION_LIFETIME: 120
+  SESSION_DOMAIN: localhost
+  SESSION_COOKIE: my_session_cookie
+  SESSION_COOKIE_SECURE: false
+  SESSION_HTTP_ONLY: true
+  SANCTUM_STATEFUL_DOMAINS: localhost
 
 jobs:
   test:
@@ -134,21 +142,6 @@ jobs:
 
       - name: Run Tests
         run: php artisan test --testsuite=Feature
-        env:
-          APP_ENV: testing
-          DB_CONNECTION: mysql
-          DB_HOST: 127.0.0.1
-          DB_PORT: 3306
-          DB_DATABASE: ems_testing
-          DB_USERNAME: ems_testing
-          DB_PASSWORD: password123
-          SESSION_DRIVER: file
-          SESSION_LIFETIME: 120
-          SESSION_DOMAIN: localhost
-          SESSION_COOKIE: my_session_cookie
-          SESSION_COOKIE_SECURE: false
-          SESSION_HTTP_ONLY: true
-          SANCTUM_STATEFUL_DOMAINS: localhost
 
       - name: view laravel.log
         if: failure()
