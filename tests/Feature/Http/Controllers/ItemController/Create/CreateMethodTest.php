@@ -45,6 +45,12 @@ class CreateMethodTest extends TestCase
         $this->faker = FakerFactory::create();
     }
 
+    protected function tearDown(): void
+    {
+        // 子クラスでのクリーンアップ処理
+        parent::tearDown();
+    }
+
     /** @test */
     function 備品新規登録画面を開く()
     {

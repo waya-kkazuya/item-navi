@@ -21,6 +21,12 @@ class indexMethodTest extends TestCase
         $this->faker = FakerFactory::create();
     }
 
+    protected function tearDown(): void
+    {
+        // 子クラスでのクリーンアップ処理
+        parent::tearDown();
+    }
+
     // edithistoriesの編集履歴モーダル用のデータを取得できる
     /** @test */
     function 編集履歴モーダル用のデータをAPIで取得できる()

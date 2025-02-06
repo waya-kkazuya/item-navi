@@ -46,6 +46,12 @@ class decreaseStockMethodTest extends TestCase
         $this->faker = FakerFactory::create();
     }
 
+    protected function tearDown(): void
+    {
+        // 子クラスでのクリーンアップ処理
+        parent::tearDown();
+    }
+
     // 在庫数以下にはquantityを出来ないバリデーションRulesがStockLimit
   
     /** @test */
@@ -75,6 +81,10 @@ class decreaseStockMethodTest extends TestCase
             'operator_name' => $user->name,
             'quantity' => 3,
         ];
+
+        \Log::info('CSRFトークン（リクエストヘッダー）: ' . csrf_token());
+        \Log::info('CSRFトークン（セッション）: ' . session()->token());
+        // dd(csrf_token(), session()->token());
 
         // 備品を出庫処理
         $response = $this->put(route('decreaseStock', $item->id), $validData);

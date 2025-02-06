@@ -18,10 +18,11 @@
 
     <env name="MAIL_MAILER" value="array"/>
     <env name="QUEUE_CONNECTION" value="sync"/>
-    <env name="SESSION_DRIVER" value="array"/>
+    <env name="SESSION_DRIVER" value="file"/>
     <env name="TELESCOPE_ENABLED" value="false"/>
 
     <env name="XDEBUG_MODE" value="coverage"/>
+    <env name="LOG_CHANNEL" value="stack"/>
     <env name="LOG_SLACK_WEBHOOK_URL" value=""/>
   </php>
   <source>

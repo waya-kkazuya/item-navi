@@ -49,9 +49,17 @@ class UpdateValidationTest extends TestCase
         $this->faker = FakerFactory::create();
 
         // categoriesテーブルをトランケートして連番をリセット
-        // DB::statement('SET FOREIGN_KEY_CHECKS=0;');
-        // DB::table('categories')->truncate();
-        // DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+        DB::table('categories')->truncate();
+        DB::table('users')->truncate();
+        DB::table('usage_statuses')->truncate();
+        DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+    }
+
+    protected function tearDown(): void
+    {
+        // 子クラスでのクリーンアップ処理
+        parent::tearDown();
     }
 
     // 編集更新のnameのバリデーションのテスト

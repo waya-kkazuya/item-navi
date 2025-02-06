@@ -47,6 +47,12 @@ class UpdateMethodTest extends TestCase
         $this->faker = FakerFactory::create();
     }
 
+    protected function tearDown(): void
+    {
+        // 子クラスでのクリーンアップ処理
+        parent::tearDown();
+    }
+
     /** @test */
     public function プロフィール画面が表示される(): void
     {

@@ -21,6 +21,12 @@ class DestroyMethodTest extends TestCase
         $this->faker = FakerFactory::create();
     }
 
+    protected function tearDown(): void
+    {
+        // 子クラスでのクリーンアップ処理
+        parent::tearDown();
+    }
+
     /** @test */
     function リクエストが削除できる()
     {

@@ -45,7 +45,13 @@ class diposeItemValidationTest extends TestCase
         $this->faker = FakerFactory::create();
     }
 
-        // 備品廃棄モーダルでのバリデーションテスト
+    protected function tearDown(): void
+    {
+        // 子クラスでのクリーンアップ処理
+        parent::tearDown();
+    }
+
+    // 備品廃棄モーダルでのバリデーションテスト
     /** @test */
     function 廃棄モーダルバリデーションdisposal_dateがnullで無効値な場合()
     {

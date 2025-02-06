@@ -24,6 +24,12 @@ class IndexMethodTest extends TestCase
         $this->faker = FakerFactory::create();
     }
 
+    protected function tearDown(): void
+    {
+        // 子クラスでのクリーンアップ処理
+        parent::tearDown();
+    }
+
     /** @test */
     function 点検と廃棄画面の予定と履歴の情報をVue側に渡せる()
     {

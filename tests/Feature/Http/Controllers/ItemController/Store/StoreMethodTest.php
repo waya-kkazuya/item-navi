@@ -34,6 +34,7 @@ use Intervention\Image\ImageManager;
 // use Intervention\Image\Drivers\Gd\Driver;
 use Intervention\Image\Drivers\Imagick\Driver;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\App;
 
 class StoreMethodTest extends TestCase
 {
@@ -59,10 +60,29 @@ class StoreMethodTest extends TestCase
         $this->app->instance(ImageService::class, $this->imageService);
     }
 
+    protected function tearDown(): void
+    {
+        // 子クラスでのクリーンアップ処理
+        Mockery::close();
+        parent::tearDown();
+    }
+
     /** @test */
     function 備品新規登録画面で備品を登録できる、消耗品の時()
     {
         // 備品が新規作成された裏でItemObserverによってedithistoriesテーブルにもデータが保存される
+        // CI環境でのQrCodeServiceのモック化
+        if (App::environment('testing')) {
+            $mock = Mockery::mock(QrCodeService::class);
+            $mock->shouldReceive('upload')
+                ->once()
+                ->with(Mockery::type(Item::class))
+                ->andReturn([
+                    'labelNameToStore' => 'mocked_label.jpg',
+                    'qrCodeNameToStore' => 'mocked_qrcode.png'
+                ]);
+            $this->app->instance(QrCodeService::class, $mock);
+        }
 
         $category = Category::factory()->create([
             'id' => 1,
@@ -118,7 +138,8 @@ class StoreMethodTest extends TestCase
         // dd($response->status()); // ステータスコード
         // dd($response->getContent()); // レスポンスの内容を確認
         
-        $response->assertStatus(302); 
+        $response->assertStatus(302);
+        \Log::debug('$response', ['context' => $response]);
         $response->assertRedirect('items');
 
         $this->assertDatabaseHas('items', [

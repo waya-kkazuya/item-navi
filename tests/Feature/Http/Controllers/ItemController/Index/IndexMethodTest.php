@@ -42,6 +42,11 @@ class IndexMethodTest extends TestCase
         $this->faker = FakerFactory::create();
     }
 
+    protected function tearDown(): void
+    {
+        // 子クラスでのクリーンアップ処理
+        parent::tearDown();
+    }
 
     /** @test */
     function 備品一覧画面表示用のpaginateオブジェクトのデータを渡す()
@@ -79,6 +84,7 @@ class IndexMethodTest extends TestCase
 
         $response = $this->get('/items')
             ->assertOk();
+        \Log::info('レスポンス: ' . $response->status()); // レスポンスのステータスコードをログに出力
 
         $response->assertInertia(fn (Assert $page) => $page
             ->component('Items/Index')
@@ -180,6 +186,7 @@ class IndexMethodTest extends TestCase
 
         $response = $this->get('/items?disposal=true')
             ->assertOk();
+        \Log::info('レスポンス: ' . $response->status()); // レスポンスのステータスコードをログに出力
 
         $response->assertInertia(fn (Assert $page) => $page
             ->component('Items/Index')

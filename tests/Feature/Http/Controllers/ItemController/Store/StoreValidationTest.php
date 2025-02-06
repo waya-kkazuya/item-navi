@@ -21,6 +21,7 @@ use App\Services\ImageService;
 use Faker\Factory as FakerFactory;
 use Inertia\Testing\AssertableInertia as Assert;
 use Mockery;
+use App\Services\QrCodeService;
 use App\Services\ManagementIdService;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
@@ -33,6 +34,7 @@ use Intervention\Image\ImageManager;
 // use Intervention\Image\Drivers\Gd\Driver;
 use Intervention\Image\Drivers\Imagick\Driver;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\App;
 
 class StoreValidationTest extends TestCase
 {
@@ -44,6 +46,12 @@ class StoreValidationTest extends TestCase
         parent::setUp();
 
         $this->faker = FakerFactory::create();
+    }
+
+    protected function tearDown(): void
+    {
+        // 子クラスでのクリーンアップ処理
+        parent::tearDown();
     }
 
     // 新規登録のnameのバリデーションのテスト（データプロバイダを使用）
@@ -270,6 +278,19 @@ class StoreValidationTest extends TestCase
     /** @test */
     public function 備品新規登録バリデーションカテゴリが消耗品の時はminimum_stockの値は保存される()
     {
+        // CI環境でのQrCodeServiceのモック化
+        if (App::environment('testing')) {
+            $mock = Mockery::mock(QrCodeService::class);
+            $mock->shouldReceive('upload')
+                ->once()
+                ->with(Mockery::type(Item::class))
+                ->andReturn([
+                    'labelNameToStore' => 'mocked_label.jpg',
+                    'qrCodeNameToStore' => 'mocked_qrcode.png'
+                ]);
+            $this->app->instance(QrCodeService::class, $mock);
+        }
+
         // 世界を構築
         // $categories = Category::factory()->count(11)->create();
         $category = Category::factory()->create([
@@ -308,6 +329,7 @@ class StoreValidationTest extends TestCase
             'inspection_scheduled_date' => '2024-09-10',
             'disposal_scheduled_date' => '2024-09-20'  
         ]);
+        \Log::debug('$response', ['context' => $response]);
         $response->assertRedirect('items'); //URLにリダイレクト
         $response->assertStatus(302);
 

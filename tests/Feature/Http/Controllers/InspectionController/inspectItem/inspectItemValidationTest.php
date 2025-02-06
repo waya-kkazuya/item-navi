@@ -45,6 +45,12 @@ class inspectItemValidationTest extends TestCase
         $this->faker = FakerFactory::create();
     }
 
+    protected function tearDown(): void
+    {
+        // 子クラスでのクリーンアップ処理
+        parent::tearDown();
+    }
+
     // 点検予定日のレコードがない場合でテスト
     /** @test */
     function 点検モーダルバリデーションinspection_dateがnullで無効値の場合()
