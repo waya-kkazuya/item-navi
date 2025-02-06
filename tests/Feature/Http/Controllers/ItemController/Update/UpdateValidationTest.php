@@ -52,6 +52,7 @@ class UpdateValidationTest extends TestCase
         DB::statement('SET FOREIGN_KEY_CHECKS=0;');
         DB::table('categories')->truncate();
         DB::table('users')->truncate();
+        DB::table('usage_statuses')->truncate();
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');
     }
 
