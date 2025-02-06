@@ -53,6 +53,7 @@ jobs:
         with:
           php-version: 8.2
           tools: composer:v2
+          extensions: xdebug
 
       - name: Cache Vendor
         id: cache-vendor
@@ -71,14 +72,6 @@ jobs:
         with:
           node-version: '22'
 
-      # - name: Cache npm dependencies
-      #   id: cache-npm-dependencies
-      #   uses: actions/cache@v4
-      #   with:
-      #     path: ~/.npm
-      #     key: ${{ runner.os }}-npm-${{ hashFiles('**/package-lock.json') }}
-      #     restore-keys: ${{ runner.os }}-npm-
-
       - name: Cache node_modules
         id: cache-node-modules
         uses: actions/cache@v4
@@ -89,11 +82,9 @@ jobs:
 
       - name: Install npm Dependencies
         if: steps.cache-node-modules.outputs.cache-hit != 'true'
-        run: npm ci
-
-      - name: Fix npm vulnerabilities
-        if: steps.cache-node-modules.outputs.cache-hit != 'true'
-        run: npm audit fix
+        run: |
+          npm ci
+          npm audit fix
 
       # - name: Cache build output
       #   id: cache-build-output
@@ -141,7 +132,15 @@ jobs:
         run: php artisan migrate
 
       - name: Run Tests
-        run: php artisan test --testsuite=Feature || exit 0
+        run: |
+          php artisan config:clear
+          php artisan test --testsuite=Feature || exit 0
+
+      # - name: Run Tests with Coverage
+      #   run: |
+      #     php artisan config:clear
+      #     php artisan test --testsuite=Feature --stop-on-failure --coverage-text --colors=never > storage/logs/coverage.log
+      #     cat storage/logs/coverage.log
 
       - name: view laravel.log
         if: failure()

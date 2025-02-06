@@ -25,9 +25,9 @@
     <env name="LOG_CHANNEL" value="stack"/>
     <env name="LOG_SLACK_WEBHOOK_URL" value=""/>
   </php>
-  <source>
+  <coverage processUncoveredFiles="true">
     <include>
       <directory suffix=".php">./app</directory>
     </include>
-  </source>
+  </coverage>
 </phpunit>
