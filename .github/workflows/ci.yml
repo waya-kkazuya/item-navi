@@ -140,8 +140,14 @@ jobs:
       - name: Run Migrate
         run: php artisan migrate
 
-      - name: Run Tests
-        run: php artisan test --testsuite=Feature || exit 0
+      # - name: Run Tests
+      #   run: php artisan test --testsuite=Feature || exit 0
+
+      - name: Run Tests with Coverage
+        run: |
+          # php artisan config:clear
+          php artisan test --testsuite=Feature --coverage-text --colors=never > storage/logs/coverage.log
+          cat storage/logs/coverage.log
 
       - name: view laravel.log
         if: failure()
