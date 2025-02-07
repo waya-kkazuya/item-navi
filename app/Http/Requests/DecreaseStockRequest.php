@@ -2,9 +2,8 @@
 
 namespace App\Http\Requests;
 
-use Illuminate\Foundation\Http\FormRequest;
 use App\Rules\StockLimit;
-use Illuminate\Support\Facades\Log;
+use Illuminate\Foundation\Http\FormRequest;
 
 class DecreaseStockRequest extends FormRequest
 {
@@ -27,8 +26,8 @@ class DecreaseStockRequest extends FormRequest
 
         return [
             'transaction_type' => ['required', 'in:出庫'],
-            'operator_name' => ['required', 'max:10'] ,
-            'quantity' => ['required', 'integer',  'min:1', new StockLimit($item)], // 出庫数の上限は在庫数まで　
+            'operator_name'    => ['required', 'max:10'],
+            'quantity'         => ['required', 'integer', 'min:1', new StockLimit($item)], // 出庫数の上限は在庫数まで
         ];
     }
 }
