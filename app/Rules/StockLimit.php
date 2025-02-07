@@ -21,7 +21,7 @@ class StockLimit implements ValidationRule
      */
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
-        if (!$this->item || $value > $this->item->stock) {
+        if (! $this->item || $value > $this->item->stock) {
             $fail('在庫数以上の数量は出庫できません');
         }
     }
