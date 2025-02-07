@@ -3,11 +3,8 @@
 namespace App\Logging;
 
 use Monolog\Formatter\LineFormatter;
-use Monolog\Logger;
-use Monolog\Processor\IntrospectionProcessor;
-use Hikaeme\Monolog\Formatter\LtsvFormatter;
 use Monolog\Level;
-use App\Logging\CustomLtsvFormatter;
+use Monolog\Processor\IntrospectionProcessor;
 
 class CustomizeFormatter
 {
@@ -17,7 +14,7 @@ class CustomizeFormatter
             null, // デフォルトのフォーマットを使用
             null,
             true, // 改行を許可
-            false  // 空のcontextとextraフィールドを含まない
+            false // 空のcontextとextraフィールドを含まない
         );
 
         $introprocessor = new IntrospectionProcessor(Level::Debug, [
