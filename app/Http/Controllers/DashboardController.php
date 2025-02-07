@@ -3,16 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\UseCases\Dashboard\GroupedEditHistoriesUseCase;
+use App\UseCases\Dashboard\ItemsByTypeUseCase;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
-use Inertia\Inertia;
-use App\Models\Item;
-use App\Models\Edithistory;
-use Illuminate\Support\Facades\DB;
-use App\UseCases\Dashboard\ItemsByTypeUseCase;
-use App\UseCases\Dashboard\GroupedEditHistoriesUseCase;
-use PhpParser\Node\Expr\List_;
 use Illuminate\Support\Facades\Log;
+use Inertia\Inertia;
 
 class DashboardController extends Controller
 {
@@ -23,7 +19,7 @@ class DashboardController extends Controller
         ItemsByTypeUseCase $itemsByTypeUseCase,
         GroupedEditHistoriesUseCase $groupedEditHistories
     ) {
-        $this->itemsByTypeUseCase = $itemsByTypeUseCase;
+        $this->itemsByTypeUseCase   = $itemsByTypeUseCase;
         $this->groupedEditHistories = $groupedEditHistories;
     }
 
@@ -34,24 +30,24 @@ class DashboardController extends Controller
         Log::info('DashboardController index method called');
 
         try {
-            $type = $request->input('type', 'category');
-            List('allItems' => $allItems, 'itemsByType' => $itemsByType) = $this->itemsByTypeUseCase->handle($type);
+            $type                                                        = $request->input('type', 'category');
+            list('allItems' => $allItems, 'itemsByType' => $itemsByType) = $this->itemsByTypeUseCase->handle($type);
 
             $groupedEditHistories = $this->groupedEditHistories->handle();
 
             Log::info('DashboardController index method succeeded');
 
             return Inertia::render('Dashboard', [
-                'allItems' => $allItems,
-                'itemsByType' => $itemsByType,
+                'allItems'             => $allItems,
+                'itemsByType'          => $itemsByType,
                 'groupedEdithistories' => $groupedEditHistories,
-                'type' => $type
+                'type'                 => $type,
             ]);
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             Log::error('DashboardController index method failed', [
-                'error' => $e->getMessage(),
-                'stack' => $e->getTraceAsString(),
-                'request' => $request->all()
+                'error'   => $e->getMessage(),
+                'stack'   => $e->getTraceAsString(),
+                'request' => $request->all(),
             ]);
         }
     }

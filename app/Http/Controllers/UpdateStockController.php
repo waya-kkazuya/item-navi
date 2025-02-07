@@ -4,14 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Events\LowStockDetectEvent;
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use App\Models\Item;
-use App\Models\StockTransaction;
-use App\Models\Edithistory;
 use App\Http\Requests\DecreaseStockRequest;
 use App\Http\Requests\IncreaseStockRequest;
-use App\Models\User;
-use Illuminate\Support\Facades\Auth;
+use App\Models\Item;
+use App\Models\StockTransaction;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
@@ -28,16 +24,16 @@ class UpdateStockController extends Controller
 
         try {
             // 念のため、サーバーサイドでもバリデーション
-            if($request->quantity <= 0 || $request->quantity > $item->stock){
+            if ($request->quantity <= 0 || $request->quantity > $item->stock) {
                 Log::warning('UpdateStockController decreaseStock method failed');
 
                 return to_route('consumable_items')
-                ->with([
-                    'message' => '出庫数に正しい値を入力してください',
-                    'status' => 'danger'
-                ]);
+                    ->with([
+                        'message' => '出庫数に正しい値を入力してください',
+                        'status' => 'danger'
+                    ]);
             }
-            
+
             // stock_transactionsテーブルの新しいレコードを作成
             $stockTransaction = new StockTransaction();
             $stockTransaction->item_id = $item->id;
@@ -53,20 +49,19 @@ class UpdateStockController extends Controller
             });
 
             // 通知がオンになっている、かつ、在庫数が通知在庫数以下になったら通知を送る
-            if($item->notification && $item->stock <= $item->minimum_stock) {
+            if ($item->notification && $item->stock <= $item->minimum_stock) {
                 event(new LowStockDetectEvent($item));
             }
-            
+
             DB::commit();
 
             Log::info('UpdateStockController decreaseStock method succeeded');
 
             return to_route('consumable_items')
-            ->with([
-                'message' => '在庫数を更新しました。',
-                'status' => 'success'
-            ]);
-
+                ->with([
+                    'message' => '在庫数を更新しました。',
+                    'status' => 'success'
+                ]);
         } catch (\Exception $e) {
             DB::rollBack();
 
@@ -77,10 +72,10 @@ class UpdateStockController extends Controller
             ]);
 
             return redirect()->back()
-            ->with([
-                'message' => '登録中にエラーが発生しました',
-                'status' => 'danger'
-            ]);
+                ->with([
+                    'message' => '登録中にエラーが発生しました',
+                    'status' => 'danger'
+                ]);
         }
     }
 
@@ -94,16 +89,16 @@ class UpdateStockController extends Controller
 
         try {
             // 念のため、サーバーサイドでもバリデーション
-            if($request->quantity <= 0){
+            if ($request->quantity <= 0) {
                 Log::warning('UpdateStockController increaseStock method failed');
 
                 return to_route('consumable_items')
-                ->with([
-                    'message' => '出庫数に正しい値を入力してください',
-                    'status' => 'danger'
-                ]);
+                    ->with([
+                        'message' => '出庫数に正しい値を入力してください',
+                        'status' => 'danger'
+                    ]);
             }
-            
+
             $stockTransaction = new StockTransaction();
             $stockTransaction->item_id = $item->id;
             $stockTransaction->transaction_type = $request->transaction_type;
@@ -116,17 +111,16 @@ class UpdateStockController extends Controller
                 $item->stock += $request->quantity;
                 $item->save();
             });
-            
+
             DB::commit();
 
             Log::info('UpdateStockController increaseStock method succeeded');
 
             return to_route('consumable_items')
-            ->with([
-                'message' => '在庫数を更新しました。',
-                'status' => 'success'
-            ]);
-
+                ->with([
+                    'message' => '在庫数を更新しました。',
+                    'status' => 'success'
+                ]);
         } catch (\Exception $e) {
             DB::rollBack();
 
@@ -137,10 +131,10 @@ class UpdateStockController extends Controller
             ]);
 
             return redirect()->back()
-            ->with([
-                'message' => '登録中にエラーが発生しました',
-                'status' => 'danger'
-            ]);
+                ->with([
+                    'message' => '登録中にエラーが発生しました',
+                    'status' => 'danger'
+                ]);
         }
     }
 }
