@@ -9,7 +9,8 @@ class AcquisitionMethod extends Model
 {
     use HasFactory;
 
-    public function item() {
+    public function item()
+    {
         return $this->hasOne(Item::class);
     }
 }

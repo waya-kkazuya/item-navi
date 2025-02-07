@@ -9,7 +9,7 @@ class RequestStatus extends Model
 {
     use HasFactory;
 
-    public function itemRequest() 
+    public function itemRequest()
     {
         return $this->hasOne(ItemRequest::class);
     }

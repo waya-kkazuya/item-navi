@@ -6,7 +6,6 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-
 class Edithistory extends Model
 {
     use HasFactory;
@@ -20,7 +19,7 @@ class Edithistory extends Model
         'new_value',
         'edit_user',
         'edit_reason_id',
-        'edit_reason_text'
+        'edit_reason_text',
     ];
 
     /**
