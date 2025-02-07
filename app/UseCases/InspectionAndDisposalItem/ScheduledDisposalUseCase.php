@@ -22,21 +22,21 @@ class ScheduledDisposalUseCase
                     'category',
                     'unit',
                     'usageStatus',
-                    'locationOfUse', 
+                    'locationOfUse',
                     'storageLocation',
-                    'acquisitionMethod'
+                    'acquisitionMethod',
                 ]);
-            }
+            },
         ];
 
         $disposalSelectFields = [
             'id',
             'item_id',
-            'disposal_scheduled_date', 
+            'disposal_scheduled_date',
             'disposal_date',
             'disposal_person',
             'details',
-            'created_at'
+            'created_at',
         ];
 
         $scheduledDisposals = Disposal::with($disposalWithRelations)

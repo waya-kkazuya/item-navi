@@ -19,21 +19,21 @@ class HistoryInspectionsUseCase
         $inspectionWithRelations = [
             'item.category',
             'item.unit',
-            'item.usageStatus', 
+            'item.usageStatus',
             'item.locationOfUse',
             'item.storageLocation',
-            'item.acquisitionMethod'
+            'item.acquisitionMethod',
         ];
 
         $inspectionSelectFields = [
             'id',
             'item_id',
-            'inspection_scheduled_date', 
+            'inspection_scheduled_date',
             'inspection_date',
             'status',
-            'inspection_person', 
+            'inspection_person',
             'details',
-            'created_at'
+            'created_at',
         ];
 
         $historyInspections = Inspection::with($inspectionWithRelations)
