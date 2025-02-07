@@ -2,12 +2,11 @@
 
 namespace App\Console\Commands;
 
-use Illuminate\Console\Command;
-use Carbon\Carbon;
-use App\Models\User;
 use App\Models\Disposal;
+use App\Models\User;
 use App\Notifications\DisposalScheduleNotification;
-
+use Carbon\Carbon;
+use Illuminate\Console\Command;
 
 class DisposalSchedule extends Command
 {
@@ -36,11 +35,11 @@ class DisposalSchedule extends Command
             Carbon::today()->addWeek(),
             Carbon::today()->addDays(3),
             Carbon::today()->addDay(),
-            Carbon::today()
+            Carbon::today(),
         ];
 
         $disposals = Disposal::whereIn('disposal_scheduled_date', $dates)->get();
-        
+
         \Log::info('sendDisposalNotifications called');
 
         foreach ($disposals as $disposal) {

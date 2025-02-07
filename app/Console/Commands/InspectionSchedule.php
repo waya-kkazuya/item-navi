@@ -2,11 +2,11 @@
 
 namespace App\Console\Commands;
 
-use Illuminate\Console\Command;
-use Carbon\Carbon;
-use App\Models\User;
 use App\Models\Inspection;
+use App\Models\User;
 use App\Notifications\InspectionScheduleNotification;
+use Carbon\Carbon;
+use Illuminate\Console\Command;
 
 class InspectionSchedule extends Command
 {
@@ -35,11 +35,11 @@ class InspectionSchedule extends Command
             Carbon::today()->addWeek(),
             Carbon::today()->addDays(3),
             Carbon::today()->addDay(),
-            Carbon::today()
+            Carbon::today(),
         ];
 
         $inspections = Inspection::whereIn('inspection_scheduled_date', $dates)->get();
-        
+
         \Log::info('sendInspectionNotifications called'); // ログを記録
 
         foreach ($inspections as $inspection) {
