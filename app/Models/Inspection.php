@@ -19,7 +19,6 @@ class Inspection extends Model
         'details',
     ];
 
-
     /**
      * @return BelongsTo
      */

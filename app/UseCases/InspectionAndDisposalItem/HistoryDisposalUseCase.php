@@ -22,23 +22,23 @@ class HistoryDisposalUseCase
                     'category',
                     'unit',
                     'usageStatus',
-                    'locationOfUse', 
+                    'locationOfUse',
                     'storageLocation',
-                    'acquisitionMethod'
+                    'acquisitionMethod',
                 ]);
-            }
+            },
         ];
 
         $disposalSelectFields = [
             'id',
             'item_id',
-            'disposal_scheduled_date', 
+            'disposal_scheduled_date',
             'disposal_date',
             'disposal_person',
             'details',
-            'created_at'
+            'created_at',
         ];
-        
+
         $historyDisposals = Disposal::with($disposalWithRelations)
             ->select($disposalSelectFields)
             ->orderBy('disposal_scheduled_date', 'asc')

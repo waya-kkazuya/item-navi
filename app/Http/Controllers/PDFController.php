@@ -4,11 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Models\Item;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\Log;
+use Barryvdh\Snappy\Facades\SnappyPdf as PDF;
 use Illuminate\Support\Facades\Gate;
-use Barryvdh\Snappy\Facades\SnappyPdf as PDF; // snappy pdfを使用する
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 
 class PDFController extends Controller
 {
@@ -27,18 +26,18 @@ class PDFController extends Controller
 
         // QRラベル画像のパスの配列を取得
         $qrCodes = [];
-        foreach($consumableItems as $consumableItem) {
-            $qrCodes[] = Storage::disk()->url('labels/'.$consumableItem->qrcode);
+        foreach ($consumableItems as $consumableItem) {
+            $qrCodes[] = Storage::disk()->url('labels/' . $consumableItem->qrcode);
         }
 
         if (empty($qrCodes)) {
             Log::warning('PDFController generatePDF method failed because QRLabel does not exist');
 
             return to_route('consumable_items')
-            ->with([
-                'message' => 'QRラベルが存在しません',
-                'status' => 'danger'
-            ]);
+                ->with([
+                    'message' => 'QRラベルが存在しません',
+                    'status'  => 'danger',
+                ]);
         }
 
         // ビューを作成してPDFを生成
@@ -53,7 +52,7 @@ class PDFController extends Controller
             ->setOption('enable-local-file-access', true);
 
         Log::info('PDFController generatePDF method succeeded');
-        
+
         return $pdf->inline('消耗品QRコード.pdf');
     }
 }

@@ -18,10 +18,10 @@ class StockTransactionFactory extends Factory
     public function definition(): array
     {
         return [
-            'item_id' => Item::factory(),
-            'transaction_type' => $this->faker->randomElement(['入庫', '出庫', '登録', '修正']),
-            'quantity' => $this->faker->numberBetween(1, 10), //整合性のあるように作るのは難しい
-            'operator_name' => $this->faker->name(),
+            'item_id'          => Item::factory(),
+            'transaction_type' => $this->faker->randomElement(['入庫', '出庫', '登録']),
+            'quantity'         => $this->faker->numberBetween(1, 10),
+            'operator_name'    => $this->faker->name(),
         ];
     }
 }

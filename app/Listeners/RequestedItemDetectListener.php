@@ -3,10 +3,8 @@
 namespace App\Listeners;
 
 use App\Events\RequestedItemDetectEvent;
-use App\Notifications\RequestedItemNotification;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Queue\InteractsWithQueue;
 use App\Models\User;
+use App\Notifications\RequestedItemNotification;
 
 class RequestedItemDetectListener
 {

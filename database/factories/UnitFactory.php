@@ -19,7 +19,7 @@ class UnitFactory extends Factory
         $units = ['個', '箱', '袋', 'セット', '台', 'ライセンス', '本', 'リットル', '枚', '束'];
 
         return [
-            'name' => $this->faker->randomElement($units)
+            'name' => $this->faker->randomElement($units),
         ];
     }
 }

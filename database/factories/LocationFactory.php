@@ -16,11 +16,23 @@ class LocationFactory extends Factory
      */
     public function definition(): array
     {
-        $locations = ['作業室１', '作業室２', '廊下', '給湯室', 'トイレ', '玄関',
-                '階段', '休憩室', '相談室', '事務所', '倉庫', 'その他'];
+        $locations = [
+            '作業室１',
+            '作業室２',
+            '廊下',
+            '給湯室',
+            'トイレ',
+            '玄関',
+            '階段',
+            '休憩室',
+            '相談室',
+            '事務所',
+            '倉庫',
+            'その他'
+        ];
 
         return [
-            'name' => $this->faker->randomElement($locations)
+            'name' => $this->faker->randomElement($locations),
         ];
     }
 }

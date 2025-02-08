@@ -3,8 +3,6 @@
 namespace App\Notifications;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 use Illuminate\Support\Facades\Storage;
 
@@ -37,7 +35,7 @@ class DisposalScheduleNotification extends Notification
      */
     // public function toMail(object $notifiable): MailMessage
     // {
-        // 
+    //
     // }
 
     /**
@@ -49,19 +47,19 @@ class DisposalScheduleNotification extends Notification
     {
         // 画像パスの設定
         $defaultDisk = Storage::disk();
-        
+
         $imagePath = $defaultDisk->url('items/' . $this->disposal->item->image1);
-        if (!$this->disposal->item->image1 || !$defaultDisk->exists('items/' . $this->disposal->item->image1)) {
+        if (! $this->disposal->item->image1 || ! $defaultDisk->exists('items/' . $this->disposal->item->image1)) {
             $imagePath = $defaultDisk->url('items/No_Image.jpg');
         }
 
         return [
-            'id' => $this->disposal->item->id,
-            'management_id' => $this->disposal->item->management_id,
-            'image_path1' => $imagePath, //絶対URL
-            'item_name' => $this->disposal->item->name,
+            'id'             => $this->disposal->item->id,
+            'management_id'  => $this->disposal->item->management_id,
+            'image_path1'    => $imagePath, //絶対URL
+            'item_name'      => $this->disposal->item->name,
             'scheduled_date' => $this->disposal ? $this->disposal->disposal_scheduled_date : null,
-            'message' => '廃棄予定日が近づいています'
+            'message'        => '廃棄予定日が近づいています',
         ];
     }
 }

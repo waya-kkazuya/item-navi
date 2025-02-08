@@ -2,8 +2,8 @@
 
 namespace App\Observers;
 
-use App\Models\Inspection;
 use App\Models\Edithistory;
+use App\Models\Inspection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 
@@ -14,26 +14,26 @@ class InspectionObserver
      */
     public function created(Inspection $inspection): void
     {
-        $edit_reason_id = Session::get('edit_reason_id');
+        $edit_reason_id   = Session::get('edit_reason_id');
         $edit_reason_text = Session::get('edit_reason_text');
-        $operation_type = Session::get('operation_type');
+        $operation_type   = Session::get('operation_type');
 
-        $edit_mode = 'normal'; // 仮置き
+        $edit_mode = 'normal'; // 仮置き、棚卸機能追加時に使用予定
 
         $oldValue = null;
-        $newValue = $inspection->inspection_scheduled_date; 
-        
+        $newValue = $inspection->inspection_scheduled_date;
+
         if ($operation_type == 'update') {
             Edithistory::create([
-                'edit_mode' => $edit_mode,
-                'operation_type' => $operation_type,
-                'item_id' => $inspection->item_id,
-                'edited_field' => 'inspection_scheduled_date',
-                'old_value' => $oldValue,
-                'new_value' => $newValue,
-                'edit_user' => Auth::user()->name ?? '',
-                'edit_reason_id' => $edit_reason_id, //プルダウン
-                'edit_reason_text' => $edit_reason_text, //その他テキストエリア  
+                'edit_mode'        => $edit_mode,
+                'operation_type'   => $operation_type,
+                'item_id'          => $inspection->item_id,
+                'edited_field'     => 'inspection_scheduled_date',
+                'old_value'        => $oldValue,
+                'new_value'        => $newValue,
+                'edit_user'        => Auth::user()->name ?? '',
+                'edit_reason_id'   => $edit_reason_id,   //プルダウン
+                'edit_reason_text' => $edit_reason_text, //その他テキストエリア
             ]);
         }
     }
@@ -53,26 +53,26 @@ class InspectionObserver
         $changes = $inspection->getChanges();
 
         // セッションから編集理由を取得
-        $edit_reason_id = Session::get('edit_reason_id');
+        $edit_reason_id   = Session::get('edit_reason_id');
         $edit_reason_text = Session::get('edit_reason_text');
-        $operation_type = Session::get('operation_type');
+        $operation_type   = Session::get('operation_type');
 
         // 備品編集更新の際、inspection_scheduled_dateカラムのみを追跡
-        if (isset($changes['inspection_scheduled_date'])) {    
+        if (isset($changes['inspection_scheduled_date'])) {
             $edit_mode = 'normal'; // 仮置き
 
             $oldValue = $inspection->getOriginal('inspection_scheduled_date');
             $newValue = $changes['inspection_scheduled_date'];
 
             Edithistory::create([
-                'edit_mode' => $edit_mode,
-                'operation_type' => $operation_type,
-                'item_id' => $inspection->item_id,
-                'edited_field' => 'inspection_scheduled_date',
-                'old_value' => $oldValue,
-                'new_value' => $newValue,
-                'edit_user' => Auth::user()->name ?? '',
-                'edit_reason_id' => $edit_reason_id,
+                'edit_mode'        => $edit_mode,
+                'operation_type'   => $operation_type,
+                'item_id'          => $inspection->item_id,
+                'edited_field'     => 'inspection_scheduled_date',
+                'old_value'        => $oldValue,
+                'new_value'        => $newValue,
+                'edit_user'        => Auth::user()->name ?? '',
+                'edit_reason_id'   => $edit_reason_id,
                 'edit_reason_text' => $edit_reason_text,
             ]);
         }

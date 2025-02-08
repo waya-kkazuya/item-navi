@@ -3,9 +3,9 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\Item;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
-use App\Models\Item;
 
 class ItemController extends Controller
 {
@@ -21,18 +21,18 @@ class ItemController extends Controller
 
             Log::info('Api/ItemController restore method succeeded');
 
-            return response()->json([ 
-                'message' => '備品を復元しました', 
-                'status' => 'success',
-                'item' => $item // 復元したアイテムの情報を返す
+            return response()->json([
+                'message' => '備品を復元しました',
+                'status'  => 'success',
+                'item'    => $item, // 復元したアイテムの情報を返す
             ]);
         }
 
         Log::warning('Api/ItemController restore method failed');
 
-        return response()->json([ 
+        return response()->json([
             'message' => '該当の備品が存在しませんでした',
-            'status' => 'danger'
+            'status'  => 'danger',
         ], 404);
     }
 }

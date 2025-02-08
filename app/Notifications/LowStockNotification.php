@@ -3,8 +3,6 @@
 namespace App\Notifications;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 use Illuminate\Support\Facades\Storage;
 
@@ -37,7 +35,7 @@ class LowStockNotification extends Notification
      */
     // public function toMail(object $notifiable): MailMessage
     // {
-        // 
+    //
     // }
 
     /**
@@ -51,19 +49,19 @@ class LowStockNotification extends Notification
         $defaultDisk = Storage::disk();
 
         $imagePath = $defaultDisk->url('items/' . $this->item->image1);
-        if (!$this->item->image1 || !$defaultDisk->exists('items/' . $this->item->image1)) {
+        if (! $this->item->image1 || ! $defaultDisk->exists('items/' . $this->item->image1)) {
             $imagePath = $defaultDisk->url('items/No_Image.jpg');
         }
 
         // ここで表示するのに必要な情報を詰め込む
         return [
-            'id' => $this->item->id,
+            'id'            => $this->item->id,
             'management_id' => $this->item->management_id,
-            'image_path1' => $imagePath,
-            'item_name' => $this->item->name,
-            'quantity' => $this->item->stock,
+            'image_path1'   => $imagePath,
+            'item_name'     => $this->item->name,
+            'quantity'      => $this->item->stock,
             'minimum_stock' => $this->item->minimum_stock,
-            'message' => '在庫数が通知在庫数以下になっています'
+            'message'       => '在庫数が通知在庫数以下になっています',
         ];
     }
 }

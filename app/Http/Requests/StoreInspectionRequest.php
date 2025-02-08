@@ -22,12 +22,10 @@ class StoreInspectionRequest extends FormRequest
     public function rules(): array
     {
         return [
-            // 'item_id' => ['required', 'exists:items,id'],
-            'inspection_scheduled_date' => ['nullable','date'],
-            'inspection_date' => ['required', 'date'], // 消耗品管理で保存する時に使う
-            // 'status' => ['required', 'boolean'],
-            'inspection_person' => ['required', 'max:10'] ,
-            'details' => ['required', 'max:200'] ,
+            'inspection_scheduled_date' => ['nullable', 'date'],
+            'inspection_date'           => ['required', 'date'], // 消耗品管理で保存する時に使う
+            'inspection_person'         => ['required', 'max:10'],
+            'details'                   => ['required', 'max:200'],
         ];
     }
 }

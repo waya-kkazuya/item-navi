@@ -2,15 +2,15 @@
 
 namespace App\Providers;
 
-use App\Models\Item;
-use App\Models\Inspection;
 use App\Models\Disposal;
-use App\Observers\ItemObserver;
-use App\Observers\InspectionObserver;
+use App\Models\Inspection;
+use App\Models\Item;
 use App\Observers\DisposalObserver;
+use App\Observers\InspectionObserver;
+use App\Observers\ItemObserver;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
 use Inertia\Inertia;
-use Illuminate\Support\Facades\URL;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -39,6 +39,6 @@ class AppServiceProvider extends ServiceProvider
         if ($this->app->environment('production')) {
             URL::forceScheme('https');
         }
-        $this->app['request']->server->set('HTTPS','on');
+        $this->app['request']->server->set('HTTPS', 'on');
     }
 }

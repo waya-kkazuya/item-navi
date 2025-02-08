@@ -2,17 +2,17 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 use App\Models\Category;
+use App\Models\Disposal;
 use App\Models\Location;
 use App\Models\Unit;
-use App\Models\Disposal;
 use Carbon\Carbon;
-use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Item extends Model
 {
@@ -41,7 +41,6 @@ class Item extends Model
         'qrcode',
     ];
 
-    
     /**
      * @return BelongsTo
      */
@@ -55,7 +54,7 @@ class Item extends Model
      */
     public function unit()
     {
-        return $this->belongsTo(Unit::class);       
+        return $this->belongsTo(Unit::class);
     }
 
     /**
@@ -63,7 +62,7 @@ class Item extends Model
      */
     public function usageStatus()
     {
-        return $this->belongsTo(UsageStatus::class);       
+        return $this->belongsTo(UsageStatus::class);
     }
 
     /**
@@ -87,7 +86,7 @@ class Item extends Model
      */
     public function acquisitionMethod()
     {
-        return $this->belongsTo(AcquisitionMethod::class);       
+        return $this->belongsTo(AcquisitionMethod::class);
     }
 
     /**
@@ -115,8 +114,8 @@ class Item extends Model
     }
 
     public function scopeSearchItems($query, $input = null)
-    {   
-        if(!empty($input)){
+    {
+        if (! empty($input)) {
             return $query->where('name', 'like', "%{$input}%");
         }
     }

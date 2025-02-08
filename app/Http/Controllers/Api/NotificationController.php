@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
-use App\Http\Controllers\Controller;
 
 class NotificationController extends Controller
 {
@@ -19,7 +19,7 @@ class NotificationController extends Controller
         $notification = Auth::user()->notifications()->find($id);
         if ($notification) {
             $notification->markAsRead();
-            return response()->noContent(); // 204 レスポンスにコンテンツ含まれない
+            return response()->noContent(); // No Content=204レスポンス、レスポンスにコンテンツが含まれない
         }
 
         return response()->json(['status' => 'error'], 404);

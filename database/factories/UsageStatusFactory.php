@@ -19,7 +19,7 @@ class UsageStatusFactory extends Factory
         $usage_statuses = ['使用中', '未使用'];
 
         return [
-            'name' => $this->faker->randomElement($usage_statuses)
+            'name' => $this->faker->randomElement($usage_statuses),
         ];
     }
 }

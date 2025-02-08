@@ -43,6 +43,6 @@ class ItemRequest extends Model
      */
     public function requestStatus()
     {
-        return $this->belongsTo(RequestStatus::class);       
+        return $this->belongsTo(RequestStatus::class);
     }
 }

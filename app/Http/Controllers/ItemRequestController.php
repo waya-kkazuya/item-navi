@@ -2,19 +2,18 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\RequestedItemDetectEvent;
+use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreItemRequestRequest;
+use App\Models\Category;
+use App\Models\ItemRequest;
+use App\Models\Location;
+use App\Models\RequestStatus;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
-use App\Http\Controllers\Controller;
-use App\Http\Requests\StoreItemRequestRequest;
-use App\Models\ItemRequest;
-use App\Models\Category;
-use App\Models\Location;
-use App\Models\RequestStatus;
-use App\Events\RequestedItemDetectEvent;
-
 
 class ItemRequestController extends Controller
 {
@@ -22,13 +21,13 @@ class ItemRequestController extends Controller
     {
         Gate::authorize('user-higher');
 
-        Log::info('ItemRequestController index method called');        
+        Log::info('ItemRequestController index method called');
 
         // 作成日でソートの値、初期値はasc
         $sortOrder = $request->query('sortOrder', 'asc');
 
         $withRelations = ['category', 'locationOfUse', 'requestStatus'];
-        $selectFields = [
+        $selectFields  = [
             'id',
             'name',
             'category_id',
@@ -39,12 +38,12 @@ class ItemRequestController extends Controller
             'manufacturer',
             'reference',
             'price',
-            'created_at'
+            'created_at',
         ];
 
         $query = ItemRequest::with($withRelations)
-        ->select($selectFields)
-        ->orderBy('created_at', $sortOrder);
+            ->select($selectFields)
+            ->orderBy('created_at', $sortOrder);
 
         $total_count = $query->count();
 
@@ -53,8 +52,8 @@ class ItemRequestController extends Controller
         $item_requests->getCollection()->transform(function ($item) {
             $item->formatted_created_at = $item->created_at->format('Y-m-d H:i:s');
             return $item;
-        });             
-    
+        });
+
         $item_requests = $item_requests->setCollection($item_requests->getCollection());
 
         $request_statuses = RequestStatus::all();
@@ -62,27 +61,27 @@ class ItemRequestController extends Controller
         Log::info('ItemRequestController index method succeeded');
 
         return Inertia::render('ItemRequests/Index', [
-            'itemRequests' => $item_requests,
-            'sortOrder' => $sortOrder,
-            'totalCount' => $total_count,
-            'requestStatuses' => $request_statuses
-        ]); 
+            'itemRequests'    => $item_requests,
+            'sortOrder'       => $sortOrder,
+            'totalCount'      => $total_count,
+            'requestStatuses' => $request_statuses,
+        ]);
     }
-    
+
     public function create()
     {
         Gate::authorize('user-higher');
-        
-        Log::info('ItemRequestController create method called');        
+
+        Log::info('ItemRequestController create method called');
 
         $categories = Category::all();
-        $locations = Location::all();
+        $locations  = Location::all();
 
         Log::info('ItemRequestController create method succeeded');
 
         return Inertia::render('ItemRequests/Create', [
             'categories' => $categories,
-            'locations' => $locations,
+            'locations'  => $locations,
         ]);
     }
 
@@ -91,20 +90,20 @@ class ItemRequestController extends Controller
         Gate::authorize('user-higher');
 
         Log::info('ItemRequestController store method called');
-        
+
         DB::beginTransaction();
 
         try {
-            $itemRequest = ItemRequest::create([            
-                'name' => $request->name,
-                'category_id' => $request->category_id ,
-                'location_of_use_id' => $request->location_of_use_id,
-                'requestor' => $request->requestor,
+            $itemRequest = ItemRequest::create([
+                'name'                   => $request->name,
+                'category_id'            => $request->category_id,
+                'location_of_use_id'     => $request->location_of_use_id,
+                'requestor'              => $request->requestor,
                 'remarks_from_requestor' => $request->remarks_from_requestor,
-                'request_status_id' => 1,
-                'manufacturer' => $request->manufacturer,
-                'reference' => $request->reference,
-                'price' => $request->price,
+                'request_status_id'      => 1,
+                'manufacturer'           => $request->manufacturer,
+                'reference'              => $request->reference,
+                'price'                  => $request->price,
             ]);
 
             // リクエストが作成されたらイベントを発火
@@ -115,25 +114,24 @@ class ItemRequestController extends Controller
             Log::info('ItemRequestController store method succeeded');
 
             return to_route('item_requests.index')
-            ->with([
-                'message' => 'リクエストしました。',
-                'status' => 'success'
-            ]);
-
+                ->with([
+                    'message' => 'リクエストしました。',
+                    'status'  => 'success',
+                ]);
         } catch (\Exception $e) {
             DB::rollBack();
 
             Log::error('ItemRequestController store method Transaction failed', [
-                'error' => $e->getMessage(),
-                'stack' => $e->getTraceAsString(),
-                'request' => $request->all()
+                'error'   => $e->getMessage(),
+                'stack'   => $e->getTraceAsString(),
+                'request' => $request->all(),
             ]);
 
             return redirect()->back()
-            ->with([
-                'message' => '登録中にエラーが発生しました',
-                'status' => 'danger'
-            ]);
+                ->with([
+                    'message' => '登録中にエラーが発生しました',
+                    'status'  => 'danger',
+                ]);
         }
     }
 
@@ -148,9 +146,9 @@ class ItemRequestController extends Controller
         Log::info('ItemRequestController destroy method succeeded');
 
         return to_route('item_requests.index')
-        ->with([
-            'message' => 'リクエストを削除しました',
-            'status' => 'danger'
-        ]);
+            ->with([
+                'message' => 'リクエストを削除しました',
+                'status'  => 'danger',
+            ]);
     }
 }

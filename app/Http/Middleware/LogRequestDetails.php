@@ -22,17 +22,17 @@ class LogRequestDetails
         $user = Auth::user();
         $sessionId = Session::getId();
         $hashedSessionId = Hash::make($sessionId); // セッションIDをハッシュ化
-        $url = $request->fullUrl(); 
+        $url = $request->fullUrl();
 
         if ($user) {
             Log::withContext([
-                'user_id' => $user->id, 
+                'user_id' => $user->id,
                 'session_id' => $hashedSessionId,
                 'url' => $url
             ]);
         } else {
             Log::withContext([
-                'user_id' => 'guest', 
+                'user_id' => 'guest',
                 'session_id' => $hashedSessionId,
                 'url' => $url
             ]);

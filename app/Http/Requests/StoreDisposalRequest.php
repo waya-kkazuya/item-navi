@@ -22,11 +22,10 @@ class StoreDisposalRequest extends FormRequest
     public function rules(): array
     {
         return [
-            // 'item_id' => ['required', 'exists:items,id'],
             'disposal_scheduled_date' => ['nullable', 'date'],
-            'disposal_date' => ['required', 'date'], //現実の物理的な廃棄の日付
-            'disposal_person' => ['required', 'max:10'] ,
-            'details' => ['required', 'max:200'] ,
+            'disposal_date'           => ['required', 'date'], //現実の物理的な廃棄の日付
+            'disposal_person'         => ['required', 'max:10'],
+            'details'                 => ['required', 'max:200'],
         ];
     }
 }

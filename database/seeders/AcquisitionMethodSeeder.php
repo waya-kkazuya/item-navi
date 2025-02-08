@@ -1,8 +1,6 @@
 <?php
-
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
@@ -15,22 +13,22 @@ class AcquisitionMethodSeeder extends Seeder
     {
         DB::table('acquisition_methods')->insert([
             [
-                'name' => '購入'
+                'name' => '購入',
             ],
             [
-                'name' => 'レンタル'
+                'name' => 'レンタル',
             ],
             [
-                'name' => 'リース'
+                'name' => 'リース',
             ],
             [
-                'name' => '譲渡'
+                'name' => '譲渡',
             ],
             [
-                'name' => 'サブスクリプション'
+                'name' => 'サブスクリプション',
             ],
             [
-                'name' => 'その他'
+                'name' => 'その他',
             ],
         ]);
     }

@@ -2,10 +2,9 @@
 
 namespace App\Models;
 
+use App\Models\Item;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use App\Models\Item;
-use App\Models\Wish;
 
 class Category extends Model
 {
@@ -13,11 +12,12 @@ class Category extends Model
 
     protected $fillable = ['name'];
 
-    public function item() {
+    public function item()
+    {
         return $this->hasOne(Item::class);
     }
 
-    public function itemRequest() 
+    public function itemRequest()
     {
         return $this->hasOne(Item::class);
     }
