@@ -134,19 +134,13 @@ jobs:
       - name: Run Tests with Coverage
         run: |
           php artisan config:clear
-          php artisan test --testsuite=Feature --coverage-clover=coverage.xml
+          php artisan test --testsuite=Feature --coverage-html=coverage
 
-      - name: Upload coverage report
+      - name: Upload HTML coverage report
         uses: actions/upload-artifact@v4
         with:
-          name: coverage-report
-          path: coverage.xml
-
-      - name: Codecov
-        uses: codecov/codecov-action@v5
-        with:
-          file: coverage.xml
-          flags: feature
+          name: coverage-html-report
+          path: coverage
 
       # - name: Run Tests
       #   run: |
