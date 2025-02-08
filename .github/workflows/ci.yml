@@ -134,7 +134,7 @@ jobs:
       - name: Run Tests
         run: |
           php artisan config:clear
-          php artisan test --testsuite=Feature
+          php artisan test --testsuite=Feature --verbose
 
       # - name: Run Tests
       #   run: |
