@@ -137,13 +137,13 @@ jobs:
           php artisan test --testsuite=Feature --coverage-clover=coverage.xml
 
       - name: Upload coverage report
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: coverage-report
           path: coverage.xml
 
       - name: Codecov
-        uses: codecov/codecov-action@v2
+        uses: codecov/codecov-action@v5
         with:
           file: coverage.xml
           flags: feature
