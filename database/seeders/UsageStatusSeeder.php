@@ -2,7 +2,6 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
@@ -15,10 +14,10 @@ class UsageStatusSeeder extends Seeder
     {
         DB::table('usage_statuses')->insert([
             [
-                'name' => '使用中'
+                'name' => '使用中',
             ],
             [
-                'name' => '未使用'
+                'name' => '未使用',
             ],
         ]);
     }

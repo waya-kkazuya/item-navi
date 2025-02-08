@@ -16,10 +16,15 @@ class RequestStatusFactory extends Factory
      */
     public function definition(): array
     {
-        $request_statuses = ['未確認', '検討中', '採用', '見送り'];
+        $request_statuses = [
+            '未確認',
+            '検討中',
+            '採用',
+            '見送り'
+        ];
 
         return [
-            'status_name' => $this->faker->randomElement($request_statuses)
+            'status_name' => $this->faker->randomElement($request_statuses),
         ];
     }
 }

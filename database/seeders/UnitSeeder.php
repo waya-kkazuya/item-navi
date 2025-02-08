@@ -2,7 +2,6 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
@@ -15,34 +14,34 @@ class UnitSeeder extends Seeder
     {
         DB::table('units')->insert([
             [
-                'name' => '個'
+                'name' => '個',
             ],
             [
-                'name' => '箱'
+                'name' => '箱',
             ],
             [
-                'name' => '袋'
+                'name' => '袋',
             ],
             [
-                'name' => 'セット'
+                'name' => 'セット',
             ],
             [
-                'name' => '台'
+                'name' => '台',
             ],
             [
-                'name' => 'ライセンス'
+                'name' => 'ライセンス',
             ],
             [
-                'name' => '本'
+                'name' => '本',
             ],
             [
-                'name' => 'リットル'
+                'name' => 'リットル',
             ],
             [
-                'name' => '枚'
+                'name' => '枚',
             ],
             [
-                'name' => '束'
+                'name' => '束',
             ],
         ]);
     }

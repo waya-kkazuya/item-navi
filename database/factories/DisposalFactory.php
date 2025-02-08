@@ -2,8 +2,8 @@
 
 namespace Database\Factories;
 
-use Illuminate\Database\Eloquent\Factories\Factory;
 use App\Models\Item;
+use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Disposal>
@@ -18,11 +18,11 @@ class DisposalFactory extends Factory
     public function definition(): array
     {
         return [
-            'item_id' => Item::factory(),
+            'item_id'                 => Item::factory(),
             'disposal_scheduled_date' => $this->faker->dateTime(),
-            'disposal_date' => $this->faker->dateTime(),
-            'disposal_person' => $this->faker->name(),
-            'details' => $this->faker->realText(100),
+            'disposal_date'           => $this->faker->dateTime(),
+            'disposal_person'         => $this->faker->name(),
+            'details'                 => $this->faker->realText(100),
         ];
     }
 }

@@ -19,7 +19,7 @@ class AcquisitionMethodFactory extends Factory
         $aquisition_methods = ['購入', 'レンタル', 'リース', '譲渡', 'サブスクリプション', 'その他'];
 
         return [
-            'name' => $this->faker->randomElement($aquisition_methods)
+            'name' => $this->faker->randomElement($aquisition_methods),
         ];
     }
 }

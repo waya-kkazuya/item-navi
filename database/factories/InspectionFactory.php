@@ -18,12 +18,12 @@ class InspectionFactory extends Factory
     public function definition(): array
     {
         return [
-            'item_id' => Item::factory(),
+            'item_id'                   => Item::factory(),
             'inspection_scheduled_date' => $this->faker->dateTime(),
-            'inspection_date' => $this->faker->dateTime(),
-            'status' => $this->faker->boolean(),
-            'inspection_person' => $this->faker->name(),
-            'details' => $this->faker->realText(100),
+            'inspection_date'           => $this->faker->dateTime(),
+            'status'                    => $this->faker->boolean(),
+            'inspection_person'         => $this->faker->name(),
+            'details'                   => $this->faker->realText(100),
         ];
     }
 }
