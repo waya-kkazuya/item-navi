@@ -2,25 +2,22 @@
 
 namespace Tests\Feature\Notification;
 
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
-use Tests\TestCase;
+use App\Events\LowStockDetectEvent;
+use App\Models\Category;
 use App\Models\Item;
 use App\Models\User;
-use App\Models\Category;
-use Illuminate\Support\Facades\Event;
-use Illuminate\Support\Facades\Notification;
-use App\Events\LowStockDetectEvent;
-use App\Listeners\LowStockDetectListener;
 use App\Notifications\LowStockNotification;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Event;
+use Tests\TestCase;
 
 class LowStockNotificationTest extends TestCase
 {
     use RefreshDatabase;
 
     /** @test */
-    function LowStockNotificationのテスト()
+    public function LowStockNotificationのテスト()
     {
         // categoriesテーブルをトランケートして連番をリセット
         DB::statement('SET FOREIGN_KEY_CHECKS=0;');
@@ -35,10 +32,10 @@ class LowStockNotificationTest extends TestCase
         ]);
 
         // テスト用のアイテムを作成
-        $category = Category::factory()->create(['id' => 1]);   
-        $item = Item::factory()->create([
-            'category_id' => $category->id,
-            'stock' => 2,
+        $category = Category::factory()->create(['id' => 1]);
+        $item     = Item::factory()->create([
+            'category_id'   => $category->id,
+            'stock'         => 2,
             'minimum_stock' => 5,
         ]);
 
@@ -48,9 +45,9 @@ class LowStockNotificationTest extends TestCase
         // 通知がデータベースに保存されたことをアサート
         foreach ($users as $user) {
             $this->assertDatabaseHas('notifications', [
-                'notifiable_id' => $user->id,
+                'notifiable_id'   => $user->id,
                 'notifiable_type' => User::class,
-                'type' => LowStockNotification::class,
+                'type'            => LowStockNotification::class,
             ]);
 
             // 通知内容を検証

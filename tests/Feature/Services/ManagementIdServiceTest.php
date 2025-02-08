@@ -2,31 +2,30 @@
 
 namespace Tests\Feature\Services;
 
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
-use Tests\TestCase;
 use App\Services\ManagementIdService;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Validation\ValidationException;
+use Tests\TestCase;
 
 class ManagementIdServiceTest extends TestCase
 {
     use RefreshDatabase;
 
     /** @test */
-    function ManagementIdServiceがすべての接頭辞で管理IDを作成できるかテスト()
+    public function ManagementIdServiceがすべての接頭辞で管理IDを作成できるかテスト()
     {
         $idPrefixPairs = [
-            1 => 'CO-',
-            2 => 'IT-',
-            3 => 'SA-',
-            4 => 'EA-',
-            5 => 'DP-',
-            6 => 'OS-',
-            7 => 'OF-',
-            8 => 'TO-',
-            9 => 'CL-',
+            1  => 'CO-',
+            2  => 'IT-',
+            3  => 'SA-',
+            4  => 'EA-',
+            5  => 'DP-',
+            6  => 'OS-',
+            7  => 'OF-',
+            8  => 'TO-',
+            9  => 'CL-',
             10 => 'GR-',
-            11 => 'OT-'
+            11 => 'OT-',
         ];
 
         foreach ($idPrefixPairs as $category_id => $prefix) {

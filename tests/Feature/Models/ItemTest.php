@@ -2,26 +2,24 @@
 
 namespace Tests\Feature\Models;
 
-use App\Models\Item;
+use App\Models\AcquisitionMethod;
 use App\Models\Category;
+use App\Models\Disposal;
+use App\Models\Inspection;
+use App\Models\Item;
 use App\Models\Location;
 use App\Models\Unit;
 use App\Models\UsageStatus;
-use App\Models\AcquisitionMethod;
-use App\Models\Disposal;
-use App\Models\Inspection;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
-use Tests\TestCase;
 use Illuminate\Database\Eloquent\Collection;
-
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\TestCase;
 
 class ItemTest extends TestCase
 {
     use RefreshDatabase;
 
     /** @test */
-    function categoryリレーションを返す()
+    public function categoryリレーションを返す()
     {
         $item = Item::factory()->create();
 
@@ -29,7 +27,7 @@ class ItemTest extends TestCase
     }
 
     /** @test */
-    function unitリレーションを返す()
+    public function unitリレーションを返す()
     {
         $item = Item::factory()->create();
 
@@ -37,15 +35,15 @@ class ItemTest extends TestCase
     }
 
     /** @test */
-    function usageStatusリレーションを返す()
+    public function usageStatusリレーションを返す()
     {
         $item = Item::factory()->create();
 
         $this->assertInstanceOf(UsageStatus::class, $item->usageStatus);
     }
-    
+
     /** @test */
-    function locationOfUseリレーションを返す()
+    public function locationOfUseリレーションを返す()
     {
         $item = Item::factory()->create();
 
@@ -53,7 +51,7 @@ class ItemTest extends TestCase
     }
 
     /** @test */
-    function storageLocationリレーションを返す()
+    public function storageLocationリレーションを返す()
     {
         $item = Item::factory()->create();
 
@@ -61,7 +59,7 @@ class ItemTest extends TestCase
     }
 
     /** @test */
-    function acquisitionMethodリレーションを返す()
+    public function acquisitionMethodリレーションを返す()
     {
         $item = Item::factory()->create();
 
@@ -69,7 +67,7 @@ class ItemTest extends TestCase
     }
 
     /** @test */
-    function inspectionsリレーションを返す()
+    public function inspectionsリレーションを返す()
     {
         $item = Item::factory()->create();
 
@@ -84,7 +82,7 @@ class ItemTest extends TestCase
     }
 
     /** @test */
-    function disposalリレーションを返す()
+    public function disposalリレーションを返す()
     {
         $item = Item::factory()->create();
 
@@ -96,7 +94,7 @@ class ItemTest extends TestCase
     }
 
     /** @test */
-    function stockTransactionsリレーションを返す()
+    public function stockTransactionsリレーションを返す()
     {
         $item = Item::factory()->create();
 

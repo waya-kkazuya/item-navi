@@ -2,38 +2,11 @@
 
 namespace Tests\Feature\Http\Controllers\ProfileController;
 
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
-use Tests\TestCase;
 use App\Models\User;
-use App\Models\Item;
-use App\Models\Unit;
-use App\Models\Category;
-use App\Models\Location;
-use App\Models\UsageStatus;
-use App\Models\AcquisitionMethod;
-use App\Models\Edithistory;
-use App\Models\Inspection;
-use App\Models\EditReason;
-use App\Models\RequestStatus;
-use App\Models\StockTransaction;
-use App\Services\ImageService;
 use Faker\Factory as FakerFactory;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Inertia\Testing\AssertableInertia as Assert;
-use Mockery;
-use App\Services\ManagementIdService;
-use Illuminate\Support\Facades\Auth;
-use Carbon\Carbon;
-use Illuminate\Database\Console\DumpCommand;
-use Illuminate\Testing\Fluent\AssertableJson;
-use Inertia\Inertia;
-use Illuminate\Http\UploadedFile;
-use Illuminate\Support\Facades\Storage;
-use Intervention\Image\ImageManager;
-// use Intervention\Image\Drivers\Gd\Driver;
-use Intervention\Image\Drivers\Imagick\Driver;
-use Illuminate\Support\Facades\Session;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Tests\TestCase;
 
 class UpdateValidationTest extends TestCase
 {
@@ -48,7 +21,6 @@ class UpdateValidationTest extends TestCase
 
     protected function tearDown(): void
     {
-        // 子クラスでのクリーンアップ処理
         parent::tearDown();
     }
 
@@ -59,7 +31,6 @@ class UpdateValidationTest extends TestCase
         $user = User::factory()->role(1)->create();
         $this->actingAs($user);
 
-
         $response = $this->from('profile')
             ->patch(route('profile.update'), ['name' => '']);
         $response->assertRedirect('profile'); //URLにリダイレクト
@@ -67,11 +38,11 @@ class UpdateValidationTest extends TestCase
 
         $response = $this->followRedirects($response);
 
-        $response->assertInertia(fn (Assert $page) => $page
-            ->component('Profile/Edit')
-            ->has('errors.name')
-            ->where('errors.name', '名前は必ず指定してください。')
-            // ->dump()
+        $response->assertInertia(fn(Assert $page) => $page
+                ->component('Profile/Edit')
+                ->has('errors.name')
+                ->where('errors.name', '名前は必ず指定してください。')
+                // ->dump()
         );
     }
 
@@ -81,7 +52,6 @@ class UpdateValidationTest extends TestCase
         $user = User::factory()->role(1)->create();
         $this->actingAs($user);
 
-
         $response = $this->from('profile')
             ->patch(route('profile.update'), ['name' => str_repeat('あ', 20)]);
         $response->assertRedirect('profile'); //URLにリダイレクト
@@ -89,10 +59,10 @@ class UpdateValidationTest extends TestCase
 
         $response = $this->followRedirects($response);
 
-        $response->assertInertia(fn (Assert $page) => $page
-            ->component('Profile/Edit')
-            ->missing('errors.name')
-            // ->dump()
+        $response->assertInertia(fn(Assert $page) => $page
+                ->component('Profile/Edit')
+                ->missing('errors.name')
+                // ->dump()
         );
     }
 
@@ -102,7 +72,6 @@ class UpdateValidationTest extends TestCase
         $user = User::factory()->role(1)->create();
         $this->actingAs($user);
 
-
         $response = $this->from('profile')
             ->patch(route('profile.update'), ['name' => str_repeat('あ', 21)]);
         $response->assertRedirect('profile'); //URLにリダイレクト
@@ -110,11 +79,11 @@ class UpdateValidationTest extends TestCase
 
         $response = $this->followRedirects($response);
 
-        $response->assertInertia(fn (Assert $page) => $page
-            ->component('Profile/Edit')
-            ->has('errors.name')
-            ->where('errors.name', '名前は、20文字以下で指定してください。')
-            // ->dump()
+        $response->assertInertia(fn(Assert $page) => $page
+                ->component('Profile/Edit')
+                ->has('errors.name')
+                ->where('errors.name', '名前は、20文字以下で指定してください。')
+                // ->dump()
         );
     }
 }

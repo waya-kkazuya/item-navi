@@ -1,39 +1,14 @@
 <?php
-
 namespace Tests\Feature\Http\Controllers\ItemRequestController\Store;
 
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
-use Tests\TestCase;
-use App\Models\User;
-use App\Models\Item;
-use App\Models\Unit;
 use App\Models\Category;
 use App\Models\Location;
-use App\Models\UsageStatus;
-use App\Models\AcquisitionMethod;
-use App\Models\Edithistory;
-use App\Models\Inspection;
-use App\Models\EditReason;
-use App\Models\RequestStatus;
-use App\Models\StockTransaction;
-use App\Services\ImageService;
+use App\Models\User;
 use Faker\Factory as FakerFactory;
-use Inertia\Testing\AssertableInertia as Assert;
-use Mockery;
-use App\Services\ManagementIdService;
-use Illuminate\Support\Facades\Auth;
-use Carbon\Carbon;
-use Illuminate\Database\Console\DumpCommand;
-use Illuminate\Testing\Fluent\AssertableJson;
-use Inertia\Inertia;
-use Illuminate\Http\UploadedFile;
-use Illuminate\Support\Facades\Storage;
-use Intervention\Image\ImageManager;
-// use Intervention\Image\Drivers\Gd\Driver;
-use Intervention\Image\Drivers\Imagick\Driver;
-use Illuminate\Support\Facades\Session;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
+use Inertia\Testing\AssertableInertia as Assert;
+use Tests\TestCase;
 
 class StoreValidationTest extends TestCase
 {
@@ -53,7 +28,6 @@ class StoreValidationTest extends TestCase
 
     protected function tearDown(): void
     {
-        // 子クラスでのクリーンアップ処理
         parent::tearDown();
     }
 
@@ -72,11 +46,11 @@ class StoreValidationTest extends TestCase
 
         $response = $this->followRedirects($response);
 
-        $response->assertInertia(fn (Assert $page) => $page
-            ->component('ItemRequests/Create')
-            ->has('errors.name')
-            ->where('errors.name', '名前は必ず指定してください。')
-            // ->dump()
+        $response->assertInertia(fn(Assert $page) => $page
+                ->component('ItemRequests/Create')
+                ->has('errors.name')
+                ->where('errors.name', '名前は必ず指定してください。')
+                // ->dump()
         );
     }
 
@@ -94,10 +68,10 @@ class StoreValidationTest extends TestCase
 
         $response = $this->followRedirects($response);
 
-        $response->assertInertia(fn (Assert $page) => $page
-            ->component('ItemRequests/Create')
-            ->missing('errors.name')
-            // ->dump()
+        $response->assertInertia(fn(Assert $page) => $page
+                ->component('ItemRequests/Create')
+                ->missing('errors.name')
+                // ->dump()
         );
     }
 
@@ -115,10 +89,10 @@ class StoreValidationTest extends TestCase
 
         $response = $this->followRedirects($response);
 
-        $response->assertInertia(fn (Assert $page) => $page
-            ->component('ItemRequests/Create')
-            ->missing('errors.name')
-            // ->dump()
+        $response->assertInertia(fn(Assert $page) => $page
+                ->component('ItemRequests/Create')
+                ->missing('errors.name')
+                // ->dump()
         );
     }
 
@@ -136,14 +110,13 @@ class StoreValidationTest extends TestCase
 
         $response = $this->followRedirects($response);
 
-        $response->assertInertia(fn (Assert $page) => $page
-            ->component('ItemRequests/Create')
-            ->has('errors.name')
-            ->where('errors.name', '名前は、40文字以下で指定してください。')
-            // ->dump()
+        $response->assertInertia(fn(Assert $page) => $page
+                ->component('ItemRequests/Create')
+                ->has('errors.name')
+                ->where('errors.name', '名前は、40文字以下で指定してください。')
+                // ->dump()
         );
     }
-
 
     // category_idのバリデーションのテスト
     /** @test */
@@ -163,14 +136,14 @@ class StoreValidationTest extends TestCase
 
         $response = $this->followRedirects($response);
 
-        $response->assertInertia(fn (Assert $page) => $page
-            ->component('ItemRequests/Create')
-            ->has('errors.category_id')
-            ->where('errors.category_id', '選択されたカテゴリは正しくありません。')
-            // ->dump()
+        $response->assertInertia(fn(Assert $page) => $page
+                ->component('ItemRequests/Create')
+                ->has('errors.category_id')
+                ->where('errors.category_id', '選択されたカテゴリは正しくありません。')
+                // ->dump()
         );
     }
-    
+
     /** @test */
     public function リクエスト新規登録バリデーションcategoryIdが最小の有効値()
     {
@@ -188,13 +161,13 @@ class StoreValidationTest extends TestCase
 
         $response = $this->followRedirects($response);
 
-        $response->assertInertia(fn (Assert $page) => $page
-            ->component('ItemRequests/Create')
-            ->missing('errors.category_id')
-            // ->dump()
+        $response->assertInertia(fn(Assert $page) => $page
+                ->component('ItemRequests/Create')
+                ->missing('errors.category_id')
+                // ->dump()
         );
     }
-    
+
     /** @test */
     public function リクエスト新規登録バリデーションcategoryIdが最大の有効値()
     {
@@ -212,13 +185,13 @@ class StoreValidationTest extends TestCase
 
         $response = $this->followRedirects($response);
 
-        $response->assertInertia(fn (Assert $page) => $page
-            ->component('ItemRequests/Create')
-            ->missing('errors.category_id')
-            // ->dump()
+        $response->assertInertia(fn(Assert $page) => $page
+                ->component('ItemRequests/Create')
+                ->missing('errors.category_id')
+                // ->dump()
         );
     }
-    
+
     /** @test */
     public function リクエスト新規登録バリデーションcategoryIdが最大値を超える無効値()
     {
@@ -236,14 +209,13 @@ class StoreValidationTest extends TestCase
 
         $response = $this->followRedirects($response);
 
-        $response->assertInertia(fn (Assert $page) => $page
-            ->component('ItemRequests/Create')
-            ->has('errors.category_id')
-            ->where('errors.category_id', '選択されたカテゴリは正しくありません。')
-            // ->dump()
+        $response->assertInertia(fn(Assert $page) => $page
+                ->component('ItemRequests/Create')
+                ->has('errors.category_id')
+                ->where('errors.category_id', '選択されたカテゴリは正しくありません。')
+                // ->dump()
         );
     }
-
 
     // location_of_use_idのバリデーションのテスト
     /** @test */
@@ -263,11 +235,11 @@ class StoreValidationTest extends TestCase
 
         $response = $this->followRedirects($response);
 
-        $response->assertInertia(fn (Assert $page) => $page
-            ->component('ItemRequests/Create')
-            ->has('errors.location_of_use_id')
-            ->where('errors.location_of_use_id', '選択された利用場所は正しくありません。')
-            // ->dump()
+        $response->assertInertia(fn(Assert $page) => $page
+                ->component('ItemRequests/Create')
+                ->has('errors.location_of_use_id')
+                ->where('errors.location_of_use_id', '選択された利用場所は正しくありません。')
+                // ->dump()
         );
     }
 
@@ -288,12 +260,12 @@ class StoreValidationTest extends TestCase
 
         $response = $this->followRedirects($response);
 
-        $response->assertInertia(fn (Assert $page) => $page
-            ->component('ItemRequests/Create')
-            ->missing('errors.location_of_use_id')
-            // ->dump()
+        $response->assertInertia(fn(Assert $page) => $page
+                ->component('ItemRequests/Create')
+                ->missing('errors.location_of_use_id')
+                // ->dump()
         );
-    }    
+    }
 
     /** @test */
     public function リクエスト新規登録バリデーションlocation_of_use_idが最大の有効値()
@@ -312,12 +284,12 @@ class StoreValidationTest extends TestCase
 
         $response = $this->followRedirects($response);
 
-        $response->assertInertia(fn (Assert $page) => $page
-            ->component('ItemRequests/Create')
-            ->missing('errors.location_of_use_id')
-            // ->dump()
+        $response->assertInertia(fn(Assert $page) => $page
+                ->component('ItemRequests/Create')
+                ->missing('errors.location_of_use_id')
+                // ->dump()
         );
-    }    
+    }
 
     /** @test */
     public function リクエスト新規登録バリデーションlocation_of_use_idが最大値を超える無効値()
@@ -336,15 +308,13 @@ class StoreValidationTest extends TestCase
 
         $response = $this->followRedirects($response);
 
-        $response->assertInertia(fn (Assert $page) => $page
-            ->component('ItemRequests/Create')
-            ->has('errors.location_of_use_id')
-            ->where('errors.location_of_use_id', '選択された利用場所は正しくありません。')
-            // ->dump()
+        $response->assertInertia(fn(Assert $page) => $page
+                ->component('ItemRequests/Create')
+                ->has('errors.location_of_use_id')
+                ->where('errors.location_of_use_id', '選択された利用場所は正しくありません。')
+                // ->dump()
         );
     }
-
-
 
     // requestorのバリデーションテスト
     /** @test */
@@ -361,11 +331,11 @@ class StoreValidationTest extends TestCase
 
         $response = $this->followRedirects($response);
 
-        $response->assertInertia(fn (Assert $page) => $page
-            ->component('ItemRequests/Create')
-            ->has('errors.requestor')
-            ->where('errors.requestor', '申請者は必ず指定してください。')
-            // ->dump()
+        $response->assertInertia(fn(Assert $page) => $page
+                ->component('ItemRequests/Create')
+                ->has('errors.requestor')
+                ->where('errors.requestor', '申請者は必ず指定してください。')
+                // ->dump()
         );
     }
 
@@ -383,10 +353,10 @@ class StoreValidationTest extends TestCase
 
         $response = $this->followRedirects($response);
 
-        $response->assertInertia(fn (Assert $page) => $page
-            ->component('ItemRequests/Create')
-            ->missing('errors.requestor')
-            // ->dump()
+        $response->assertInertia(fn(Assert $page) => $page
+                ->component('ItemRequests/Create')
+                ->missing('errors.requestor')
+                // ->dump()
         );
     }
 
@@ -404,10 +374,10 @@ class StoreValidationTest extends TestCase
 
         $response = $this->followRedirects($response);
 
-        $response->assertInertia(fn (Assert $page) => $page
-            ->component('ItemRequests/Create')
-            ->missing('errors.requestor')
-            // ->dump()
+        $response->assertInertia(fn(Assert $page) => $page
+                ->component('ItemRequests/Create')
+                ->missing('errors.requestor')
+                // ->dump()
         );
     }
 
@@ -425,14 +395,13 @@ class StoreValidationTest extends TestCase
 
         $response = $this->followRedirects($response);
 
-        $response->assertInertia(fn (Assert $page) => $page
-            ->component('ItemRequests/Create')
-            ->has('errors.requestor')
-            ->where('errors.requestor', '申請者は、20文字以下で指定してください。')
-            // ->dump()
+        $response->assertInertia(fn(Assert $page) => $page
+                ->component('ItemRequests/Create')
+                ->has('errors.requestor')
+                ->where('errors.requestor', '申請者は、20文字以下で指定してください。')
+                // ->dump()
         );
     }
-
 
     // remarks_from_requestorのバリデーションのテスト
     /** @test */
@@ -449,11 +418,11 @@ class StoreValidationTest extends TestCase
 
         $response = $this->followRedirects($response);
 
-        $response->assertInertia(fn (Assert $page) => $page
-            ->component('ItemRequests/Create')
-            ->has('errors.remarks_from_requestor')
-            ->where('errors.remarks_from_requestor', '申請理由は必ず指定してください。')
-            // ->dump()
+        $response->assertInertia(fn(Assert $page) => $page
+                ->component('ItemRequests/Create')
+                ->has('errors.remarks_from_requestor')
+                ->where('errors.remarks_from_requestor', '申請理由は必ず指定してください。')
+                // ->dump()
         );
     }
 
@@ -471,10 +440,10 @@ class StoreValidationTest extends TestCase
 
         $response = $this->followRedirects($response);
 
-        $response->assertInertia(fn (Assert $page) => $page
-            ->component('ItemRequests/Create')
-            ->missing('errors.remarks_from_requestor')
-            // ->dump()
+        $response->assertInertia(fn(Assert $page) => $page
+                ->component('ItemRequests/Create')
+                ->missing('errors.remarks_from_requestor')
+                // ->dump()
         );
     }
 
@@ -492,10 +461,10 @@ class StoreValidationTest extends TestCase
 
         $response = $this->followRedirects($response);
 
-        $response->assertInertia(fn (Assert $page) => $page
-            ->component('ItemRequests/Create')
-            ->missing('errors.remarks_from_requestor')
-            // ->dump()
+        $response->assertInertia(fn(Assert $page) => $page
+                ->component('ItemRequests/Create')
+                ->missing('errors.remarks_from_requestor')
+                // ->dump()
         );
     }
 
@@ -513,14 +482,13 @@ class StoreValidationTest extends TestCase
 
         $response = $this->followRedirects($response);
 
-        $response->assertInertia(fn (Assert $page) => $page
-            ->component('ItemRequests/Create')
-            ->has('errors.remarks_from_requestor')
-            ->where('errors.remarks_from_requestor', '申請理由は、500文字以下で指定してください。')
-            // ->dump()
+        $response->assertInertia(fn(Assert $page) => $page
+                ->component('ItemRequests/Create')
+                ->has('errors.remarks_from_requestor')
+                ->where('errors.remarks_from_requestor', '申請理由は、500文字以下で指定してください。')
+                // ->dump()
         );
     }
-
 
     // manufacturerのバリデーションテスト
     /** @test */
@@ -537,10 +505,10 @@ class StoreValidationTest extends TestCase
 
         $response = $this->followRedirects($response);
 
-        $response->assertInertia(fn (Assert $page) => $page
-            ->component('ItemRequests/Create')
-            ->missing('errors.manufacturer')
-            // ->dump()
+        $response->assertInertia(fn(Assert $page) => $page
+                ->component('ItemRequests/Create')
+                ->missing('errors.manufacturer')
+                // ->dump()
         );
     }
 
@@ -558,10 +526,10 @@ class StoreValidationTest extends TestCase
 
         $response = $this->followRedirects($response);
 
-        $response->assertInertia(fn (Assert $page) => $page
-            ->component('ItemRequests/Create')
-            ->missing('errors.manufacturer')
-            // ->dump()
+        $response->assertInertia(fn(Assert $page) => $page
+                ->component('ItemRequests/Create')
+                ->missing('errors.manufacturer')
+                // ->dump()
         );
     }
 
@@ -579,10 +547,10 @@ class StoreValidationTest extends TestCase
 
         $response = $this->followRedirects($response);
 
-        $response->assertInertia(fn (Assert $page) => $page
-            ->component('ItemRequests/Create')
-            ->missing('errors.manufacturer')
-            // ->dump()
+        $response->assertInertia(fn(Assert $page) => $page
+                ->component('ItemRequests/Create')
+                ->missing('errors.manufacturer')
+                // ->dump()
         );
     }
 
@@ -600,14 +568,13 @@ class StoreValidationTest extends TestCase
 
         $response = $this->followRedirects($response);
 
-        $response->assertInertia(fn (Assert $page) => $page
-            ->component('ItemRequests/Create')
-            ->has('errors.manufacturer')
-            ->where('errors.manufacturer', 'メーカーは、20文字以下で指定してください。')
-            // ->dump()
+        $response->assertInertia(fn(Assert $page) => $page
+                ->component('ItemRequests/Create')
+                ->has('errors.manufacturer')
+                ->where('errors.manufacturer', 'メーカーは、20文字以下で指定してください。')
+                // ->dump()
         );
     }
-
 
     // referenceのバリデーションテスト
     /** @test */
@@ -624,10 +591,10 @@ class StoreValidationTest extends TestCase
 
         $response = $this->followRedirects($response);
 
-        $response->assertInertia(fn (Assert $page) => $page
-            ->component('ItemRequests/Create')
-            ->missing('errors.reference')
-            // ->dump()
+        $response->assertInertia(fn(Assert $page) => $page
+                ->component('ItemRequests/Create')
+                ->missing('errors.reference')
+                // ->dump()
         );
     }
 
@@ -645,10 +612,10 @@ class StoreValidationTest extends TestCase
 
         $response = $this->followRedirects($response);
 
-        $response->assertInertia(fn (Assert $page) => $page
-            ->component('ItemRequests/Create')
-            ->missing('errors.reference')
-            // ->dump()
+        $response->assertInertia(fn(Assert $page) => $page
+                ->component('ItemRequests/Create')
+                ->missing('errors.reference')
+                // ->dump()
         );
     }
 
@@ -666,10 +633,10 @@ class StoreValidationTest extends TestCase
 
         $response = $this->followRedirects($response);
 
-        $response->assertInertia(fn (Assert $page) => $page
-            ->component('ItemRequests/Create')
-            ->missing('errors.reference')
-            // ->dump()
+        $response->assertInertia(fn(Assert $page) => $page
+                ->component('ItemRequests/Create')
+                ->missing('errors.reference')
+                // ->dump()
         );
     }
 
@@ -687,14 +654,13 @@ class StoreValidationTest extends TestCase
 
         $response = $this->followRedirects($response);
 
-        $response->assertInertia(fn (Assert $page) => $page
-            ->component('ItemRequests/Create')
-            ->has('errors.reference')
-            ->where('errors.reference', '参考サイトは、20文字以下で指定してください。')
-            // ->dump()
+        $response->assertInertia(fn(Assert $page) => $page
+                ->component('ItemRequests/Create')
+                ->has('errors.reference')
+                ->where('errors.reference', '参考サイトは、20文字以下で指定してください。')
+                // ->dump()
         );
     }
-
 
     // priceのバリデーションテスト
     /** @test */
@@ -711,11 +677,11 @@ class StoreValidationTest extends TestCase
 
         $response = $this->followRedirects($response);
 
-        $response->assertInertia(fn (Assert $page) => $page
-            ->component('ItemRequests/Create')
-            ->has('errors.price')
-            ->where('errors.price', '価格は整数で指定してください。')
-            // ->dump()
+        $response->assertInertia(fn(Assert $page) => $page
+                ->component('ItemRequests/Create')
+                ->has('errors.price')
+                ->where('errors.price', '価格は整数で指定してください。')
+                // ->dump()
         );
     }
 
@@ -733,10 +699,10 @@ class StoreValidationTest extends TestCase
 
         $response = $this->followRedirects($response);
 
-        $response->assertInertia(fn (Assert $page) => $page
-            ->has('errors.price')
-            ->where('errors.price', '価格には、0以上の数字を指定してください。')
-            // ->dump()
+        $response->assertInertia(fn(Assert $page) => $page
+                ->has('errors.price')
+                ->where('errors.price', '価格には、0以上の数字を指定してください。')
+                // ->dump()
         );
     }
 
@@ -754,10 +720,10 @@ class StoreValidationTest extends TestCase
 
         $response = $this->followRedirects($response);
 
-        $response->assertInertia(fn (Assert $page) => $page
-            ->component('ItemRequests/Create')
-            ->missing('errors.price')
-            // ->dump()
+        $response->assertInertia(fn(Assert $page) => $page
+                ->component('ItemRequests/Create')
+                ->missing('errors.price')
+                // ->dump()
         );
     }
 
@@ -775,10 +741,10 @@ class StoreValidationTest extends TestCase
 
         $response = $this->followRedirects($response);
 
-        $response->assertInertia(fn (Assert $page) => $page
-            ->component('ItemRequests/Create')
-            ->missing('errors.price')
-            // ->dump()
+        $response->assertInertia(fn(Assert $page) => $page
+                ->component('ItemRequests/Create')
+                ->missing('errors.price')
+                // ->dump()
         );
     }
 
@@ -796,10 +762,10 @@ class StoreValidationTest extends TestCase
 
         $response = $this->followRedirects($response);
 
-        $response->assertInertia(fn (Assert $page) => $page
-            ->component('ItemRequests/Create')
-            ->missing('errors.price')
-            // ->dump()
+        $response->assertInertia(fn(Assert $page) => $page
+                ->component('ItemRequests/Create')
+                ->missing('errors.price')
+                // ->dump()
         );
     }
 
@@ -817,15 +783,12 @@ class StoreValidationTest extends TestCase
 
         $response = $this->followRedirects($response);
 
-        $response->assertInertia(fn (Assert $page) => $page
-            ->component('ItemRequests/Create')
-            ->has('errors.price')
-            ->where('errors.price', '価格には、1000000以下の数字を指定してください。')
-            // ->dump()
+        $response->assertInertia(fn(Assert $page) => $page
+                ->component('ItemRequests/Create')
+                ->has('errors.price')
+                ->where('errors.price', '価格には、1000000以下の数字を指定してください。')
+                // ->dump()
         );
     }
-
-
-
 
 }

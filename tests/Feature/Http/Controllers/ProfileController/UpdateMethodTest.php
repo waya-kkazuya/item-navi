@@ -2,40 +2,13 @@
 
 namespace Tests\Feature\Http\Controllers\ProfileController;
 
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
-use Tests\TestCase;
 use App\Models\User;
-use App\Models\Item;
-use App\Models\Unit;
-use App\Models\Category;
-use App\Models\Location;
-use App\Models\UsageStatus;
-use App\Models\AcquisitionMethod;
-use App\Models\Edithistory;
-use App\Models\Inspection;
-use App\Models\EditReason;
-use App\Models\RequestStatus;
-use App\Models\StockTransaction;
 use App\Services\ImageService;
 use Faker\Factory as FakerFactory;
-use Inertia\Testing\AssertableInertia as Assert;
-use Mockery;
-use App\Services\ManagementIdService;
-use Illuminate\Support\Facades\Auth;
-use Carbon\Carbon;
-use Illuminate\Database\Console\DumpCommand;
-use Illuminate\Testing\Fluent\AssertableJson;
-use Inertia\Inertia;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
-use Illuminate\Support\Facades\Storage;
-use Intervention\Image\ImageManager;
-// use Intervention\Image\Drivers\Gd\Driver;
-use Intervention\Image\Drivers\Imagick\Driver;
-use Illuminate\Support\Facades\Session;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
-
+use Mockery;
+use Tests\TestCase;
 
 class UpdateMethodTest extends TestCase
 {
@@ -49,7 +22,6 @@ class UpdateMethodTest extends TestCase
 
     protected function tearDown(): void
     {
-        // 子クラスでのクリーンアップ処理
         parent::tearDown();
     }
 
@@ -86,16 +58,16 @@ class UpdateMethodTest extends TestCase
 
         $response = $this->actingAs($user)
             ->patch('/profile', [
-                'name' => 'Test User',
-                'profile_image_file' => $this->fakeImage
+                'name'               => 'Test User',
+                'profile_image_file' => $this->fakeImage,
             ]);
 
         $response->assertSessionHasNoErrors()
             ->assertRedirect('/profile');
 
         $this->assertDatabaseHas('users', [
-            'name' => 'Test User',
-            'profile_image' => 'mocked_profile_image.jpg'
+            'name'          => 'Test User',
+            'profile_image' => 'mocked_profile_image.jpg',
         ]);
 
         $user->refresh();
@@ -149,9 +121,8 @@ class UpdateMethodTest extends TestCase
     //                 'profile_image_file' => $this->fakeImage
     //             ]);
 
-            
     //         // Mockeryのスパイを使ってメソッドが呼ばれたことを検証
-    //         // Mockery::spy(User::class)->shouldHaveReceived('save')->once();   
+    //         // Mockery::spy(User::class)->shouldHaveReceived('save')->once();
     //         // dd($response);
 
     //         $response->assertStatus(500);
@@ -162,20 +133,18 @@ class UpdateMethodTest extends TestCase
     //             // $response->assertSessionHasNoErrors()
     //             //     ->assertRedirect('/profile');
 
-
     //          // テストがここまで来るべきではないので失敗させる
     //         // $this->fail('Expected Exception not thrown.');
     //     } catch (\Exception $e) {
     //         // dd($e->getMessage());
     //         // 例外が発生したことを確認
     //         // $this->assertEquals('トランザクションの強制失敗', $e->getMessage());
-        
+
     //     }
 
     //     // フラッシュメッセージを確認
     //     // $response->assertSessionHas('message', 'プロフィールの更新中にエラーが発生しました');
     //     // $response->assertSessionHas('status', 'danger');
-
 
     //     // dd(session('errors'));
     //     // レスポンスの内容をダンプして確認
@@ -187,7 +156,7 @@ class UpdateMethodTest extends TestCase
     //     // プロフィール画像の削除が行われたかを確認
     //     Storage::disk()->assertMissing('profile/mocked_profile_image.jpg');
     //     Storage::disk()->assertExists('profile/before_profile_image.jpg');
-        
+
     //     $this->assertDatabaseHas('users', [
     //         'name' => 'BeforeTestUser',
     //         'profile_image' => 'before_profile_image.jpg'
@@ -240,7 +209,6 @@ class UpdateMethodTest extends TestCase
     //     $response->assertSessionHas('message', 'プロフィールの更新中にエラーが発生しました');
     //     $response->assertSessionHas('status', 'danger');
 
-
     //     // dd(session('errors'));
     //     // レスポンスの内容をダンプして確認
     //     // dd($response->getContent());
@@ -254,10 +222,6 @@ class UpdateMethodTest extends TestCase
     //     // $this->assertSame('Test User', $user->name);
     //     // $this->assertSame('mocked_profile_image.jpg', $user->profile_image);
     // }
-
-
-
-
 
     // デフォルトで用意されていたテスト
     // public function test_email_verification_status_is_unchanged_when_the_email_address_is_unchanged(): void
