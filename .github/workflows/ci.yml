@@ -131,16 +131,21 @@ jobs:
       - name: Run Migrate
         run: php artisan migrate
 
-      - name: Run Tests
+      - name: Run Tests with Coverage
         run: |
           php artisan config:clear
-          php artisan test --testsuite=Feature || exit 0
+          php artisan test --testsuite=Feature --coverage-html=coverage
 
-      # - name: Run Tests with Coverage
+      - name: Upload HTML coverage report
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-html-report
+          path: coverage
+
+      # - name: Run Tests
       #   run: |
       #     php artisan config:clear
-      #     php artisan test --testsuite=Feature --stop-on-failure --coverage-text --colors=never > storage/logs/coverage.log
-      #     cat storage/logs/coverage.log
+      #     php artisan test --testsuite=Feature || exit 0
 
       - name: view laravel.log
         if: failure()
