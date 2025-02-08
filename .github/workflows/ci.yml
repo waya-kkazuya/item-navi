@@ -134,7 +134,7 @@ jobs:
       - name: Run Tests
         run: |
           php artisan config:clear
-          php artisan test --testsuite=Feature --verbose
+          vendor/bin/phpunit --testsuite=Feature
 
       # - name: Run Tests
       #   run: |
