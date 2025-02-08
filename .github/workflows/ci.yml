@@ -131,10 +131,11 @@ jobs:
       - name: Run Migrate
         run: php artisan migrate
 
-      - name: Run Tests
+      - name: Run Tests with Coverage
         run: |
           php artisan config:clear
-          php artisan test --testsuite=Feature
+          php artisan test --testsuite=Feature --coverage-text --colors=never > storage/logs/coverage.log
+          cat storage/logs/coverage.log
 
       # - name: Run Tests
       #   run: |
