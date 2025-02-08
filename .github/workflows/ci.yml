@@ -134,7 +134,12 @@ jobs:
       - name: Run Tests
         run: |
           php artisan config:clear
-          php artisan test --testsuite=Feature || exit 0
+          php artisan test --testsuite=Feature
+
+      # - name: Run Tests
+      #   run: |
+      #     php artisan config:clear
+      #     php artisan test --testsuite=Feature || exit 0
 
       # - name: Run Tests with Coverage
       #   run: |
