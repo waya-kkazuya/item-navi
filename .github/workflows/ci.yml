@@ -135,7 +135,9 @@ jobs:
         run: |
           php artisan config:clear
           php artisan test --testsuite=Feature --coverage-text --colors=never > storage/logs/coverage.log
-          cat storage/logs/coverage.log
+
+      - name: view coverage.log
+        run: cat storage/logs/coverage.log
 
       # - name: Run Tests
       #   run: |
