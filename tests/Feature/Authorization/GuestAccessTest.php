@@ -2,38 +2,13 @@
 
 namespace Tests\Feature\Authorization;
 
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
-use Tests\TestCase;
-use App\Models\User;
 use App\Models\Item;
-use App\Models\Unit;
-use App\Models\Category;
-use App\Models\Location;
-use App\Models\UsageStatus;
-use App\Models\AcquisitionMethod;
-use App\Models\Edithistory;
-use App\Models\Inspection;
-use App\Models\EditReason;
 use App\Models\ItemRequest;
-use App\Models\RequestStatus;
-use App\Models\StockTransaction;
-use App\Services\ImageService;
+use App\Models\User;
 use Faker\Factory as FakerFactory;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Inertia\Testing\AssertableInertia as Assert;
-use Mockery;
-use App\Services\ManagementIdService;
-use Illuminate\Support\Facades\Auth;
-use Carbon\Carbon;
-use Illuminate\Database\Console\DumpCommand;
-use Illuminate\Testing\Fluent\AssertableJson;
-use Inertia\Inertia;
-use Illuminate\Http\UploadedFile;
-use Illuminate\Support\Facades\Storage;
-use Intervention\Image\ImageManager;
-// use Intervention\Image\Drivers\Gd\Driver;
-use Intervention\Image\Drivers\Imagick\Driver;
-use Illuminate\Support\Facades\Session;
+use Tests\TestCase;
 
 class GuestAccessTest extends TestCase
 {
@@ -48,13 +23,12 @@ class GuestAccessTest extends TestCase
 
     protected function tearDown(): void
     {
-        // 子クラスでのクリーンアップ処理
         parent::tearDown();
     }
 
     /** @test */
-    function ゲストログインユーザーは画面にアクセスできる()
-    {   
+    public function ゲストログインユーザーは画面にアクセスできる()
+    {
         $loginUrl = 'login';
         // ゲストログインユーザー
         $user = User::factory()->role(0)->create();
@@ -67,7 +41,7 @@ class GuestAccessTest extends TestCase
 
         $this->get(route('items.index'))->assertOk();
         $this->get(route('items.create'))->assertOk();
-        $this->get(route('items.edit', ['item' => $item]))->assertOk();     
+        $this->get(route('items.edit', ['item' => $item]))->assertOk();
         $this->get(route('consumable_items'))->assertOk();
         $this->get(route('inspection_and_disposal_items'))->assertOk();
         $this->get(route('item_requests.index'))->assertOk();
@@ -77,8 +51,8 @@ class GuestAccessTest extends TestCase
     }
 
     /** @test */
-    function ゲストログインユーザーは備品の新規登録が許可されない()
-    {   
+    public function ゲストログインユーザーは備品の新規登録が許可されない()
+    {
         // ゲストログインユーザー
         $user = User::factory()->role(0)->create();
         $this->actingAs($user);
@@ -92,18 +66,18 @@ class GuestAccessTest extends TestCase
         $response = $this->followRedirects($response);
 
         // フラッシュメッセージの内容をアサート
-        $response->assertInertia(fn (Assert $page) => $page
-            ->component('Items/Create') // コンポーネント名を指定
-            ->has('flash.message')
-            ->where('flash.message', 'ゲストには許可されていない機能です、ログインして実行してください')
-            ->has('flash.status')
-            ->where('flash.status', 'danger')
+        $response->assertInertia(fn(Assert $page) => $page
+                ->component('Items/Create') // コンポーネント名を指定
+                ->has('flash.message')
+                ->where('flash.message', 'ゲストには許可されていない機能です、ログインして実行してください')
+                ->has('flash.status')
+                ->where('flash.status', 'danger')
         );
     }
 
     /** @test */
-    function ゲストログインユーザーは備品の編集更新が許可されない()
-    {   
+    public function ゲストログインユーザーは備品の編集更新が許可されない()
+    {
         // ゲストログインユーザー
         $user = User::factory()->role(0)->create();
         $this->actingAs($user);
@@ -117,8 +91,8 @@ class GuestAccessTest extends TestCase
         $response = $this->followRedirects($response);
 
         // フラッシュメッセージの内容をアサート
-        $response->assertInertia(fn (Assert $page) => $page
-            ->component('Items/Edit')
+        $response->assertInertia(fn(Assert $page) => $page
+                ->component('Items/Edit')
                 ->has('flash.message')
                 ->where('flash.message', 'ゲストには許可されていない機能です、ログインして実行してください')
                 ->has('flash.status')
@@ -127,8 +101,8 @@ class GuestAccessTest extends TestCase
     }
 
     /** @test */
-    function ゲストログインユーザーは備品の復元が許可されない()
-    {   
+    public function ゲストログインユーザーは備品の復元が許可されない()
+    {
         // ゲストログインユーザー
         $user = User::factory()->role(0)->create();
         $this->actingAs($user);
@@ -150,8 +124,8 @@ class GuestAccessTest extends TestCase
         $response = $this->followRedirects($response);
 
         // フラッシュメッセージの内容をアサート
-        $response->assertInertia(fn (Assert $page) => $page
-            ->component('Items/Index')
+        $response->assertInertia(fn(Assert $page) => $page
+                ->component('Items/Index')
                 ->has('flash.message')
                 ->where('flash.message', 'ゲストには許可されていない機能です、ログインして実行してください')
                 ->has('flash.status')
@@ -163,7 +137,7 @@ class GuestAccessTest extends TestCase
     }
 
     /** @test */
-    function 廃棄モーダルで廃棄の実施が許可されない()
+    public function 廃棄モーダルで廃棄の実施が許可されない()
     {
         // ゲストログインユーザー
         $user = User::factory()->role(0)->create();
@@ -178,8 +152,8 @@ class GuestAccessTest extends TestCase
         $response = $this->followRedirects($response);
 
         // フラッシュメッセージの内容をアサート
-        $response->assertInertia(fn (Assert $page) => $page
-            ->component('Items/Show')
+        $response->assertInertia(fn(Assert $page) => $page
+                ->component('Items/Show')
                 ->has('flash.message')
                 ->where('flash.message', 'ゲストには許可されていない機能です、ログインして実行してください')
                 ->has('flash.status')
@@ -188,7 +162,7 @@ class GuestAccessTest extends TestCase
     }
 
     /** @test */
-    function 点検モーダルで点検の実施が許可されない()
+    public function 点検モーダルで点検の実施が許可されない()
     {
         // ゲストログインユーザー
         $user = User::factory()->role(0)->create();
@@ -203,8 +177,8 @@ class GuestAccessTest extends TestCase
         $response = $this->followRedirects($response);
 
         // フラッシュメッセージの内容をアサート
-        $response->assertInertia(fn (Assert $page) => $page
-            ->component('Items/Show')
+        $response->assertInertia(fn(Assert $page) => $page
+                ->component('Items/Show')
                 ->has('flash.message')
                 ->where('flash.message', 'ゲストには許可されていない機能です、ログインして実行してください')
                 ->has('flash.status')
@@ -213,7 +187,7 @@ class GuestAccessTest extends TestCase
     }
 
     /** @test */
-    function 出庫モーダルで出庫の実施が許可されない()
+    public function 出庫モーダルで出庫の実施が許可されない()
     {
         // ゲストログインユーザー
         $user = User::factory()->role(0)->create();
@@ -228,8 +202,8 @@ class GuestAccessTest extends TestCase
         $response = $this->followRedirects($response);
 
         // フラッシュメッセージの内容をアサート
-        $response->assertInertia(fn (Assert $page) => $page
-            ->component('ConsumableItems/Index')
+        $response->assertInertia(fn(Assert $page) => $page
+                ->component('ConsumableItems/Index')
                 ->has('flash.message')
                 ->where('flash.message', 'ゲストには許可されていない機能です、ログインして実行してください')
                 ->has('flash.status')
@@ -238,7 +212,7 @@ class GuestAccessTest extends TestCase
     }
 
     /** @test */
-    function 入庫モーダルで入庫の実施が許可されない()
+    public function 入庫モーダルで入庫の実施が許可されない()
     {
         // ゲストログインユーザー
         $user = User::factory()->role(0)->create();
@@ -253,8 +227,8 @@ class GuestAccessTest extends TestCase
         $response = $this->followRedirects($response);
 
         // フラッシュメッセージの内容をアサート
-        $response->assertInertia(fn (Assert $page) => $page
-            ->component('ConsumableItems/Index')
+        $response->assertInertia(fn(Assert $page) => $page
+                ->component('ConsumableItems/Index')
                 ->has('flash.message')
                 ->where('flash.message', 'ゲストには許可されていない機能です、ログインして実行してください')
                 ->has('flash.status')
@@ -263,7 +237,7 @@ class GuestAccessTest extends TestCase
     }
 
     /** @test */
-    function リクエストの新規登録が許可されない()
+    public function リクエストの新規登録が許可されない()
     {
         // ゲストログインユーザー
         $user = User::factory()->role(0)->create();
@@ -276,8 +250,8 @@ class GuestAccessTest extends TestCase
         $response = $this->followRedirects($response);
 
         // フラッシュメッセージの内容をアサート
-        $response->assertInertia(fn (Assert $page) => $page
-            ->component('ItemRequests/Create')
+        $response->assertInertia(fn(Assert $page) => $page
+                ->component('ItemRequests/Create')
                 ->has('flash.message')
                 ->where('flash.message', 'ゲストには許可されていない機能です、ログインして実行してください')
                 ->has('flash.status')
@@ -286,7 +260,7 @@ class GuestAccessTest extends TestCase
     }
 
     /** @test */
-    function リクエストの削除が許可されない()
+    public function リクエストの削除が許可されない()
     {
         // ゲストログインユーザー
         $user = User::factory()->role(0)->create();
@@ -301,8 +275,8 @@ class GuestAccessTest extends TestCase
         $response = $this->followRedirects($response);
 
         // フラッシュメッセージの内容をアサート
-        $response->assertInertia(fn (Assert $page) => $page
-            ->component('ItemRequests/Index')
+        $response->assertInertia(fn(Assert $page) => $page
+                ->component('ItemRequests/Index')
                 ->has('flash.message')
                 ->where('flash.message', 'ゲストには許可されていない機能です、ログインして実行してください')
                 ->has('flash.status')
@@ -311,7 +285,7 @@ class GuestAccessTest extends TestCase
     }
 
     /** @test */
-    function APIによるリクエストのステータスの変更が許可されない()
+    public function APIによるリクエストのステータスの変更が許可されない()
     {
         $item_requests = ItemRequest::factory()->count(4)->create();
         // ゲストログインユーザー
@@ -329,12 +303,12 @@ class GuestAccessTest extends TestCase
         $response->assertStatus(403)
             ->assertJson([
                 'message' => 'ゲストには許可されていない機能です、ログインして実行してください',
-                'status' => 'danger'
+                'status'  => 'danger',
             ]);
     }
 
     /** @test */
-    function プロフィール情報の更新が許可されない()
+    public function プロフィール情報の更新が許可されない()
     {
         // ゲストログインユーザー
         $user = User::factory()->role(0)->create();
@@ -349,19 +323,12 @@ class GuestAccessTest extends TestCase
         $response = $this->followRedirects($response);
 
         // フラッシュメッセージの内容をアサート
-        $response->assertInertia(fn (Assert $page) => $page
-            ->component('Profile/Edit')
+        $response->assertInertia(fn(Assert $page) => $page
+                ->component('Profile/Edit')
                 ->has('flash.message')
                 ->where('flash.message', 'ゲストには許可されていない機能です、ログインして実行してください')
                 ->has('flash.status')
                 ->where('flash.status', 'danger')
         );
     }
-
-
-
-    
-
-    // プロフィール情報の更新
-
 }

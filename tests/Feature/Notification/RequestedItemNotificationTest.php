@@ -2,28 +2,26 @@
 
 namespace Tests\Feature\Notification;
 
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
-use Tests\TestCase;
 use App\Events\RequestedItemDetectEvent;
-use App\Listeners\RequestedItemDetectListener;
-use App\Models\User;
 use App\Models\ItemRequest;
+use App\Models\User;
 use App\Notifications\RequestedItemNotification;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\TestCase;
 
 class RequestedItemNotificationTest extends TestCase
 {
     use RefreshDatabase;
 
     /** @test */
-    function RequestedItemNotificationのテスト()
+    public function RequestedItemNotificationのテスト()
     {
         // 送信するユーザーを世界に構築
         $users = User::factory()->createMany([
             ['role' => 1],
             ['role' => 5],
         ]);
-        
+
         $itemRequest = ItemRequest::factory()->create();
 
         // LowStockDetectEventを発火
@@ -32,9 +30,9 @@ class RequestedItemNotificationTest extends TestCase
         // 通知がデータベースに保存されたことをアサート
         foreach ($users as $user) {
             $this->assertDatabaseHas('notifications', [
-                'notifiable_id' => $user->id,
+                'notifiable_id'   => $user->id,
                 'notifiable_type' => User::class,
-                'type' => RequestedItemNotification::class,
+                'type'            => RequestedItemNotification::class,
             ]);
 
             // 通知内容を検証

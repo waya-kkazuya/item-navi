@@ -2,16 +2,15 @@
 
 namespace Tests\Feature\Http\Controllers\InspectionAndDisposalItemController\index;
 
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
-use Tests\TestCase;
-use Faker\Factory as FakerFactory;
-use App\Models\User;
-use App\Models\Item;
-use App\Models\Inspection;
 use App\Models\Disposal;
-use Inertia\Testing\AssertableInertia as Assert;
+use App\Models\Inspection;
+use App\Models\Item;
+use App\Models\User;
 use Carbon\Carbon;
+use Faker\Factory as FakerFactory;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Inertia\Testing\AssertableInertia as Assert;
+use Tests\TestCase;
 
 class IndexMethodTest extends TestCase
 {
@@ -26,12 +25,11 @@ class IndexMethodTest extends TestCase
 
     protected function tearDown(): void
     {
-        // 子クラスでのクリーンアップ処理
         parent::tearDown();
     }
 
     /** @test */
-    function 点検と廃棄画面の予定と履歴の情報をVue側に渡せる()
+    public function 点検と廃棄画面の予定と履歴の情報をVue側に渡せる()
     {
         // DBにデータを構築
         // Inspectionのデータ
@@ -49,7 +47,7 @@ class IndexMethodTest extends TestCase
         // 廃棄予定日
         $scheduledDisposals = Disposal::withoutEvents(function () {
             return Disposal::factory()->count(10)->create([
-                'item_id' => Item::factory()->create(['deleted_at' => null])->id, // 廃棄されていない
+                'item_id'                 => Item::factory()->create(['deleted_at' => null])->id, // 廃棄されていない
                 'disposal_scheduled_date' => Carbon::today()->addWeek(),
             ]);
         });
@@ -67,13 +65,13 @@ class IndexMethodTest extends TestCase
 
         $response = $this->get('/inspection-and-disposal-items')
             ->assertOk();
-        
-        $response->assertInertia(fn (Assert $page) => $page
-            ->component('InspectionAndDisposalItems/Index')
-            ->has('scheduledInspections.data', 10)
-            ->has('historyInspections.data', 10)
-            ->has('scheduledDisposals.data', 10)
-            ->has('historyDisposals.data', 10)
+
+        $response->assertInertia(fn(Assert $page) => $page
+                ->component('InspectionAndDisposalItems/Index')
+                ->has('scheduledInspections.data', 10)
+                ->has('historyInspections.data', 10)
+                ->has('scheduledDisposals.data', 10)
+                ->has('historyDisposals.data', 10)
         );
     }
 }

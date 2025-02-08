@@ -2,15 +2,14 @@
 
 namespace Tests\Feature\Services;
 
+use App\Services\ImageService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
-use Tests\TestCase;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
-use App\Services\ImageService;
+use Intervention\Image\Drivers\Imagick\Driver;
 use Intervention\Image\ImageManager;
 // use Intervention\Image\Drivers\Gd\Driver;
-use Intervention\Image\Drivers\Imagick\Driver;
+use Tests\TestCase;
 
 class ImageServiceTest extends TestCase
 {
@@ -18,7 +17,7 @@ class ImageServiceTest extends TestCase
 
     // ItemControllerのstore,updateの画像アップロード
     /** @test */
-    function resizeUploadのテスト()
+    public function resizeUploadのテスト()
     {
         Storage::fake('public');
 
@@ -28,11 +27,11 @@ class ImageServiceTest extends TestCase
 
         dump($fileNameToStore);
 
-        Storage::disk()->assertExists('items/'.$fileNameToStore);
+        Storage::disk()->assertExists('items/' . $fileNameToStore);
     }
 
     /** @test */
-    function profileImageResizeUploadのテスト()
+    public function profileImageResizeUploadのテスト()
     {
         Storage::fake('public');
 
@@ -42,11 +41,11 @@ class ImageServiceTest extends TestCase
 
         // dd($fileNameToStore);
 
-        Storage::disk()->assertExists('profile/'.$fileNameToStore);
+        Storage::disk()->assertExists('profile/' . $fileNameToStore);
     }
 
     /** @test */
-    function InterventionImageテスト()
+    public function InterventionImageテスト()
     {
         // テスト用の画像ファイルを準備
         Storage::fake('public');
@@ -55,12 +54,12 @@ class ImageServiceTest extends TestCase
         try {
             // 画像を処理するコード
             $manager = new ImageManager(new Driver());
-            $image = $manager->read($image->getPathname());
+            $image   = $manager->read($image->getPathname());
         } catch (\Intervention\Image\Exception\NotReadableException $e) {
             Log::error('Image not readable: ' . $e->getMessage());
             $this->fail('Image processing failed: ' . $e->getMessage());
         }
-    
+
         $this->assertTrue(true);
     }
 }

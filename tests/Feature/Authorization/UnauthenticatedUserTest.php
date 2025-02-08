@@ -2,37 +2,10 @@
 
 namespace Tests\Feature\Authorization;
 
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
-use Tests\TestCase;
-use App\Models\User;
 use App\Models\Item;
-use App\Models\Unit;
-use App\Models\Category;
-use App\Models\Location;
-use App\Models\UsageStatus;
-use App\Models\AcquisitionMethod;
-use App\Models\Edithistory;
-use App\Models\Inspection;
-use App\Models\EditReason;
-use App\Models\RequestStatus;
-use App\Models\StockTransaction;
-use App\Services\ImageService;
 use Faker\Factory as FakerFactory;
-use Inertia\Testing\AssertableInertia as Assert;
-use Mockery;
-use App\Services\ManagementIdService;
-use Illuminate\Support\Facades\Auth;
-use Carbon\Carbon;
-use Illuminate\Database\Console\DumpCommand;
-use Illuminate\Testing\Fluent\AssertableJson;
-use Inertia\Inertia;
-use Illuminate\Http\UploadedFile;
-use Illuminate\Support\Facades\Storage;
-use Intervention\Image\ImageManager;
-// use Intervention\Image\Drivers\Gd\Driver;
-use Intervention\Image\Drivers\Imagick\Driver;
-use Illuminate\Support\Facades\Session;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\TestCase;
 
 class UnauthenticatedUserTest extends TestCase
 {
@@ -47,15 +20,14 @@ class UnauthenticatedUserTest extends TestCase
 
     protected function tearDown(): void
     {
-        // 子クラスでのクリーンアップ処理
         parent::tearDown();
     }
 
     /** @test */
-    function ログインしていないユーザーはログイン後の画面にアクセスできない()
-    {   
+    public function ログインしていないユーザーはログイン後の画面にアクセスできない()
+    {
         $loginUrl = 'login';
-        // $user = User::factory()->role(1)->create();
+        // $user = User::factory()->role(1)->create(); // ログインはしない
         // $this->actingAs($user);
 
         $item = Item::factory()->create();
@@ -68,7 +40,7 @@ class UnauthenticatedUserTest extends TestCase
         $this->get(route('items.show', ['item' => $item]))->assertRedirect($loginUrl);
         $this->get(route('items.edit', ['item' => $item]))->assertRedirect($loginUrl);
         $this->from(route('items.edit', ['item' => $item]))->patch(route('items.update', $item->id), [])->assertRedirect($loginUrl);
-        
+
         // 詳細画面から廃棄できない
         $this->from(route('items.show', ['item' => $item]))
             ->put(route('dispose_item.disposeItem', ['item' => $item]), [])->assertRedirect($loginUrl);

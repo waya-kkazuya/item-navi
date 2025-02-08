@@ -2,15 +2,11 @@
 
 namespace Tests\Feature\Http\Controllers\Auth;
 
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
-use Tests\TestCase;
-use Faker\Factory as FakerFactory;
-use Inertia\Testing\AssertableInertia as Assert;
 use App\Models\User;
-
-use function Laravel\Prompts\error;
-use function Laravel\Prompts\password;
+use Faker\Factory as FakerFactory;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Inertia\Testing\AssertableInertia as Assert;
+use Tests\TestCase;
 
 class LoginTest extends TestCase
 {
@@ -20,12 +16,11 @@ class LoginTest extends TestCase
     {
         parent::setUp();
 
-        $this->faker = FakerFactory::create(); 
+        $this->faker = FakerFactory::create();
     }
 
     protected function tearDown(): void
     {
-        // 子クラスでのクリーンアップ処理
         parent::tearDown();
     }
 
@@ -41,7 +36,7 @@ class LoginTest extends TestCase
     {
         $response = $this->from('/login')
             ->post('/login', [
-                'email' => 'invalid@example.com',
+                'email'    => 'invalid@example.com',
                 'password' => 'invalidpassword',
             ]);
 
@@ -54,23 +49,23 @@ class LoginTest extends TestCase
 
         $response = $this->followRedirects($response);
 
-        $response->assertInertia(fn (Assert $page) => $page
-            ->component('Auth/Login')
-            ->has('errors.email')
-            ->where('errors.email', 'ログイン情報が存在しません。')
-            // ->dump()
+        $response->assertInertia(fn(Assert $page) => $page
+                ->component('Auth/Login')
+                ->has('errors.email')
+                ->where('errors.email', 'ログイン情報が存在しません。')
+                // ->dump()
         );
     }
 
-     /** @test */
-     public function Eメールとパスワードが空ではログインできない()
-     {
-         $response = $this->from('/login')
+    /** @test */
+    public function Eメールとパスワードが空ではログインできない()
+    {
+        $response = $this->from('/login')
             ->post('/login', [
-                'email' => '',
+                'email'    => '',
                 'password' => '',
             ]);
- 
+
         $response->assertSessionHasErrors(['email']);
         $response->assertStatus(302);
         $response->assertRedirect('/login');
@@ -79,13 +74,13 @@ class LoginTest extends TestCase
 
         // 実際はVue側でリアルタイムにバリデーションが行われるので
         // 開発ツールなどで入力しない限りは表示されない
-        $response->assertInertia(fn (Assert $page) => $page
-            ->component('Auth/Login')
-            ->has('errors.email')
-            ->where('errors.email', 'メールアドレスは必ず指定してください。')
-            ->has('errors.password')
-            ->where('errors.password', 'パスワードは必ず指定してください。')
-            // ->dump()
+        $response->assertInertia(fn(Assert $page) => $page
+                ->component('Auth/Login')
+                ->has('errors.email')
+                ->where('errors.email', 'メールアドレスは必ず指定してください。')
+                ->has('errors.password')
+                ->where('errors.password', 'パスワードは必ず指定してください。')
+                // ->dump()
         );
     }
 
@@ -98,7 +93,7 @@ class LoginTest extends TestCase
 
         $response = $this->from('/login')
             ->post('/login', [
-                'email' => $user->email,
+                'email'    => $user->email,
                 'password' => $password,
             ]);
 

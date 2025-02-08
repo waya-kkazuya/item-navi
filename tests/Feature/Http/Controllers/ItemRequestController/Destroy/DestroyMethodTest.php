@@ -2,13 +2,11 @@
 
 namespace Tests\Feature\Http\Controllers\ItemRequestController\Destroy;
 
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
-use Tests\TestCase;
-use Faker\Factory as FakerFactory;
-use Inertia\Testing\AssertableInertia as Assert;
-use App\Models\User;
 use App\Models\ItemRequest;
+use App\Models\User;
+use Faker\Factory as FakerFactory;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\TestCase;
 
 class DestroyMethodTest extends TestCase
 {
@@ -23,12 +21,11 @@ class DestroyMethodTest extends TestCase
 
     protected function tearDown(): void
     {
-        // 子クラスでのクリーンアップ処理
         parent::tearDown();
     }
 
     /** @test */
-    function リクエストが削除できる()
+    public function リクエストが削除できる()
     {
         $itemRequest = ItemRequest::factory()->create();
 
@@ -40,7 +37,7 @@ class DestroyMethodTest extends TestCase
 
         $response->assertSessionHas([
             'message' => 'リクエストを削除しました',
-            'status' => 'danger'
+            'status'  => 'danger',
         ]);
 
         // データベースの検証

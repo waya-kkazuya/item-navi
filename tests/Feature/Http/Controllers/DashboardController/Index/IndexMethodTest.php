@@ -2,19 +2,16 @@
 
 namespace Tests\Feature\Http\Controllers\DashboardController\Index;
 
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
-use Tests\TestCase;
-use Inertia\Testing\AssertableInertia as Assert;
-use Faker\Factory as FakerFactory;
-use App\Models\User;
-use App\Models\Item;
 use App\Models\Category;
-use App\Models\Location;
 use App\Models\Edithistory;
-use App\Models\EditReason;
+use App\Models\Item;
+use App\Models\Location;
+use App\Models\User;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\Log;
+use Faker\Factory as FakerFactory;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Inertia\Testing\AssertableInertia as Assert;
+use Tests\TestCase;
 
 class IndexMethodTest extends TestCase
 {
@@ -29,17 +26,16 @@ class IndexMethodTest extends TestCase
 
     protected function tearDown(): void
     {
-        // 子クラスでのクリーンアップ処理
         parent::tearDown();
     }
 
     /** @test */
-    function DashboardControllerがすべての備品情報を渡せる_カテゴリでまとめた時()
+    public function DashboardControllerがすべての備品情報を渡せる_カテゴリでまとめた時()
     {
         Item::factory()->count(10)->create();
 
         $user = User::factory()->create([
-            'role' => 1
+            'role' => 1,
         ]);
         $this->actingAs($user);
 
@@ -48,19 +44,19 @@ class IndexMethodTest extends TestCase
 
         $this->assertCount(10, Item::all());
 
-        $response->assertInertia(fn (Assert $page) => $page
-            ->component('Dashboard')
-            ->has('allItems', 10)
+        $response->assertInertia(fn(Assert $page) => $page
+                ->component('Dashboard')
+                ->has('allItems', 10)
         );
     }
 
     /** @test */
-    function DashboardControllerがすべての備品情報を渡せる_利用場所でまとめた時()
+    public function DashboardControllerがすべての備品情報を渡せる_利用場所でまとめた時()
     {
         Item::factory()->count(10)->create();
 
         $user = User::factory()->create([
-            'role' => 1
+            'role' => 1,
         ]);
         $this->actingAs($user);
 
@@ -69,15 +65,14 @@ class IndexMethodTest extends TestCase
 
         $this->assertCount(10, Item::all());
 
-        $response->assertInertia(fn (Assert $page) => $page
-            ->component('Dashboard')
-            ->has('allItems', 10)
+        $response->assertInertia(fn(Assert $page) => $page
+                ->component('Dashboard')
+                ->has('allItems', 10)
         );
     }
 
-
     /** @test */
-    function DashboardControllerがカテゴリでまとめたデータを渡せる()
+    public function DashboardControllerがカテゴリでまとめたデータを渡せる()
     {
         // 世界を構築
         $categories = Category::factory()->count(11)->create();
@@ -87,35 +82,35 @@ class IndexMethodTest extends TestCase
         });
 
         $user = User::factory()->create([
-            'role' => 1
+            'role' => 1,
         ]);
         $this->actingAs($user);
 
         $response = $this->get('/dashboard?type=category')
             ->assertOk();
 
-        $response->assertInertia(fn (Assert $page) => $page
-            ->component('Dashboard')
-            ->has('itemsByType', fn (Assert $data) =>
-                $categories->pluck('name')->each(fn ($name) =>
-                    $data->has($name)
+        $response->assertInertia(fn(Assert $page) => $page
+                ->component('Dashboard')
+                ->has('itemsByType', fn(Assert $data) =>
+                    $categories->pluck('name')->each(fn($name) =>
+                        $data->has($name)
+                    )
                 )
-            )
         );
     }
 
     /** @test */
-    function DashboardControllerが利用場所でまとめたデータを渡せる()
+    public function DashboardControllerが利用場所でまとめたデータを渡せる()
     {
         // 世界を構築
-        $locations = Location::factory()->count(12)->create();        
+        $locations = Location::factory()->count(12)->create();
 
         $items = $locations->map(function ($location) {
             return Item::factory()->create(['location_of_use_id' => $location->id]);
         });
 
         $user = User::factory()->create([
-            'role' => 1
+            'role' => 1,
         ]);
         $this->actingAs($user);
 
@@ -124,21 +119,21 @@ class IndexMethodTest extends TestCase
         $response = $this->get('/dashboard?type=locationOfUse')
             ->assertOk();
 
-        $response->assertInertia(fn (Assert $page) => $page
-            ->component('Dashboard')
-            ->has('itemsByType', fn (Assert $data) =>
-                $locations->pluck('name')->each(fn ($name) =>
-                    $data->has($name)
+        $response->assertInertia(fn(Assert $page) => $page
+                ->component('Dashboard')
+                ->has('itemsByType', fn(Assert $data) =>
+                    $locations->pluck('name')->each(fn($name) =>
+                        $data->has($name)
+                    )
                 )
-            )
         );
     }
 
     /** @test */
-    function DashboardControllerが編集履歴のデータを渡せる()
+    public function DashboardControllerが編集履歴のデータを渡せる()
     {
         $user = User::factory()->create([
-            'role' => 1
+            'role' => 1,
         ]);
         $this->actingAs($user);
 
@@ -148,29 +143,29 @@ class IndexMethodTest extends TestCase
         // 4つの編集履歴を作成、当日にCarbon::now()を使うとおかしくなるので使用しない
         // $editHistory3,$editHistory4は同じ日付でまとめられているかテスト
         $editHistory1 = EditHistory::factory()->create([
-            'item_id' => $item->id,
+            'item_id'        => $item->id,
             'operation_type' => 'store',
-            'created_at' => Carbon::now()->subDays(1),
+            'created_at'     => Carbon::now()->subDays(1),
         ]);
         $editHistory2 = EditHistory::factory()->create([
-            'item_id' => $item->id,
+            'item_id'        => $item->id,
             'operation_type' => 'update',
-            'created_at' => Carbon::now()->subDays(2),
+            'created_at'     => Carbon::now()->subDays(2),
         ]);
         $editHistory3 = EditHistory::factory()->create([
-            'item_id' => $item->id,
+            'item_id'        => $item->id,
             'operation_type' => 'stock_in',
-            'created_at' => Carbon::now()->subDays(3),
+            'created_at'     => Carbon::now()->subDays(3),
         ]);
         $editHistory4 = EditHistory::factory()->create([
-            'item_id' => $item->id,
+            'item_id'        => $item->id,
             'operation_type' => 'stock_out',
-            'created_at' => Carbon::now()->subDays(3)->subHour(), //1時間前
+            'created_at'     => Carbon::now()->subDays(3)->subHour(), //1時間前
         ]);
 
         $response = $this->get('/dashboard')
             ->assertOk();
-        
+
         // slackにログ送信テスト用
         // Log::critical('editHistory1 created_at: ' . $editHistory1->created_at);
         // Log::critical('editHistory1 operation_type: ' . $editHistory1->operation_type);
@@ -179,22 +174,22 @@ class IndexMethodTest extends TestCase
         // Log::info('editHistory3 created_at: ' . $editHistory3->created_at);
         // Log::info('editHistory4 created_at: ' . $editHistory4->created_at);
 
-        $response->assertInertia(fn (Assert $page) => $page
-            ->component('Dashboard')
-            ->has('groupedEdithistories')     
-            ->has('groupedEdithistories.'.Carbon::now()->subDays(1)->format('Y-m-d')) //具体的な日付でグループ化されていることを確認する
-            ->where('groupedEdithistories.'.Carbon::now()->subDays(1)->format('Y-m-d').'.0.item_id', $editHistory1->item_id)
-            ->where('groupedEdithistories.'.Carbon::now()->subDays(1)->format('Y-m-d').'.0.operation_type', $editHistory1->operation_type)
-            ->has('groupedEdithistories.'.Carbon::now()->subDays(2)->format('Y-m-d')) 
-            ->where('groupedEdithistories.'.Carbon::now()->subDays(2)->format('Y-m-d').'.0.item_id', $editHistory2->item_id)
-            ->where('groupedEdithistories.'.Carbon::now()->subDays(2)->format('Y-m-d').'.0.operation_type', $editHistory2->operation_type)
-            ->has('groupedEdithistories.'.Carbon::now()->subDays(3)->format('Y-m-d')) 
-            ->where('groupedEdithistories.'.Carbon::now()->subDays(3)->format('Y-m-d').'.0.item_id', $editHistory3->item_id)
-            ->where('groupedEdithistories.'.Carbon::now()->subDays(3)->format('Y-m-d').'.0.operation_type', $editHistory3->operation_type)
-            ->has('groupedEdithistories.'.Carbon::now()->subDays(3)->format('Y-m-d')) 
-            ->where('groupedEdithistories.'.Carbon::now()->subDays(3)->format('Y-m-d').'.1.item_id', $editHistory4->item_id)
-            ->where('groupedEdithistories.'.Carbon::now()->subDays(3)->format('Y-m-d').'.1.operation_type', $editHistory4->operation_type)
-            // ->dump()
+        $response->assertInertia(fn(Assert $page) => $page
+                ->component('Dashboard')
+                ->has('groupedEdithistories')
+                ->has('groupedEdithistories.' . Carbon::now()->subDays(1)->format('Y-m-d')) //具体的な日付でグループ化されていることを確認する
+                ->where('groupedEdithistories.' . Carbon::now()->subDays(1)->format('Y-m-d') . '.0.item_id', $editHistory1->item_id)
+                ->where('groupedEdithistories.' . Carbon::now()->subDays(1)->format('Y-m-d') . '.0.operation_type', $editHistory1->operation_type)
+                ->has('groupedEdithistories.' . Carbon::now()->subDays(2)->format('Y-m-d'))
+                ->where('groupedEdithistories.' . Carbon::now()->subDays(2)->format('Y-m-d') . '.0.item_id', $editHistory2->item_id)
+                ->where('groupedEdithistories.' . Carbon::now()->subDays(2)->format('Y-m-d') . '.0.operation_type', $editHistory2->operation_type)
+                ->has('groupedEdithistories.' . Carbon::now()->subDays(3)->format('Y-m-d'))
+                ->where('groupedEdithistories.' . Carbon::now()->subDays(3)->format('Y-m-d') . '.0.item_id', $editHistory3->item_id)
+                ->where('groupedEdithistories.' . Carbon::now()->subDays(3)->format('Y-m-d') . '.0.operation_type', $editHistory3->operation_type)
+                ->has('groupedEdithistories.' . Carbon::now()->subDays(3)->format('Y-m-d'))
+                ->where('groupedEdithistories.' . Carbon::now()->subDays(3)->format('Y-m-d') . '.1.item_id', $editHistory4->item_id)
+                ->where('groupedEdithistories.' . Carbon::now()->subDays(3)->format('Y-m-d') . '.1.operation_type', $editHistory4->operation_type)
+                // ->dump()
         );
     }
 }

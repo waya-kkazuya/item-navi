@@ -2,38 +2,12 @@
 
 namespace Tests\Feature\Authorization;
 
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
-use Tests\TestCase;
-use App\Models\User;
 use App\Models\Item;
-use App\Models\Unit;
-use App\Models\Category;
-use App\Models\Location;
-use App\Models\UsageStatus;
-use App\Models\AcquisitionMethod;
-use App\Models\Edithistory;
-use App\Models\Inspection;
-use App\Models\EditReason;
 use App\Models\ItemRequest;
-use App\Models\RequestStatus;
-use App\Models\StockTransaction;
-use App\Services\ImageService;
+use App\Models\User;
 use Faker\Factory as FakerFactory;
-use Inertia\Testing\AssertableInertia as Assert;
-use Mockery;
-use App\Services\ManagementIdService;
-use Illuminate\Support\Facades\Auth;
-use Carbon\Carbon;
-use Illuminate\Database\Console\DumpCommand;
-use Illuminate\Testing\Fluent\AssertableJson;
-use Inertia\Inertia;
-use Illuminate\Http\UploadedFile;
-use Illuminate\Support\Facades\Storage;
-use Intervention\Image\ImageManager;
-// use Intervention\Image\Drivers\Gd\Driver;
-use Intervention\Image\Drivers\Imagick\Driver;
-use Illuminate\Support\Facades\Session;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\TestCase;
 
 class UserAccessTest extends TestCase
 {
@@ -48,18 +22,17 @@ class UserAccessTest extends TestCase
 
     protected function tearDown(): void
     {
-        // 子クラスでのクリーンアップ処理
         parent::tearDown();
     }
 
     /** @test */
-    function Userが権限のない画面にアクセスできない()
+    public function Userが権限のない画面にアクセスできない()
     {
         // roleが9の場合のuser
         $user = User::factory()->role(9)->create();
         $this->actingAs($user);
 
-        $item = Item::factory()->create();
+        $item         = Item::factory()->create();
         $item_request = ItemRequest::factory()->create();
 
         // 表示できない場合はリダイレクトではなく、403Forbiddenにしておく
@@ -70,7 +43,7 @@ class UserAccessTest extends TestCase
         $this->get(route('items.edit', ['item' => $item]))->assertStatus(403);
         $this->from(route('items.edit', ['item' => $item]))
             ->patch(route('items.update', $item->id), [])->assertStatus(403);
-        
+
         // 詳細画面から廃棄できない
         $this->from(route('items.show', ['item' => $item]))
             ->put(route('dispose_item.disposeItem', ['item' => $item]), [])->assertStatus(403);
@@ -86,7 +59,7 @@ class UserAccessTest extends TestCase
         // リクエストは削除できない(削除ボタンは表示されていない)
         $this->from(route('item_requests.index'))
             ->delete(route('item_requests.destroy', ['item_request' => $item_request]))->assertStatus(403);
-        
+
         // Dashboardはアプリアイコンにリンクが設定されていて、
         // ログイン後にアクセスすると403になってしまうので、消耗品管理画面にリダイレクトする
         // ダッシュボードにアクセスすると、消耗品管理画面へリダイレクトする
@@ -94,7 +67,7 @@ class UserAccessTest extends TestCase
     }
 
     /** @test */
-    function Userが権限のある画面にアクセスできる()
+    public function Userが権限のある画面にアクセスできる()
     {
         // roleが9の場合のuser
         $user = User::factory()->role(9)->create();
@@ -108,7 +81,6 @@ class UserAccessTest extends TestCase
             ->put(route('decreaseStock', ['item' => $item]), [])->assertStatus(302); //バリデーションエラー
         $this->from(route('consumable_items'))
             ->put(route('increaseStock', ['item' => $item]), [])->assertStatus(302); //バリデーションエラー
-
 
         // リクエスト一覧、新規作成画面、新規登録はできる
         $this->get(route('item_requests.index'))->assertOk();
