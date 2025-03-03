@@ -56,6 +56,7 @@
 
 
 ## ER図
+![ER図](public/images/Entity_Relationship_Diagram.jpg)
 
 ## AWS構成図
 ![AWS構成図](public/images/AWS_Architecture_Diagram.jpg)
