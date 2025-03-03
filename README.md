@@ -54,6 +54,12 @@
 - **開発ツール**
   - Visual Studio Code
 
+
+## ER図
+
+## AWS構成図
+![AWS構成図](public/images/AWS_Architecture_Diagram.jpg)
+
 ## 利用方法
 どのようにして使うか
 インストール方法
