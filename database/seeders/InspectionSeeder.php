@@ -50,7 +50,7 @@ class InspectionSeeder extends Seeder
             [
                 'id'                        => 4,
                 'item_id'                   => 87,
-                'inspection_scheduled_date' => '2025/10/20',
+                'inspection_scheduled_date' => '2025/4/1',
                 'inspection_date'           => null,
                 'status'                    => 0,
                 'inspection_person'         => null,

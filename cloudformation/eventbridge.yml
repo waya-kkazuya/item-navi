@@ -1,0 +1,48 @@
+Resources:
+  # InspectionScheduleコマンド用のEventBridgeルール
+  LaravelInspectionSchedule:
+    Type: "AWS::Events::Rule"
+    Properties:
+      Name: "LaravelInspectionSchedule"
+      ScheduleExpression: "cron(0 0 * * ? *)"
+      State: "ENABLED"
+      Targets:
+        - Id: "EcsTask"
+          Arn: "arn:aws:ecs:ap-northeast-1:600627344486:cluster/my-portfolio-cluster"
+          RoleArn: "arn:aws:iam::600627344486:role/ECSExecTaskRole"
+          EcsParameters:
+            TaskDefinitionArn: "arn:aws:ecs:ap-northeast-1:600627344486:task-definition/my-portfolio"
+            LaunchType: "FARGATE"
+            NetworkConfiguration:
+              AwsVpcConfiguration:
+                AssignPublicIp: "DISABLED"
+                Subnets:
+                  - "subnet-0fa6f1670af50711b"
+                SecurityGroups:
+                  - "sg-06aaab837959d0283"
+            TaskCount: 1
+          Input: '{"containerOverrides": [{"name": "portfolio-app-container", "command": ["php", "artisan", "app:inspection-schedule"]}]}'
+
+  # DisposalScheduleコマンド用のEventBridgeルール
+  LaravelDisposalSchedule:
+    Type: "AWS::Events::Rule"
+    Properties:
+      Name: "LaravelDisposalSchedule"
+      ScheduleExpression: "cron(0 0 * * ? *)"
+      State: "ENABLED"
+      Targets:
+        - Id: "EcsTask"
+          Arn: "arn:aws:ecs:ap-northeast-1:600627344486:cluster/my-portfolio-cluster"
+          RoleArn: "arn:aws:iam::600627344486:role/ECSExecTaskRole"
+          EcsParameters:
+            TaskDefinitionArn: "arn:aws:ecs:ap-northeast-1:600627344486:task-definition/my-portfolio"
+            LaunchType: "FARGATE"
+            NetworkConfiguration:
+              AwsVpcConfiguration:
+                AssignPublicIp: "DISABLED"
+                Subnets:
+                  - "subnet-0fa6f1670af50711b"
+                SecurityGroups:
+                  - "sg-06aaab837959d0283"
+            TaskCount: 1
+          Input: '{"containerOverrides": [{"name": "portfolio-app-container", "command": ["php", "artisan", "app:disposal-schedule"]}]}'
