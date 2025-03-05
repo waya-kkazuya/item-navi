@@ -1,7 +1,7 @@
 <script setup lang="ts">
+import ApplicationLogo from '@/Components/ApplicationLogo.vue';
 import { Head, Link } from '@inertiajs/vue3';
 import { onMounted } from 'vue';
-import ApplicationLogo from '@/Components/ApplicationLogo.vue';
 
 defineProps({
     canLogin: {
@@ -52,14 +52,15 @@ onMounted(() => {
             </div>
         </nav>
 
-
-        <section class="bg-[#366097] text-white pt-20 pb-5">
-            <div class="container mx-auto px-4 py-12 grid grid-cols-1 md:grid-cols-2 gap-8">
-                <div class="flex flex-col justify-center">
-                    <h1 class="text-4xl font-bold leading-tight tracking-widest">
-                        管理者の負担を減らし<br>
-                        備品の利用者の満足度を上げる<br>
-                        備品管理システム
+        <!-- <section class="bg-indigo-50 pt-20 pb-5"> -->
+        <section 
+            class="bg-cover bg-center pt-20 pb-5"
+            style="background-image: url('/images/office_layer.png'); background-color: #eef2ff; background-size: cover; background-position: left;">
+            <div class="container mx-auto px-20 py-8 grid grid-cols-1 md:grid-cols-2">
+                <div class="flex flex-col justify-center order-2 md:order-1">
+                    <h1 class="pt-4 md:pt-0 text-2xl font-bold leading-normal tracking-widest text-center">
+                        利用者も参加できる備品管理システム<br>
+                        事業所の生産性と満足度を上げよう<br>
                     </h1>
                     <div class="flex items-center">
                         <img src="/images/hero-logo.png" class="block w-88 fill-current text-gray-800">
