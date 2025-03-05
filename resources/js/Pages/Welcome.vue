@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import ApplicationLogo from "@/Components/ApplicationLogo.vue";
-import { Head, Link } from "@inertiajs/vue3";
-import { onMounted } from "vue";
+import ApplicationLogo from '@/Components/ApplicationLogo.vue';
+import { Head, Link } from '@inertiajs/vue3';
+import { onMounted } from 'vue';
 
 defineProps({
     canLogin: {
@@ -41,7 +41,9 @@ onMounted(() => {
             </div>
         </nav>
 
-        <section class="bg-indigo-50 pt-20 pb-5">
+        <section 
+            class="bg-cover bg-center pt-20 pb-5"
+            style="background-image: url('/images/office_layer.png'); background-color: #eef2ff; background-size: cover; background-position: left;">
             <div class="container mx-auto px-20 py-8 grid grid-cols-1 md:grid-cols-2">
                 <div class="flex flex-col justify-center order-2 md:order-1">
                     <h1 class="pt-4 md:pt-0 text-2xl font-bold leading-normal tracking-widest text-center">

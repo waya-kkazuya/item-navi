@@ -1,15 +1,15 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
+import type { UserType } from '@/@types/model';
 import ApplicationLogo from '@/Components/ApplicationLogo.vue';
+import BellNotification from '@/Components/BellNotification.vue';
 import Dropdown from '@/Components/Dropdown.vue';
 import DropdownLink from '@/Components/DropdownLink.vue';
 import NavLink from '@/Components/NavLink.vue';
 import ResponsiveNavLink from '@/Components/ResponsiveNavLink.vue';
 import { Link, usePage } from '@inertiajs/vue3';
-import BellNotification from '@/Components/BellNotification.vue';
 import axios from 'axios';
-import type { Ref, ComputedRef } from 'vue';
-import type { UserType } from '@/@types/model';
+import type { Ref } from 'vue';
+import { onMounted, ref } from 'vue';
 
 const showingNavigationDropdown: Ref<boolean> = ref(false);
 
@@ -223,7 +223,28 @@ onMounted(() => {
 
             <footer class="text-gray-400 text-center text-sm py-4">
                 <p>&copy; 2024 waya. All rights reserved.</p>
-                <p>Icons provided by <a href="https://heroicons.com/" target="_blank" class="text-blue-500">Heroicons</a>. Licensed under the MIT License.</p>
+                <p>
+                    Icons provided by
+                    <a
+                        href="https://heroicons.com/"
+                        target="_blank"
+                        class="text-blue-500"
+                        >Heroicons</a>
+                    . Licensed under the MIT License.
+                </p>
+                <p>
+                Fonts provided by
+                <a
+                    href="https://fonts.google.com/"
+                    target="_blank"
+                    class="text-blue-500"
+                >Google Fonts</a>. Licensed under the 
+                <a
+                    href="https://scripts.sil.org/cms/scripts/page.php?item_id=OFL_web"
+                    target="_blank"
+                    class="text-blue-500"
+                >Open Font License</a>.
+            </p>
             </footer>
         </div>
     </div>
