@@ -4,7 +4,7 @@ Resources:
     Type: "AWS::Events::Rule"
     Properties:
       Name: "LaravelInspectionSchedule"
-      ScheduleExpression: "cron(0 0 * * ? *)"
+      ScheduleExpression: "cron(0 15 * * ? *)"
       State: "ENABLED"
       Targets:
         - Id: "EcsTask"
@@ -28,7 +28,7 @@ Resources:
     Type: "AWS::Events::Rule"
     Properties:
       Name: "LaravelDisposalSchedule"
-      ScheduleExpression: "cron(0 0 * * ? *)"
+      ScheduleExpression: "cron(0 15 * * ? *)"
       State: "ENABLED"
       Targets:
         - Id: "EcsTask"
