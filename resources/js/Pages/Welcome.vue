@@ -47,9 +47,11 @@ onMounted(() => {
             style="background-image: url('/images/office_layer.png'); background-color: #eef2ff; background-size: cover; background-position: left;">
             <div class="container mx-auto px-20 py-8 grid grid-cols-1 md:grid-cols-2">
                 <div class="flex flex-col justify-center order-2 md:order-1">
-                    <h1 class="pt-4 md:pt-0 text-2xl font-bold leading-normal tracking-widest text-center">
-                        利用者も参加できる備品管理システム<br>
-                        事業所の生産性と満足度を上げよう<br>
+                    <h1 class="pt-4 md:pt-0 font-noto-sans-jp text-2xl font-bold leading-normal tracking-widest text-center">
+                        <P class="font-normal">
+                            利用者も参加できる備品管理システム<br>
+                            事業所の生産性と満足度を上げよう<br>
+                        </P>
                     </h1>
                     <div v-if="canLogin" class="mt-4 flex justify-center">
                         <Link
