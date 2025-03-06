@@ -37,7 +37,7 @@ class DisposalSeeder extends Seeder
             [
                 'id'                      => 3,
                 'item_id'                 => 73,
-                'disposal_scheduled_date' => '2025-03-27',
+                'disposal_scheduled_date' => '2025-03-20',
                 'disposal_date'           => null,
                 'disposal_person'         => null,
                 'details'                 => null,
