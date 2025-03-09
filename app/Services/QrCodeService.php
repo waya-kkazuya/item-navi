@@ -22,10 +22,9 @@ class QrCodeService
             $qrCode            = QrCode::format('png')->size(300)->generate($item->id); // $item->idを元にQRコードを生成
             $qrCodeNameToStore = 'QR-' . uniqid(rand() . '_') . '.png';
             Storage::disk()->put('qrcode/' . $qrCodeNameToStore, $qrCode);
-            $qrCodefilePath = Storage::disk()->path('qrcode/' . $qrCodeNameToStore);
 
             $qrManager = new ImageManager(new Driver());
-            $qrImage   = $qrManager->read($qrCodefilePath);
+            $qrImage   = $qrManager->read(Storage::disk()->get('qrcode/' . $qrCodeNameToStore));
 
             $label = $qrManager->create(910, 550)->fill('fff'); //白地に画像と文字列を合成
             $label->place($qrImage, 'top-left', 40, 125);
