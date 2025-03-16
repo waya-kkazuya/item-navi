@@ -1,11 +1,11 @@
 name: EMS Deploy Pipeline
 on:
-  pull_request:  #プルリクのマージ時自動デプロイ
-    types: [closed]
+  push:  #プルリクエストのマージ時自動デプロイ
     branches: 
       - main
-    paths:
-      - '**'
+    paths-ignore:
+      - 'README.md'
+      - 'public/images/**'
 
 env:
   AWS_REGION: ap-northeast-1
