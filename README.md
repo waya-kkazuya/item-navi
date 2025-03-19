@@ -148,15 +148,15 @@
 
 ## 9.ローカル環境でアプリを動かす方法（Windows環境の場合）
 
-**必要環境**
-自分の環境がWindowsなので、Windowsでの環境構築を想定しています。
+**必要環境**   
+自分の環境がWindowsなので、Windowsでの環境構築を想定しています。  
 以下のインストールを事前に行います。
 - WSLをインストールする
 - Docker Desktopをインストールする
 - VScodeで拡張機能のRemote Developmentをインストール（VScode上でWSLにアクセス可能）
 
 
-**リポジトリのクローン**
+**リポジトリのクローン**  
 VScodeで「Ctrl + Shift + P」で「WSLへ接続」と入力して、WSL上にアクセスします。
 任意の場所でgit cloneします。
 ```
@@ -164,49 +164,49 @@ git clone https://github.com/waya-kkazuya/EMS.git
 cd EMS
 ```
 
-**依存関係をインストール**
+**依存関係をインストール**  
 Sailを含む依存関係をインストールします。
 ```
 composer install
 ```
 
-**.envファイルの準備**
+**.envファイルの準備**  
 ```
 cp .env.example .env
 ```
 
-**Sailを使えるようにする**
+**Sailを使えるようにする**  
 Sailの実行スクリプトをインストールします。
 選択肢が表示された場合は、mysqlを選択します。
 ```
 php artisan sail:install
 ```
 
-**Dockerコンテナを起動**
+**Dockerコンテナを起動**  
 Sailを使用してLaravel環境を立ち上げます。
 ```
 ./vendor/bin/sail up -d
 ```
 
-**Laravelのセットアップ**
+**Laravelのセットアップ**  
 アプリケーションキーの生成と、データベースにテストデータを入れます。
 ```
 ./vendor/bin/sail artisan key:generate
 ./vendor/bin/sail artisan migrate --seed
 ```
 
-**フロント側の依存関係をインストール**
-この時、./vendor/bin/sailを付けずに、npm installとだけコマンドを打つと、WSL上ではなくWindows上を参照し、依存関係のインストールが上手くいかないので注意が必要です。
+**フロント側の依存関係をインストール**  
+この時、「./vendor/bin/sail」を付けずに、「npm install」とだけコマンドを打つと、WSL上ではなくWindows上を参照し、依存関係のインストールが上手くいかないので注意が必要です。
 ```
 ./vendor/bin/sail npm install
 ```
 
-**Viteの起動**
+**Viteの起動**  
 ```
 ./vendor/bin/sail npm run dev
 ```
 
-**アプリを開く**
+**アプリを開く**  
 ```
 http://localhost:8000
 ```
