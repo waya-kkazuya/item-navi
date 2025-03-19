@@ -156,6 +156,9 @@
 - VScodeで拡張機能のRemote Developmentをインストール（VScode上でWSLにアクセス可能）
 
 
+**DockerDesktopの起動**  
+リポジトリのクローンの前にDockerDesktopを起動しておきます。
+
 **リポジトリのクローン**  
 VScodeで「Ctrl + Shift + P」で「WSLへ接続」と入力して、WSL上にアクセスします。
 任意の場所でgit cloneします。
@@ -164,15 +167,16 @@ git clone https://github.com/waya-kkazuya/EMS.git
 cd EMS
 ```
 
+**.envファイルの準備**  
+.env.exampleをコピーして.envを作成します。
+```
+cp .env.example .env
+```
+
 **依存関係をインストール**  
 Sailを含む依存関係をインストールします。
 ```
 composer install
-```
-
-**.envファイルの準備**  
-```
-cp .env.example .env
 ```
 
 **Sailを使えるようにする**  
@@ -196,17 +200,19 @@ Sailを使用してLaravel環境を立ち上げます。
 ```
 
 **フロント側の依存関係をインストール**  
-この時、「./vendor/bin/sail」を付けずに、「npm install」とだけコマンドを打つと、WSL上ではなくWindows上を参照し、依存関係のインストールが上手くいかないので注意が必要です。
+※この時「./vendor/bin/sail」を付けずに、「npm install」とだけコマンドを打つと、WSL上ではなくWindows上を参照し、依存関係のインストールが上手くいかないので注意が必要です。
 ```
 ./vendor/bin/sail npm install
 ```
 
 **Viteの起動**  
+フロントエンドの開発サーバーを立ち上げます。
 ```
 ./vendor/bin/sail npm run dev
 ```
 
 **アプリを開く**  
+以下のURLで開発の画面を確認します。
 ```
 http://localhost:8000
 ```
