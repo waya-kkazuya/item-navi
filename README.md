@@ -110,11 +110,14 @@
 ### ⑤消耗品入出庫（QRコード読取対応）
 ![消耗品入出庫](public/images/入出庫処理.gif)
 
-#### 従業員による消耗品の入出庫処理
-![従業員による消耗品の入出庫処理](public/images/入出庫処理_従業員.png)
+#### 従業員による消耗品の入出庫処理画面
+![従業員による消耗品の入出庫処理画面](public/images/入出庫処理_従業員.png)
 
 #### スマホ・タブレットでのQRコード読み取りで入出庫のモーダルウィンドウを開く
+![スマホQRコード読み取りボタンタップ画像](public/images/スマホQRコード読み取りボタンタップ画像.png)
+
 ![スマホQR読取で入出庫](public/images/消耗品をスマホで入出庫_軽量版２.gif)
+
 
 ### ⑥消耗品在庫履歴表示
 ![消耗品在庫履歴表示](public/images/入出庫履歴.gif)
@@ -143,17 +146,28 @@
 - 管理者によるユーザー発行機能の追加
 
 
-## 9.ローカル環境でアプリを動かす方法
-どのようにして使うか
-インストール方法
+## 9.ローカル環境でアプリを動かす方法（Windows環境の場合）
 
 **必要環境**
-Docker Desktop(Laravel Sail環境はDockerをしようするため)
+自分の環境がWindowsなので、Windowsでの環境構築を想定しています。
+以下のインストールを事前に行います。
+- WSLをインストールする
+- Docker Desktopをインストールする
+- VScodeで拡張機能のRemote Developmentをインストール（VScode上でWSLを開ける）
+
 
 **リポジトリのクローン**
+VScodeで「Ctrl + Shift + P」で「WSLへ接続」と入力して、WSL上にアクセスします。
+任意の場所でgit cloneします。
 ```
 git clone https://github.com/waya-kkazuya/EMS.git
 cd EMS
+```
+
+**依存関係をインストール**
+Sailを含む依存関係をインストールします。
+```
+composer install
 ```
 
 **.envファイルの準備**
@@ -161,15 +175,35 @@ cd EMS
 cp .env.example .env
 ```
 
-**Sail の初回セットアップ**
+**Sailを使えるようにする**
+Sailの実行スクリプトをインストールします。
+選択肢が表示された場合は、mysqlを選択します。
+```
+php artisan sail:install
+```
+
+**Dockerコンテナを起動**
+Sailを使用してLaravel環境を立ち上げます。
 ```
 ./vendor/bin/sail up -d
 ```
 
 **Laravelのセットアップ**
+アプリケーションキーの生成と、データベースにテストデータを入れます。
 ```
 ./vendor/bin/sail artisan key:generate
 ./vendor/bin/sail artisan migrate --seed
+```
+
+**フロント側の依存関係をインストール**
+この時、./vendor/bin/sailを付けずに、npm installとだけコマンドを打つと、WSL上ではなくWindows上を参照し、依存関係のインストールが上手くいかないので注意が必要です。
+```
+./vendor/bin/sail npm install
+```
+
+**Viteの起動**
+```
+./vendor/bin/sail npm run dev
 ```
 
 **アプリを開く**
@@ -178,15 +212,12 @@ http://localhost:8000
 ```
 
 
+
 ## おわりに
 ここまで見ていただきありがとうございます。
 私の学習の成果としてリポジトリを公開させていただきました。
 
 アプリ作成についての記事をQiita（リンク）に投稿しているので、ご覧いただけますと幸いです。（Qiita記事には、アプリ自体のご紹介のほか、作成における自身の考えなどもまとめてあります）。
-
-##　ライセンス情報
-Heroicons
-Google Fonts
 
 ## 開発者
 - waya
