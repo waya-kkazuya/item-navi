@@ -20,7 +20,15 @@ services:
             IGNITION_LOCAL_SITES_PATH: '${PWD}'
         volumes:
             - '.:/var/www/html'
-        command: "sh -c \"  chown -R www-data:www-data /var/www/html/storage &&  chmod -R 775 /var/www/html/storage &&  chown -R www-data:www-data /var/www/html/public &&  chmod -R 775 /var/www/html/public &&  rm -rf /var/www/html/public/storage && ln -s /var/www/html/storage/app/public /var/www/html/public/storage && apache2-foreground  \"\n"
+        command: "sh -c \" \
+            id -u sail || useradd -m sail && \
+            chown -R www-data:www-data /var/www/html/storage && \
+            chmod -R 777 /var/www/html/storage && \
+            chown -R www-data:www-data /var/www/html/public && \
+            chmod -R 777 /var/www/html/public && \
+            rm -rf /var/www/html/public/storage && \
+            ln -s /var/www/html/storage/app/public /var/www/html/public/storage && \
+            apache2-foreground \"\n"
         networks:
             - sail
         depends_on:
