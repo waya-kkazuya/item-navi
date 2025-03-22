@@ -1,9 +1,10 @@
 <script setup lang="ts">
+import apiClient from '@/apiClient';
 import axios from 'axios';
 import { ref } from 'vue';
-import apiClient from '@/apiClient';
-import type { Ref } from 'vue'
-import type { ItemType, EditHistoryType } from '@/@types/model';
+
+import type { Ref } from 'vue';
+import type { EditHistoryType, ItemType } from '@/@types/model';
 
 type Props = {
   item: ItemType;
@@ -20,10 +21,10 @@ const toggleStatus = (): void => { isShow.value = !isShow.value};
 const editHistories = async (item: ItemType): Promise<void> => {
   try {
     await apiClient.get(`api/edithistory?item_id=${item.id}`)
-    .then( res => {
-      editHistoriesData.value = res.data.edithistories
-    });
-    toggleStatus();
+      .then( res => {
+        editHistoriesData.value = res.data.edithistories
+      });
+      toggleStatus();
   } catch(e: any) {
     axios.post('/api/log-error', {
       error: e.toString(),
@@ -98,8 +99,7 @@ const formatDate = (timestamp: string) => {
       </div>
     </div>
   </div>
-  <!-- item.idを親から子へ渡す、async await axiosの変数として渡される -->
-   <!-- 行表示かタイル表示かでボタンの表示を切り替え -->
+  <!-- 行表示かタイル表示かでボタンの表示を切り替え -->
   <div>
     <button v-if="props.isTableView" @click="editHistories(item)" type="button" data-micromodal-trigger="modal-1" class="h-4">
       <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>

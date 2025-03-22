@@ -5,4 +5,5 @@ export type GraphData = {
     labels: string[];
     stocks: number[];
     transaction_types: string[];
+    minimum_stock: number;
 };
