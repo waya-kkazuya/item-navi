@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import axios from 'axios';
-import { ref, onMounted, watch } from 'vue';
 import { Link } from '@inertiajs/vue3';
+import { ref, onMounted, watch } from 'vue';
+
 import type { Ref } from 'vue';
 import type { NotificationType } from '@/@types/model';
-
 
 type Props = {
   requestedItemNotifications: NotificationType[];

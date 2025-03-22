@@ -1,13 +1,14 @@
 <script setup lang="ts">
 import axios from 'axios';
+import { router } from '@inertiajs/vue3'
 import { QrcodeStream } from 'vue-qrcode-reader'
 import { ref } from 'vue'
-import { router } from '@inertiajs/vue3'
+
 import type { Ref } from 'vue';
 
 type QrCodeContent = {
   rawValue: string;
-}
+};
 
 const emits = defineEmits<{(e: 'qrDetected'): void}>();
 

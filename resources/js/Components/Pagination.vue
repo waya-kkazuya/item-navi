@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { Link } from '@inertiajs/vue3';
 import DOMPurify from 'dompurify';
-import type { LinkType } from '@/@types/types';
 
+import type { LinkType } from '@/@types/types';
 
 defineProps<{ links: LinkType[] }>();
 

@@ -1,10 +1,11 @@
 <script setup lang="ts">
 import axios from 'axios';
-import { reactive, ref, watch } from 'vue';
 import Chart from '@/Components/Chart.vue';
+import { reactive, ref, watch } from 'vue';
+
 import type { Ref } from 'vue';
-import type { ItemType, StockTransactionType } from '@/@types/model';
 import type { GraphData } from '@/@types/graph-data';
+import type { ItemType, StockTransactionType } from '@/@types/model';
 
 // 親コンポーネントから受け取る
 type Props = {
