@@ -3,36 +3,20 @@ import axios from 'axios';
 import { Link } from '@inertiajs/vue3';
 import { onMounted, ref } from 'vue';
 
-import type { Ref } from 'vue';
+import type { PropType, Ref } from 'vue';
 import type { NotificationType } from '@/@types/model';
 
 // 通常のNavLinkの場合はリンクとして、ResponsiveNavLinkの場合はただのアイコンとして使用
 defineProps({
+  notifications: {
+    type: Array as PropType<NotificationType[]>,
+    required: true
+  },
   isLink: {
     type: Boolean,
     required: true
   },
 });
-
-const notifications: Ref<NotificationType[]> = ref([]);
-const isFetched: Ref<boolean> = ref(false);
-
-const fetchNotifications = async (): Promise<void> => {
-  if (!isFetched.value) {
-    try {
-      const res = await axios.get('/api/notifications_count');
-      notifications.value = res.data;
-      isFetched.value = true;
-    } catch (e: any) {
-      axios.post('/api/log-error', {
-        error: e.toString(),
-        component: 'BellNotification.vue onMounted axios.get',
-      });
-    }
-  }
-};
-
-onMounted(fetchNotifications);
 </script>
 
 <template>
