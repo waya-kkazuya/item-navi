@@ -11,7 +11,7 @@ import NavLink from '@/Components/NavLink.vue';
 import ResponsiveNavLink from '@/Components/ResponsiveNavLink.vue';
 
 import type { Ref } from 'vue';
-import type { UserType } from '@/@types/model';
+import type { NotificationType, UserType } from '@/@types/model';
 
 const showingNavigationDropdown: Ref<boolean> = ref(false);
 
@@ -29,18 +29,30 @@ type PageType = {
 const page: PageType = usePage();
 
 const profileImageUrl: Ref<string> = ref('');
+const notifications: Ref<NotificationType[]> = ref([]);
 
-onMounted(() => {
-  axios.get('/api/profile-image')
-    .then(res => {
-      profileImageUrl.value = res.data.profile_image_url;
-    })
-    .catch(e => {
-      axios.post('/api/log-error', {
-        error: e.toString(),
-        component: 'AuthenticatedLayout.vue get profile_image_url',
-      });
+onMounted(async () => {
+  // プロフィール画像URLの取得
+  try {
+    const profileRes = await axios.get('/api/profile-image');
+    profileImageUrl.value = profileRes.data.profile_image_url;
+  } catch (e: any) {
+    axios.post('/api/log-error', {
+      error: e.toString(),
+      component: 'AuthenticatedLayout.vue get profile_image_url',
     });
+  }
+
+  // 通知数の取得
+  try {
+    const notificationsRes = await axios.get('/api/notifications_count');
+    notifications.value = notificationsRes.data;
+  } catch (e: any) {
+    axios.post('/api/log-error', {
+      error: e.toString(),
+      component: 'AuthenticatedLayout.vue get notifications_count',
+    });
+  }
 });
 </script>
 
@@ -77,10 +89,13 @@ onMounted(() => {
                 </NavLink>
 
                 <!-- profile側にまとめるべきか -->
-                <BellNotification :isLink="true" v-if="page.props.auth.user_role <= 5" />
+                <BellNotification
+                  :notifications="notifications"
+                  :isLink="true" 
+                  v-if="page.props.auth.user_role <= 5"
+                />
               </div>
             </div>
-
 
 
             <div class="hidden sm:flex sm:items-center sm:ms-6">
@@ -161,7 +176,12 @@ onMounted(() => {
               :active="route().current('notifications.index')">
               <div class="flex">
                 <div class="mr-2">通知</div>
-                <BellNotification :isLink="false" class="flex" />
+                <BellNotification 
+                  :notifications="notifications"
+                  :isLink="false"
+                  v-if="page.props.auth.user_role <= 5"
+                  class="flex"
+                />
               </div>
             </ResponsiveNavLink>
           </div>
