@@ -15,20 +15,24 @@ defineProps({
 });
 
 const notifications: Ref<NotificationType[]> = ref([]);
+const isFetched: Ref<boolean> = ref(false);
 
-onMounted(async (): Promise<void> => {
-  try {
-    await axios.get('/api/notifications_count')
-    .then(res => {
+const fetchNotifications = async (): Promise<void> => {
+  if (!isFetched.value) {
+    try {
+      const res = await axios.get('/api/notifications_count');
       notifications.value = res.data;
-    });
-  } catch (e: any) {
-    axios.post('/api/log-error', {
-      error: e.toString(),
-      component: 'BellNotification.vue onMounted axios.get',
-    });
+      isFetched.value = true;
+    } catch (e: any) {
+      axios.post('/api/log-error', {
+        error: e.toString(),
+        component: 'BellNotification.vue onMounted axios.get',
+      });
+    }
   }
-});
+};
+
+onMounted(fetchNotifications);
 </script>
 
 <template>
