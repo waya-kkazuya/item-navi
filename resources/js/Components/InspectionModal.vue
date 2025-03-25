@@ -2,13 +2,13 @@
 import axios from 'axios';
 import { useForm } from '@inertiajs/vue3';
 import { ref } from 'vue';
+
 import type { Ref } from 'vue';
 import type { ItemType, InspectionType } from '@/@types/model';
 import type { ValidationErrors } from '@/@types/types';
 
-
 const isShow: Ref<boolean> = ref(false);
-const toggleStatus = (): void => { isShow.value = !isShow.value};
+const toggleStatus = (): void => { isShow.value = !isShow.value };
 
 type Props = {
   item: ItemType;

@@ -1,82 +1,72 @@
 <script setup lang="ts">
 import { Head, useForm, router } from '@inertiajs/vue3';
+
 import GuestLayout from '@/Layouts/GuestLayout.vue';
 import InputError from '@/Components/InputError.vue';
 import InputLabel from '@/Components/InputLabel.vue';
 import TextInput from '@/Components/TextInput.vue';
 
-
 defineProps<{
-    canResetPassword: boolean;
-    status: string;
+  canResetPassword: boolean;
+  status: string;
 }>();
 
 const form = useForm({
-    email: '' as string,
-    password: '' as string,
+  email: '' as string,
+  password: '' as string,
 });
 
 const submit = (): void => {
-    form.post(route('login'), {
-        onFinish: () => form.reset('password'),
-    });
+  form.post(route('login'), {
+    onFinish: () => form.reset('password'),
+  });
 };
 
 const guestLogin = (): void => {
-    router.post(route('guest.login'));
+  router.post(route('guest.login'));
 };
 </script>
 
 <template>
-    <GuestLayout>
-        <Head title="ログイン" />
+  <GuestLayout>
 
-        <div v-if="status" class="mb-4 font-medium text-sm text-green-600">
-            {{ status }}
-        </div>
+    <Head title="ログイン" />
 
-        <form @submit.prevent="submit">
-            <div>
-                <InputLabel for="email" value="Eメール" />
-                <TextInput
-                    id="email"
-                    type="email"
-                    class="mt-1 block w-full"
-                    v-model="form.email"
-                    required
-                    autofocus
-                    autocomplete="username"
-                />
-                <InputError class="mt-2" :message="form.errors.email" />
-            </div>
+    <div v-if="status" class="mb-4 font-medium text-sm text-green-600">
+      {{ status }}
+    </div>
 
-            <div class="mt-4">
-                <InputLabel for="password" value="パスワード" />
-                <TextInput
-                    id="password"
-                    type="password"
-                    class="mt-1 block w-full"
-                    v-model="form.password"
-                    required
-                    autocomplete="current-password"
-                />
-                <InputError class="mt-2" :message="form.errors.password" />
-            </div>
+    <form @submit.prevent="submit">
+      <div>
+        <InputLabel for="email" value="Eメール" />
+        <TextInput id="email" type="email" class="mt-1 block w-full" v-model="form.email" required autofocus
+          autocomplete="username" />
+        <InputError class="mt-2" :message="form.errors.email" />
+      </div>
 
-            <div class="flex items-center justify-center mt-4">
-                <button id="login" class="mb-4 inline-flex items-center justify-center w-44 px-8 py-2 bg-blue-900 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-800 focus:bg-blue-800 active:bg-blue-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150"
-                    :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
-                    ログイン
-                </button>
-            </div>
-        </form>
+      <div class="mt-4">
+        <InputLabel for="password" value="パスワード" />
+        <TextInput id="password" type="password" class="mt-1 block w-full" v-model="form.password" required
+          autocomplete="current-password" />
+        <InputError class="mt-2" :message="form.errors.password" />
+      </div>
 
-        <hr>
+      <div class="flex items-center justify-center mt-4">
+        <button id="login"
+          class="mb-4 inline-flex items-center justify-center w-44 px-8 py-2 bg-blue-900 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-800 focus:bg-blue-800 active:bg-blue-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150"
+          :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
+          ログイン
+        </button>
+      </div>
+    </form>
 
-        <div class="flex items-center justify-center mt-4">
-            <button id="guestLogin"  @click="guestLogin" class="inline-flex items-center justify-center w-44 px-8 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 focus:bg-gray-700 active:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150">
-                ゲストとしてログイン
-            </button>
-        </div>
-    </GuestLayout>
+    <hr>
+
+    <div class="flex items-center justify-center mt-4">
+      <button id="guestLogin" @click="guestLogin"
+        class="inline-flex items-center justify-center w-44 px-8 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 focus:bg-gray-700 active:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150">
+        ゲストとしてログイン
+      </button>
+    </div>
+  </GuestLayout>
 </template>

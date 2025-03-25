@@ -2,6 +2,7 @@
 import axios from 'axios';
 import { ref, onMounted, watch } from 'vue';
 import { Link } from '@inertiajs/vue3';
+
 import type { Ref } from 'vue';
 import type { NotificationType } from '@/@types/model';
 

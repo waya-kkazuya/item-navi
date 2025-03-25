@@ -30,12 +30,12 @@ class DisposalSchedule extends Command
     public function handle()
     {
         $dates = [
-            Carbon::today()->addWeeks(4),
-            Carbon::today()->addWeeks(2),
-            Carbon::today()->addWeek(),
-            Carbon::today()->addDays(3),
-            Carbon::today()->addDay(),
-            Carbon::today(),
+            Carbon::today()->addWeeks(4)->toDateString(),
+            Carbon::today()->addWeeks(2)->toDateString(),
+            Carbon::today()->addWeek()->toDateString(),
+            Carbon::today()->addDays(3)->toDateString(),
+            Carbon::today()->addDay()->toDateString(),
+            Carbon::today()->toDateString(),
         ];
 
         $disposals = Disposal::whereIn('disposal_scheduled_date', $dates)->get();
@@ -43,7 +43,7 @@ class DisposalSchedule extends Command
         \Log::info('sendDisposalNotifications called');
 
         foreach ($disposals as $disposal) {
-            $users = User::whereIn('role', [1, 5])->get(); // roleが1（admin）または5（staff）のユーザーを取得
+            $users = User::whereIn('role', [0, 1, 5])->get(); // roleが1（admin）または5（staff）のユーザーを取得
             foreach ($users as $user) {
                 $user->notify(new DisposalScheduleNotification($disposal));
             }

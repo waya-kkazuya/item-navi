@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import { Chart, registerables } from "chart.js";
 import annotationPlugin from "chartjs-plugin-annotation";
+import { computed, reactive } from "vue";
 import { LineChart } from "vue-chart-3";
-import { reactive, computed } from "vue";
+
 import type { ComputedRef } from "vue";
 import type { ChartData, ChartOptions } from "chart.js";
-import type { GraphData } from "@/@types/graph-data";;
-
+import type { GraphData } from "@/@types/graph-data";
 
 Chart.register(...registerables);
 Chart.register(annotationPlugin);

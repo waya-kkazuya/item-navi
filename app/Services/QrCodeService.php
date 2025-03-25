@@ -22,26 +22,29 @@ class QrCodeService
             $qrCode            = QrCode::format('png')->size(300)->generate($item->id); // $item->idを元にQRコードを生成
             $qrCodeNameToStore = 'QR-' . uniqid(rand() . '_') . '.png';
             Storage::disk()->put('qrcode/' . $qrCodeNameToStore, $qrCode);
-            $qrCodefilePath = Storage::disk()->path('qrcode/' . $qrCodeNameToStore);
 
             $qrManager = new ImageManager(new Driver());
-            $qrImage   = $qrManager->read($qrCodefilePath);
+            $qrImage   = $qrManager->read(Storage::disk()->get('qrcode/' . $qrCodeNameToStore));
 
             $label = $qrManager->create(910, 550)->fill('fff'); //白地に画像と文字列を合成
             $label->place($qrImage, 'top-left', 40, 125);
 
-            $label->text('管理ID' . $item->management_id, 370, 160, function (FontFactory $font) {
-                $font->filename(public_path('storage/fonts/NotoSansJP-Medium.ttf'));
+            // S3からフォントファイルを取得し、テンポラリファイルに保存
+            $fontPath = tempnam(sys_get_temp_dir(), 'font');
+            file_put_contents($fontPath, Storage::disk()->get('fonts/NotoSansJP-Medium.ttf'));
+
+            $label->text('管理ID' . $item->management_id, 370, 160, function (FontFactory $font) use ($fontPath) {
+                $font->file($fontPath);
                 $font->size(30);
                 $font->color('#000');
             });
-            $label->text('備品名 ' . $item->name, 370, 230, function (FontFactory $font) {
-                $font->filename(public_path('storage/fonts/NotoSansJP-Medium.ttf'));
+            $label->text('備品名 ' . $item->name, 370, 230, function (FontFactory $font) use ($fontPath) {
+                $font->file($fontPath);
                 $font->size(30);
                 $font->color('#000');
             });
-            $label->text('カテゴリ' . $item->category->name, 370, 300, function (FontFactory $font) {
-                $font->filename(public_path('storage/fonts/NotoSansJP-Medium.ttf'));
+            $label->text('カテゴリ' . $item->category->name, 370, 300, function (FontFactory $font) use ($fontPath) {
+                $font->file($fontPath);
                 $font->size(30);
                 $font->color('#000');
             });
@@ -63,6 +66,11 @@ class QrCodeService
             ]);
 
             throw $e; // エラーを再スローしてコントローラでキャッチできるように
+        } finally {
+            // 一時ファイルの削除
+            if (isset($fontPath)) {
+                unlink($fontPath);
+            }
         }
     }
 }
