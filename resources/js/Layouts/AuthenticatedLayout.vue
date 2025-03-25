@@ -228,15 +228,33 @@ onMounted(async () => {
         <p>&copy; 2024 waya. All rights reserved.</p>
         <p>
           Icons provided by
-          <a href="https://heroicons.com/" target="_blank" class="text-blue-500">Heroicons</a>
-          . Licensed under the MIT License.
+          <a 
+            href="https://heroicons.com/"
+            target="_blank"
+            class="text-blue-500"
+            >Heroicons</a>
+          and
+          <a 
+            href="https://iconsvg.xyz/"
+            target="_blank"
+            class="text-blue-500"
+            >ICONSVG</a>.
+          Both are licensed under the MIT License.
         </p>
         <p>
           Fonts provided by
-          <a href="https://fonts.google.com/" target="_blank" class="text-blue-500">Google Fonts</a>. Licensed under the
-          <a href="https://scripts.sil.org/cms/scripts/page.php?item_id=OFL_web" target="_blank"
-            class="text-blue-500">Open
-            Font License</a>.
+          <a
+            href="https://fonts.google.com/"
+            target="_blank"
+            class="text-blue-500"
+            >Google Fonts</a>
+            . Licensed under the
+          <a 
+            href="https://scripts.sil.org/cms/scripts/page.php?item_id=OFL_web"
+            target="_blank"
+            class="text-blue-500">
+            Open Font License</a>
+          .
         </p>
       </footer>
     </div>
