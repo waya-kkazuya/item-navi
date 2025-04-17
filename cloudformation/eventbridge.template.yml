@@ -4,22 +4,22 @@ Resources:
     Type: "AWS::Events::Rule"
     Properties:
       Name: "LaravelInspectionSchedule"
-      ScheduleExpression: "cron(0 15 * * ? *)"
+      ScheduleExpression: "cron(* * * * ? *)"
       State: "ENABLED"
       Targets:
         - Id: "EcsTask"
-          Arn: "arn:aws:ecs:ap-northeast-1:600627344486:cluster/my-portfolio-cluster"
-          RoleArn: "arn:aws:iam::600627344486:role/ECSExecTaskRole"
+          Arn: "__CLUSTER_ARN__"
+          RoleArn: "__ROLE_ARN__"
           EcsParameters:
-            TaskDefinitionArn: "arn:aws:ecs:ap-northeast-1:600627344486:task-definition/my-portfolio"
+            TaskDefinitionArn: "__TASK_DEF_ARN__"
             LaunchType: "FARGATE"
             NetworkConfiguration:
               AwsVpcConfiguration:
                 AssignPublicIp: "DISABLED"
                 Subnets:
-                  - "subnet-0fa6f1670af50711b"
+                  - "__SUBNET_ID__"
                 SecurityGroups:
-                  - "sg-06aaab837959d0283"
+                  - "__SECURITY_GROUP_ID__"
             TaskCount: 1
           Input: '{"containerOverrides": [{"name": "portfolio-app-container", "command": ["php", "artisan", "app:inspection-schedule"]}]}'
 
@@ -28,21 +28,21 @@ Resources:
     Type: "AWS::Events::Rule"
     Properties:
       Name: "LaravelDisposalSchedule"
-      ScheduleExpression: "cron(0 15 * * ? *)"
+      ScheduleExpression: "cron(* * * * ? *)"
       State: "ENABLED"
       Targets:
         - Id: "EcsTask"
-          Arn: "arn:aws:ecs:ap-northeast-1:600627344486:cluster/my-portfolio-cluster"
-          RoleArn: "arn:aws:iam::600627344486:role/ECSExecTaskRole"
+          Arn: "__CLUSTER_ARN__"
+          RoleArn: "__ROLE_ARN__"
           EcsParameters:
-            TaskDefinitionArn: "arn:aws:ecs:ap-northeast-1:600627344486:task-definition/my-portfolio"
+            TaskDefinitionArn: "__TASK_DEF_ARN__"
             LaunchType: "FARGATE"
             NetworkConfiguration:
               AwsVpcConfiguration:
                 AssignPublicIp: "DISABLED"
                 Subnets:
-                  - "subnet-0fa6f1670af50711b"
+                  - "__SUBNET_ID__"
                 SecurityGroups:
-                  - "sg-06aaab837959d0283"
+                  - "__SECURITY_GROUP_ID__"
             TaskCount: 1
           Input: '{"containerOverrides": [{"name": "portfolio-app-container", "command": ["php", "artisan", "app:disposal-schedule"]}]}'

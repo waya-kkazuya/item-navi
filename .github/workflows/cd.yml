@@ -139,3 +139,20 @@ jobs:
           service: ${{ env.ECS_SERVICE }}
           cluster: ${{ env.ECS_CLUSTER }}
           wait-for-service-stability: true
+
+      - name: Prepare EventBridge file from template
+        run: |
+          sed "s|__CLUSTER_ARN__|${{ secrets.ECS_CLUSTER_ARN }}|g" \
+          cloudformation/eventbridge.template.yml \
+          | sed "s|__ROLE_ARN__|${{ secrets.EXEC_ROLE_ARN }}|g" \
+          | sed "s|__TASK_DEF_ARN__|${{ secrets.TASK_DEF_ARN }}|g" \
+          | sed "s|__SUBNET_ID__|${{ secrets.SUBNET_ID }}|g" \
+          | sed "s|__SECURITY_GROUP_ID__|${{ secrets.SECURITY_GROUP_ID }}|g" \
+          > cloudformation/eventbridge.yml
+
+      - name: Deploy EventBridge Rule via CloudFormation
+        run: |
+          aws cloudformation deploy \
+            --template-file cloudformation/eventbridge.yml \
+            --stack-name eventbridge-rule-stack \
+            --capabilities CAPABILITY_NAMED_IAM
