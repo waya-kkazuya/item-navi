@@ -17,7 +17,7 @@ class InspectionSeeder extends Seeder
             [
                 'id'                        => 1,
                 'item_id'                   => 84,
-                'inspection_scheduled_date' => '2025/10/05',
+                'inspection_scheduled_date' => '2025-10-05',
                 'inspection_date'           => null,
                 'status'                    => 0,
                 'inspection_person'         => null,
@@ -28,7 +28,7 @@ class InspectionSeeder extends Seeder
             [
                 'id'                        => 2,
                 'item_id'                   => 85,
-                'inspection_scheduled_date' => '2025/10/05',
+                'inspection_scheduled_date' => '2025-10-05',
                 'inspection_date'           => null,
                 'status'                    => 0,
                 'inspection_person'         => null,
@@ -39,7 +39,7 @@ class InspectionSeeder extends Seeder
             [
                 'id'                        => 3,
                 'item_id'                   => 86,
-                'inspection_scheduled_date' => '2025/10/05',
+                'inspection_scheduled_date' => '2025-10-05',
                 'inspection_date'           => null,
                 'status'                    => 0,
                 'inspection_person'         => null,
@@ -50,7 +50,7 @@ class InspectionSeeder extends Seeder
             [
                 'id'                        => 4,
                 'item_id'                   => 87,
-                'inspection_scheduled_date' => '2025/3/7',
+                'inspection_scheduled_date' => '2025-4-21',
                 'inspection_date'           => null,
                 'status'                    => 0,
                 'inspection_person'         => null,
@@ -61,7 +61,7 @@ class InspectionSeeder extends Seeder
             [
                 'id'                        => 5,
                 'item_id'                   => 89,
-                'inspection_scheduled_date' => '2025/10/20',
+                'inspection_scheduled_date' => '2025-10-20',
                 'inspection_date'           => '2024-10-20',
                 'status'                    => 1,
                 'inspection_person'         => '管理者大川',
