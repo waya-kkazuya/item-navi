@@ -17,25 +17,25 @@ class UserSeeder extends Seeder
             [
                 'name'     => 'ゲストユーザー',
                 'email'    => 'guest@guest.com',
-                'password' => Hash::make('Z%F!8d$5dZhp'),
+                'password' => Hash::make(env('USER_PASSWORD')),
                 'role'     => 0,
             ],
             [
                 'name'     => '管理者大川',
                 'email'    => 'admin@admin.com',
-                'password' => Hash::make('Z%F!8d$5dZhp'),
+                'password' => Hash::make(env('USER_PASSWORD')),
                 'role'     => 1,
             ],
             [
                 'name'     => 'staff',
                 'email'    => 'staff@staff.com',
-                'password' => Hash::make('Z%F!8d$5dZhp'),
+                'password' => Hash::make(env('USER_PASSWORD')),
                 'role'     => 5,
             ],
             [
                 'name'     => 'user',
                 'email'    => 'user@user.com',
-                'password' => Hash::make('Z%F!8d$5dZhp'),
+                'password' => Hash::make(env('USER_PASSWORD')),
                 'role'     => 9,
             ],
         ]);
