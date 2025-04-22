@@ -70,6 +70,9 @@ jobs:
           echo "S3_BUCKET_URL=${{ secrets.PROD_S3_BUCKET_URL }}" >> .env
 
           # Userパスワード
+          echo "GUEST_PASSWORD=${{ secrets.PROD_GUEST_PASSWORD }}" >> .env
+          echo "ADMIN_PASSWORD=${{ secrets.PROD_ADMIN_PASSWORD }}" >> .env
+          echo "STAFF_PASSWORD=${{ secrets.PROD_STAFF_PASSWORD }}" >> .env
           echo "USER_PASSWORD=${{ secrets.PROD_USER_PASSWORD }}" >> .env
 
       - name: Build Image

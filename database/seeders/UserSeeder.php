@@ -17,13 +17,13 @@ class UserSeeder extends Seeder
             [
                 'name'     => 'ゲストユーザー',
                 'email'    => 'guest@guest.com',
-                'password' => Hash::make(env('USER_PASSWORD')),
+                'password' => Hash::make(env('GUEST_PASSWORD')),
                 'role'     => 0,
             ],
             [
                 'name'     => '管理者大川',
                 'email'    => 'admin@admin.com',
-                'password' => Hash::make(env('USER_PASSWORD')),
+                'password' => Hash::make(env('ADMIN_PASSWORD')),
                 'role'     => 1,
             ],
             [
