@@ -29,7 +29,6 @@ const guestLogin = (): void => {
 
 <template>
   <GuestLayout>
-
     <Head title="ログイン" />
 
     <div v-if="status" class="mb-4 font-medium text-sm text-green-600">
@@ -39,32 +38,51 @@ const guestLogin = (): void => {
     <form @submit.prevent="submit">
       <div>
         <InputLabel for="email" value="Eメール" />
-        <TextInput id="email" type="email" class="mt-1 block w-full" v-model="form.email" required autofocus
-          autocomplete="username" />
+        <TextInput
+          id="email"
+          type="email"
+          class="mt-1 block w-full"
+          v-model="form.email"
+          required
+          autofocus
+          autocomplete="username"
+        />
         <InputError class="mt-2" :message="form.errors.email" />
       </div>
 
       <div class="mt-4">
         <InputLabel for="password" value="パスワード" />
-        <TextInput id="password" type="password" class="mt-1 block w-full" v-model="form.password" required
-          autocomplete="current-password" />
+        <TextInput
+          id="password"
+          type="password"
+          class="mt-1 block w-full"
+          v-model="form.password"
+          required
+          autocomplete="current-password"
+        />
         <InputError class="mt-2" :message="form.errors.password" />
       </div>
 
       <div class="flex items-center justify-center mt-4">
-        <button id="login"
+        <button
+          id="login"
           class="mb-4 inline-flex items-center justify-center w-44 px-8 py-2 bg-blue-900 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-800 focus:bg-blue-800 active:bg-blue-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150"
-          :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
+          :class="{ 'opacity-25': form.processing }"
+          :disabled="form.processing"
+        >
           ログイン
         </button>
       </div>
     </form>
 
-    <hr>
+    <hr />
 
     <div class="flex items-center justify-center mt-4">
-      <button id="guestLogin" @click="guestLogin"
-        class="inline-flex items-center justify-center w-44 px-8 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 focus:bg-gray-700 active:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150">
+      <button
+        id="guestLogin"
+        @click="guestLogin"
+        class="inline-flex items-center justify-center w-44 px-8 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 focus:bg-gray-700 active:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150"
+      >
         ゲストとしてログイン
       </button>
     </div>
