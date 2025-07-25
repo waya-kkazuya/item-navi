@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import axios from 'axios';
+import { BellIcon } from '@heroicons/vue/24/outline';
+import { Bell } from 'lucide-vue-next';
 import { Link } from '@inertiajs/vue3';
-import { onMounted, ref } from 'vue';
 
 import type { PropType, Ref } from 'vue';
 import type { NotificationType } from '@/@types/model';
@@ -10,27 +10,31 @@ import type { NotificationType } from '@/@types/model';
 defineProps({
   notifications: {
     type: Array as PropType<NotificationType[]>,
-    required: true
+    required: true,
   },
   isLink: {
     type: Boolean,
-    required: true
+    required: true,
   },
 });
 </script>
 
 <template>
   <div class="relative" v-if="isLink">
-      <Link as="button" :href="route('notifications.index')" class="flex">
-        <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 17H2a3 3 0 0 0 3-3V9a7 7 0 0 1 14 0v5a3 3 0 0 0 3 3zm-8.27 4a2 2 0 0 1-3.46 0"></path></svg>
-        <span class="absolute top-0 right-0 text-xs bg-blue-500 text-white rounded-full w-4 h-4 flex items-center justify-center">
-          {{ notifications.length }}
-        </span>
-      </Link>
+    <Link as="button" :href="route('notifications.index')" class="flex">
+      <Bell class="w-6 h-6 text-white" :stroke-width="2" />
+      <span
+        class="absolute top-0 right-0 text-xs bg-blue-500 text-white rounded-full w-4 h-4 flex items-center justify-center"
+      >
+        {{ notifications.length }}
+      </span>
+    </Link>
   </div>
   <div class="relative" v-else>
-    <svg class="w-6 h-6 stroke-current text-gray-600" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 17H2a3 3 0 0 0 3-3V9a7 7 0 0 1 14 0v5a3 3 0 0 0 3 3zm-8.27 4a2 2 0 0 1-3.46 0"></path></svg>
-    <span class="absolute top-0 right-0 text-xs bg-blue-500 text-white rounded-full w-4 h-4 flex items-center justify-center">
+    <Bell class="w-6 h-6 text-gray-600" :stroke-width="2" />
+    <span
+      class="absolute top-0 right-0 text-xs bg-blue-500 text-white rounded-full w-4 h-4 flex items-center justify-center"
+    >
       {{ notifications.length }}
     </span>
   </div>

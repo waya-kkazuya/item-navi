@@ -6,8 +6,8 @@ import type { Ref } from 'vue';
 const props = defineProps({
   text: {
     type: String,
-    required: true
-  }
+    required: true,
+  },
 });
 
 const show: Ref<boolean> = ref(false);

@@ -1,4 +1,14 @@
 <script setup lang="ts">
+import {
+  ArrowDownTrayIcon,
+  ArrowUpIcon,
+  ArrowDownIcon,
+  MagnifyingGlassIcon,
+  ArrowTrendingDownIcon,
+  ArchiveBoxIcon,
+  InformationCircleIcon,
+} from '@heroicons/vue/24/outline';
+import { BellAlertIcon, BellSlashIcon } from '@heroicons/vue/24/solid';
 import axios from 'axios';
 import { Head, Link, router } from '@inertiajs/vue3';
 import { ref, onMounted, watch } from 'vue';
@@ -12,7 +22,7 @@ import UpdateStockModal from '@/Components/UpdateStockModal.vue';
 
 import { isMobile } from '@/utils/device';
 
-import type { Ref } from 'vue'
+import type { Ref } from 'vue';
 import type { ItemType, CategoryType, LocationType } from '@/@types/model';
 import type { Paginator } from '@/@types/types';
 import type { ValidationErrors } from '@/@types/types';
@@ -30,7 +40,7 @@ type Props = {
   userName: string;
   linkedItem: ItemType; // 指定した備品のモーダルを開くために使用
   errors: ValidationErrors;
-}
+};
 
 const props = defineProps<Props>();
 
@@ -60,22 +70,28 @@ onMounted(() => {
   }
 });
 
-watch(() => props.linkedItem, (newVal: ItemType) => {
-  if (newVal) {
-    openStockTransactionModal(newVal);
+watch(
+  () => props.linkedItem,
+  (newVal: ItemType) => {
+    if (newVal) {
+      openStockTransactionModal(newVal);
+    }
   }
-});
+);
 
 // 同期処理でプルダウンや検索フォームを反映
 const fetchAndFilterItems = (): void => {
-  router.visit(route('consumable_items', {
-    search: search.value,
-    sortOrder: sortOrder.value,
-    locationOfUseId: locationOfUseId.value,
-    storageLocationId: storageLocationId.value,
-  }), {
-    method: 'get'
-  });
+  router.visit(
+    route('consumable_items', {
+      search: search.value,
+      sortOrder: sortOrder.value,
+      locationOfUseId: locationOfUseId.value,
+      storageLocationId: storageLocationId.value,
+    }),
+    {
+      method: 'get',
+    }
+  );
 };
 
 const toggleSortOrder = (): void => {
@@ -91,7 +107,6 @@ const clearState = (): void => {
   storageLocationId.value = 0;
   fetchAndFilterItems();
 };
-
 
 // 入出庫履歴モーダル
 const isStockTransactionModalOpen: Ref<boolean> = ref(false);
@@ -120,12 +135,11 @@ const closeUpdateStockModal = (itemId: number): void => {
   fetchStock(itemId);
 };
 
-
 // 入出庫処理をした後に非同期で在庫数を更新する
 const fetchStock = async (itemId: number): Promise<void> => {
   try {
     const res = await axios.get(`/api/consumable_items/${itemId}/stock`);
-    const updatedItem = localConsumableItems.value.data.find(item => item.id === itemId);
+    const updatedItem = localConsumableItems.value.data.find((item) => item.id === itemId);
     if (updatedItem) {
       updatedItem.stock = res.data.stock;
     }
@@ -139,14 +153,11 @@ const fetchStock = async (itemId: number): Promise<void> => {
 </script>
 
 <template>
-
   <Head title="消耗品管理" />
 
   <AuthenticatedLayout>
     <template #header>
-      <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-        消耗品管理
-      </h2>
+      <h2 class="font-semibold text-xl text-gray-800 leading-tight">消耗品管理</h2>
     </template>
 
     <div class="py-2 md:py-4">
@@ -158,119 +169,114 @@ const fetchStock = async (itemId: number): Promise<void> => {
               <div class="container px-5 mx-auto">
                 <!-- ボタンはコンテナ直下 -->
                 <div class="flex justify-center">
-                  <a :href="route('generate_pdf')" target="_blank"
-                    class="flex items-center text-white text-sm bg-green-500 border-0 py-2 px-6 focus:outline-none hover:bg-green-600 rounded">
+                  <a
+                    :href="route('generate_pdf')"
+                    target="_blank"
+                    class="flex items-center text-white text-sm bg-green-500 border-0 py-2 px-6 focus:outline-none hover:bg-green-600 rounded"
+                  >
                     消耗品QRコ―ドをダウンロード
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                      stroke="currentColor" class="size-6">
-                      <path stroke-linecap="round" stroke-linejoin="round"
-                        d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3" />
-                    </svg>
+                    <ArrowDownTrayIcon class="size-6 ml-1" />
                   </a>
                 </div>
 
-
                 <div
-                  class="flex flex-col md:space-x-4 lg:space-x-12 lg:flex-row justify-center items-center pl-4 mt-4 lg:mt-6 w-full">
-                  <!-- 作成日とプルダウンをdivタグで囲む -->
+                  class="flex flex-col md:space-x-4 lg:space-x-12 lg:flex-row justify-center items-center pl-4 mt-4 lg:mt-6 w-full"
+                >
                   <div class="flex justify-center items-center space-x-4">
                     <!-- 作成日でソート -->
                     <div class="w-full sm:w-1/3 md:w-auto ml-0 md:ml-0">
                       <button @click="toggleSortOrder" class="flex w-full text-xs md:text-sm">
-                        <div v-if="sortOrder == 'asc'"
-                          class="w-full flex justify-center items-center whitespace-nowrap">
-                          作成日昇順
-                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
-                            class="size-5">
-                            <path fill-rule="evenodd"
-                              d="M10 18a.75.75 0 0 1-.75-.75V4.66L7.3 6.76a.75.75 0 0 1-1.1-1.02l3.25-3.5a.75.75 0 0 1 1.1 0l3.25 3.5a.75.75 0 1 1-1.1 1.02l-1.95-2.1v12.59A.75.75 0 0 1 10 18Z"
-                              clip-rule="evenodd" />
-                          </svg>
+                        <div
+                          v-if="sortOrder == 'asc'"
+                          class="ml-1 w-full flex justify-center items-center whitespace-nowrap"
+                        >
+                          日付古い順
+                          <ArrowUpIcon class="size-4 transform -translate-y-0.5" />
                         </div>
-                        <div v-else class="w-full flex justify-center items-center whitespace-nowrap">
-                          作成日降順
-                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
-                            class="size-5">
-                            <path fill-rule="evenodd"
-                              d="M10 2a.75.75 0 0 1 .75.75v12.59l1.95-2.1a.75.75 0 1 1 1.1 1.02l-3.25 3.5a.75.75 0 0 1-1.1 0l-3.25-3.5a.75.75 0 1 1 1.1-1.02l1.95 2.1V2.75A.75.75 0 0 1 10 2Z"
-                              clip-rule="evenodd" />
-                          </svg>
+                        <div
+                          v-else
+                          class="w-full flex justify-center items-center whitespace-nowrap"
+                        >
+                          日付新しい順
+                          <ArrowDownIcon class="size-4 transform -translate-y-0.5" />
                         </div>
                       </button>
                     </div>
 
                     <!-- 利用場所のプルダウン -->
                     <div class="w-full sm:w-1/3 md:w-auto">
-                      <select v-model="locationOfUseId" @change="fetchAndFilterItems"
-                        class="h-9 w-26 md:w-40 text-xs md:text-sm">
-                        <option :value="0">利用場所
-                          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                            stroke="currentColor" class="size-6">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
-                          </svg>
-                        </option>
-                        <option v-for="location in locations" :value="location.id" :key="location.id">{{ location.name
-                          }}
-                          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                            stroke="currentColor" class="size-6">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
-                          </svg>
+                      <select
+                        v-model="locationOfUseId"
+                        @change="fetchAndFilterItems"
+                        class="h-9 w-26 md:w-40 text-xs md:text-sm"
+                      >
+                        <option :value="0">利用場所</option>
+                        <option
+                          v-for="location in locations"
+                          :value="location.id"
+                          :key="location.id"
+                        >
+                          {{ location.name }}
                         </option>
                       </select>
                     </div>
 
                     <!-- 保管場所のプルダウン -->
                     <div class="w-full sm:w-1/3 md:w-auto">
-                      <select v-model="storageLocationId" @change="fetchAndFilterItems"
-                        class="h-9 w-26 md:w-40 text-xs md:text-sm">
-                        <option :value="0">保管場所
-                          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                            stroke="currentColor" class="size-6">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
-                          </svg>
-                        </option>
-                        <option v-for="location in locations" :value="location.id" :key="location.id">{{ location.name
-                          }}
-                          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                            stroke="currentColor" class="size-6">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
-                          </svg>
+                      <select
+                        v-model="storageLocationId"
+                        @change="fetchAndFilterItems"
+                        class="h-9 w-26 md:w-40 text-xs md:text-sm"
+                      >
+                        <option :value="0">保管場所</option>
+                        <option
+                          v-for="location in locations"
+                          :value="location.id"
+                          :key="location.id"
+                        >
+                          {{ location.name }}
                         </option>
                       </select>
                     </div>
                   </div>
 
-                  <!-- 検索フォームとリセットボタンをdivタグで囲む -->
                   <div
-                    class="w-full mt-4 lg:mt-0 md:w-1/2 flex justify-center lg:justify-start space-x-4 md:space-x-0 self-center">
+                    class="w-full mt-4 lg:mt-0 md:w-1/2 flex justify-center lg:justify-start space-x-4 md:space-x-0 self-center"
+                  >
                     <!-- 検索フォーム -->
                     <div class="flex items-center relative">
-                      <input type="text" id="search" name="search" v-model="search" placeholder="備品名で検索"
+                      <input
+                        type="text"
+                        id="search"
+                        name="search"
+                        v-model="search"
+                        placeholder="備品名で検索"
                         @keyup.enter="fetchAndFilterItems"
-                        class="h-9 md:w-60 text-sm md:text-base placeholder-text-xs md:placeholder-text-base">
+                        class="h-9 md:w-60 text-sm md:text-base placeholder-text-xs md:placeholder-text-base"
+                      />
+                      <!-- スマホ・タブレットならカメラを使用してQRコードを読み取り可能 -->
                       <div v-if="isMobileDevice" class="absolute right-10 md:right-11">
                         <QrCodeReader />
                       </div>
-                      <button id="searchButton"
+                      <button
+                        id="searchButton"
                         class="h-9 w-9 md:w-10 bg-blue-300 text-white py-2 px-2 flex justify-center items-center border border-gray-300"
-                        @click="fetchAndFilterItems">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                          stroke="currentColor" class="size-6">
-                          <path stroke-linecap="round" stroke-linejoin="round"
-                            d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
-                        </svg>
+                        @click="fetchAndFilterItems"
+                      >
+                        <MagnifyingGlassIcon class="size-6" />
                       </button>
                     </div>
 
-                    <!-- 条件をすべてリセットするボタン -->
+                    <!-- 条件をすべてクリアするボタン -->
                     <div>
-                      <button @click="clearState"
-                        class="text-xs md:text-base flex justify-center items-center w-24 md:w-16 h-9 p-2 md:ml-4 text-gray-600 bg-white border border-gray-600 focus:outline-none hover:bg-blue-50 rounded">
+                      <button
+                        @click="clearState"
+                        class="text-xs md:text-base flex justify-center items-center w-24 md:w-16 h-9 p-2 md:ml-4 text-gray-600 bg-white border border-gray-600 focus:outline-none hover:bg-blue-50 rounded"
+                      >
                         クリア
                       </button>
                     </div>
                   </div>
-
                 </div>
               </div>
 
@@ -283,16 +289,20 @@ const fetchStock = async (itemId: number): Promise<void> => {
 
               <!-- タイル表示 -->
               <div class="mt-4">
-                <div v-if="localConsumableItems.data.length > 0"
-                  class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-0">
+                <div
+                  v-if="localConsumableItems.data.length > 0"
+                  class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-0"
+                >
                   <template v-for="item in localConsumableItems.data" :key="item.id">
                     <div class="w-full p-2 border">
                       <div>
                         <a class="mb-2 block relative h-48">
                           <Link :href="route('items.show', { item: item.id })">
-                          <img alt="消耗品の画像"
-                            class="object-cover object-center w-full h-full block border border-gray-300"
-                            :src="item.image_path1">
+                            <img
+                              alt="消耗品の画像"
+                              class="object-cover object-center w-full h-full block border border-gray-300"
+                              :src="item.image_path1"
+                            />
                           </Link>
                         </a>
 
@@ -304,79 +314,75 @@ const fetchStock = async (itemId: number): Promise<void> => {
                         <div class="ml-4">
                           <span class="mr-2 text-xs lg:text-sm font-medium">管理ID</span>
                           <Link :href="route('items.show', { item: item.id })">
-                          <span class="text-blue-600 title-font text-xs lg:text-sm">{{ item.management_id }}</span>
+                            <span class="text-blue-600 title-font text-xs lg:text-sm">{{
+                              item.management_id
+                            }}</span>
                           </Link>
                         </div>
                         <div class="ml-4 mt-1">
-                          <span class="text-sm lg:text-base">在庫数 {{ item.stock }} / 通知在庫数 {{ item.minimum_stock }} ({{
-                            item.unit.name }})</span>
+                          <span class="text-sm lg:text-base"
+                            >在庫数 {{ item.stock }} / 通知在庫数 {{ item.minimum_stock }} ({{
+                              item.unit.name
+                            }})</span
+                          >
                         </div>
                         <div class="ml-4">
                           <!-- {{ item.notification ? 'オン' : 'オフ'}} -->
-                          <div v-if="item.notification" class="flex justify-start items-center text-xs">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
-                              class="size-4">
-                              <path
-                                d="M5.85 3.5a.75.75 0 0 0-1.117-1 9.719 9.719 0 0 0-2.348 4.876.75.75 0 0 0 1.479.248A8.219 8.219 0 0 1 5.85 3.5ZM19.267 2.5a.75.75 0 1 0-1.118 1 8.22 8.22 0 0 1 1.987 4.124.75.75 0 0 0 1.48-.248A9.72 9.72 0 0 0 19.266 2.5Z" />
-                              <path fill-rule="evenodd"
-                                d="M12 2.25A6.75 6.75 0 0 0 5.25 9v.75a8.217 8.217 0 0 1-2.119 5.52.75.75 0 0 0 .298 1.206c1.544.57 3.16.99 4.831 1.243a3.75 3.75 0 1 0 7.48 0 24.583 24.583 0 0 0 4.83-1.244.75.75 0 0 0 .298-1.205 8.217 8.217 0 0 1-2.118-5.52V9A6.75 6.75 0 0 0 12 2.25ZM9.75 18c0-.034 0-.067.002-.1a25.05 25.05 0 0 0 4.496 0l.002.1a2.25 2.25 0 1 1-4.5 0Z"
-                                clip-rule="evenodd" />
-                            </svg>
+                          <div
+                            v-if="item.notification"
+                            class="flex justify-start items-center text-xs"
+                          >
+                            <BellAlertIcon class="size-4" />
                             <div>通知オン</div>
                           </div>
                           <div v-else class="flex justify-start items-center text-xs text-gray-300">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
-                              class="size-4">
-                              <path
-                                d="M3.53 2.47a.75.75 0 0 0-1.06 1.06l18 18a.75.75 0 1 0 1.06-1.06l-18-18ZM20.57 16.476c-.223.082-.448.161-.674.238L7.319 4.137A6.75 6.75 0 0 1 18.75 9v.75c0 2.123.8 4.057 2.118 5.52a.75.75 0 0 1-.297 1.206Z" />
-                              <path fill-rule="evenodd"
-                                d="M5.25 9c0-.184.007-.366.022-.546l10.384 10.384a3.751 3.751 0 0 1-7.396-1.119 24.585 24.585 0 0 1-4.831-1.244.75.75 0 0 1-.298-1.205A8.217 8.217 0 0 0 5.25 9.75V9Zm4.502 8.9a2.25 2.25 0 1 0 4.496 0 25.057 25.057 0 0 1-4.496 0Z"
-                                clip-rule="evenodd" />
-                            </svg>
+                            <BellSlashIcon class="size-4" />
                             <div>通知オフ</div>
                           </div>
                         </div>
                         <div
-                          class="mt-2 flex justify-center space-x-4 md:space-x-1 lg:space-x-2 items-center max-h-20 ">
+                          class="mt-2 flex justify-center space-x-4 md:space-x-1 lg:space-x-2 items-center max-h-20"
+                        >
                           <!-- 親コンポーネントからモーダルを開くボタン -->
-                          <button @click="openStockTransactionModal(item)" type="button"
+                          <button
+                            @click="openStockTransactionModal(item)"
+                            type="button"
                             data-micromodal-trigger="modal-1"
-                            class="flex items-center text-white text-sm bg-gray-500 border-0 py-2 px-4 focus:outline-none hover:bg-gray-600 rounded">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                              stroke="currentColor" class="size-5">
-                              <path stroke-linecap="round" stroke-linejoin="round"
-                                d="M2.25 6 9 12.75l4.286-4.286a11.948 11.948 0 0 1 4.306 6.43l.776 2.898m0 0 3.182-5.511m-3.182 5.51-5.511-3.181" />
-                            </svg>
+                            class="flex items-center text-white text-sm bg-gray-500 border-0 py-2 px-4 focus:outline-none hover:bg-gray-600 rounded"
+                          >
+                            <ArrowTrendingDownIcon class="size-5 mr-1" />
                             在庫履歴
                           </button>
-                          <button @click="openUpdateStockModal(item)" type="button" id="updateStock"
+                          <button
+                            @click="openUpdateStockModal(item)"
+                            type="button"
+                            id="updateStock"
                             data-micromodal-trigger="modal-1"
-                            class="flex items-center text-white text-sm bg-sky-500 border-0 py-2 px-4 focus:outline-none hover:bg-sky-600 rounded">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                              stroke="currentColor" class="size-5">
-                              <path stroke-linecap="round" stroke-linejoin="round"
-                                d="m20.25 7.5-.625 10.632a2.25 2.25 0 0 1-2.247 2.118H6.622a2.25 2.25 0 0 1-2.247-2.118L3.75 7.5M10 11.25h4M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125Z" />
-                            </svg>
+                            class="flex items-center text-white text-sm bg-sky-500 border-0 py-2 px-4 focus:outline-none hover:bg-sky-600 rounded"
+                          >
+                            <ArchiveBoxIcon class="size-5 mr-1" />
                             入出庫
                           </button>
                         </div>
                       </div>
                     </div>
                   </template>
-                  <StockTransactionModal v-if="selectedStockTransactionItem && isStockTransactionModalOpen"
-                    :item="selectedStockTransactionItem" @stockTransactionModalClosed="closeStockTransactionModal" />
-                  <UpdateStockModal v-if="selectedUpdateStockItem && isUpdateStockModalOpen"
-                    :item="selectedUpdateStockItem" :userName="userName" :errors="errors"
-                    @updateStockModalClosed="closeUpdateStockModal" />
+                  <StockTransactionModal
+                    v-if="selectedStockTransactionItem && isStockTransactionModalOpen"
+                    :item="selectedStockTransactionItem"
+                    @stockTransactionModalClosed="closeStockTransactionModal"
+                  />
+                  <UpdateStockModal
+                    v-if="selectedUpdateStockItem && isUpdateStockModalOpen"
+                    :item="selectedUpdateStockItem"
+                    :userName="userName"
+                    :errors="errors"
+                    @updateStockModalClosed="closeUpdateStockModal"
+                  />
                 </div>
                 <div v-else>
                   <div class="flex items-center justify-center">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                      stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                      <circle cx="12" cy="12" r="10"></circle>
-                      <line x1="12" y1="8" x2="12" y2="12"></line>
-                      <line x1="12" y1="16" x2="12.01" y2="16"></line>
-                    </svg>
+                    <InformationCircleIcon class="w-6 h-6 text-black" />
                     <div class="ml-2 text-center py-4">備品が見つかりません</div>
                   </div>
                 </div>
