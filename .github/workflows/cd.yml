@@ -48,10 +48,23 @@ jobs:
           echo "APP_PORT=80" >> .env
 
           # DBの設定
-          echo "DB_HOST=${{ secrets.PROD_DB_HOST }}" >> .env 
-          echo "DB_DATABASE=${{ secrets.PROD_DB_DATABASE }}" >> .env
-          echo "DB_USERNAME=${{ secrets.PROD_DB_USERNAME }}" >> .env
-          echo "DB_PASSWORD=${{ secrets.PROD_DB_PASSWORD }}" >> .env
+          # AWSから直接取得
+          SECRET=$(aws secretsmanager get-secret-value \
+            --secret-id portfolio-rds-credentials \ #AWS Secrets Managerのtfファイルで設定したID
+            --region ap-northeast-1 \
+            --query SecretString \
+            --output text)
+          
+          db_host=$(echo $SECRET | jq -r '.host')
+          db_password=$(echo $SECRET | jq -r '.password')
+          db_username=$(echo $SECRET | jq -r '.username')
+          db_database=$(echo $SECRET | jq -r '.database')
+          
+          echo "DB_HOST=$db_host" >> .env
+          echo "DB_PASSWORD=$db_password" >> .env
+          echo "DB_USERNAME=$db_username" >> .env
+          echo "DB_DATABASE=$db_database" >> .env
+          
 
           # セッションの設定
           echo "SESSION_DOMAIN=${{ secrets.PROD_SESSION_DOMAIN }}" >> .env
