@@ -50,7 +50,7 @@ jobs:
           # DBの設定
           # AWSから直接取得
           SECRET=$(aws secretsmanager get-secret-value \
-            --secret-id portfolio-rds-credentials \ #AWS Secrets Managerのtfファイルで設定したID
+            --secret-id portfolio-rds-credentials \
             --region ap-northeast-1 \
             --query SecretString \
             --output text)
