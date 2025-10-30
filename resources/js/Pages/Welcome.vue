@@ -3,22 +3,27 @@ import { Head, Link } from '@inertiajs/vue3';
 
 import ApplicationLogo from '@/Components/ApplicationLogo.vue';
 
-defineProps({
-  canLogin: {
-    type: Boolean,
-  },
-  canRegister: {
-    type: Boolean,
-  },
-  laravelVersion: {
-    type: String,
-    required: true,
-  },
-  phpVersion: {
-    type: String,
-    required: true,
-  },
-});
+interface Images {
+  heroBackground: string;
+  heroImage: string;
+  item: string;
+  graph: string;
+  checklist: string;
+  lightBulb: string;
+  bell: string;
+  users: string;
+  qrcode: string;
+  pdf: string;
+  // logo: string;
+}
+
+defineProps<{
+  canLogin: boolean;
+  canRegister: boolean;
+  laravelVersion: string;
+  phpVersion: string;
+  images: Images; // ← Images 型を使用
+}>();
 </script>
 
 <template>
@@ -36,13 +41,11 @@ defineProps({
     </nav>
 
     <section
-      class="bg-cover bg-center pt-20 pb-5"
-      style="
-        background-image: url('/images/office_layer.png');
-        background-color: #eef2ff;
-        background-size: cover;
-        background-position: left;
-      "
+      class="bg-cover bg-left pt-20 pb-5"
+      :style="{
+        backgroundImage: `url('${images.heroBackground}')`,
+        backgroundColor: '#eef2ff',
+      }"
     >
       <div class="container mx-auto px-20 py-8 grid grid-cols-1 md:grid-cols-2">
         <div class="flex flex-col justify-center order-2 md:order-1">
@@ -73,7 +76,7 @@ defineProps({
           </div>
         </div>
         <div class="order-1 md:order-2">
-          <img src="/images/hero_image.png" alt="システム紹介画像" class="w-full h-auto" />
+          <img :src="images.heroImage" alt="システム紹介画像" class="w-full h-auto" />
         </div>
       </div>
     </section>
@@ -93,7 +96,7 @@ defineProps({
             <div
               class="w-20 h-20 inline-flex items-center justify-center rounded-full bg-indigo-100 text-indigo-500 mb-5 flex-shrink-0"
             >
-              <img src="/images/item.png" alt="備品管理の画像" class="w-10 h-auto" />
+              <img :src="images.item" alt="備品管理の画像" class="w-10 h-auto" />
             </div>
             <div class="flex-grow">
               <h2 class="text-gray-900 text-lg title-font font-medium mb-3">備品管理</h2>
@@ -107,7 +110,7 @@ defineProps({
             <div
               class="w-20 h-20 inline-flex items-center justify-center rounded-full bg-indigo-100 text-indigo-500 mb-5 flex-shrink-0"
             >
-              <img src="/images/graph.png" alt="消耗品管理の画像" class="w-10 h-auto" />
+              <img :src="images.graph" alt="消耗品管理の画像" class="w-10 h-auto" />
             </div>
             <div class="flex-grow">
               <h2 class="text-gray-900 text-lg title-font font-medium mb-3">消耗品在庫管理</h2>
@@ -121,7 +124,7 @@ defineProps({
             <div
               class="w-20 h-20 inline-flex items-center justify-center rounded-full bg-indigo-100 text-indigo-500 mb-5 flex-shrink-0"
             >
-              <img src="/images/checklist.png" alt="備品の点検・廃棄の画像" class="w-10 h-auto" />
+              <img :src="images.checklist" alt="備品の点検・廃棄の画像" class="w-10 h-auto" />
             </div>
             <div class="flex-grow">
               <h2 class="text-gray-900 text-lg title-font font-medium mb-3">備品の点検と廃棄</h2>
@@ -135,7 +138,7 @@ defineProps({
             <div
               class="w-20 h-20 inline-flex items-center justify-center rounded-full bg-indigo-100 text-indigo-500 mb-5 flex-shrink-0"
             >
-              <img src="/images/light_bulb.png" alt="備品の点検・廃棄の画像" class="w-10 h-auto" />
+              <img :src="images.lightBulb" alt="備品の点検・廃棄の画像" class="w-10 h-auto" />
             </div>
             <div class="flex-grow">
               <h2 class="text-gray-900 text-lg title-font font-medium mb-3">備品のリクエスト</h2>
@@ -154,7 +157,7 @@ defineProps({
             <div
               class="w-20 h-20 inline-flex items-center justify-center rounded-full bg-indigo-100 text-indigo-500 mb-5 flex-shrink-0"
             >
-              <img src="/images/bell.png" alt="備品管理の画像" class="w-10 h-auto" />
+              <img :src="images.bell" alt="備品管理の画像" class="w-10 h-auto" />
             </div>
             <div class="flex-grow">
               <h2 class="text-gray-900 text-lg title-font font-medium mb-3">通知機能</h2>
@@ -170,7 +173,7 @@ defineProps({
             <div
               class="w-20 h-20 inline-flex items-center justify-center rounded-full bg-indigo-100 text-indigo-500 mb-5 flex-shrink-0"
             >
-              <img src="/images/users.png" alt="消耗品管理の画像" class="w-10 h-auto" />
+              <img :src="images.users" alt="消耗品管理の画像" class="w-10 h-auto" />
             </div>
             <div class="flex-grow">
               <h2 class="text-gray-900 text-lg title-font font-medium mb-3">ユーザー権限機能</h2>
@@ -184,7 +187,7 @@ defineProps({
             <div
               class="w-20 h-20 inline-flex items-center justify-center rounded-full bg-indigo-100 text-indigo-500 mb-5 flex-shrink-0"
             >
-              <img src="/images/qrcode.png" alt="備品の点検・廃棄の画像" class="w-10 h-auto" />
+              <img :src="images.qrcode" alt="備品の点検・廃棄の画像" class="w-10 h-auto" />
             </div>
             <div class="flex-grow">
               <h2 class="text-gray-900 text-lg title-font font-medium mb-3">QRコードで入出庫</h2>
@@ -197,7 +200,7 @@ defineProps({
             <div
               class="w-20 h-20 inline-flex items-center justify-center rounded-full bg-indigo-100 text-indigo-500 mb-5 flex-shrink-0"
             >
-              <img src="/images/PDF.png" alt="備品の点検・廃棄の画像" class="w-10 h-auto" />
+              <img :src="images.pdf" alt="備品の点検・廃棄の画像" class="w-10 h-auto" />
             </div>
             <div class="flex-grow">
               <h2 class="text-gray-900 text-lg title-font font-medium mb-3">

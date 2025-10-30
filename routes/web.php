@@ -37,6 +37,18 @@ Route::get('/', function () {
         'canRegister'    => Route::has('register'),
         'laravelVersion' => Application::VERSION,
         'phpVersion'     => PHP_VERSION,
+        'images' => [
+            'heroBackground' => Storage::disk()->url('images/hero_background.png'),
+            'heroImage' => Storage::disk()->url('images/hero_image.png'),
+            'item' => Storage::disk()->url('images/item.png'),
+            'graph' => Storage::disk()->url('images/graph.png'),
+            'checklist' => Storage::disk()->url('images/checklist.png'),
+            'lightBulb' => Storage::disk()->url('images/light_bulb.png'),
+            'bell' => Storage::disk()->url('images/bell.png'),
+            'users' => Storage::disk()->url('images/users.png'),
+            'qrcode' => Storage::disk()->url('images/qrcode.png'),
+            'pdf' => Storage::disk()->url('images/pdf.png'),
+        ],
     ]);
 });
 
