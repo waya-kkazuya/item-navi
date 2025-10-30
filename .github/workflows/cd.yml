@@ -80,6 +80,7 @@ jobs:
           echo "FILESYSTEM_DISK=s3" >> .env
           echo "AWS_DEFAULT_REGION=${{ secrets.PROD_AWS_DEFAULT_REGION }}" >> .env
           echo "AWS_BUCKET=${{ secrets.PROD_AWS_BUCKET }}" >> .env
+          echo "AWS_URL=${{ secrets.PROD_APP_URL }}" >> .env
 
           # ログの設定
           echo "LOG_SLACK_WEBHOOK_URL=${{ secrets.PROD_LOG_SLACK_WEBHOOK_URL }}" >> .env
