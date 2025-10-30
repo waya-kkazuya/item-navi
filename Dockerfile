@@ -49,7 +49,7 @@ RUN curl -sL https://deb.nodesource.com/setup_22.x | bash - \
 
 # 必要なNPMパッケージをインストール
 COPY package*.json ./
-RUN npm install
+RUN npm ci
 
 # AWS CLIのインストール
 RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" \
