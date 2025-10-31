@@ -38,7 +38,6 @@ class AppServiceProvider extends ServiceProvider
         // 本番環境でURLをHTTPSに強制する
         if ($this->app->environment('production')) {
             URL::forceScheme('https');
-            $this->app['request']->server->set('HTTPS', 'on');
         }
     }
 }
