@@ -3,11 +3,12 @@ import './micromodal';
 import '../css/app.css';
 import '../css/micromodal.css';
 
-import type { App, DefineComponent } from "vue"; 
+import type { App, DefineComponent } from "vue";
 import { createApp, h } from 'vue';
+
+import { ZiggyVue } from 'ziggy-js'
 import { createInertiaApp } from '@inertiajs/vue3';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
-import { ZiggyVue } from '../../vendor/tightenco/ziggy/src/js';
 
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
 
