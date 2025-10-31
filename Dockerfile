@@ -47,16 +47,6 @@ RUN docker-php-ext-configure gd --with-freetype --with-jpeg --with-webp --with-x
 RUN curl -sL https://deb.nodesource.com/setup_22.x | bash - \
     && apt-get install -y nodejs
 
-# 必要なNPMパッケージをインストール
-COPY package*.json ./
-RUN npm ci
-
-# AWS CLIのインストール
-RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" \
-    && unzip awscliv2.zip \
-    && ./aws/install \
-    && rm -rf awscliv2.zip aws
-
 # Apacheのmod_rewriteを有効化
 RUN a2enmod rewrite
 
@@ -67,13 +57,7 @@ COPY ./docker-config/apache2.conf /etc/apache2/sites-available/000-default.conf
 COPY . /var/www/html
 
 # Composerの依存関係をインストール
-RUN composer install
-
-# アプリケーションキーの生成
-RUN php artisan key:generate
-
-# アプリケーションのビルド
-RUN npm run build
+RUN composer install --no-dev --optimize-autoloader --no-interaction --prefer-dist
 
 # ログディレクトリの所有者と権限を設定 
 RUN chown -R www-data:www-data /var/www/html/storage \
