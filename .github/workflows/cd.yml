@@ -71,6 +71,12 @@ jobs:
             s3://${{ secrets.PROD_AWS_BUCKET }}/storage/build/manifest.json \
             --cache-control "public,max-age=300"
 
+      - name: Upload favicon
+        run: |
+          aws s3 cp public/favicon.ico \
+            s3://${{ secrets.PROD_AWS_BUCKET }}/storage/favicon.ico \
+            --cache-control "public,max-age=86400"
+
       # Terraformでdistribution IDは毎度変化するのでAWS CLIで取得
       - name: Resolve CloudFront distribution ID by alias
         run: |
