@@ -60,8 +60,7 @@ jobs:
       # CloudFront 側は origin_path=/storage、/build/* を S3 オリジンへ振る前提
       - name: Sync Vite assets to S3 (long cache)
         run: |
-          aws s3 sync public/build/assets \
-            s3://${{ secrets.PROD_AWS_BUCKET }}/storage/build/assets \
+          aws s3 sync "public/build/assets" "s3://${{ secrets.PROD_AWS_BUCKET }}/storage/build/assets" \
             --delete \
             --cache-control "public,max-age=31536000,immutable"
 
