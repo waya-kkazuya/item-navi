@@ -70,7 +70,8 @@ jobs:
           aws s3 cp public/build/manifest.json \
             s3://${{ secrets.PROD_AWS_BUCKET }}/storage/build/manifest.json \
             --cache-control "public,max-age=300"
-
+            
+      # favicon.icoをアップ
       - name: Upload favicon
         run: |
           aws s3 cp public/favicon.ico \
@@ -101,6 +102,7 @@ jobs:
           echo "APP_ENV=production" >> .env
           echo "APP_DEBUG=false" >> .env
           echo "APP_URL=${{ secrets.PROD_APP_URL }}" >> .env
+          echo "ASSET_URL=${{ secrets.PROD_APP_URL }}" >> .env
           echo "APP_PORT=80" >> .env
 
           # アプリケーションキーを注入
