@@ -167,114 +167,120 @@ const fetchStock = async (itemId: number): Promise<void> => {
             <FlashMessage />
             <section class="mt-2 text-gray-600 body-font">
               <div class="container px-5 mx-auto">
-                <!-- ボタンはコンテナ直下 -->
+                <!-- 消耗品QRコードボタン -->
                 <div class="flex justify-center">
                   <a
                     :href="route('generate_pdf')"
                     target="_blank"
                     class="flex items-center text-white text-sm bg-green-500 border-0 py-2 px-6 focus:outline-none hover:bg-green-600 rounded"
                   >
+                    <ArrowDownTrayIcon class="size-5 ml-1" />
                     消耗品QRコ―ドをダウンロード
-                    <ArrowDownTrayIcon class="size-6 ml-1" />
                   </a>
                 </div>
 
-                <div
-                  class="flex flex-col md:space-x-4 lg:space-x-12 lg:flex-row justify-center items-center pl-4 mt-4 lg:mt-6 w-full"
-                >
-                  <div class="flex justify-center items-center space-x-4">
-                    <!-- 作成日でソート -->
-                    <div class="w-full sm:w-1/3 md:w-auto ml-0 md:ml-0">
-                      <button @click="toggleSortOrder" class="flex w-full text-xs md:text-sm">
-                        <div
-                          v-if="sortOrder == 'asc'"
-                          class="ml-1 w-full flex justify-center items-center whitespace-nowrap"
-                        >
-                          日付古い順
-                          <ArrowUpIcon class="size-4 transform -translate-y-0.5" />
-                        </div>
-                        <div
-                          v-else
-                          class="w-full flex justify-center items-center whitespace-nowrap"
-                        >
-                          日付新しい順
-                          <ArrowDownIcon class="size-4 transform -translate-y-0.5" />
-                        </div>
-                      </button>
-                    </div>
-
-                    <!-- 利用場所のプルダウン -->
-                    <div class="w-full sm:w-1/3 md:w-auto">
-                      <select
-                        v-model="locationOfUseId"
-                        @change="fetchAndFilterItems"
-                        class="h-9 w-26 md:w-40 text-xs md:text-sm"
-                      >
-                        <option :value="0">利用場所</option>
-                        <option
-                          v-for="location in locations"
-                          :value="location.id"
-                          :key="location.id"
-                        >
-                          {{ location.name }}
-                        </option>
-                      </select>
-                    </div>
-
-                    <!-- 保管場所のプルダウン -->
-                    <div class="w-full sm:w-1/3 md:w-auto">
-                      <select
-                        v-model="storageLocationId"
-                        @change="fetchAndFilterItems"
-                        class="h-9 w-26 md:w-40 text-xs md:text-sm"
-                      >
-                        <option :value="0">保管場所</option>
-                        <option
-                          v-for="location in locations"
-                          :value="location.id"
-                          :key="location.id"
-                        >
-                          {{ location.name }}
-                        </option>
-                      </select>
-                    </div>
-                  </div>
-
+                <div class="mt-4 mb-2 space-y-4 md:max-w-4xl md:mx-auto">
                   <div
-                    class="w-full mt-4 lg:mt-0 md:w-1/2 flex justify-center lg:justify-start space-x-4 md:space-x-0 self-center"
+                    class="flex flex-col lg:flex-row lg:gap-4 space-y-4 lg:space-y-0 lg:max-w-4xl lg:mx-auto"
                   >
-                    <!-- 検索フォーム -->
-                    <div class="flex items-center relative">
-                      <input
-                        type="text"
-                        id="search"
-                        name="search"
-                        v-model="search"
-                        placeholder="備品名で検索"
-                        @keyup.enter="fetchAndFilterItems"
-                        class="h-9 md:w-60 text-sm md:text-base placeholder-text-xs md:placeholder-text-base"
-                      />
-                      <!-- スマホ・タブレットならカメラを使用してQRコードを読み取り可能 -->
-                      <div v-if="isMobileDevice" class="absolute right-10 md:right-11">
-                        <QrCodeReader />
+                    <!-- 検索フォームとクリアボタングループ -->
+                    <div
+                      class="w-full flex justify-around md:justify-center lg:justify-start space-x-1 md:space-x-0 self-center order-1 lg:order-2"
+                    >
+                      <!-- 検索フォーム -->
+                      <div class="flex items-center flex-1 md:flex-none relative">
+                        <input
+                          type="text"
+                          id="search"
+                          name="search"
+                          v-model="search"
+                          placeholder="備品名で検索"
+                          @keyup.enter="fetchAndFilterItems"
+                          class="h-9 w-full md:w-96 lg:w-60 text-sm md:text-base placeholder-text-xs md:placeholder-text-base"
+                        />
+                        <!-- スマホ・タブレットならカメラを使用してQRコードを読み取り可能 -->
+                        <div v-if="isMobileDevice" class="absolute right-10 md:right-11">
+                          <QrCodeReader />
+                        </div>
+                        <button
+                          id="searchButton"
+                          class="h-9 w-9 md:w-10 bg-blue-300 text-white py-2 px-2 flex justify-center items-center border border-gray-300"
+                          @click="fetchAndFilterItems"
+                        >
+                          <MagnifyingGlassIcon class="size-6" />
+                        </button>
                       </div>
-                      <button
-                        id="searchButton"
-                        class="h-9 w-9 md:w-10 bg-blue-300 text-white py-2 px-2 flex justify-center items-center border border-gray-300"
-                        @click="fetchAndFilterItems"
-                      >
-                        <MagnifyingGlassIcon class="size-6" />
-                      </button>
+
+                      <!-- 条件をすべてクリアするボタン -->
+                      <div>
+                        <button
+                          @click="clearState"
+                          class="text-xs md:text-base flex justify-center items-center w-16 h-9 p-2 md:ml-4 bg-gray-100 hover:bg-gray-200 text-gray-500 border border-gray-300 focus:outline-none rounded"
+                        >
+                          クリア
+                        </button>
+                      </div>
                     </div>
 
-                    <!-- 条件をすべてクリアするボタン -->
-                    <div>
-                      <button
-                        @click="clearState"
-                        class="text-xs md:text-base flex justify-center items-center w-24 md:w-16 h-9 p-2 md:ml-4 text-gray-600 bg-white border border-gray-600 focus:outline-none hover:bg-blue-50 rounded"
-                      >
-                        クリア
-                      </button>
+                    <!-- 作成日ソートボタンとカテゴリプルダウングループ -->
+                    <div
+                      class="flex justify-center lg:justify-end items-center space-x-4 order-2 lg:order-1"
+                    >
+                      <!-- 作成日でソート -->
+                      <div class="w-full sm:w-1/3 md:w-auto ml-0 md:ml-0">
+                        <button @click="toggleSortOrder" class="flex w-full text-xs md:text-sm">
+                          <div
+                            v-if="sortOrder == 'asc'"
+                            class="ml-1 w-full flex justify-center items-center whitespace-nowrap"
+                          >
+                            <ArrowUpIcon class="size-4 transform -translate-y-0.5" />
+                            古い順
+                          </div>
+                          <div
+                            v-else
+                            class="w-full flex justify-center items-center whitespace-nowrap"
+                          >
+                            <ArrowDownIcon class="size-4 transform -translate-y-0.5" />
+                            新しい順
+                          </div>
+                        </button>
+                      </div>
+
+                      <!-- 利用場所のプルダウン -->
+                      <div class="w-full sm:w-1/3 md:w-auto">
+                        <select
+                          v-model="locationOfUseId"
+                          @change="fetchAndFilterItems"
+                          class="h-9 w-[6.5rem] md:w-40 text-xs md:text-sm"
+                        >
+                          <option :value="0">利用場所</option>
+                          <option
+                            v-for="location in locations"
+                            :value="location.id"
+                            :key="location.id"
+                          >
+                            {{ location.name }}
+                          </option>
+                        </select>
+                      </div>
+
+                      <!-- 保管場所のプルダウン -->
+                      <div class="w-full sm:w-1/3 md:w-auto">
+                        <select
+                          v-model="storageLocationId"
+                          @change="fetchAndFilterItems"
+                          class="h-9 w-[6.5rem] md:w-40 text-xs md:text-sm"
+                        >
+                          <option :value="0">保管場所</option>
+                          <option
+                            v-for="location in locations"
+                            :value="location.id"
+                            :key="location.id"
+                          >
+                            {{ location.name }}
+                          </option>
+                        </select>
+                      </div>
                     </div>
                   </div>
                 </div>
