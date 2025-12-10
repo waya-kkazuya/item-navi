@@ -37,11 +37,8 @@ const saveInspection = (item: ItemType): void => {
         },
       });
     }
-  } catch (e: any) {
-    axios.post('/api/log-error', {
-      error: e.toString(),
-      component: 'InspectionModal.vue saveInspection method',
-    });
+  } catch (error: any) {
+    console.error('InspectionModal.vue saveInspection method error:', error.message);
   }
 };
 </script>

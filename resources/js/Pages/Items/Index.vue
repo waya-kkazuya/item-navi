@@ -116,11 +116,8 @@ const restoreItem = async (itemId: number): Promise<void> => {
         alert(res.data.message);
       }
     }
-  } catch (e: any) {
-    axios.post('/api/log-error', {
-      error: e.toString(),
-      component: 'Items/Index.vue restoreItem method',
-    });
+  } catch (error: any) {
+    console.error('Items/Index.vue restoreItem method error:', error.message);
   }
 };
 </script>
@@ -130,7 +127,20 @@ const restoreItem = async (itemId: number): Promise<void> => {
 
   <AuthenticatedLayout>
     <template #header>
-      <h2 class="font-semibold text-xl text-gray-800 leading-tight">備品一覧</h2>
+      <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+        <div>
+          <h2 class="font-semibold text-xl text-gray-800 leading-tight">備品一覧</h2>
+          <p class="mt-1 text-sm text-gray-600">登録されている備品を管理</p>
+        </div>
+
+        <Link
+          :href="route('items.create')"
+          class="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all shadow-sm hover:shadow"
+        >
+          <PlusIcon class="size-4" />
+          備品を登録
+        </Link>
+      </div>
     </template>
 
     <div class="py-2 md:py-4">
@@ -139,21 +149,6 @@ const restoreItem = async (itemId: number): Promise<void> => {
           <div class="p-4 md:p-6 text-gray-900">
             <FlashMessage />
             <section class="mt-2 text-gray-600 body-font">
-              <div class="container md:px-5 mx-auto">
-                <!-- 「備品を登録する」ボタン -->
-                <div class="flex justify-center">
-                  <Link
-                    as="button"
-                    id="create"
-                    :href="route('items.create')"
-                    class="flex items-center text-white text-sm bg-green-500 border-0 py-2 px-6 focus:outline-none hover:bg-green-600 rounded"
-                  >
-                    <PlusIcon class="size-5 mr-1" />
-                    備品を登録する
-                  </Link>
-                </div>
-              </div>
-
               <div class="mt-4 mb-2 space-y-4 md:max-w-4xl md:mx-auto">
                 <!-- 検索フォームとクリアボタングループ -->
                 <div
@@ -289,12 +284,12 @@ const restoreItem = async (itemId: number): Promise<void> => {
                           v-if="sortOrder == 'asc'"
                           class="w-full flex justify-center text-xs md:text-sm"
                         >
-                          日付古い順
                           <ArrowUpIcon class="size-4 transform -translate-y-0.5" />
+                          古い順
                         </div>
                         <div v-else class="w-full flex justify-center text-xs md:text-sm">
-                          日付新しい順
                           <ArrowDownIcon class="size-4 transform -translate-y-0.5" />
+                          新しい順
                         </div>
                       </button>
                     </div>
@@ -325,7 +320,8 @@ const restoreItem = async (itemId: number): Promise<void> => {
                     </label>
                     <!-- Label -->
                     <div class="ml-3 text-gray-700 font-medium text-xs md:text-sm">
-                      廃棄済みの備品を表示
+                      {{ isDisposal ? '廃棄済みを表示中' : '使用中のみ表示中' }}
+                      <!-- 廃棄済みの備品を表示 -->
                     </div>
                   </div>
                 </div>

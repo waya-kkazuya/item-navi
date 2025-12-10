@@ -72,11 +72,8 @@ const handleFileUpload = (event: Event) => {
 const storeItem = (): void => {
   try {
     form.post('/items');
-  } catch (e: any) {
-    axios.post('/api/log-error', {
-      error: e.toString(),
-      component: 'Items/Create.vue storeItem method',
-    });
+  } catch (error: any) {
+    console.error('Items/Create.vue storeItem method error:', error.message);
   }
 };
 
