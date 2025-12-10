@@ -4,10 +4,38 @@
  * CSRF token as a header based on the value of the "XSRF" token cookie.
  */
 
+import type { AxiosError, InternalAxiosRequestConfig } from 'axios';
+
 import axios from 'axios';
+
 window.axios = axios;
 
+// X-Requested-Withヘッダーを追加
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
+
+// Cookieを自動的に送信（Sanctum認証に必須）
+window.axios.defaults.withCredentials = true;
+
+// CSRF Cookie初期化フラグ
+let csrfInitialized = false;
+
+// リクエストインターセプター（初回APIリクエスト前にCSRF Cookie取得）
+window.axios.interceptors.request.use(
+    async (config: InternalAxiosRequestConfig) => {
+        if (!csrfInitialized && config.url?.startsWith('/api/')) {
+            try {
+                await axios.get('/sanctum/csrf-cookie');
+                csrfInitialized = true;
+            } catch (error) {
+                console.error('CSRF token initialization failed:', error);
+            }
+        }
+        return config;
+    },
+    (error: AxiosError) => {
+        return Promise.reject(error);
+    }
+);
 
 /**
  * Echo exposes an expressive API for subscribing to channels and listening
