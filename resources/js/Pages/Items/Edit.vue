@@ -68,11 +68,8 @@ const updateItem = (id: number) => {
   try {
     // putメソッドが使えないため、useForm内に「_method: 'PUT'」を記述
     form.post(`/items/${id}`);
-  } catch (e: any) {
-    axios.post('/api/log-error', {
-      error: e.toString(),
-      component: 'Item/Edit.vue updateItem method',
-    });
+  } catch (error: any) {
+    console.error('Items/Edit.vue error:', error.message);
   }
 };
 

@@ -73,11 +73,8 @@ const decreaseStock = (item: ItemType): void => {
         },
       });
     }
-  } catch (e: any) {
-    axios.post('/api/log-error', {
-      error: e.toString(),
-      component: 'UpdateStockModal.vue decreaseStock method',
-    });
+  } catch (error: any) {
+    console.error('UpdateStockModal.vue decreaseStock method error:', error.message);
   }
 };
 
@@ -97,11 +94,8 @@ const increaseStock = (item: ItemType): void => {
         },
       });
     }
-  } catch (e: any) {
-    axios.post('/api/log-error', {
-      error: e.toString(),
-      component: 'UpdateStockModal.vue increaseStock method',
-    });
+  } catch (error: any) {
+    console.error('UpdateStockModal.vue increaseStock method error:', error.message);
   }
 };
 

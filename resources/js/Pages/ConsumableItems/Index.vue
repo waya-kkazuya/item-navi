@@ -143,11 +143,8 @@ const fetchStock = async (itemId: number): Promise<void> => {
     if (updatedItem) {
       updatedItem.stock = res.data.stock;
     }
-  } catch (e: any) {
-    await axios.post('/api/log-error', {
-      error: e.toString(),
-      component: 'ConsumableItems/Index.vue fetchStock method',
-    });
+  } catch (error: any) {
+    console.error('ConsumableItems/Index.vue fetchStock method error:', error.message);
   }
 };
 </script>

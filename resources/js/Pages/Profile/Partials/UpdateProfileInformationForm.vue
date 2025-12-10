@@ -47,11 +47,8 @@ const save = (): void => {
     form.post('/profile', {
       onFinish: () => (form.processing = false), // 送信完了時にfalseに戻す
     });
-  } catch (e: any) {
-    axios.post('/api/log-error', {
-      error: e.toString(),
-      component: 'UpdateProfileInformationForm.vue save method',
-    });
+  } catch (error: any) {
+    console.error('UpdateProfileInformationForm.vue save method error:', error.message);
   }
 };
 

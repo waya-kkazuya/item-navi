@@ -38,22 +38,16 @@ onMounted(async () => {
   try {
     const profileRes = await axios.get('/api/profile-image');
     profileImageUrl.value = profileRes.data.profile_image_url;
-  } catch (e: any) {
-    axios.post('/api/log-error', {
-      error: e.toString(),
-      component: 'AuthenticatedLayout.vue get profile_image_url',
-    });
+  } catch (error: any) {
+    console.error('AuthenticatedLayout.vue get profile_image_url error:', error.message);
   }
 
   // 通知数の取得
   try {
     const notificationsRes = await axios.get('/api/notifications_count');
     notifications.value = notificationsRes.data;
-  } catch (e: any) {
-    axios.post('/api/log-error', {
-      error: e.toString(),
-      component: 'AuthenticatedLayout.vue get notifications_count',
-    });
+  } catch (error: any) {
+    console.error('AuthenticatedLayout.vue get notifications_count error:', error.message);
   }
 });
 </script>

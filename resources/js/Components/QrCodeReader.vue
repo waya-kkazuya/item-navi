@@ -32,11 +32,8 @@ const onDetect = (content: QrCodeContent[]) => {
     } else {
       alert('QRコードの内容を取得できませんでした');
     }
-  } catch (e: any) {
-    axios.post('/api/log-error', {
-      error: e.toString(),
-      component: 'QrCodeReader.vue onDetect method',
-    });
+  } catch (error: any) {
+    console.error('QrCodeReader.vue onDetect method error:', error.message);
     alert('エラーが発生しました、もう一度お試しください');
   }
   scannerActive.value = false; // スキャンが完了したらカメラを停止

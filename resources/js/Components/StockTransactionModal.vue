@@ -30,11 +30,8 @@ const fetchStockTransactions = async (item: ItemType): Promise<void> => {
     graphData.stocks = res.data.stocks;
     graphData.transaction_types = res.data.transaction_types;
     graphData.minimum_stock = res.data.minimum_stock;
-  } catch (e: any) {
-    axios.post('/api/log-error', {
-      error: e.toString(),
-      component: 'StockTransactionModal.vue fetchStockTransactions method',
-    });
+  } catch (error: any) {
+    console.error('StockTransactionModal.vue fetchStockTransactions method error:', error.message);
   }
 };
 

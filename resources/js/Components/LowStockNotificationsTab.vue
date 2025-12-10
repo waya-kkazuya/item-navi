@@ -35,11 +35,8 @@ onMounted(() => {
 const markAsRead = async (id: string): Promise<void> => {
   try {
     await axios.patch(`/api/notifications/${id}/read`);
-  } catch (e: any) {
-    axios.post('/api/log-error', {
-      error: e.toString(),
-      component: 'LowStockNotificationsTab.vue markAsRead method',
-    });
+  } catch (error: any) {
+    console.error('LowStockNotificationsTab.vue markAsRead method error:', error.message);
   }
 };
 </script>

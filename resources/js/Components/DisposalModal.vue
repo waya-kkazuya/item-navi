@@ -37,11 +37,8 @@ const saveDisposal = (item: ItemType): void => {
         },
       });
     }
-  } catch (e: any) {
-    axios.post('/api/log-error', {
-      error: e.toString(),
-      component: 'DisposalModal.vue saveDisposal method',
-    });
+  } catch (error: any) {
+    console.error('DisposalModal.vue saveDisposal method error:', error.message);
   }
 };
 </script>

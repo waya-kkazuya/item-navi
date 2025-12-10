@@ -27,11 +27,8 @@ const editHistories = async (item: ItemType): Promise<void> => {
       editHistoriesData.value = res.data.edithistories;
     });
     toggleStatus();
-  } catch (e: any) {
-    axios.post('/api/log-error', {
-      error: e.toString(),
-      component: 'EditHistoryModal.vue editHistories method',
-    });
+  } catch (error: any) {
+    console.error('EditHistoryModal.vue editHistories method error:', error.message);
   }
 };
 

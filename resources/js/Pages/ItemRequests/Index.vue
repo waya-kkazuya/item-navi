@@ -49,11 +49,8 @@ const updateStatus = async (request: ItemRequestType) => {
     await axios.post(`/api/item-requests/${request.id}/update-status`, {
       requestStatusId: request.request_status_id,
     });
-  } catch (e: any) {
-    axios.post('/api/log-error', {
-      error: e.toString(),
-      component: 'ItemRequests/Index.vue updateStatus method',
-    });
+  } catch (error: any) {
+    console.error('ItemRequests/Index.vue updateStatus method error:', error.message);
     // フラッシュメッセージの代わりにアラートを表示する
     alert('ステータスの変更に失敗しました、もう一度お試しください。');
   } finally {
@@ -67,11 +64,8 @@ const getUserRole = async () => {
   try {
     const res = await axios.get('/api/user-role');
     loginUserRole.value = res.data;
-  } catch (e: any) {
-    axios.post('/api/log-error', {
-      error: e.toString(),
-      component: 'ItemRequests/Index.vue getUserRole method',
-    });
+  } catch (error: any) {
+    console.error('ItemRequests/Index.vue getUserRole method error:', error.message);
   }
 };
 
@@ -86,11 +80,8 @@ const deleteItemRequest = (request: ItemRequestType) => {
         method: 'delete',
       });
     }
-  } catch (e: any) {
-    axios.post('/api/log-error', {
-      error: e.toString(),
-      component: 'ItemRequests/Index.vue deleteItemRequest method',
-    });
+  } catch (error: any) {
+    console.error('ItemRequests/Index.vue deleteItemRequest method error:', error.message);
   }
 };
 </script>
@@ -117,8 +108,8 @@ const deleteItemRequest = (request: ItemRequestType) => {
                     id="createItemRequest"
                     class="flex items-center text-white text-sm bg-gray-400 border-0 py-2 px-6 focus:outline-none hover:bg-gray-300 rounded"
                   >
-                    <PlusIcon class="size-6" />
-                    備品をリクエストする
+                    <PlusIcon class="size-5" />
+                    備品をリクエスト
                   </Link>
                 </div>
               </div>
@@ -131,12 +122,12 @@ const deleteItemRequest = (request: ItemRequestType) => {
                         v-if="sortOrder == 'asc'"
                         class="w-full flex justify-center items-center whitespace-nowrap"
                       >
-                        日付古い順
                         <ArrowUpIcon class="size-5 ml-1" />
+                        古い順
                       </div>
                       <div v-else class="w-full flex justify-center items-center whitespace-nowrap">
-                        日付新しい順
                         <ArrowDownIcon class="size-5 ml-1" />
+                        新しい順
                       </div>
                     </div>
                   </button>
