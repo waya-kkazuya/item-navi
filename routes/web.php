@@ -112,9 +112,6 @@ Route::middleware(['auth', 'verified', 'can:user-higher'])->group(function () {
 // AWSのターゲットグループのヘルスチェック用
 Route::get('/health-check', function () {
     return response()->json(['status' => 'OK']);
-})->withoutMiddleware([
-    \Illuminate\Session\Middleware\StartSession::class,
-    \App\Http\Middleware\VerifyCsrfToken::class,
-]);
+})->withoutMiddleware([]);
 
 require __DIR__ . '/auth.php';
