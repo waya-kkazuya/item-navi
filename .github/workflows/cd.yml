@@ -89,16 +89,11 @@ jobs:
           echo "DB_USERNAME=$db_username" >> .env
           echo "DB_DATABASE=$db_database" >> .env
           
-
           # セッションの設定
           echo "SESSION_DOMAIN=${{ secrets.PROD_SESSION_DOMAIN }}" >> .env
 
-          # ファイルシステムをs3に変更する設定
-          echo "FILESYSTEM_DISK=s3" >> .env
-          echo "AWS_DEFAULT_REGION=${{ secrets.PROD_AWS_DEFAULT_REGION }}" >> .env
-          echo "AWS_BUCKET=${{ secrets.PROD_AWS_BUCKET }}" >> .env
-          echo "AWS_URL=${{ secrets.PROD_APP_URL }}" >> .env
-          echo "S3_BUCKET_URL=${{ secrets.PROD_S3_BUCKET_URL }}" >> .env
+          # ファイルシステムをpublicに変更（変更点）
+          echo "FILESYSTEM_DISK=public" >> .env
 
           # ログの設定
           echo "LOG_SLACK_WEBHOOK_URL=${{ secrets.PROD_LOG_SLACK_WEBHOOK_URL }}" >> .env
