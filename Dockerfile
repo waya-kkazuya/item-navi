@@ -59,12 +59,12 @@ COPY . /var/www/html
 # Composerの依存関係をインストール
 RUN composer install --no-dev --optimize-autoloader --no-interaction --prefer-dist
 
+# シンボリックリンクを作成（追加）
+RUN php artisan storage:link
+
 # ログディレクトリの所有者と権限を設定 
 RUN chown -R www-data:www-data /var/www/html/storage \
     && chmod -R 775 /var/www/html/storage
-
-# 本番環境でシンボリックリンクを削除
-RUN rm -f /var/www/html/public/storage
 
 # コンテナのポートを公開
 EXPOSE 80
