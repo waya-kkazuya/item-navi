@@ -26,6 +26,12 @@ RUN apt-get update && apt-get install -y \
     xfonts-75dpi \
     xfonts-base
 
+# AWS CLI v2 のインストール
+RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" \
+    && unzip awscliv2.zip \
+    && ./aws/install \
+    && rm -rf aws awscliv2.zip
+
 # ライブラリファイルを取得
 RUN wget http://archive.ubuntu.com/ubuntu/pool/main/o/openssl/libssl1.1_1.1.0g-2ubuntu4_amd64.deb && \
     wget http://archive.ubuntu.com/ubuntu/pool/main/libj/libjpeg-turbo/libjpeg-turbo8_2.0.3-0ubuntu1_amd64.deb && \
@@ -59,6 +65,18 @@ COPY . /var/www/html
 # Composerの依存関係をインストール
 RUN composer install --no-dev --optimize-autoloader --no-interaction --prefer-dist
 
+# storage/app/public/ のディレクトリを作成
+RUN mkdir -p /var/www/html/storage/app/public/items \
+    && mkdir -p /var/www/html/storage/app/public/images \
+    && mkdir -p /var/www/html/storage/app/public/fonts \
+    && mkdir -p /var/www/html/storage/app/public/labels \
+    && mkdir -p /var/www/html/storage/app/public/profile \
+    && mkdir -p /var/www/html/storage/app/public/qrcode
+
+# entrypointスクリプトをコピー
+COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
+RUN chmod +x /usr/local/bin/docker-entrypoint.sh
+
 # ログディレクトリの所有者と権限を設定 
 RUN chown -R www-data:www-data /var/www/html/storage \
     && chmod -R 775 /var/www/html/storage
@@ -68,3 +86,9 @@ RUN rm -f /var/www/html/public/storage
 
 # コンテナのポートを公開
 EXPOSE 80
+
+# ENTRYPOINTを設定
+ENTRYPOINT ["docker-entrypoint.sh"]
+
+# デフォルトコマンド（Apacheを起動）
+CMD ["apache2-foreground"]
