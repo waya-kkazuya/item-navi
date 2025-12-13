@@ -56,43 +56,6 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ env.AWS_REGION }}
 
-      # ビルド資産を S3 へアップ（長期キャッシュ）
-      # CloudFront 側は origin_path=/storage、/build/* を S3 オリジンへ振る前提
-      - name: Sync Vite assets to S3 (long cache)
-        run: |
-          aws s3 sync "public/build/assets" "s3://${{ secrets.PROD_AWS_BUCKET }}/build/assets" \
-            --delete \
-            --cache-control "public,max-age=31536000,immutable"
-
-      # manifest.json は短期キャッシュで個別アップ
-      - name: Upload manifest.json (short cache)
-        run: |
-          aws s3 cp public/build/manifest.json \
-            s3://${{ secrets.PROD_AWS_BUCKET }}/build/manifest.json \
-            --cache-control "public,max-age=300"
-            
-      # favicon.icoをアップ
-      - name: Upload favicon
-        run: |
-          aws s3 cp public/favicon.ico \
-            s3://${{ secrets.PROD_AWS_BUCKET }}/favicon.ico \
-            --cache-control "public,max-age=86400"
-
-      # Terraformでdistribution IDは毎度変化するのでAWS CLIで取得
-      - name: Resolve CloudFront distribution ID by alias
-        run: |
-          CF_ID=$(aws cloudfront list-distributions \
-            --query "DistributionList.Items[?contains(Aliases.Items || \`[]\`, 'itemnavi.biz')].Id | [0]" \
-            --output text)
-          echo "CF_DIST_ID=$CF_ID" >> $GITHUB_ENV
-
-      # manifest だけキャッシュ無効化
-      - name: Invalidate manifest
-        run: |
-          aws cloudfront create-invalidation \
-            --distribution-id ${{ env.CF_DIST_ID }} \
-            --paths "/build/manifest.json"
-
       - name: Create .env file
         run: |
           cp .env.example .env
