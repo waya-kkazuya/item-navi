@@ -10,7 +10,7 @@ echo "======================================"
 
 # S3から画像を同期
 echo "Syncing images from S3..."
-aws s3 sync s3://bucket-portfolio-ems/storage/app/public/ \
+aws s3 sync s3://bucket-portfolio-ems/ \
     /var/www/html/storage/app/public/ \
     --exclude ".gitkeep" \
     || echo "Warning: Failed to sync images from S3 (this is normal in local development)"
