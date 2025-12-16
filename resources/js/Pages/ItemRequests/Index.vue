@@ -139,63 +139,63 @@ const deleteItemRequest = (request: ItemRequestType) => {
                     <tr>
                       <th
                         v-if="loginUserRole !== null && loginUserRole <= 5"
-                        class="min-w-32 md:min-w-32 px-4 py-3 title-font tracking-wider font-medium text-center text-white text-xs md:text-base bg-sky-700"
+                        class="min-w-32 md:min-w-32 px-4 py-3 title-font tracking-wider font-medium text-center text-white text-xs md:text-sm bg-sky-700"
                       >
                         登録
                       </th>
                       <th
-                        class="min-w-32 md:min-w-32 px-4 py-3 title-font tracking-wider font-medium text-center text-white text-xs md:text-base bg-sky-700"
+                        class="min-w-32 md:min-w-32 px-4 py-3 title-font tracking-wider font-medium text-center text-white text-xs md:text-sm bg-sky-700"
                       >
                         ステータス
                       </th>
                       <th
-                        class="min-w-48 md:min-w-48 px-4 py-3 title-font tracking-wider font-medium text-center text-white text-xs md:text-base bg-sky-700"
+                        class="min-w-48 md:min-w-48 px-4 py-3 title-font tracking-wider font-medium text-center text-white text-xs md:text-sm bg-sky-700"
                       >
                         登録日
                       </th>
                       <th
-                        class="min-w-28 md:min-w-40 px-4 py-3 title-font tracking-wider font-medium text-center text-white text-xs md:text-base bg-sky-700"
+                        class="min-w-28 md:min-w-40 px-4 py-3 title-font tracking-wider font-medium text-center text-white text-xs md:text-sm bg-sky-700"
                       >
                         商品名
                       </th>
                       <th
-                        class="min-w-32 md:min-w-40 px-4 py-3 title-font tracking-wider font-medium text-center text-white text-xs md:text-base bg-sky-700"
+                        class="min-w-32 md:min-w-40 px-4 py-3 title-font tracking-wider font-medium text-center text-white text-xs md:text-sm bg-sky-700"
                       >
                         カテゴリ
                       </th>
                       <th
-                        class="min-w-28 md:min-w-32 px-4 py-3 title-font tracking-wider font-medium text-center text-white text-xs md:text-base bg-sky-700"
+                        class="min-w-28 md:min-w-32 px-4 py-3 title-font tracking-wider font-medium text-center text-white text-xs md:text-sm bg-sky-700"
                       >
                         利用場所
                       </th>
                       <th
-                        class="min-w-32 md:min-w-32 px-4 py-3 title-font tracking-wider font-medium text-center text-white text-xs md:text-base bg-sky-700"
+                        class="min-w-32 md:min-w-32 px-4 py-3 title-font tracking-wider font-medium text-center text-white text-xs md:text-sm bg-sky-700"
                       >
                         メーカー
                       </th>
                       <th
-                        class="min-w-28 md:min-w-32 px-4 py-3 title-font tracking-wider font-medium text-center text-white text-xs md:text-base bg-sky-700"
+                        class="min-w-28 md:min-w-32 px-4 py-3 title-font tracking-wider font-medium text-center text-white text-xs md:text-sm bg-sky-700"
                       >
                         参考サイト
                       </th>
                       <th
-                        class="min-w-24 md:min-w-32 px-4 py-3 title-font tracking-wider font-medium text-center text-white text-xs md:text-base bg-sky-700"
+                        class="min-w-24 md:min-w-32 px-4 py-3 title-font tracking-wider font-medium text-center text-white text-xs md:text-sm bg-sky-700"
                       >
                         価格
                       </th>
                       <th
-                        class="min-w-24 md:min-w-32 px-4 py-3 title-font tracking-wider font-medium text-center text-white text-xs md:text-base bg-sky-700"
+                        class="min-w-24 md:min-w-32 px-4 py-3 title-font tracking-wider font-medium text-center text-white text-xs md:text-sm bg-sky-700"
                       >
                         申請者
                       </th>
                       <th
-                        class="min-w-48 md:min-w-48 px-4 py-3 title-font tracking-wider font-medium text-center text-white text-xs md:text-base bg-sky-700"
+                        class="min-w-48 md:min-w-48 px-4 py-3 title-font tracking-wider font-medium text-center text-white text-xs md:text-sm bg-sky-700"
                       >
                         申請理由
                       </th>
                       <th
                         v-if="loginUserRole !== null && loginUserRole <= 5"
-                        class="min-w-36 md:min-w-36 px-4 py-3 title-font tracking-wider font-medium text-center text-white text-xs md:text-base bg-sky-700"
+                        class="min-w-36 md:min-w-36 px-4 py-3 title-font tracking-wider font-medium text-center text-white text-xs md:text-sm bg-sky-700"
                       ></th>
                     </tr>
                   </thead>
@@ -203,7 +203,7 @@ const deleteItemRequest = (request: ItemRequestType) => {
                     <tr v-for="request in itemRequests.data" :key="request.id">
                       <td
                         v-if="loginUserRole !== null && loginUserRole <= 5"
-                        class="border-b-2 border-gray-200 text-center text-xs md:text-base px-4 py-3"
+                        class="border-b-2 border-gray-200 text-center text-xs md:text-sm px-4 py-3"
                       >
                         <Link
                           as="button"
@@ -223,7 +223,7 @@ const deleteItemRequest = (request: ItemRequestType) => {
                         </Link>
                       </td>
                       <td
-                        class="border-b-2 border-gray-200 text-center text-xs md:text-base px-4 py-3"
+                        class="border-b-2 border-gray-200 text-center text-xs md:text-sm px-4 py-3"
                       >
                         <template v-if="loginUserRole !== null && loginUserRole <= 5">
                           <select
@@ -232,7 +232,7 @@ const deleteItemRequest = (request: ItemRequestType) => {
                             v-model="request.request_status_id"
                             @change="updateStatus(request)"
                             :class="[
-                              'w-full bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-xs md:text-base outline-none text-gray-700 py-0 md:py-1 md:px-3 leading-8 transition-colors duration-200 ease-in-out',
+                              'w-full bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-xs md:text-sm outline-none text-gray-700 py-0 md:py-1 md:px-3 leading-8 transition-colors duration-200 ease-in-out',
                               {
                                 'bg-gray-200': request.request_status_id == 1,
                                 'bg-yellow-200': request.request_status_id == 2,
@@ -253,7 +253,7 @@ const deleteItemRequest = (request: ItemRequestType) => {
                         <template v-else>
                           <div
                             :class="[
-                              'w-full bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-xs md:text-base outline-none text-gray-700 py-0 md:py-1 md:px-3 leading-8 transition-colors duration-200 ease-in-out',
+                              'w-full bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-xs md:text-sm outline-none text-gray-700 py-0 md:py-1 md:px-3 leading-8 transition-colors duration-200 ease-in-out',
                               {
                                 'bg-gray-200': request.request_status_id == 1,
                                 'bg-yellow-200': request.request_status_id == 2,
@@ -267,53 +267,53 @@ const deleteItemRequest = (request: ItemRequestType) => {
                         </template>
                       </td>
                       <td
-                        class="border-b-2 border-gray-200 text-center text-xs md:text-base px-4 py-2"
+                        class="border-b-2 border-gray-200 text-center text-xs md:text-sm px-4 py-2"
                       >
                         {{ request.formatted_created_at }}
                       </td>
                       <td
-                        class="border-b-2 border-gray-200 text-center text-xs md:text-base px-4 py-2"
+                        class="border-b-2 border-gray-200 text-center text-xs md:text-sm px-4 py-2"
                       >
                         {{ request.name }}
                       </td>
                       <td
-                        class="border-b-2 border-gray-200 text-center text-xs md:text-base px-4 py-2"
+                        class="border-b-2 border-gray-200 text-center text-xs md:text-sm px-4 py-2"
                       >
                         {{ request.category.name }}
                       </td>
                       <td
-                        class="border-b-2 border-gray-200 text-center text-xs md:text-base px-4 py-2"
+                        class="border-b-2 border-gray-200 text-center text-xs md:text-sm px-4 py-2"
                       >
                         {{ request.location_of_use.name }}
                       </td>
                       <td
-                        class="border-b-2 border-gray-200 text-center text-xs md:text-base px-4 py-2"
+                        class="border-b-2 border-gray-200 text-center text-xs md:text-sm px-4 py-2"
                       >
                         {{ request.manufacturer }}
                       </td>
                       <td
-                        class="border-b-2 border-gray-200 text-center text-xs md:text-base px-4 py-2"
+                        class="border-b-2 border-gray-200 text-center text-xs md:text-sm px-4 py-2"
                       >
                         {{ request.reference }}
                       </td>
                       <td
-                        class="border-b-2 border-gray-200 text-center text-xs md:text-base px-4 py-2"
+                        class="border-b-2 border-gray-200 text-center text-xs md:text-sm px-4 py-2"
                       >
                         {{ request.price }}
                       </td>
                       <td
-                        class="border-b-2 border-gray-200 text-center text-xs md:text-base px-4 py-2"
+                        class="border-b-2 border-gray-200 text-center text-xs md:text-sm px-4 py-2"
                       >
                         {{ request.requestor }}
                       </td>
                       <td
-                        class="border-b-2 border-gray-200 text-center text-xs md:text-base px-4 py-2"
+                        class="border-b-2 border-gray-200 text-center text-xs md:text-sm px-4 py-2"
                       >
                         {{ request.remarks_from_requestor ?? '' }}
                       </td>
                       <td
                         v-if="loginUserRole !== null && loginUserRole <= 5"
-                        class="border-b-2 border-gray-200 text-center text-xs md:text-base px-4 py-2"
+                        class="border-b-2 border-gray-200 text-center text-xs md:text-sm font-semibold px-4 py-2"
                       >
                         <button
                           @click="deleteItemRequest(request)"
@@ -336,7 +336,6 @@ const deleteItemRequest = (request: ItemRequestType) => {
               <!-- ページネーションと件数(表の下) -->
               <div class="mt-6 flex flex-col items-center justify-end space-y-3">
                 <Pagination :links="itemRequests.links" />
-                <div class="font-medium text-xs md:text-sm">合計{{ totalCount }}件</div>
               </div>
             </section>
           </div>
