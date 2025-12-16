@@ -112,35 +112,24 @@ const deleteItemRequest = (request: ItemRequestType) => {
         <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
           <div class="p-6 text-gray-900">
             <FlashMessage />
-            <section class="mt-2 text-gray-600 body-font">
-              <div class="py-4 mb-4">
-                <div class="md:w-24 ml-4">
-                  <button @click="toggleSortOrder" class="flex w-full text-sm">
-                    <div>
-                      <div
-                        v-if="sortOrder == 'asc'"
-                        class="w-full flex justify-center items-center whitespace-nowrap"
-                      >
-                        <ArrowUpIcon class="size-5 ml-1" />
-                        古い順
-                      </div>
-                      <div v-else class="w-full flex justify-center items-center whitespace-nowrap">
-                        <ArrowDownIcon class="size-5 ml-1" />
-                        新しい順
-                      </div>
-                    </div>
+            <section class="text-gray-600 body-font">
+              <div class="mb-4">
+                <div class="flex items-center px-2 py-2">
+                  <!-- ソートボタン -->
+                  <button
+                    @click="toggleSortOrder"
+                    class="inline-flex items-center gap-1.5 px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+                  >
+                    <component
+                      :is="sortOrder === 'asc' ? ArrowUpIcon : ArrowDownIcon"
+                      class="size-4"
+                    />
+                    <span>{{ sortOrder === 'asc' ? '古い順' : '新しい順' }}</span>
                   </button>
-                </div>
-
-                <div class="flex justify-end items-end space-x-2 mr-4">
-                  <div class="font-medium text-xs md:text-sm">
-                    リクエスト合計 {{ totalCount }}件
-                  </div>
-                  <Pagination class="ml-4" :links="itemRequests.links"></Pagination>
                 </div>
               </div>
 
-              <!-- 行表示 -->
+              <!-- テーブル表示 -->
               <div class="min-w-full overflow-auto">
                 <table
                   v-if="itemRequests.data && itemRequests.data.length > 0"
@@ -344,8 +333,10 @@ const deleteItemRequest = (request: ItemRequestType) => {
                 </div>
               </div>
 
-              <div class="mb-4 flex justify-end">
-                <Pagination class="mt-6" :links="itemRequests.links"></Pagination>
+              <!-- ページネーションと件数(表の下) -->
+              <div class="mt-6 flex flex-col items-center justify-end space-y-3">
+                <Pagination :links="itemRequests.links" />
+                <div class="font-medium text-xs md:text-sm">合計{{ totalCount }}件</div>
               </div>
             </section>
           </div>
