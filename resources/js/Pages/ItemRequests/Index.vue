@@ -91,7 +91,20 @@ const deleteItemRequest = (request: ItemRequestType) => {
 
   <AuthenticatedLayout>
     <template #header>
-      <h2 class="font-semibold text-xl text-gray-800 leading-tight">リクエスト一覧</h2>
+      <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+        <div>
+          <h2 class="font-semibold text-xl text-gray-800 leading-tight">リクエスト一覧</h2>
+          <p class="mt-1 text-sm text-gray-600">備品のリクエストを管理</p>
+        </div>
+
+        <Link
+          :href="route('item_requests.create')"
+          class="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all shadow-sm hover:shadow"
+        >
+          <PlusIcon class="size-4" />
+          備品をリクエスト
+        </Link>
+      </div>
     </template>
 
     <div class="py-2 md:py-4">
@@ -100,20 +113,6 @@ const deleteItemRequest = (request: ItemRequestType) => {
           <div class="p-6 text-gray-900">
             <FlashMessage />
             <section class="mt-2 text-gray-600 body-font">
-              <div class="container md:px-5 mx-auto">
-                <div class="flex items-center justify-around space-x-4">
-                  <Link
-                    as="button"
-                    :href="route('item_requests.create')"
-                    id="createItemRequest"
-                    class="flex items-center text-white text-sm bg-gray-400 border-0 py-2 px-6 focus:outline-none hover:bg-gray-300 rounded"
-                  >
-                    <PlusIcon class="size-5" />
-                    備品をリクエスト
-                  </Link>
-                </div>
-              </div>
-
               <div class="py-4 mb-4">
                 <div class="md:w-24 ml-4">
                   <button @click="toggleSortOrder" class="flex w-full text-sm">
