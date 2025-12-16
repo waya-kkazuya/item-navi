@@ -22,11 +22,10 @@ permissions:
 jobs:
 # Build
   build-and-push:
-    if: github.event.pull_request.merged == true
-    # if: |
-    #   github.event.pull_request.merged == true && 
-    #   contains(github.event.pull_request.labels.*.name, 'deploy') &&
-    #   !contains(github.event.pull_request.title, '[skip ci]')
+    if: |
+      github.event.pull_request.merged == true && 
+      (contains(github.event.pull_request.labels.*.name, 'deploy') ||
+       contains(github.event.pull_request.title, '[deploy]'))
     runs-on: ubuntu-latest
     defaults:
       run:
