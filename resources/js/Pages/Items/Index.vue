@@ -168,7 +168,7 @@ const restoreItem = async (itemId: number): Promise<void> => {
                           v-model="search"
                           placeholder="備品名で検索"
                           @keyup.enter="fetchAndFilterItems"
-                          class="h-9 w-full md:w-96 lg:w-60 text-sm md:text-base placeholder-text-xs md:placeholder-text-base"
+                          class="h-9 w-full md:w-96 lg:w-60 text-sm md:text-sm placeholder-text-xs md:placeholder-text-base"
                         />
                         <button
                           @click="fetchAndFilterItems"
@@ -183,7 +183,7 @@ const restoreItem = async (itemId: number): Promise<void> => {
                       <div>
                         <button
                           @click="clearState"
-                          class="text-xs md:text-base flex justify-center items-center w-16 h-9 p-2 md:ml-4 bg-gray-100 hover:bg-gray-200 text-gray-500 border border-gray-300 focus:outline-none rounded"
+                          class="text-xs md:text-sm flex justify-center items-center w-16 h-9 p-2 md:ml-4 bg-gray-100 hover:bg-gray-200 text-gray-500 border border-gray-300 focus:outline-none rounded"
                         >
                           クリア
                         </button>
@@ -349,107 +349,107 @@ const restoreItem = async (itemId: number): Promise<void> => {
                       <tr>
                         <th
                           v-if="isDisposal"
-                          class="min-w-16 md:min-w-24 px-4 py-3 title-font tracking-wider font-medium text-center text-white text-xs md:text-base bg-sky-700"
+                          class="min-w-16 md:min-w-24 px-4 py-3 title-font tracking-wider font-medium text-center text-white text-xs md:text-sm bg-sky-700"
                         >
                           復元
                         </th>
                         <th
-                          class="min-w-16 md:min-w-20 px-4 py-3 title-font tracking-wider font-medium text-center text-white text-xs md:text-base bg-sky-700"
+                          class="min-w-16 md:min-w-20 px-4 py-3 title-font tracking-wider font-medium text-center text-white text-xs md:text-sm bg-sky-700"
                         >
                           履歴
                         </th>
                         <th
-                          class="min-w-28 md:min-w-32 px-4 py-3 title-font tracking-wider font-medium text-center text-white text-xs md:text-base bg-sky-700"
+                          class="min-w-28 md:min-w-32 px-4 py-3 title-font tracking-wider font-medium text-center text-white text-xs md:text-sm bg-sky-700"
                         >
                           管理ID
                         </th>
                         <th
-                          class="min-w-28 md:min-w-36 px-4 py-3 title-font tracking-wider font-medium text-center text-white text-xs md:text-base bg-sky-700"
+                          class="min-w-28 md:min-w-36 px-4 py-3 title-font tracking-wider font-medium text-center text-white text-xs md:text-sm bg-sky-700"
                         >
                           登録日
                         </th>
                         <th
-                          class="min-w-32 md:min-w-44 px-4 py-3 title-font tracking-wider font-medium text-center text-white text-xs md:text-base bg-sky-700"
+                          class="min-w-32 md:min-w-44 px-4 py-3 title-font tracking-wider font-medium text-center text-white text-xs md:text-sm bg-sky-700"
                         >
                           備品名
                         </th>
                         <th
-                          class="min-w-24 md:min-w-28 px-4 py-3 title-font tracking-wider font-medium text-center text-white text-xs md:text-base bg-sky-700"
+                          class="min-w-24 md:min-w-28 px-4 py-3 title-font tracking-wider font-medium text-center text-white text-xs md:text-sm bg-sky-700"
                         >
                           画像
                         </th>
                         <th
-                          class="min-w-32 md:min-w-40 px-4 py-3 title-font tracking-wider font-medium text-center text-white text-xs md:text-base bg-sky-700"
+                          class="min-w-32 md:min-w-40 px-4 py-3 title-font tracking-wider font-medium text-center text-white text-xs md:text-sm bg-sky-700"
                         >
                           カテゴリ
                         </th>
                         <th
-                          class="min-w-20 md:min-w-28 px-4 py-3 title-font tracking-wider font-medium text-center text-white text-xs md:text-base bg-sky-700"
+                          class="min-w-20 md:min-w-28 px-4 py-3 title-font tracking-wider font-medium text-center text-white text-xs md:text-sm bg-sky-700"
                         >
                           在庫数
                         </th>
                         <th
-                          class="min-w-24 md:min-w-28 px-4 py-3 title-font tracking-wider font-medium text-center text-white text-xs md:text-base bg-sky-700"
+                          class="min-w-24 md:min-w-28 px-4 py-3 title-font tracking-wider font-medium text-center text-white text-xs md:text-sm bg-sky-700"
                         >
                           利用状況
                         </th>
                         <th
-                          class="min-w-20 md:min-w-28 px-4 py-3 title-font tracking-wider font-medium text-center text-white text-xs md:text-base bg-sky-700"
+                          class="min-w-20 md:min-w-28 px-4 py-3 title-font tracking-wider font-medium text-center text-white text-xs md:text-sm bg-sky-700"
                         >
                           使用者
                         </th>
                         <th
-                          class="min-w-28 md:min-w-32 px-4 py-3 title-font tracking-wider font-medium text-center text-white text-xs md:text-base bg-sky-700"
+                          class="min-w-28 md:min-w-32 px-4 py-3 title-font tracking-wider font-medium text-center text-white text-xs md:text-sm bg-sky-700"
                         >
                           利用場所
                         </th>
                         <th
-                          class="min-w-28 md:min-w-32 px-4 py-3 title-font tracking-wider font-medium text-center text-white text-xs md:text-base bg-sky-700"
+                          class="min-w-28 md:min-w-32 px-4 py-3 title-font tracking-wider font-medium text-center text-white text-xs md:text-sm bg-sky-700"
                         >
                           保管場所
                         </th>
                         <th
-                          class="min-w-28 md:min-w-32 px-4 py-3 title-font tracking-wider font-medium text-center text-white text-xs md:text-base bg-sky-700"
+                          class="min-w-28 md:min-w-32 px-4 py-3 title-font tracking-wider font-medium text-center text-white text-xs md:text-sm bg-sky-700"
                         >
                           取得区分
                         </th>
                         <th
-                          class="min-w-32 md:min-w-36 px-4 py-3 title-font tracking-wider font-medium text-center text-white text-xs md:text-base bg-sky-700"
+                          class="min-w-32 md:min-w-36 px-4 py-3 title-font tracking-wider font-medium text-center text-white text-xs md:text-sm bg-sky-700"
                         >
                           取得先
                         </th>
                         <th
-                          class="min-w-24 md:min-w-32 px-4 py-3 title-font tracking-wider font-medium text-center text-white text-xs md:text-base bg-sky-700"
+                          class="min-w-24 md:min-w-32 px-4 py-3 title-font tracking-wider font-medium text-center text-white text-xs md:text-sm bg-sky-700"
                         >
                           取得価額
                         </th>
                         <th
-                          class="min-w-32 md:min-w-36 px-4 py-3 title-font tracking-wider font-medium text-center text-white text-xs md:text-base bg-sky-700"
+                          class="min-w-32 md:min-w-36 px-4 py-3 title-font tracking-wider font-medium text-center text-white text-xs md:text-sm bg-sky-700"
                         >
                           取得年月日
                         </th>
                         <th
-                          class="min-w-32 md:min-w-36 px-4 py-3 title-font tracking-wider font-medium text-center text-white text-xs md:text-base bg-sky-700"
+                          class="min-w-32 md:min-w-36 px-4 py-3 title-font tracking-wider font-medium text-center text-white text-xs md:text-sm bg-sky-700"
                         >
                           点検予定日
                         </th>
                         <th
-                          class="min-w-32 md:min-w-36 px-4 py-3 title-font tracking-wider font-medium text-center text-white text-xs md:text-base bg-sky-700"
+                          class="min-w-32 md:min-w-36 px-4 py-3 title-font tracking-wider font-medium text-center text-white text-xs md:text-sm bg-sky-700"
                         >
                           廃棄予定日
                         </th>
                         <th
-                          class="min-w-32 md:min-w-32 px-4 py-3 title-font tracking-wider font-medium text-center text-white text-xs md:text-base bg-sky-700"
+                          class="min-w-32 md:min-w-32 px-4 py-3 title-font tracking-wider font-medium text-center text-white text-xs md:text-sm bg-sky-700"
                         >
                           メーカー
                         </th>
                         <th
-                          class="min-w-32 md:min-w-32 px-4 py-3 title-font tracking-wider font-medium text-center text-white text-xs md:text-base bg-sky-700"
+                          class="min-w-32 md:min-w-32 px-4 py-3 title-font tracking-wider font-medium text-center text-white text-xs md:text-sm bg-sky-700"
                         >
                           製品番号
                         </th>
                         <th
-                          class="min-w-56 md:min-w-56 px-4 py-3 title-font tracking-wider font-medium text-center text-white text-xs md:text-base bg-sky-700"
+                          class="min-w-56 md:min-w-56 px-4 py-3 title-font tracking-wider font-medium text-center text-white text-xs md:text-sm bg-sky-700"
                         >
                           備考
                         </th>
@@ -481,7 +481,7 @@ const restoreItem = async (itemId: number): Promise<void> => {
                           </div>
                         </td>
                         <td
-                          class="border-b-2 border-gray-200 px-4 py-2 text-center text-xs md:text-base"
+                          class="border-b-2 border-gray-200 px-4 py-2 text-center text-xs md:text-sm"
                           :class="isDisposal ? 'bg-red-100' : ''"
                         >
                           <template v-if="!isDisposal">
@@ -498,19 +498,19 @@ const restoreItem = async (itemId: number): Promise<void> => {
                           </template>
                         </td>
                         <td
-                          class="border-b-2 border-gray-200 px-4 py-2 text-center text-xs md:text-base"
+                          class="border-b-2 border-gray-200 px-4 py-2 text-center text-xs md:text-sm"
                           :class="isDisposal ? 'bg-red-100' : ''"
                         >
                           {{ item.created_at }}
                         </td>
                         <td
-                          class="border-b-2 border-gray-200 px-4 py-2 text-center text-xs md:text-base"
+                          class="border-b-2 border-gray-200 px-4 py-2 text-center text-xs md:text-sm"
                           :class="isDisposal ? 'bg-red-100' : ''"
                         >
                           {{ item.name }}
                         </td>
                         <td
-                          class="border-b-2 border-gray-200 px-4 py-2 text-center text-xs md:text-base max-w-full h-auto"
+                          class="border-b-2 border-gray-200 px-4 py-2 text-center text-xs md:text-sm max-w-full h-auto"
                           :class="isDisposal ? 'bg-red-100' : ''"
                         >
                           <div class="flex justify-center">
@@ -518,91 +518,91 @@ const restoreItem = async (itemId: number): Promise<void> => {
                           </div>
                         </td>
                         <td
-                          class="border-b-2 border-gray-200 px-4 py-2 text-center text-xs md:text-base"
+                          class="border-b-2 border-gray-200 px-4 py-2 text-center text-xs md:text-sm"
                           :class="isDisposal ? 'bg-red-100' : ''"
                         >
                           {{ item.category.name }}
                         </td>
                         <td
-                          class="border-b-2 border-gray-200 px-4 py-2 text-center text-xs md:text-base"
+                          class="border-b-2 border-gray-200 px-4 py-2 text-center text-xs md:text-sm"
                           :class="isDisposal ? 'bg-red-100' : ''"
                         >
                           <span>{{ item.stock }}{{ item.unit.name }}</span>
                         </td>
                         <td
-                          class="border-b-2 border-gray-200 px-4 py-2 text-center text-xs md:text-base"
+                          class="border-b-2 border-gray-200 px-4 py-2 text-center text-xs md:text-sm"
                           :class="isDisposal ? 'bg-red-100' : ''"
                         >
                           {{ item.usage_status.name }}
                         </td>
                         <td
-                          class="border-b-2 border-gray-200 px-4 py-2 text-center text-xs md:text-base"
+                          class="border-b-2 border-gray-200 px-4 py-2 text-center text-xs md:text-sm"
                           :class="isDisposal ? 'bg-red-100' : ''"
                         >
                           {{ item.end_user }}
                         </td>
                         <td
-                          class="border-b-2 border-gray-200 px-4 py-2 text-center text-xs md:text-base"
+                          class="border-b-2 border-gray-200 px-4 py-2 text-center text-xs md:text-sm"
                           :class="isDisposal ? 'bg-red-100' : ''"
                         >
                           {{ item.location_of_use.name }}
                         </td>
                         <td
-                          class="border-b-2 border-gray-200 px-4 py-2 text-center text-xs md:text-base"
+                          class="border-b-2 border-gray-200 px-4 py-2 text-center text-xs md:text-sm"
                           :class="isDisposal ? 'bg-red-100' : ''"
                         >
                           {{ item.storage_location.name }}
                         </td>
                         <td
-                          class="border-b-2 border-gray-200 px-4 py-2 text-center text-xs md:text-base"
+                          class="border-b-2 border-gray-200 px-4 py-2 text-center text-xs md:text-sm"
                           :class="isDisposal ? 'bg-red-100' : ''"
                         >
                           {{ item.acquisition_method ? item.acquisition_method.name : '' }}
                         </td>
                         <td
-                          class="border-b-2 border-gray-200 px-4 py-2 text-center text-xs md:text-base"
+                          class="border-b-2 border-gray-200 px-4 py-2 text-center text-xs md:text-sm"
                           :class="isDisposal ? 'bg-red-100' : ''"
                         >
                           {{ item.acquisition_source }}
                         </td>
                         <td
-                          class="border-b-2 border-gray-200 px-4 py-2 text-center text-xs md:text-base"
+                          class="border-b-2 border-gray-200 px-4 py-2 text-center text-xs md:text-sm"
                           :class="isDisposal ? 'bg-red-100' : ''"
                         >
                           {{ item.price }}円
                         </td>
                         <td
-                          class="border-b-2 border-gray-200 px-4 py-2 text-center text-xs md:text-base"
+                          class="border-b-2 border-gray-200 px-4 py-2 text-center text-xs md:text-sm"
                           :class="isDisposal ? 'bg-red-100' : ''"
                         >
                           {{ item.date_of_acquisition }}
                         </td>
                         <td
-                          class="border-b-2 border-gray-200 px-4 py-2 text-center text-xs md:text-base"
+                          class="border-b-2 border-gray-200 px-4 py-2 text-center text-xs md:text-sm"
                           :class="isDisposal ? 'bg-red-100' : ''"
                         >
                           {{ item.inspection_scheduled_date ?? '予定なし' }}
                         </td>
                         <td
-                          class="border-b-2 border-gray-200 px-4 py-2 text-center text-xs md:text-base"
+                          class="border-b-2 border-gray-200 px-4 py-2 text-center text-xs md:text-sm"
                           :class="isDisposal ? 'bg-red-100' : ''"
                         >
                           {{ item.disposal ? item.disposal.disposal_scheduled_date : '予定なし' }}
                         </td>
                         <td
-                          class="border-b-2 border-gray-200 px-4 py-2 text-center text-xs md:text-base"
+                          class="border-b-2 border-gray-200 px-4 py-2 text-center text-xs md:text-sm"
                           :class="isDisposal ? 'bg-red-100' : ''"
                         >
                           {{ item.manufacturer }}
                         </td>
                         <td
-                          class="border-b-2 border-gray-200 px-4 py-2 text-center text-xs md:text-base"
+                          class="border-b-2 border-gray-200 px-4 py-2 text-center text-xs md:text-sm"
                           :class="isDisposal ? 'bg-red-100' : ''"
                         >
                           {{ item.product_number }}
                         </td>
                         <td
-                          class="border-b-2 border-gray-200 px-4 py-2 text-center text-xs md:text-base"
+                          class="border-b-2 border-gray-200 px-4 py-2 text-center text-xs md:text-sm"
                           :class="isDisposal ? 'bg-red-100' : ''"
                         >
                           {{ item.remarks ?? '' }}
