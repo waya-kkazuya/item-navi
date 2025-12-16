@@ -149,180 +149,184 @@ const restoreItem = async (itemId: number): Promise<void> => {
           <div class="p-4 md:p-6 text-gray-900">
             <FlashMessage />
             <section class="mt-2 text-gray-600 body-font">
-              <div class="mt-4 mb-2 space-y-4 md:max-w-4xl md:mx-auto">
-                <!-- 検索フォームとクリアボタングループ -->
-                <div
-                  class="flex flex-col lg:flex-row lg:gap-4 space-y-4 lg:space-y-0 lg:max-w-4xl lg:mx-auto"
-                >
+              <!-- ツールバー全体をカードで囲む -->
+              <div class="mb-8 bg-gray-50 rounded-lg border border-gray-200 p-4">
+                <div class="mt-4 mb-2 space-y-4 md:max-w-4xl md:mx-auto">
+                  <!-- 検索フォームとクリアボタングループ -->
                   <div
-                    class="w-full flex justify-around md:justify-center lg:justify-start items-center space-x-1 md:space-x-0 order-1 lg:order-2"
+                    class="flex flex-col lg:flex-row lg:gap-4 space-y-4 lg:space-y-0 lg:max-w-4xl lg:mx-auto"
                   >
-                    <!-- 検索フォーム -->
-                    <div class="flex items-center flex-1 md:flex-none">
-                      <input
-                        type="text"
-                        name="search"
-                        id="search"
-                        v-model="search"
-                        placeholder="備品名で検索"
-                        @keyup.enter="fetchAndFilterItems"
-                        class="h-9 w-full md:w-96 lg:w-60 text-sm md:text-base placeholder-text-xs md:placeholder-text-base"
-                      />
-                      <button
-                        @click="fetchAndFilterItems"
-                        id="searchButton"
-                        class="h-9 w-9 md:w-10 bg-blue-300 text-white py-2 px-2 flex justify-center items-center border border-gray-300"
-                      >
-                        <MagnifyingGlassIcon class="size-6" />
-                      </button>
-                    </div>
-
-                    <!-- 条件をすべてクリアするボタン -->
-                    <div>
-                      <button
-                        @click="clearState"
-                        class="text-xs md:text-base flex justify-center items-center w-16 md:w-16 md:w-16 h-9 p-2 md:ml-4 bg-gray-100 hover:bg-gray-200 text-gray-500 border border-gray-300 focus:outline-none rounded"
-                      >
-                        クリア
-                      </button>
-                    </div>
-                  </div>
-
-                  <!-- プルダウングループ -->
-                  <div
-                    class="w-full mt-4 flex justify-around md:justify-center lg:justify-end items-center space-x-1 md:space-x-4 order-2 lg:order-1"
-                  >
-                    <!-- 備品カテゴリプルダウン -->
-                    <div class="w-full sm:w-1/3 md:w-auto">
-                      <select
-                        v-model="categoryId"
-                        @change="fetchAndFilterItems"
-                        class="h-9 w-[6.5rem] md:w-40 text-xs md:text-sm"
-                      >
-                        <option :value="0">カテゴリ</option>
-                        <option
-                          v-for="category in categories"
-                          :value="category.id"
-                          :key="category.id"
-                        >
-                          {{ category.name }}
-                        </option>
-                      </select>
-                    </div>
-
-                    <!-- 利用場所のプルダウン -->
-                    <div class="w-full sm:w-1/3 md:w-auto">
-                      <select
-                        v-model="locationOfUseId"
-                        @change="fetchAndFilterItems"
-                        class="h-9 w-[6.5rem] md:w-40 text-xs md:text-sm"
-                      >
-                        <option :value="0">利用場所</option>
-                        <option
-                          v-for="location in locations"
-                          :value="location.id"
-                          :key="location.id"
-                        >
-                          {{ location.name }}
-                        </option>
-                      </select>
-                    </div>
-
-                    <!-- 保管場所のプルダウン -->
-                    <div class="w-full sm:w-1/3 md:w-auto">
-                      <select
-                        v-model="storageLocationId"
-                        @change="fetchAndFilterItems"
-                        class="h-9 w-[6.5rem] md:w-40 text-xs md:text-sm"
-                      >
-                        <option :value="0">保管場所</option>
-                        <option
-                          v-for="location in locations"
-                          :value="location.id"
-                          :key="location.id"
-                        >
-                          {{ location.name }}
-                        </option>
-                      </select>
-                    </div>
-                  </div>
-                </div>
-
-                <!-- 表示切り替えボタンとソート機能のグループ -->
-                <div
-                  class="w-full flex justify-around md:justify-center items-center space-x-1 md:space-x-4 order-3 lg:order-3 md:max-w-lg md:mx-auto lg:max-w-4xl lg:mx-auto"
-                >
-                  <div class="flex items-center w-full space-x-1 lg:space-x-2">
-                    <!-- 行表示・タイル表示の切り替えボタン -->
-                    <div class="flex space-x-0">
-                      <div
-                        @click="isTableView = true"
-                        class="h-8 lg:h-10 rounded-l-full"
-                        :class="{ 'bg-gray-300': isTableView, 'bg-white': !isTableView }"
-                      >
-                        <Bars3Icon
-                          class="w-8 h-8 lg:w-10 lg:h-10 p-2 rounded-l-full"
-                          style="border: 1px solid black"
+                    <div
+                      class="w-full flex justify-around md:justify-center lg:justify-start items-center space-x-1 md:space-x-0 order-1 lg:order-2"
+                    >
+                      <!-- 検索フォーム -->
+                      <div class="flex items-center flex-1 md:flex-none">
+                        <input
+                          type="text"
+                          name="search"
+                          id="search"
+                          v-model="search"
+                          placeholder="備品名で検索"
+                          @keyup.enter="fetchAndFilterItems"
+                          class="h-9 w-full md:w-96 lg:w-60 text-sm md:text-base placeholder-text-xs md:placeholder-text-base"
                         />
+                        <button
+                          @click="fetchAndFilterItems"
+                          id="searchButton"
+                          class="h-9 w-9 md:w-10 bg-blue-300 text-white py-2 px-2 flex justify-center items-center border border-gray-300"
+                        >
+                          <MagnifyingGlassIcon class="size-6" />
+                        </button>
                       </div>
-                      <div
-                        @click="isTableView = false"
-                        class="h-8 lg:h-10 rounded-r-full"
-                        :class="{ 'bg-gray-300': !isTableView, 'bg-white': isTableView }"
-                      >
-                        <Squares2X2Icon
-                          class="w-8 h-8 lg:w-10 lg:h-10 p-2 rounded-r-full"
-                          style="border: 1px solid black"
-                        />
+
+                      <!-- 条件をすべてクリアするボタン -->
+                      <div>
+                        <button
+                          @click="clearState"
+                          class="text-xs md:text-base flex justify-center items-center w-16 h-9 p-2 md:ml-4 bg-gray-100 hover:bg-gray-200 text-gray-500 border border-gray-300 focus:outline-none rounded"
+                        >
+                          クリア
+                        </button>
                       </div>
                     </div>
 
-                    <!-- 作成日でソートボタン -->
-                    <div class="w-full sm:w-1/3 md:w-auto flex justify-start">
-                      <button @click="toggleSortOrder" class="flex text-sm">
-                        <div
-                          v-if="sortOrder == 'asc'"
-                          class="w-full flex justify-center text-xs md:text-sm"
+                    <!-- プルダウングループ -->
+                    <div
+                      class="w-full mt-4 flex justify-around md:justify-center lg:justify-end items-center space-x-1 md:space-x-4 order-2 lg:order-1"
+                    >
+                      <!-- 備品カテゴリプルダウン -->
+                      <div class="w-full sm:w-1/3 md:w-auto">
+                        <select
+                          v-model="categoryId"
+                          @change="fetchAndFilterItems"
+                          class="h-9 w-[6.5rem] md:w-40 text-xs md:text-sm"
                         >
-                          <ArrowUpIcon class="size-4 transform -translate-y-0.5" />
-                          古い順
-                        </div>
-                        <div v-else class="w-full flex justify-center text-xs md:text-sm">
-                          <ArrowDownIcon class="size-4 transform -translate-y-0.5" />
-                          新しい順
-                        </div>
-                      </button>
+                          <option :value="0">カテゴリ</option>
+                          <option
+                            v-for="category in categories"
+                            :value="category.id"
+                            :key="category.id"
+                          >
+                            {{ category.name }}
+                          </option>
+                        </select>
+                      </div>
+
+                      <!-- 利用場所のプルダウン -->
+                      <div class="w-full sm:w-1/3 md:w-auto">
+                        <select
+                          v-model="locationOfUseId"
+                          @change="fetchAndFilterItems"
+                          class="h-9 w-[6.5rem] md:w-40 text-xs md:text-sm"
+                        >
+                          <option :value="0">利用場所</option>
+                          <option
+                            v-for="location in locations"
+                            :value="location.id"
+                            :key="location.id"
+                          >
+                            {{ location.name }}
+                          </option>
+                        </select>
+                      </div>
+
+                      <!-- 保管場所のプルダウン -->
+                      <div class="w-full sm:w-1/3 md:w-auto">
+                        <select
+                          v-model="storageLocationId"
+                          @change="fetchAndFilterItems"
+                          class="h-9 w-[6.5rem] md:w-40 text-xs md:text-sm"
+                        >
+                          <option :value="0">保管場所</option>
+                          <option
+                            v-for="location in locations"
+                            :value="location.id"
+                            :key="location.id"
+                          >
+                            {{ location.name }}
+                          </option>
+                        </select>
+                      </div>
                     </div>
                   </div>
 
-                  <!-- 空の中央部 -->
-                  <div class="w-full sm:w-1/3 md:w-auto"></div>
+                  <!-- 区切り線 -->
+                  <div class="border-t border-gray-300 my-4"></div>
 
-                  <!-- 廃棄済み備品に切り替えのトグルボタン -->
-                  <div class="w-full sm:w-1/3 md:w-auto flex justify-end">
-                    <label for="toggle" class="flex items-center cursor-pointer">
+                  <!-- 表示切り替えボタンとソート機能のグループ -->
+                  <div class="flex items-center justify-between gap-3">
+                    <div class="flex items-center gap-3">
+                      <!-- 行表示・タイル表示の切り替えボタン -->
+                      <div class="inline-flex rounded-lg border border-gray-300 bg-white p-0.5">
+                        <button
+                          @click="isTableView = true"
+                          :class="[
+                            'inline-flex items-center px-3 py-1.5 text-sm font-medium rounded-md transition-all whitespace-nowrap',
+                            isTableView
+                              ? 'bg-gray-200 text-gray-900'
+                              : 'text-gray-600 hover:bg-gray-100',
+                          ]"
+                        >
+                          <Bars3Icon class="size-4 mr-1.5" />
+                          <span class="hidden sm:inline">リスト</span>
+                        </button>
+                        <button
+                          @click="isTableView = false"
+                          :class="[
+                            'inline-flex items-center px-3 py-1.5 text-sm font-medium rounded-md transition-all whitespace-nowrap',
+                            !isTableView
+                              ? 'bg-gray-200 text-gray-900'
+                              : 'text-gray-600 hover:bg-gray-100',
+                          ]"
+                        >
+                          <Squares2X2Icon class="size-4 mr-1.5" />
+                          <span class="hidden sm:inline">グリッド</span>
+                        </button>
+                      </div>
+
+                      <!-- 作成日でソートボタン -->
+                      <button
+                        @click="toggleSortOrder"
+                        class="inline-flex items-center gap-1.5 px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors whitespace-nowrap"
+                      >
+                        <component
+                          :is="sortOrder === 'asc' ? ArrowUpIcon : ArrowDownIcon"
+                          class="size-4"
+                        />
+                        <span>{{ sortOrder === 'asc' ? '古い順' : '新しい順' }}</span>
+                      </button>
+                    </div>
+
+                    <!-- 空の中央部 -->
+                    <div class="w-full sm:w-1/3 md:w-auto"></div>
+
+                    <!-- 廃棄済み備品に切り替えのトグルボタン -->
+                    <label class="inline-flex items-center gap-3 cursor-pointer">
                       <div class="relative">
-                        <!-- Input -->
                         <input
                           id="toggle"
                           type="checkbox"
                           v-model="isDisposal"
                           @input="toggleItems"
-                          class="sr-only"
+                          class="sr-only peer"
                         />
-                        <!-- 背景 -->
-                        <div class="block bg-gray-300 w-10 h-6 md:w-14 md:h-8 rounded-full"></div>
-                        <!-- 丸 -->
                         <div
-                          class="dot absolute left-1 top-1 bg-white w-4 h-4 md:w-6 md:h-6 rounded-full transition"
+                          class="w-11 h-6 bg-gray-300 rounded-full peer peer-checked:bg-red-500 transition-colors"
+                        ></div>
+                        <div
+                          class="absolute left-0.5 top-0.5 w-5 h-5 bg-white rounded-full shadow-md transition-transform peer-checked:translate-x-5"
                         ></div>
                       </div>
+                      <span
+                        class="text-sm font-medium transition-colors whitespace-nowrap"
+                        :class="isDisposal ? 'text-red-600' : 'text-gray-700'"
+                      >
+                        <span class="sm:hidden">{{ isDisposal ? '廃棄済み' : '使用中' }}</span>
+                        <span class="hidden sm:inline">{{
+                          isDisposal ? '廃棄済みを表示中' : '使用中のみ表示中'
+                        }}</span>
+                      </span>
                     </label>
-                    <!-- Label -->
-                    <div class="ml-3 text-gray-700 font-medium text-xs md:text-sm">
-                      {{ isDisposal ? '廃棄済みを表示中' : '使用中のみ表示中' }}
-                      <!-- 廃棄済みの備品を表示 -->
-                    </div>
                   </div>
                 </div>
               </div>
@@ -716,12 +720,6 @@ const restoreItem = async (itemId: number): Promise<void> => {
 </template>
 
 <style>
-input:checked ~ .dot {
-  transform: translateX(100%);
-}
-input:checked ~ .block {
-  background-color: red;
-}
 /* プレースホルダーの文字サイズを調整 */
 .placeholder-text-xs::placeholder {
   font-size: 0.75rem; /* 12px */
