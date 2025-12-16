@@ -336,6 +336,7 @@ const deleteItemRequest = (request: ItemRequestType) => {
               <!-- ページネーションと件数(表の下) -->
               <div class="mt-6 flex flex-col items-center justify-end space-y-3">
                 <Pagination :links="itemRequests.links" />
+                <div class="font-medium text-xs md:text-sm">{{ totalCount }}件</div>
               </div>
             </section>
           </div>
