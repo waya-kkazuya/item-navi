@@ -61,22 +61,22 @@ const markAsRead = async (id: string): Promise<void> => {
         <thead>
           <tr>
             <th
-              class="min-w-32 md:min-w-26 px-4 py-3 title-font tracking-wider font-medium text-center text-gray-900 text-xs md:text-base bg-gray-100"
+              class="min-w-32 md:min-w-26 px-4 py-3 title-font tracking-wider font-medium text-center text-gray-900 text-xs md:text-sm bg-gray-100"
             >
               通知
             </th>
             <th
-              class="min-w-32 md:min-w-40 px-4 py-3 title-font tracking-wider font-medium text-center text-gray-900 text-xs md:text-base bg-gray-100"
+              class="min-w-32 md:min-w-40 px-4 py-3 title-font tracking-wider font-medium text-center text-gray-900 text-xs md:text-sm bg-gray-100"
             >
               商品名
             </th>
             <th
-              class="min-w-32 md:min-w-40 px-4 py-3 title-font tracking-wider font-medium text-center text-gray-900 text-xs md:text-base bg-gray-100"
+              class="min-w-32 md:min-w-40 px-4 py-3 title-font tracking-wider font-medium text-center text-gray-900 text-xs md:text-sm bg-gray-100"
             >
               申請者
             </th>
             <th
-              class="min-w-48 md:min-w-48 px-4 py-3 title-font tracking-wider font-medium text-center text-gray-900 text-xs md:text-base bg-gray-100"
+              class="min-w-48 md:min-w-48 px-4 py-3 title-font tracking-wider font-medium text-center text-gray-900 text-xs md:text-sm bg-gray-100"
             >
               申請理由
             </th>
@@ -88,17 +88,17 @@ const markAsRead = async (id: string): Promise<void> => {
             :key="notification.id"
             class="border-t-2 border-gray-100"
           >
-            <td class="border-b-2 border-gray-100 px-4 py-3 text-center text-xs md:text-base">
+            <td class="border-b-2 border-gray-100 px-4 py-3 text-center text-xs md:text-sm">
               <span v-if="!notification.read_at" class="text-orange-500 text-xs">●</span>
               {{ notification.relative_time }}
             </td>
-            <td class="border-b-2 border-gray-100 px-4 py-3 text-center text-xs md:text-base">
+            <td class="border-b-2 border-gray-100 px-4 py-3 text-center text-xs md:text-sm">
               {{ notification.data.item_name }}
             </td>
-            <td class="border-b-2 border-gray-100 px-4 py-3 text-center text-xs md:text-base">
+            <td class="border-b-2 border-gray-100 px-4 py-3 text-center text-xs md:text-sm">
               {{ notification.data.requestor }}
             </td>
-            <td class="border-b-2 border-gray-100 px-4 py-3 text-center text-xs md:text-base">
+            <td class="border-b-2 border-gray-100 px-4 py-3 text-center text-xs md:text-sm">
               {{ notification.data.remarks_from_requestor }}
             </td>
           </tr>
