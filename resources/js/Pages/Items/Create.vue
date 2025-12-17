@@ -107,15 +107,15 @@ const clearDisposalSchedule = () => {
                     <div class="-m-2">
                       <div class="grid grid-cols-1 md:grid-cols-3 md:gap-4">
                         <div class="col-span-1">
-                          <div class="p-4 border mb-8 md:mb-0 flex justify-center">
-                            <div class="p-2 w-full">
+                          <div class="p-3 border mb-8 md:mb-0 flex justify-center">
+                            <div class="py-3 px-4 w-full">
                               <label
                                 for="imageFile"
-                                class="leading-7 text-xs md:text-base text-blue-900"
+                                class="leading-7 text-xs md:text-sm text-blue-900"
                               >
                                 画像
                                 <span
-                                  class="ml-1 mr-2 bg-gray-400 text-white text-xs md:text-base lg:text-xs py-1 px-2 rounded-md"
+                                  class="ml-1 mr-2 bg-gray-400 text-white text-xs py-1 px-2 rounded-md"
                                   >任意</span
                                 >
                               </label>
@@ -146,7 +146,7 @@ const clearDisposalSchedule = () => {
                               </label>
                               <div
                                 v-if="errors.image_file"
-                                class="font-medium text-red-600 text-xs md:text-base"
+                                class="font-medium text-red-600 text-xs md:text-sm"
                               >
                                 {{ errors.image_file }}
                               </div>
@@ -154,15 +154,12 @@ const clearDisposalSchedule = () => {
                           </div>
                         </div>
                         <div class="col-span-2">
-                          <div class="p-4 border mb-4">
-                            <div class="p-2 w-full">
-                              <label
-                                for="name"
-                                class="leading-7 text-xs md:text-base text-blue-900"
-                              >
+                          <div class="p-3 border mb-4">
+                            <div class="py-3 px-4 w-full">
+                              <label for="name" class="leading-7 text-xs md:text-sm text-blue-900">
                                 備品名
                                 <span
-                                  class="ml-1 mr-2 bg-red-400 text-white text-xs md:text-base lg:text-xs py-1 px-2 rounded-md"
+                                  class="ml-1 mr-2 bg-red-400 text-white text-xs py-1 px-2 rounded-md"
                                   >必須</span
                                 >
                               </label>
@@ -171,23 +168,23 @@ const clearDisposalSchedule = () => {
                                 id="name"
                                 name="name"
                                 v-model="form.name"
-                                class="block md:mt-1 w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-xs md:text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
+                                class="block md:mt-1 w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-xs md:text-sm outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
                               />
                               <div
                                 v-if="errors.name"
-                                class="font-medium text-red-600 text-xs md:text-base"
+                                class="font-medium text-red-600 text-xs md:text-sm"
                               >
                                 {{ errors.name }}
                               </div>
                             </div>
-                            <div class="p-2 w-full">
+                            <div class="py-3 px-4 w-full">
                               <label
                                 for="category_id"
-                                class="leading-7 text-xs md:text-base text-blue-900"
+                                class="leading-7 text-xs md:text-sm text-blue-900"
                               >
                                 カテゴリ
                                 <span
-                                  class="ml-1 mr-2 bg-red-400 text-white text-xs md:text-base lg:text-xs py-1 px-2 rounded-md"
+                                  class="ml-1 mr-2 bg-red-400 text-white text-xs py-1 px-2 rounded-md"
                                   >必須</span
                                 > </label
                               ><br />
@@ -195,7 +192,7 @@ const clearDisposalSchedule = () => {
                                 name="category_id"
                                 id="category_id"
                                 v-model="form.category_id"
-                                class="md:mt-1 w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-xs md:text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
+                                class="md:mt-1 w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-xs md:text-sm outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
                               >
                                 <option :value="0">選択してください</option>
                                 <option
@@ -208,22 +205,19 @@ const clearDisposalSchedule = () => {
                               </select>
                               <div
                                 v-if="errors.category_id"
-                                class="font-medium text-red-600 text-xs md:text-base"
+                                class="font-medium text-red-600 text-xs md:text-sm"
                               >
                                 {{ errors.category_id }}
                               </div>
                             </div>
                           </div>
 
-                          <div class="p-4 border mb-4">
+                          <div class="p-3 border mb-4">
                             <div class="pl-2 w-full">
-                              <label
-                                for="stock"
-                                class="leading-7 text-xs md:text-base text-blue-900"
-                              >
+                              <label for="stock" class="leading-7 text-xs md:text-sm text-blue-900">
                                 在庫数
                                 <span
-                                  class="ml-1 mr-2 bg-red-400 text-white text-xs md:text-base lg:text-xs py-1 px-2 rounded-md"
+                                  class="ml-1 mr-2 bg-red-400 text-white text-xs py-1 px-2 rounded-md"
                                   >必須</span
                                 > </label
                               ><br />
@@ -233,13 +227,13 @@ const clearDisposalSchedule = () => {
                                 name="stock"
                                 v-model="form.stock"
                                 min="0"
-                                class="md:mt-1 w-1/4 bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-xs md:text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
+                                class="md:mt-1 w-1/4 bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-xs md:text-sm outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
                               />
                               <select
                                 name="unit"
                                 id="unit"
                                 v-model="form.unit_id"
-                                class="md:w-1/6 bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-xs md:text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
+                                class="md:w-1/6 bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-xs md:text-sm outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
                               >
                                 <option v-for="unit in units" :value="unit.id" :key="unit.id">
                                   {{ unit.name }}
@@ -247,13 +241,13 @@ const clearDisposalSchedule = () => {
                               </select>
                               <div
                                 v-if="errors.stock"
-                                class="font-medium text-red-600 text-xs md:text-base"
+                                class="font-medium text-red-600 text-xs md:text-sm"
                               >
                                 {{ errors.stock }}
                               </div>
                               <div
                                 v-if="errors.unit"
-                                class="font-medium text-red-600 text-xs md:text-base"
+                                class="font-medium text-red-600 text-xs md:text-sm"
                               >
                                 {{ errors.unit }}
                               </div>
@@ -261,7 +255,7 @@ const clearDisposalSchedule = () => {
                             <div v-show="form.category_id == 1" class="mt-4 pl-2 w-full">
                               <label
                                 for="minimum_stock"
-                                class="leading-7 text-xs md:text-base text-blue-900"
+                                class="leading-7 text-xs md:text-sm text-blue-900"
                               >
                                 通知在庫数 </label
                               ><br />
@@ -271,13 +265,13 @@ const clearDisposalSchedule = () => {
                                 name="minimum_stock"
                                 v-model="form.minimum_stock"
                                 min="0"
-                                class="w-1/4 bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-xs md:text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
+                                class="w-1/4 bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-xs md:text-sm outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
                               />
                               <select
                                 name="unit"
                                 id="unit"
                                 v-model="form.unit_id"
-                                class="md:w-1/6 bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-xs md:text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
+                                class="md:w-1/6 bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-xs md:text-sm outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
                               >
                                 <option v-for="unit in units" :value="unit.id" :key="unit.id">
                                   {{ unit.name }}
@@ -285,7 +279,7 @@ const clearDisposalSchedule = () => {
                               </select>
                               <div
                                 v-if="errors.minimum_stock"
-                                class="font-medium text-red-600 text-xs md:text-base"
+                                class="font-medium text-red-600 text-xs md:text-sm"
                               >
                                 {{ errors.minimum_stock }}
                               </div>
@@ -296,21 +290,21 @@ const clearDisposalSchedule = () => {
                                 id="notification"
                                 v-model="form.notification"
                               />
-                              <label for="notification" class="ml-1 text-xs md:text-base">
+                              <label for="notification" class="ml-1 text-xs md:text-sm">
                                 在庫数が通知在庫数以下になったら通知する
                               </label>
                             </div>
                           </div>
 
-                          <div class="p-4 border mb-4">
-                            <div class="p-2 w-full">
+                          <div class="p-3 border mb-4">
+                            <div class="py-3 px-4 w-full">
                               <label
                                 for="usage_status_id"
-                                class="leading-7 text-xs md:text-base text-blue-900"
+                                class="leading-7 text-xs md:text-sm text-blue-900"
                               >
                                 利用状況
                                 <span
-                                  class="ml-1 mr-2 bg-red-400 text-white text-xs md:text-base lg:text-xs py-1 px-2 rounded-md"
+                                  class="ml-1 mr-2 bg-red-400 text-white text-xs py-1 px-2 rounded-md"
                                   >必須</span
                                 >
                               </label>
@@ -318,7 +312,7 @@ const clearDisposalSchedule = () => {
                                 name="usage_status_id"
                                 id="usage_status_id"
                                 v-model="form.usage_status_id"
-                                class="md:mt-1 w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-xs md:text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
+                                class="md:mt-1 w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-xs md:text-sm outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
                               >
                                 <option :value="0">選択してください</option>
                                 <option
@@ -331,20 +325,20 @@ const clearDisposalSchedule = () => {
                               </select>
                               <div
                                 v-if="errors.usage_status_id"
-                                class="font-medium text-red-600 text-xs md:text-base"
+                                class="font-medium text-red-600 text-xs md:text-sm"
                               >
                                 {{ errors.usage_status_id }}
                               </div>
                             </div>
 
-                            <div class="p-2 w-full">
+                            <div class="py-3 px-4 w-full">
                               <label
                                 for="end_user"
-                                class="leading-7 text-xs md:text-base text-blue-900"
+                                class="leading-7 text-xs md:text-sm text-blue-900"
                               >
                                 使用者
                                 <span
-                                  class="ml-1 mr-2 bg-gray-400 text-white text-xs md:text-base lg:text-xs py-1 px-2 rounded-md"
+                                  class="ml-1 mr-2 bg-gray-400 text-white text-xs py-1 px-2 rounded-md"
                                   >任意</span
                                 >
                               </label>
@@ -353,21 +347,21 @@ const clearDisposalSchedule = () => {
                                 id="end_user"
                                 name="end_user"
                                 v-model="form.end_user"
-                                class="md:mt-1 w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-xs md:text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
+                                class="md:mt-1 w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-xs md:text-sm outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
                               />
                               <div v-if="errors.end_user" class="font-medium text-red-600">
                                 {{ errors.end_user }}
                               </div>
                             </div>
 
-                            <div class="p-2 w-full">
+                            <div class="py-3 px-4 w-full">
                               <label
                                 for="location_of_use_id"
-                                class="leading-7 text-xs md:text-base text-blue-900"
+                                class="leading-7 text-xs md:text-sm text-blue-900"
                               >
                                 利用場所
                                 <span
-                                  class="ml-1 mr-2 bg-red-400 text-white text-xs md:text-base lg:text-xs py-1 px-2 rounded-md"
+                                  class="ml-1 mr-2 bg-red-400 text-white text-xs py-1 px-2 rounded-md"
                                   >必須</span
                                 >
                               </label>
@@ -375,7 +369,7 @@ const clearDisposalSchedule = () => {
                                 name="location_of_use_id"
                                 id="location_of_use_id"
                                 v-model="form.location_of_use_id"
-                                class="md:mt-1 w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-xs md:text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
+                                class="md:mt-1 w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-xs md:text-sm outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
                               >
                                 <option :value="0">選択してください</option>
                                 <option
@@ -388,20 +382,20 @@ const clearDisposalSchedule = () => {
                               </select>
                               <div
                                 v-if="errors.location_of_use_id"
-                                class="font-medium text-red-600 text-xs md:text-base"
+                                class="font-medium text-red-600 text-xs md:text-sm"
                               >
                                 {{ errors.location_of_use_id }}
                               </div>
                             </div>
 
-                            <div class="p-2 w-full">
+                            <div class="py-3 px-4 w-full">
                               <label
                                 for="storage_location_id"
-                                class="leading-7 text-xs md:text-base text-blue-900"
+                                class="leading-7 text-xs md:text-sm text-blue-900"
                               >
                                 保管場所
                                 <span
-                                  class="ml-1 mr-2 bg-red-400 text-white text-xs md:text-base lg:text-xs py-1 px-2 rounded-md"
+                                  class="ml-1 mr-2 bg-red-400 text-white text-xs py-1 px-2 rounded-md"
                                   >必須</span
                                 >
                               </label>
@@ -409,7 +403,7 @@ const clearDisposalSchedule = () => {
                                 name="storage_location_id"
                                 id="storage_location_id"
                                 v-model="form.storage_location_id"
-                                class="md:mt-1 w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-xs md:text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
+                                class="md:mt-1 w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-xs md:text-sm outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
                               >
                                 <option :value="0">選択してください</option>
                                 <option
@@ -422,22 +416,22 @@ const clearDisposalSchedule = () => {
                               </select>
                               <div
                                 v-if="errors.storage_location_id"
-                                class="font-medium text-red-600 text-xs md:text-base"
+                                class="font-medium text-red-600 text-xs md:text-sm"
                               >
                                 {{ errors.storage_location_id }}
                               </div>
                             </div>
                           </div>
 
-                          <div class="p-4 border mb-4">
-                            <div class="p-2 w-full">
+                          <div class="p-3 border mb-4">
+                            <div class="py-3 px-4 w-full">
                               <label
                                 for="acquisition_method_id"
-                                class="leading-7 text-xs md:text-base text-blue-900"
+                                class="leading-7 text-xs md:text-sm text-blue-900"
                               >
                                 取得区分
                                 <span
-                                  class="ml-1 mr-2 bg-red-400 text-white text-xs md:text-base lg:text-xs py-1 px-2 rounded-md"
+                                  class="ml-1 mr-2 bg-red-400 text-white text-xs py-1 px-2 rounded-md"
                                   >必須</span
                                 >
                               </label>
@@ -445,7 +439,7 @@ const clearDisposalSchedule = () => {
                                 name="acquisition_method_id"
                                 id="acquisition_method_id"
                                 v-model="form.acquisition_method_id"
-                                class="md:mt-1 w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-xs md:text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
+                                class="md:mt-1 w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-xs md:text-sm outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
                               >
                                 <option :value="0">選択してください</option>
                                 <option
@@ -458,20 +452,20 @@ const clearDisposalSchedule = () => {
                               </select>
                               <div
                                 v-if="errors.acquisition_method_id"
-                                class="font-medium text-red-600 text-xs md:text-base"
+                                class="font-medium text-red-600 text-xs md:text-sm"
                               >
                                 {{ errors.acquisition_method_id }}
                               </div>
                             </div>
 
-                            <div class="p-2 w-full">
+                            <div class="py-3 px-4 w-full">
                               <label
                                 for="acquisition_source"
-                                class="leading-7 text-xs md:text-base text-blue-900"
+                                class="leading-7 text-xs md:text-sm text-blue-900"
                               >
                                 取得先
                                 <span
-                                  class="ml-1 mr-2 bg-red-400 text-white text-xs md:text-base lg:text-xs py-1 px-2 rounded-md"
+                                  class="ml-1 mr-2 bg-red-400 text-white text-xs py-1 px-2 rounded-md"
                                   >必須</span
                                 >
                               </label>
@@ -481,24 +475,21 @@ const clearDisposalSchedule = () => {
                                 name="acquisition_source"
                                 v-model="form.acquisition_source"
                                 placeholder="例 Amazonなど"
-                                class="md:mt-1 w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-xs md:text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
+                                class="md:mt-1 w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-xs md:text-sm outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
                               />
                               <div
                                 v-if="errors.acquisition_source"
-                                class="font-medium text-red-600 text-xs md:text-base"
+                                class="font-medium text-red-600 text-xs md:text-sm"
                               >
                                 {{ errors.acquisition_source }}
                               </div>
                             </div>
 
-                            <div class="p-2 w-full">
-                              <label
-                                for="price"
-                                class="leading-7 text-xs md:text-base text-blue-900"
-                              >
+                            <div class="py-3 px-4 w-full">
+                              <label for="price" class="leading-7 text-xs md:text-sm text-blue-900">
                                 取得価額
                                 <span
-                                  class="ml-1 mr-2 bg-red-400 text-white text-xs md:text-base lg:text-xs py-1 px-2 rounded-md"
+                                  class="ml-1 mr-2 bg-red-400 text-white text-xs py-1 px-2 rounded-md"
                                   >必須</span
                                 >
                               </label>
@@ -508,24 +499,24 @@ const clearDisposalSchedule = () => {
                                 name="price"
                                 v-model="form.price"
                                 min="0"
-                                class="md:mt-1 w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-xs md:text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
+                                class="md:mt-1 w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-xs md:text-sm outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
                               />
                               <div
                                 v-if="errors.price"
-                                class="font-medium text-red-600 text-xs md:text-base"
+                                class="font-medium text-red-600 text-xs md:text-sm"
                               >
                                 {{ errors.price }}
                               </div>
                             </div>
 
-                            <div class="p-2 w-full">
+                            <div class="py-3 px-4 w-full">
                               <label
                                 for="date_of_acquisition"
-                                class="leading-7 text-xs md:text-base text-blue-900"
+                                class="leading-7 text-xs md:text-sm text-blue-900"
                               >
                                 取得年月日
                                 <span
-                                  class="ml-1 mr-2 bg-red-400 text-white text-xs md:text-base lg:text-xs py-1 px-2 rounded-md"
+                                  class="ml-1 mr-2 bg-red-400 text-white text-xs py-1 px-2 rounded-md"
                                   >必須</span
                                 >
                               </label>
@@ -535,27 +526,27 @@ const clearDisposalSchedule = () => {
                                   id="date_of_acquisition"
                                   name="date_of_acquisition"
                                   v-model="form.date_of_acquisition"
-                                  class="md:mt-1 w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-xs md:text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
+                                  class="md:mt-1 w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-xs md:text-sm outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
                                 />
                               </div>
                               <div
                                 v-if="errors.date_of_acquisition"
-                                class="font-medium text-red-600 text-xs md:text-base"
+                                class="font-medium text-red-600 text-xs md:text-sm"
                               >
                                 {{ errors.date_of_acquisition }}
                               </div>
                             </div>
                           </div>
 
-                          <div class="p-4 border mb-4">
-                            <div class="p-2 w-full">
+                          <div class="p-3 border mb-4">
+                            <div class="py-3 px-4 w-full">
                               <label
                                 for="manufacturer"
-                                class="leading-7 text-xs md:text-base text-blue-900"
+                                class="leading-7 text-xs md:text-sm text-blue-900"
                               >
                                 メーカー
                                 <span
-                                  class="ml-1 mr-2 bg-gray-400 text-white text-xs md:text-base lg:text-xs py-1 px-2 rounded-md"
+                                  class="ml-1 mr-2 bg-gray-400 text-white text-xs py-1 px-2 rounded-md"
                                   >任意</span
                                 >
                               </label>
@@ -564,24 +555,24 @@ const clearDisposalSchedule = () => {
                                 id="manufacturer"
                                 name="manufacturer"
                                 v-model="form.manufacturer"
-                                class="md:mt-1 w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-xs md:text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
+                                class="md:mt-1 w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-xs md:text-sm outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
                               />
                               <div
                                 v-if="errors.manufacturer"
-                                class="font-medium text-red-600 text-xs md:text-base"
+                                class="font-medium text-red-600 text-xs md:text-sm"
                               >
                                 {{ errors.manufacturer }}
                               </div>
                             </div>
 
-                            <div class="p-2 w-full">
+                            <div class="py-3 px-4 w-full">
                               <label
                                 for="product_number"
-                                class="leading-7 text-xs md:text-base text-blue-900"
+                                class="leading-7 text-xs md:text-sm text-blue-900"
                               >
                                 製品番号
                                 <span
-                                  class="ml-1 mr-2 bg-gray-400 text-white text-xs md:text-base lg:text-xs py-1 px-2 rounded-md"
+                                  class="ml-1 mr-2 bg-gray-400 text-white text-xs py-1 px-2 rounded-md"
                                   >任意</span
                                 >
                               </label>
@@ -590,24 +581,24 @@ const clearDisposalSchedule = () => {
                                 id="product_number"
                                 name="product_number"
                                 v-model="form.product_number"
-                                class="md:mt-1 w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-xs md:text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
+                                class="md:mt-1 w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-xs md:text-sm outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
                               />
                               <div
                                 v-if="errors.product_number"
-                                class="font-medium text-red-600 text-xs md:text-base"
+                                class="font-medium text-red-600 text-xs md:text-sm"
                               >
                                 {{ errors.product_number }}
                               </div>
                             </div>
 
-                            <div class="p-2 w-full">
+                            <div class="py-3 px-4 w-full">
                               <label
                                 for="remarks"
-                                class="leading-7 text-xs md:text-base text-blue-900"
+                                class="leading-7 text-xs md:text-sm text-blue-900"
                               >
                                 備考
                                 <span
-                                  class="ml-1 mr-2 bg-gray-400 text-white text-xs md:text-base lg:text-xs py-1 px-2 rounded-md"
+                                  class="ml-1 mr-2 bg-gray-400 text-white text-xs py-1 px-2 rounded-md"
                                   >任意</span
                                 >
                               </label>
@@ -616,26 +607,26 @@ const clearDisposalSchedule = () => {
                                 name="remarks"
                                 maxlength="500"
                                 v-model="form.remarks"
-                                class="md:mt-1 w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 h-32 text-xs md:text-base outline-none text-gray-700 py-1 px-3 resize-none leading-6 transition-colors duration-200 ease-in-out"
+                                class="md:mt-1 w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 h-32 text-xs md:text-sm outline-none text-gray-700 py-1 px-3 resize-none leading-6 transition-colors duration-200 ease-in-out"
                               ></textarea>
                               <div
                                 v-if="errors.remarks"
-                                class="font-medium text-red-600 text-xs md:text-base"
+                                class="font-medium text-red-600 text-xs md:text-sm"
                               >
                                 {{ errors.remarks }}
                               </div>
                             </div>
                           </div>
 
-                          <div class="p-4 border mb-8">
-                            <div class="p-2 w-full">
+                          <div class="p-3 border mb-8">
+                            <div class="py-3 px-4 w-full">
                               <label
                                 for="inspection_scheduled_date"
-                                class="leading-7 text-xs md:text-base text-blue-900"
+                                class="leading-7 text-xs md:text-sm text-blue-900"
                               >
                                 点検予定日
                                 <span
-                                  class="ml-1 mr-2 bg-gray-400 text-white text-xs md:text-base lg:text-xs py-1 px-2 rounded-md"
+                                  class="ml-1 mr-2 bg-gray-400 text-white text-xs py-1 px-2 rounded-md"
                                   >任意</span
                                 >
                               </label>
@@ -645,7 +636,7 @@ const clearDisposalSchedule = () => {
                                   id="inspection_scheduled_date"
                                   name="inspection_scheduled_date"
                                   v-model="form.inspection_scheduled_date"
-                                  class="md:mt-1 w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-xs md:text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
+                                  class="md:mt-1 w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-xs md:text-sm outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
                                 />
                                 <button
                                   type="button"
@@ -657,20 +648,20 @@ const clearDisposalSchedule = () => {
                               </div>
                               <div
                                 v-if="errors.inspection_scheduled_date"
-                                class="font-medium text-red-600 text-xs md:text-base"
+                                class="font-medium text-red-600 text-xs md:text-sm"
                               >
                                 {{ errors.inspection_scheduled_date }}
                               </div>
                             </div>
 
-                            <div class="p-2 w-full">
+                            <div class="py-3 px-4 w-full">
                               <label
                                 for="disposal_scheduled_date"
-                                class="leading-7 text-xs md:text-base text-blue-900"
+                                class="leading-7 text-xs md:text-sm text-blue-900"
                               >
                                 廃棄予定日
                                 <span
-                                  class="ml-1 mr-2 bg-gray-400 text-white text-xs md:text-base lg:text-xs py-1 px-2 rounded-md"
+                                  class="ml-1 mr-2 bg-gray-400 text-white text-xs py-1 px-2 rounded-md"
                                   >任意</span
                                 >
                               </label>
@@ -680,7 +671,7 @@ const clearDisposalSchedule = () => {
                                   id="disposal_scheduled_date"
                                   name="disposal_scheduled_date"
                                   v-model="form.disposal_scheduled_date"
-                                  class="md:mt-1 w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-xs md:text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
+                                  class="md:mt-1 w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-xs md:text-sm outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
                                 />
                                 <button
                                   type="button"
@@ -692,7 +683,7 @@ const clearDisposalSchedule = () => {
                               </div>
                               <div
                                 v-if="errors.disposal_scheduled_date"
-                                class="font-medium text-red-600 text-xs md:text-base"
+                                class="font-medium text-red-600 text-xs md:text-sm"
                               >
                                 {{ errors.disposal_scheduled_date }}
                               </div>
@@ -701,7 +692,7 @@ const clearDisposalSchedule = () => {
                           <div class="w-full">
                             <button
                               id="item_register"
-                              class="flex mx-auto text-white text-xs md:text-base bg-indigo-500 border-0 py-2 px-8 focus:outline-none hover:bg-indigo-600 rounded"
+                              class="flex mx-auto text-white text-sm bg-indigo-500 border-0 py-2 px-8 focus:outline-none hover:bg-indigo-600 rounded"
                             >
                               登録する
                             </button>
