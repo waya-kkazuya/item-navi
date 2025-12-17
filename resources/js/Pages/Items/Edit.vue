@@ -114,8 +114,8 @@ const clearDisposalSchedule = () => {
                     <div class="-m-2">
                       <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <div class="col-span-1">
-                          <div class="p-4 border mb-8 md:mb-0 flex justify-center">
-                            <div class="p-2 w-full">
+                          <div class="p-3 border mb-8 md:mb-0 flex justify-center">
+                            <div class="py-3 px-4 w-full">
                               <label for="fileName" class="leading-7 text-sm text-blue-900">
                                 画像
                                 <span
@@ -158,8 +158,8 @@ const clearDisposalSchedule = () => {
                           </div>
                         </div>
                         <div class="col-span-2">
-                          <div class="p-4 border mb-4">
-                            <div class="p-2 w-full">
+                          <div class="p-3 border mb-4">
+                            <div class="py-3 px-4 w-full">
                               <label for="name" class="leading-7 text-sm text-blue-900">
                                 備品名
                                 <span
@@ -178,7 +178,7 @@ const clearDisposalSchedule = () => {
                                 {{ errors.name }}
                               </div>
                             </div>
-                            <div class="p-2 w-full">
+                            <div class="py-3 px-4 w-full">
                               <label for="category_id" class="leading-7 text-sm text-blue-900">
                                 カテゴリ
                                 <span
@@ -210,7 +210,7 @@ const clearDisposalSchedule = () => {
                             </div>
                           </div>
 
-                          <div class="p-4 border mb-4">
+                          <div class="p-3 border mb-4">
                             <div class="pl-2 w-full">
                               <label for="stock" class="leading-7 text-sm text-blue-900">
                                 在庫数
@@ -285,8 +285,8 @@ const clearDisposalSchedule = () => {
                             </div>
                           </div>
 
-                          <div class="p-4 border mb-4">
-                            <div class="p-2 w-full">
+                          <div class="p-3 border mb-4">
+                            <div class="py-3 px-4 w-full">
                               <label for="usage_status_id" class="leading-7 text-sm text-blue-900">
                                 利用状況
                                 <span
@@ -317,7 +317,7 @@ const clearDisposalSchedule = () => {
                               </div>
                             </div>
 
-                            <div class="p-2 w-full">
+                            <div class="py-3 px-4 w-full">
                               <label for="end_user" class="leading-7 text-sm text-blue-900">
                                 使用者
                                 <span
@@ -337,7 +337,7 @@ const clearDisposalSchedule = () => {
                               </div>
                             </div>
 
-                            <div class="p-2 w-full">
+                            <div class="py-3 px-4 w-full">
                               <label
                                 for="location_of_use_id"
                                 class="leading-7 text-sm text-blue-900"
@@ -371,7 +371,7 @@ const clearDisposalSchedule = () => {
                               </div>
                             </div>
 
-                            <div class="p-2 w-full">
+                            <div class="py-3 px-4 w-full">
                               <label
                                 for="storage_location_id"
                                 class="leading-7 text-sm text-blue-900"
@@ -406,8 +406,8 @@ const clearDisposalSchedule = () => {
                             </div>
                           </div>
 
-                          <div class="p-4 border mb-4">
-                            <div class="p-2 w-full">
+                          <div class="p-3 border mb-4">
+                            <div class="py-3 px-4 w-full">
                               <label
                                 for="acquisition_method_id"
                                 class="leading-7 text-sm text-blue-900"
@@ -441,7 +441,7 @@ const clearDisposalSchedule = () => {
                               </div>
                             </div>
 
-                            <div class="p-2 w-full">
+                            <div class="py-3 px-4 w-full">
                               <label
                                 for="acquisition_source"
                                 class="leading-7 text-sm text-blue-900"
@@ -468,7 +468,7 @@ const clearDisposalSchedule = () => {
                               </div>
                             </div>
 
-                            <div class="p-2 w-full">
+                            <div class="py-3 px-4 w-full">
                               <label for="price" class="leading-7 text-sm text-blue-900">
                                 取得価額
                                 <span
@@ -489,7 +489,7 @@ const clearDisposalSchedule = () => {
                               </div>
                             </div>
 
-                            <div class="p-2 w-full">
+                            <div class="py-3 px-4 w-full">
                               <label
                                 for="date_of_acquisition"
                                 class="leading-7 text-sm text-blue-900"
@@ -518,8 +518,8 @@ const clearDisposalSchedule = () => {
                             </div>
                           </div>
 
-                          <div class="p-4 border mb-4">
-                            <div class="p-2 w-full">
+                          <div class="p-3 border mb-4">
+                            <div class="py-3 px-4 w-full">
                               <label for="manufacturer" class="leading-7 text-sm text-blue-900">
                                 メーカー
                                 <span
@@ -542,7 +542,7 @@ const clearDisposalSchedule = () => {
                               </div>
                             </div>
 
-                            <div class="p-2 w-full">
+                            <div class="py-3 px-4 w-full">
                               <label for="product_number" class="leading-7 text-sm text-blue-900">
                                 製品番号
                                 <span
@@ -565,7 +565,7 @@ const clearDisposalSchedule = () => {
                               </div>
                             </div>
 
-                            <div class="p-2 w-full">
+                            <div class="py-3 px-4 w-full">
                               <label for="remarks" class="leading-7 text-sm text-blue-900">
                                 備考
                                 <span
@@ -586,8 +586,8 @@ const clearDisposalSchedule = () => {
                             </div>
                           </div>
 
-                          <div class="p-4 border mb-4">
-                            <div class="p-2 w-full">
+                          <div class="p-3 border mb-4">
+                            <div class="py-3 px-4 w-full">
                               <label
                                 for="inspection_scheduled_date"
                                 class="leading-7 text-sm text-blue-900"
@@ -622,7 +622,7 @@ const clearDisposalSchedule = () => {
                               </div>
                             </div>
 
-                            <div class="p-2 w-full">
+                            <div class="py-3 px-4 w-full">
                               <label
                                 for="disposal_scheduled_date"
                                 class="leading-7 text-sm text-blue-900"
@@ -660,8 +660,8 @@ const clearDisposalSchedule = () => {
 
                           <hr class="border-t my-8 border-gray-300" />
 
-                          <div class="p-4 border mt-4 bg-red">
-                            <div class="p-2 w-full">
+                          <div class="p-3 border mt-4 bg-red">
+                            <div class="py-3 px-4 w-full">
                               <label for="edit_reason_id" class="leading-7 text-sm text-blue-900">
                                 編集理由
                                 <span
@@ -691,7 +691,7 @@ const clearDisposalSchedule = () => {
                                 {{ errors.edit_reason_id }}
                               </div>
                             </div>
-                            <div class="p-2 w-full">
+                            <div class="py-3 px-4 w-full">
                               <label for="remarks" class="leading-7 text-sm text-blue-900">
                                 理由詳細
                                 <span
@@ -714,7 +714,7 @@ const clearDisposalSchedule = () => {
                               </div>
                             </div>
                           </div>
-                          <div class="p-2 w-full">
+                          <div class="py-3 px-4 w-full">
                             <button
                               id="updateButton"
                               class="flex mx-auto text-white text-xs md:text-sm bg-indigo-500 border-0 py-2 px-8 focus:outline-none hover:bg-indigo-600 rounded"
