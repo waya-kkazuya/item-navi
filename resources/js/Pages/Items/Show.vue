@@ -53,10 +53,7 @@ defineProps<{
                       <div class="col-span-1">
                         <div class="p-4 border bordr-4 mb-4">
                           <div class="p-2 w-full">
-                            <label
-                              for="fileName"
-                              class="leading-7 text-xs md:text-base text-blue-900"
-                            >
+                            <label for="fileName" class="leading-7 text-sm text-blue-900">
                               画像
                             </label>
                             <div
@@ -71,26 +68,23 @@ defineProps<{
                       <div class="col-span-2">
                         <div class="p-4 border bordr-4 mb-4">
                           <div class="p-2 w-full">
-                            <label for="name" class="leading-7 text-xs md:text-base text-blue-900">
+                            <label for="name" class="leading-7 text-sm text-blue-900">
                               備品名
                             </label>
                             <div
                               id="name"
                               name="name"
-                              class="w-full bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-xs md:text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
+                              class="w-full bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-sm outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
                             >
                               {{ item.name }}
                             </div>
                           </div>
                           <div class="p-2 w-full">
-                            <label
-                              for="categoryId"
-                              class="leading-7 text-xs md:text-base text-blue-900"
-                            >
+                            <label for="categoryId" class="leading-7 text-sm text-blue-900">
                               カテゴリ </label
                             ><br />
                             <div
-                              class="w-full bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-xs md:text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
+                              class="w-full bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-sm outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
                             >
                               {{ item.category.name }}
                             </div>
@@ -99,41 +93,38 @@ defineProps<{
 
                         <div class="p-4 border bordr-4 mb-4">
                           <div class="pl-2 w-full">
-                            <label for="stock" class="leading-7 text-xs md:text-base text-blue-900">
+                            <label for="stock" class="leading-7 text-sm text-blue-900">
                               在庫数 </label
                             ><br />
                             <div class="flex items-center">
                               <div
                                 id="stock"
                                 name="stock"
-                                class="w-1/4 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-xs md:text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
+                                class="w-1/4 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-sm outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
                               >
                                 {{ item.stock }}
                               </div>
                               <div
-                                class="w-1/6 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-xs md:text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
+                                class="w-1/6 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-sm outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
                               >
                                 {{ item.unit.name }}
                               </div>
                             </div>
                           </div>
                           <div v-if="item.category_id === 1" class="mt-4 pl-2 w-full">
-                            <label
-                              for="minimumStock"
-                              class="leading-7 text-xs md:text-base text-blue-900"
-                            >
+                            <label for="minimumStock" class="leading-7 text-sm text-blue-900">
                               通知在庫数 </label
                             ><br />
                             <div class="flex items-center">
                               <div
                                 id="minimumStock"
                                 name="minimumStock"
-                                class="w-1/4 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-xs md:text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
+                                class="w-1/4 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-sm outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
                               >
                                 {{ item.minimum_stock }}
                               </div>
                               <div
-                                class="w-1/6 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-xs md:text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
+                                class="w-1/6 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-sm outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
                               >
                                 {{ item.unit.name }}
                               </div>
@@ -147,7 +138,7 @@ defineProps<{
                                 :stroke-width="2"
                               />
                               <Square v-else class="w-4 h-4 text-black" :stroke-width="2" />
-                              <label for="notification" class="ml-1 text-xs md:text-base"
+                              <label for="notification" class="ml-1 text-sm"
                                 >在庫数が通知在庫数以下になったら通知する</label
                               >
                             </div>
@@ -156,16 +147,13 @@ defineProps<{
 
                         <div class="p-4 border bordr-4 mb-4">
                           <div class="p-2 w-full">
-                            <label
-                              for="usageStatusId"
-                              class="leading-7 text-xs md:text-base text-blue-900"
-                            >
+                            <label for="usageStatusId" class="leading-7 text-sm text-blue-900">
                               利用状況
                             </label>
                             <div
                               name="usageStatusId"
                               id="usageStatusId"
-                              class="w-full bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-xs md:text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
+                              class="w-full bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-sm outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
                             >
                               {{ item.usage_status.name }}
                             </div>
@@ -178,39 +166,33 @@ defineProps<{
                             <div
                               id="endUser"
                               name="endUser"
-                              class="w-full bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-xs md:text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out min-h-[2em]"
+                              class="w-full bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-sm outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out min-h-[2em]"
                             >
                               {{ item.end_user || 'なし' }}
                             </div>
                           </div>
 
                           <div class="p-2 w-full">
-                            <label
-                              for="locationOfUseId"
-                              class="leading-7 text-xs md:text-base text-blue-900"
-                            >
+                            <label for="locationOfUseId" class="leading-7 text-sm text-blue-900">
                               利用場所
                             </label>
                             <div
                               name="locationOfUseId"
                               id="locationOfUseId"
-                              class="w-full bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-xs md:text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
+                              class="w-full bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-sm outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
                             >
                               {{ item.location_of_use.name }}
                             </div>
                           </div>
 
                           <div class="p-2 w-full">
-                            <label
-                              for="storageLocationId"
-                              class="leading-7 text-xs md:text-base text-blue-900"
-                            >
+                            <label for="storageLocationId" class="leading-7 text-sm text-blue-900">
                               保管場所
                             </label>
                             <div
                               name="storageLocationId"
                               id="storageLocationId"
-                              class="w-full bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-xs md:text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
+                              class="w-full bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-sm outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
                             >
                               {{ item.storage_location.name }}
                             </div>
@@ -221,59 +203,53 @@ defineProps<{
                           <div class="p-2 w-full">
                             <label
                               for="acquisitionMethodId"
-                              class="leading-7 text-xs md:text-base text-blue-900"
+                              class="leading-7 text-sm text-blue-900"
                             >
                               取得区分
                             </label>
                             <div
                               name="acquisitionMethodId"
                               id="acquisitionMethodId"
-                              class="w-full bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-xs md:text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
+                              class="w-full bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-sm outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
                             >
                               {{ item.acquisition_method.name }}
                             </div>
                           </div>
 
                           <div class="p-2 w-full">
-                            <label
-                              for="acquisitionSource"
-                              class="leading-7 text-xs md:text-base text-blue-900"
-                            >
+                            <label for="acquisitionSource" class="leading-7 text-sm text-blue-900">
                               取得先
                             </label>
                             <div
                               id="acquisitionSource"
                               name="acquisitionSource"
-                              class="w-full min-h-[2em] bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-xs md:text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
+                              class="w-full min-h-[2em] bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-sm outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
                             >
                               {{ item.acquisition_source || '' }}
                             </div>
                           </div>
 
                           <div class="p-2 w-full">
-                            <label for="price" class="leading-7 text-xs md:text-base text-blue-900">
+                            <label for="price" class="leading-7 text-sm text-blue-900">
                               取得価額
                             </label>
                             <div
                               id="price"
                               name="price"
-                              class="w-full bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-xs md:text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
+                              class="w-full bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-sm outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
                             >
                               {{ item.price }}
                             </div>
                           </div>
 
                           <div class="p-2 w-full">
-                            <label
-                              for="dateOfAcquisition"
-                              class="leading-7 text-xs md:text-base text-blue-900"
-                            >
+                            <label for="dateOfAcquisition" class="leading-7 text-sm text-blue-900">
                               取得年月日
                             </label>
                             <div
                               id="dateOfAcquisition"
                               name="dateOfAcquisition"
-                              class="w-full bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-xs md:text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
+                              class="w-full bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-sm outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
                             >
                               {{ item.date_of_acquisition ?? '' }}
                             </div>
@@ -282,43 +258,37 @@ defineProps<{
 
                         <div class="p-4 border bordr-4 mb-4">
                           <div class="p-2 w-full">
-                            <label
-                              for="manufacturer"
-                              class="leading-7 text-xs md:text-base text-blue-900"
+                            <label for="manufacturer" class="leading-7 text-sm text-blue-900"
                               >メーカー</label
                             >
                             <div
                               id="manufacturer"
                               name="manufacturer"
-                              class="w-full min-h-[2em] bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-xs md:text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
+                              class="w-full min-h-[2em] bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-sm outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
                             >
                               {{ item.manufacturer ?? 'なし' }}
                             </div>
                           </div>
                           <div class="p-2 w-full">
-                            <label
-                              for="productNumber"
-                              class="leading-7 text-xs md:text-base text-blue-900"
+                            <label for="productNumber" class="leading-7 text-sm text-blue-900"
                               >製品番号</label
                             >
                             <div
                               id="productNumber"
                               name="productNumber"
-                              class="w-full min-h-[2em] bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-xs md:text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
+                              class="w-full min-h-[2em] bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-sm outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
                             >
                               {{ item.product_number ?? 'なし' }}
                             </div>
                           </div>
                           <div class="p-2 w-full">
-                            <label
-                              for="remarks"
-                              class="leading-7 text-xs md:text-base text-blue-900"
+                            <label for="remarks" class="leading-7 text-sm text-blue-900"
                               >備考</label
                             >
                             <div
                               id="remarks"
                               name="remarks"
-                              class="overflow-y-auto max-h-32 whitespace-pre-wrap w-full bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 h-32 text-xs md:text-base outline-none text-gray-700 py-1 px-3 resize-none leading-6 transition-colors duration-200 ease-in-out"
+                              class="overflow-y-auto max-h-32 whitespace-pre-wrap w-full bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 h-32 text-sm outline-none text-gray-700 py-1 px-3 resize-none leading-6 transition-colors duration-200 ease-in-out"
                             >
                               {{ item.remarks }}
                             </div>
@@ -329,7 +299,7 @@ defineProps<{
                           <div class="p-2 w-full">
                             <label
                               for="inspection_scheduled_date"
-                              class="leading-7 text-xs md:text-base text-blue-900"
+                              class="leading-7 text-sm text-blue-900"
                             >
                               点検予定日
                             </label>
@@ -337,7 +307,7 @@ defineProps<{
                               <div
                                 id="inspection_scheduled_date"
                                 name="inspection_scheduled_date"
-                                class="w-full bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-xs md:text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
+                                class="w-full bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-sm outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
                               >
                                 {{
                                   uncompleted_inspection
@@ -354,7 +324,7 @@ defineProps<{
                                 />
                               </div>
                             </div>
-                            <div class="mt-4 leading-7 text-xs md:text-base">
+                            <div class="mt-4 leading-7 text-sm">
                               前回の点検日:
                               {{
                                 last_completed_inspection
@@ -365,10 +335,7 @@ defineProps<{
                           </div>
 
                           <div class="p-2 w-full">
-                            <label
-                              for="disposalSchedule"
-                              class="leading-7 text-xs md:text-base text-blue-900"
-                            >
+                            <label for="disposalSchedule" class="leading-7 text-sm text-blue-900">
                               廃棄予定日
                             </label>
                             <div class="flex items-center">
@@ -376,7 +343,7 @@ defineProps<{
                                 type="date"
                                 id="disposalSchedule"
                                 name="disposalSchedule"
-                                class="w-full bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-xs md:text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
+                                class="w-full bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-sm outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
                               >
                                 {{
                                   item.disposal && item.disposal.disposal_scheduled_date
