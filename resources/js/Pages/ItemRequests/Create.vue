@@ -56,8 +56,8 @@ const storeItemRequest = () => {
                 <div class="container px-8 py-8 mx-auto">
                   <div class="md:w-full mx-auto">
                     <div class="-m-2">
-                      <div class="p-4 border bordr-4 mb-4">
-                        <div class="p-2 w-full">
+                      <div class="p-3 border bordr-4 mb-4">
+                        <div class="py-3 px-4 w-full">
                           <label for="name" class="leading-7 text-sm text-blue-900">
                             商品名
                             <span
@@ -76,7 +76,7 @@ const storeItemRequest = () => {
                             {{ errors.name }}
                           </div>
                         </div>
-                        <div class="p-2 w-full">
+                        <div class="py-3 px-4 w-full">
                           <label for="category_id" class="leading-7 text-sm text-blue-900">
                             カテゴリ
                             <span
@@ -105,8 +105,8 @@ const storeItemRequest = () => {
                         </div>
                       </div>
 
-                      <div class="p-4 border bordr-4 mb-4">
-                        <div class="p-2 w-full">
+                      <div class="p-3 border bordr-4 mb-4">
+                        <div class="py-3 px-4 w-full">
                           <label for="location_of_use_id" class="leading-7 text-sm text-blue-900">
                             利用場所
                             <span
@@ -138,8 +138,8 @@ const storeItemRequest = () => {
                         </div>
                       </div>
 
-                      <div class="p-4 border bordr-4 mb-4">
-                        <div class="p-2 w-full">
+                      <div class="p-3 border bordr-4 mb-4">
+                        <div class="py-3 px-4 w-full">
                           <label for="manufacturer" class="leading-7 text-sm text-blue-900">
                             メーカー
                             <span
@@ -159,7 +159,7 @@ const storeItemRequest = () => {
                           </div>
                         </div>
 
-                        <div class="p-2 w-full">
+                        <div class="py-3 px-4 w-full">
                           <label for="reference" class="leading-7 text-sm text-blue-900">
                             参考サイト
                             <span
@@ -180,7 +180,7 @@ const storeItemRequest = () => {
                           </div>
                         </div>
 
-                        <div class="p-2 w-full">
+                        <div class="py-3 px-4 w-full">
                           <label for="price" class="leading-7 text-sm text-blue-900">
                             価格
                             <span
@@ -202,8 +202,8 @@ const storeItemRequest = () => {
                         </div>
                       </div>
 
-                      <div class="p-4 border bordr-4 mb-4">
-                        <div class="p-2 w-full">
+                      <div class="p-3 border bordr-4 mb-4">
+                        <div class="py-3 px-4 w-full">
                           <label for="requestor" class="leading-7 text-sm text-blue-900">
                             申請者
                             <span
@@ -223,7 +223,7 @@ const storeItemRequest = () => {
                           </div>
                         </div>
 
-                        <div class="p-2 w-full">
+                        <div class="py-3 px-4 w-full">
                           <label
                             for="remarks_from_requestor"
                             class="leading-7 text-sm text-blue-900"
@@ -250,7 +250,7 @@ const storeItemRequest = () => {
                         </div>
                       </div>
 
-                      <div class="p-2 w-full">
+                      <div class="py-3 px-4 w-full">
                         <!-- <Link>タグでキャンセルボタン -->
                         <button
                           id="createRequest"
