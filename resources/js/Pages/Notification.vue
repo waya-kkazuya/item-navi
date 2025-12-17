@@ -54,7 +54,7 @@ onMounted(() => {
                   <a
                     @click="activeTab = 'consumableItems'"
                     :class="[
-                      'block text-center px-4 py-2 rounded-full font-bold text-xs md:text-md lg:text-lg',
+                      'block text-center px-4 py-2 rounded-full font-bold text-xs md:text-base',
                       activeTab === 'consumableItems'
                         ? 'bg-blue-500 text-white'
                         : 'bg-white text-black border',
@@ -72,7 +72,7 @@ onMounted(() => {
                   <a
                     @click="activeTab = 'inspectionAndDisposalSchedule'"
                     :class="[
-                      'block text-center px-4 py-2 rounded-full font-bold text-xs md:text-md lg:text-lg',
+                      'block text-center px-4 py-2 rounded-full font-bold text-xs md:text-base',
                       activeTab === 'inspectionAndDisposalSchedule'
                         ? 'bg-blue-500 text-white'
                         : 'bg-white text-black border',
@@ -90,7 +90,7 @@ onMounted(() => {
                   <a
                     @click="activeTab = 'request'"
                     :class="[
-                      'block text-center px-4 py-2 rounded-full font-bold text-xs md:text-md lg:text-lg',
+                      'block text-center px-4 py-2 rounded-full font-bold text-xs md:text-base',
                       activeTab === 'request'
                         ? 'bg-blue-500 text-white'
                         : 'bg-white text-black border',
