@@ -51,8 +51,8 @@ defineProps<{
                     </div>
                     <div class="grid grid-cols-1 md:grid-cols-3 md:gap-4">
                       <div class="col-span-1">
-                        <div class="p-4 border bordr-4 mb-4">
-                          <div class="p-2 w-full">
+                        <div class="p-3 border bordr-4 mb-4">
+                          <div class="py-3 px-4 w-full">
                             <label for="fileName" class="leading-7 text-sm text-blue-900">
                               画像
                             </label>
@@ -66,8 +66,8 @@ defineProps<{
                         </div>
                       </div>
                       <div class="col-span-2">
-                        <div class="p-4 border bordr-4 mb-4">
-                          <div class="p-2 w-full">
+                        <div class="p-3 border bordr-4 mb-4">
+                          <div class="py-3 px-4 w-full">
                             <label for="name" class="leading-7 text-sm text-blue-900">
                               備品名
                             </label>
@@ -79,7 +79,7 @@ defineProps<{
                               {{ item.name }}
                             </div>
                           </div>
-                          <div class="p-2 w-full">
+                          <div class="py-3 px-4 w-full">
                             <label for="categoryId" class="leading-7 text-sm text-blue-900">
                               カテゴリ </label
                             ><br />
@@ -91,7 +91,7 @@ defineProps<{
                           </div>
                         </div>
 
-                        <div class="p-4 border bordr-4 mb-4">
+                        <div class="p-3 border bordr-4 mb-4">
                           <div class="pl-2 w-full">
                             <label for="stock" class="leading-7 text-sm text-blue-900">
                               在庫数 </label
@@ -145,8 +145,8 @@ defineProps<{
                           </div>
                         </div>
 
-                        <div class="p-4 border bordr-4 mb-4">
-                          <div class="p-2 w-full">
+                        <div class="p-3 border bordr-4 mb-4">
+                          <div class="py-3 px-4 w-full">
                             <label for="usageStatusId" class="leading-7 text-sm text-blue-900">
                               利用状況
                             </label>
@@ -159,7 +159,7 @@ defineProps<{
                             </div>
                           </div>
 
-                          <div class="p-2 w-full">
+                          <div class="py-3 px-4 w-full">
                             <label for="endUser" class="leading-7 text-sm text-blue-900">
                               使用者
                             </label>
@@ -172,7 +172,7 @@ defineProps<{
                             </div>
                           </div>
 
-                          <div class="p-2 w-full">
+                          <div class="py-3 px-4 w-full">
                             <label for="locationOfUseId" class="leading-7 text-sm text-blue-900">
                               利用場所
                             </label>
@@ -185,7 +185,7 @@ defineProps<{
                             </div>
                           </div>
 
-                          <div class="p-2 w-full">
+                          <div class="py-3 px-4 w-full">
                             <label for="storageLocationId" class="leading-7 text-sm text-blue-900">
                               保管場所
                             </label>
@@ -199,8 +199,8 @@ defineProps<{
                           </div>
                         </div>
 
-                        <div class="p-4 border bordr-4 mb-4">
-                          <div class="p-2 w-full">
+                        <div class="p-3 border bordr-4 mb-4">
+                          <div class="py-3 px-4 w-full">
                             <label
                               for="acquisitionMethodId"
                               class="leading-7 text-sm text-blue-900"
@@ -216,7 +216,7 @@ defineProps<{
                             </div>
                           </div>
 
-                          <div class="p-2 w-full">
+                          <div class="py-3 px-4 w-full">
                             <label for="acquisitionSource" class="leading-7 text-sm text-blue-900">
                               取得先
                             </label>
@@ -229,7 +229,7 @@ defineProps<{
                             </div>
                           </div>
 
-                          <div class="p-2 w-full">
+                          <div class="py-3 px-4 w-full">
                             <label for="price" class="leading-7 text-sm text-blue-900">
                               取得価額
                             </label>
@@ -242,7 +242,7 @@ defineProps<{
                             </div>
                           </div>
 
-                          <div class="p-2 w-full">
+                          <div class="py-3 px-4 w-full">
                             <label for="dateOfAcquisition" class="leading-7 text-sm text-blue-900">
                               取得年月日
                             </label>
@@ -256,8 +256,8 @@ defineProps<{
                           </div>
                         </div>
 
-                        <div class="p-4 border bordr-4 mb-4">
-                          <div class="p-2 w-full">
+                        <div class="p-3 border bordr-4 mb-4">
+                          <div class="py-3 px-4 w-full">
                             <label for="manufacturer" class="leading-7 text-sm text-blue-900"
                               >メーカー</label
                             >
@@ -269,7 +269,7 @@ defineProps<{
                               {{ item.manufacturer ?? 'なし' }}
                             </div>
                           </div>
-                          <div class="p-2 w-full">
+                          <div class="py-3 px-4 w-full">
                             <label for="productNumber" class="leading-7 text-sm text-blue-900"
                               >製品番号</label
                             >
@@ -281,7 +281,7 @@ defineProps<{
                               {{ item.product_number ?? 'なし' }}
                             </div>
                           </div>
-                          <div class="p-2 w-full">
+                          <div class="py-3 px-4 w-full">
                             <label for="remarks" class="leading-7 text-sm text-blue-900"
                               >備考</label
                             >
@@ -295,8 +295,8 @@ defineProps<{
                           </div>
                         </div>
 
-                        <div class="p-4 border bordr-4 mb-2">
-                          <div class="p-2 w-full">
+                        <div class="p-3 border bordr-4 mb-2">
+                          <div class="py-3 px-4 w-full">
                             <label
                               for="inspection_scheduled_date"
                               class="leading-7 text-sm text-blue-900"
@@ -334,7 +334,7 @@ defineProps<{
                             </div>
                           </div>
 
-                          <div class="p-2 w-full">
+                          <div class="py-3 px-4 w-full">
                             <label for="disposalSchedule" class="leading-7 text-sm text-blue-900">
                               廃棄予定日
                             </label>
@@ -357,7 +357,7 @@ defineProps<{
                             </div>
                           </div>
                         </div>
-                        <div class="p-2 w-full">
+                        <div class="py-3 px-4 w-full">
                           <Link
                             as="button"
                             :href="route('items.edit', { item: item.id })"
