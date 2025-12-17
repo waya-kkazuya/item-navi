@@ -66,32 +66,32 @@ const markAsRead = async (id: string): Promise<void> => {
         <thead>
           <tr>
             <th
-              class="min-w-32 md:min-w-26 px-4 py-3 title-font tracking-wider font-medium text-center text-gray-900 text-xs md:text-base bg-gray-100"
+              class="min-w-32 md:min-w-26 px-4 py-3 title-font tracking-wider font-medium text-center text-gray-900 text-xs md:text-sm bg-gray-100"
             >
               通知
             </th>
             <th
-              class="min-w-24 md:min-w-32 px-4 py-3 title-font tracking-wider font-medium text-center text-gray-900 text-xs md:text-base bg-gray-100"
+              class="min-w-24 md:min-w-32 px-4 py-3 title-font tracking-wider font-medium text-center text-gray-900 text-xs md:text-sm bg-gray-100"
             >
               管理ID
             </th>
             <th
-              class="min-w-32 md:min-w-40 px-4 py-3 title-font tracking-wider font-medium text-center text-gray-900 text-xs md:text-base bg-gray-100"
+              class="min-w-32 md:min-w-40 px-4 py-3 title-font tracking-wider font-medium text-center text-gray-900 text-xs md:text-sm bg-gray-100"
             >
               備品名
             </th>
             <th
-              class="min-w-24 md:min-w-28 px-4 py-3 title-font tracking-wider font-medium text-center text-gray-900 text-xs md:text-base bg-gray-100"
+              class="min-w-24 md:min-w-28 px-4 py-3 title-font tracking-wider font-medium text-center text-gray-900 text-xs md:text-sm bg-gray-100"
             >
               画像
             </th>
             <th
-              class="min-w-48 md:min-w-48 px-4 py-3 title-font tracking-wider font-medium text-center text-gray-900 text-xs md:text-base bg-gray-100"
+              class="min-w-48 md:min-w-48 px-4 py-3 title-font tracking-wider font-medium text-center text-gray-900 text-xs md:text-sm bg-gray-100"
             >
               メッセージ
             </th>
             <th
-              class="min-w-48 md:min-w-48 px-4 py-3 title-font tracking-wider font-medium text-center text-gray-900 text-xs md:text-base bg-gray-100"
+              class="min-w-48 md:min-w-48 px-4 py-3 title-font tracking-wider font-medium text-center text-gray-900 text-xs md:text-sm bg-gray-100"
             >
               点検予定日
             </th>
@@ -103,21 +103,21 @@ const markAsRead = async (id: string): Promise<void> => {
             :key="notification.id"
             class="border-t-2 border-gray-100"
           >
-            <td class="border-b-2 border-gray-100 px-4 py-3 text-center text-xs md:text-base">
+            <td class="border-b-2 border-gray-100 px-4 py-3 text-center text-xs md:text-sm">
               <span v-if="!notification.read_at" class="text-orange-500 text-xs">●</span>
               {{ notification.relative_time }}
             </td>
-            <td class="border-b-2 border-gray-100 px-4 py-3 text-center text-xs md:text-base">
+            <td class="border-b-2 border-gray-100 px-4 py-3 text-center text-xs md:text-sm">
               <Link :href="route('items.show', { item: notification.data.id })">
-                <span class="text-blue-600 title-font font-medium text-xs md:text-base">
+                <span class="text-blue-600 title-font font-medium text-xs md:text-sm">
                   {{ notification.data.management_id }}
                 </span>
               </Link>
             </td>
-            <td class="border-b-2 border-gray-100 px-4 py-3 text-center text-xs md:text-base">
+            <td class="border-b-2 border-gray-100 px-4 py-3 text-center text-xs md:text-sm">
               {{ notification.data.item_name }}
             </td>
-            <td class="border-b-2 border-gray-100 px-4 py-3 text-center text-xs md:text-base">
+            <td class="border-b-2 border-gray-100 px-4 py-3 text-center text-xs md:text-sm">
               <Link
                 :href="route('items.show', { item: notification.data.id })"
                 class="flex justify-center"
@@ -125,10 +125,10 @@ const markAsRead = async (id: string): Promise<void> => {
                 <img :src="notification.data.image_path1" alt="画像" class="h-8" />
               </Link>
             </td>
-            <td class="border-b-2 border-gray-100 px-4 py-3 text-center text-xs md:text-base">
+            <td class="border-b-2 border-gray-100 px-4 py-3 text-center text-xs md:text-sm">
               {{ notification.data.message }}
             </td>
-            <td class="border-b-2 border-gray-100 px-4 py-3 text-center text-xs md:text-base">
+            <td class="border-b-2 border-gray-100 px-4 py-3 text-center text-xs md:text-sm">
               {{ notification.data.scheduled_date }}
             </td>
           </tr>
