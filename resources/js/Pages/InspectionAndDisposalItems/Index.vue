@@ -66,7 +66,7 @@ const activeTab: Ref<string> = ref('schedule');
               <div class="mt-4">
                 <div class="flex items-center px-4 font-medium">
                   <ClipboardDocumentCheckIcon class="size-5" />
-                  <span class="text-sm md:text-base lg:text-lg">点検予定日</span>
+                  <span class="text-sm md:text-base">点検予定日</span>
                   <span class="ml-2 text-xs text-gray-500">直近10件まで</span>
                 </div>
                 <div class="mt-4 min-w-full overflow-auto">
@@ -220,7 +220,7 @@ const activeTab: Ref<string> = ref('schedule');
               <div class="mt-8">
                 <div class="px-4 font-medium flex items-center">
                   <TrashIcon class="size-5" />
-                  <span class="text-sm md:text-base lg:text-lg">廃棄予定日</span>
+                  <span class="text-sm md:text-base">廃棄予定日</span>
                   <span class="ml-2 text-xs text-gray-500">直近10件まで</span>
                 </div>
                 <div class="mt-4 min-w-full overflow-auto">
@@ -377,7 +377,7 @@ const activeTab: Ref<string> = ref('schedule');
               <div class="mt-4">
                 <div class="flex items-center px-4 font-medium">
                   <ClipboardDocumentCheckIcon class="size-5" />
-                  <span class="text-sm md:text-base lg:text-lg">点検履歴</span>
+                  <span class="text-sm md:text-base">点検履歴</span>
                   <span class="ml-2 text-xs text-gray-500">直近10件まで</span>
                 </div>
                 <div class="mt-4 min-w-full overflow-auto">
@@ -565,7 +565,7 @@ const activeTab: Ref<string> = ref('schedule');
               <div class="mt-6">
                 <div class="px-4 font-medium flex items-center">
                   <TrashIcon class="size-5" />
-                  <span class="text-sm md:text-base lg:text-lg">廃棄履歴</span>
+                  <span class="text-sm md:text-base">廃棄履歴</span>
                   <span class="ml-2 text-xs text-gray-500">直近10件まで</span>
                 </div>
                 <div class="mt-4 min-w-full overflow-auto">
