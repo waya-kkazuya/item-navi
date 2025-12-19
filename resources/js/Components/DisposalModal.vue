@@ -58,8 +58,8 @@ const saveDisposal = (item: ItemType): void => {
       >
         <header class="modal__header">
           <h2 class="flex modal__title" id="modal-1-title">
-            <TrashIcon class="size-6" />
-            <span class="text-sm lg:text-lg">廃棄</span>
+            <TrashIcon class="size-5" />
+            <span class="text-sm lg:text-base">廃棄</span>
           </h2>
           <button
             @click="toggleStatus"
@@ -71,28 +71,28 @@ const saveDisposal = (item: ItemType): void => {
         </header>
         <main class="modal__content" id="modal-1-content">
           <!-- フォームの開始 -->
-          <form @submit.prevent="saveDisposal(item)">
+          <form @submit.prevent="saveDisposal(item)" class="space-y-4">
             <div>
               <div class="p-2 w-full">
-                <label for="name" class="leading-7 text-xs md:text-base text-blue-900">
+                <label for="name" class="leading-7 text-xs md:text-sm text-blue-900">
                   備品名
                 </label>
                 <div
                   id="name"
                   name="name"
-                  class="w-full bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-xs md:text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
+                  class="w-full bg-gray-50 rounded border border-gray-300 text-xs md:text-sm text-gray-700 px-3 py-2"
                 >
                   {{ item.name }}
                 </div>
               </div>
               <div class="p-2 w-full">
-                <label for="disposalSchedule" class="leading-7 text-xs md:text-base text-blue-900">
+                <label for="disposalSchedule" class="leading-7 text-xs md:text-sm text-blue-900">
                   廃棄予定日
                 </label>
                 <div
                   id="disposalSchedule"
                   name="disposalSchedule"
-                  class="w-full bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-xs md:text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
+                  class="w-full bg-gray-50 rounded border border-gray-300 text-xs md:text-sm text-gray-700 px-3 py-2"
                 >
                   {{
                     item.disposal && item.disposal.disposal_scheduled_date
@@ -102,7 +102,7 @@ const saveDisposal = (item: ItemType): void => {
                 </div>
               </div>
               <div class="p-2 w-full">
-                <label for="disposal_date" class="leading-7 text-xs md:text-base text-blue-900">
+                <label for="disposal_date" class="leading-7 text-xs md:text-sm text-blue-900">
                   廃棄実施日
                   <span class="ml-1 mr-2 bg-red-400 text-white text-xs py-1 px-2 rounded-md"
                     >必須</span
@@ -114,18 +114,18 @@ const saveDisposal = (item: ItemType): void => {
                     id="disposal_date"
                     name="disposal_date"
                     v-model="form.disposal_date"
-                    class="md:mt-1 w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-xs md:text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
+                    class="block w-full bg-white rounded border border-gray-300 focus:border-red-500 focus:ring-2 focus:ring-red-200 text-xs md:text-sm text-gray-700 px-3 py-2 transition-colors"
                   />
                 </div>
                 <div
                   v-if="errors.disposal_date"
-                  class="font-medium text-xs md:text-base text-red-600"
+                  class="font-medium text-xs md:text-sm text-red-600"
                 >
                   {{ errors.disposal_date }}
                 </div>
               </div>
               <div class="p-2 w-full">
-                <label for="disposal_person" class="leading-7 text-xs md:text-base text-blue-900">
+                <label for="disposal_person" class="leading-7 text-xs md:text-sm text-blue-900">
                   廃棄実施者
                   <span class="ml-1 mr-2 bg-red-400 text-white text-xs py-1 px-2 rounded-md"
                     >必須</span
@@ -137,18 +137,18 @@ const saveDisposal = (item: ItemType): void => {
                     id="disposal_person"
                     name="disposal_person"
                     v-model="form.disposal_person"
-                    class="md:mt-1 w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-xs md:text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
+                    class="block w-full bg-white rounded border border-gray-300 focus:border-red-500 focus:ring-2 focus:ring-red-200 text-xs md:text-sm text-gray-700 px-3 py-2 transition-colors"
                   />
                   <div
                     v-if="errors.disposal_person"
-                    class="font-medium text-xs md:text-base text-red-600"
+                    class="font-medium text-xs md:text-sm text-red-600"
                   >
                     {{ errors.disposal_person }}
                   </div>
                 </div>
               </div>
               <div class="p-2 w-full">
-                <label for="details" class="leading-7 text-xs md:text-base text-blue-900">
+                <label for="details" class="leading-7 text-xs md:text-sm text-blue-900">
                   詳細情報
                   <span class="ml-1 mr-2 bg-red-400 text-white text-xs py-1 px-2 rounded-md"
                     >必須</span
@@ -160,9 +160,9 @@ const saveDisposal = (item: ItemType): void => {
                     name="details"
                     maxlength="500"
                     v-model="form.details"
-                    class="md:mt-1 w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 h-32 text-xs md:text-base outline-none text-gray-700 py-1 px-3 resize-none leading-6 transition-colors duration-200 ease-in-out"
+                    class="block w-full bg-white rounded border border-gray-300 focus:border-red-500 focus:ring-2 focus:ring-red-200 text-xs md:text-sm text-gray-700 px-3 py-2 resize-none transition-colors"
                   ></textarea>
-                  <div v-if="errors.details" class="font-medium text-xs md:text-base text-red-600">
+                  <div v-if="errors.details" class="font-medium text-xs md:text-sm text-red-600">
                     {{ errors.details }}
                   </div>
                 </div>
