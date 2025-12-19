@@ -75,7 +75,9 @@ const handleFileUpload = (event: Event) => {
   <section>
     <FlashMessage />
     <header>
-      <h2 class="text-lg font-medium text-gray-900">プロフィール編集</h2>
+      <div class="flex items-center justify-between">
+        <h2 class="text-lg font-medium text-gray-900">プロフィール編集</h2>
+      </div>
     </header>
 
     <form @submit.prevent="save" enctype="multipart/form-data" class="mt-6 space-y-6">

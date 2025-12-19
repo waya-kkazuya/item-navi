@@ -24,7 +24,9 @@ const activeTab: Ref<string> = ref('schedule');
 
   <AuthenticatedLayout>
     <template #header>
-      <h2 class="font-semibold text-xl text-gray-800 leading-tight">点検と廃棄</h2>
+      <div class="flex items-center justify-between">
+        <h2 class="font-semibold text-xl text-gray-800 leading-tight">点検と廃棄</h2>
+      </div>
     </template>
 
     <div class="py-2 md:py-4">

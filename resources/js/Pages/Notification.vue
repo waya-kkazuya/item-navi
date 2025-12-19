@@ -41,7 +41,9 @@ onMounted(() => {
 
   <AuthenticatedLayout>
     <template #header>
-      <h2 class="font-semibold text-xl text-gray-800 leading-tight">通知</h2>
+      <div class="flex items-center justify-between">
+        <h2 class="font-semibold text-xl text-gray-800 leading-tight">通知</h2>
+      </div>
     </template>
 
     <div class="py-2 md:py-4">

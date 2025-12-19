@@ -129,11 +129,8 @@ const restoreItem = async (itemId: number): Promise<void> => {
 
   <AuthenticatedLayout>
     <template #header>
-      <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
-        <div>
-          <h2 class="font-semibold text-xl text-gray-800 leading-tight">備品一覧</h2>
-          <p class="mt-1 text-sm text-gray-600">登録されている備品を管理</p>
-        </div>
+      <div class="flex items-center justify-between">
+        <h2 class="font-semibold text-xl text-gray-800 leading-tight">備品一覧</h2>
 
         <Link
           :href="route('items.create')"

@@ -91,11 +91,8 @@ const deleteItemRequest = (request: ItemRequestType) => {
 
   <AuthenticatedLayout>
     <template #header>
-      <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
-        <div>
-          <h2 class="font-semibold text-xl text-gray-800 leading-tight">リクエスト一覧</h2>
-          <p class="mt-1 text-sm text-gray-600">備品のリクエストを管理</p>
-        </div>
+      <div class="flex items-center justify-between">
+        <h2 class="font-semibold text-xl text-gray-800 leading-tight">リクエスト一覧</h2>
 
         <Link
           :href="route('item_requests.create')"
