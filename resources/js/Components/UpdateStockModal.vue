@@ -169,109 +169,105 @@ onMounted(() => {
         <main class="modal__content" id="modal-1-content">
           <div v-if="activeTab === '出庫'" class="p-4">
             <!-- フォームの開始 -->
-            <form @submit.prevent="decreaseStock(item)">
-              <div class="">
-                <div class="p-2 w-full">
-                  <label for="name" class="leading-7 text-xs md:text-base text-blue-900">
-                    備品名
-                  </label>
-                  <div
-                    id="name"
-                    name="name"
-                    class="w-full md:w-full lg:full bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-xs md:text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
-                  >
-                    {{ item.name }}
-                  </div>
-                </div>
-                <div class="p-2 w-full">
-                  <label
-                    for="transaction_date"
-                    class="leading-7 text-xs md:text-base text-blue-900"
-                  >
-                    出庫日時
-                  </label>
-                  <div class="relative">
-                    <div
-                      id="transaction_date"
-                      name="transaction_date"
-                      class="w-full md:w-full lg:w-full bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-xs md:text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
-                    >
-                      {{ formattedDate }}
-                    </div>
-                  </div>
-                </div>
-                <div class="p-2 w-full">
-                  <label for="operator_name" class="leading-7 text-xs md:text-base text-blue-900"
-                    >実施者</label
-                  >
-                  <div>
-                    <input
-                      type="text"
-                      id="operator_name"
-                      name="operator_name"
-                      v-model="decreaseForm.operator_name"
-                      class="w-full md:w-full lg:w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-xs md:text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
-                    />
-                    <div
-                      v-if="localErrors.operator_name"
-                      class="font-medium text-xs md:text-base text-red-600"
-                    >
-                      {{ localErrors.operator_name }}
-                    </div>
-                  </div>
-                </div>
+            <form @submit.prevent="decreaseStock(item)" class="space-y-4">
+              <div class="p-2 w-full">
+                <label for="name" class="leading-7 text-xs md:text-sm text-blue-900">
+                  備品名
+                </label>
                 <div
-                  class="flex items-end md:justify-start space-x-2 md:items-end p-2 w-full md:w-full lg:w-full"
+                  id="name"
+                  name="name"
+                  class="w-full bg-gray-50 rounded border border-gray-300 text-xs md:text-sm text-gray-700 px-3 py-2"
                 >
-                  <div class="w-1/4 md:w-1/4 lg:w-1/4">
-                    <label for="name" class="leading-7 text-xs md:text-base text-blue-900">
-                      現在在庫数
-                    </label>
-                    <div
-                      id="name"
-                      name="name"
-                      class="w-full bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-xs md:text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
-                    >
-                      {{ item.stock }}
-                    </div>
-                  </div>
-                  <div class="w-1/8 md:w-1/8 lg:w-1/8 mb-2 flex items-center justify-center">
-                    <ChevronDoubleRightIcon class="w-4 md:w-6 text-black" />
-                  </div>
-                  <div class="w-1/4 md:w-1/4 lg:w-1/4">
-                    <label for="name" class="leading-7 text-xs md:text-base text-blue-900">
-                      出庫後
-                    </label>
-                    <div
-                      id="name"
-                      name="name"
-                      class="w-full bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-xs md:text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
-                    >
-                      {{ stockAfterDecrease }}
-                    </div>
-                  </div>
-                  <div class="w-1/8 md:w-1/8 lg:w-1/8">
-                    <MinusIcon class="mb-2 size-5 w-4 md:w-8 transform -rotate-45" />
-                  </div>
-                  <div class="w-1/4 md:w-1/4 lg:w-1/4">
-                    <label for="name" class="leading-7 text-xs md:text-base text-blue-900">
-                      通知在庫数
-                    </label>
-                    <div
-                      id="name"
-                      name="name"
-                      class="w-full bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-xs md:text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
-                    >
-                      {{ item.minimum_stock }}
-                    </div>
+                  {{ item.name }}
+                </div>
+              </div>
+              <div class="p-2 w-full">
+                <label for="transaction_date" class="leading-7 text-xs md:text-sm text-blue-900">
+                  出庫日時
+                </label>
+                <div class="relative">
+                  <div
+                    id="transaction_date"
+                    name="transaction_date"
+                    class="w-full bg-gray-50 rounded border border-gray-300 text-xs md:text-sm text-gray-700 px-3 py-2"
+                  >
+                    {{ formattedDate }}
                   </div>
                 </div>
               </div>
               <div class="p-2 w-full">
-                <label for="quantity" class="leading-7 text-xs md:text-base text-blue-900"
+                <label for="operator_name" class="leading-7 text-xs md:text-sm text-blue-900"
+                  >実施者</label
+                >
+                <div>
+                  <input
+                    type="text"
+                    id="operator_name"
+                    name="operator_name"
+                    v-model="decreaseForm.operator_name"
+                    class="w-full bg-white rounded border border-gray-300 focus:border-orange-500 focus:ring-2 focus:ring-orange-200 text-xs md:text-sm text-gray-700 px-3 py-2 transition-colors"
+                  />
+                  <div
+                    v-if="localErrors.operator_name"
+                    class="font-medium text-xs md:text-sm text-red-600"
+                  >
+                    {{ localErrors.operator_name }}
+                  </div>
+                </div>
+              </div>
+              <div
+                class="flex items-end md:justify-start space-x-2 md:items-end p-2 w-full md:w-full lg:w-full"
+              >
+                <div class="w-1/4 md:w-1/4 lg:w-1/4">
+                  <label for="name" class="leading-7 text-xs md:text-sm text-blue-900">
+                    現在在庫数
+                  </label>
+                  <div
+                    id="name"
+                    name="name"
+                    class="w-full bg-gray-50 rounded border border-gray-300 text-xs md:text-sm text-gray-700 px-3 py-2"
+                  >
+                    {{ item.stock }}
+                  </div>
+                </div>
+                <div class="w-1/8 md:w-1/8 lg:w-1/8 mb-2 flex items-center justify-center">
+                  <ChevronDoubleRightIcon class="w-4 md:w-6 text-black" />
+                </div>
+                <div class="w-1/4 md:w-1/4 lg:w-1/4">
+                  <label for="name" class="leading-7 text-xs md:text-sm text-blue-900">
+                    出庫後
+                  </label>
+                  <div
+                    id="name"
+                    name="name"
+                    class="w-full bg-gray-50 rounded border border-gray-300 text-xs md:text-sm text-gray-700 px-3 py-2"
+                  >
+                    {{ stockAfterDecrease }}
+                  </div>
+                </div>
+                <div class="w-1/8 md:w-1/8 lg:w-1/8">
+                  <MinusIcon class="mb-2 size-5 w-4 md:w-8 transform -rotate-45" />
+                </div>
+                <div class="w-1/4 md:w-1/4 lg:w-1/4">
+                  <label for="name" class="leading-7 text-xs md:text-sm text-blue-900">
+                    通知在庫数
+                  </label>
+                  <div
+                    id="name"
+                    name="name"
+                    class="w-full bg-gray-50 rounded border border-gray-300 text-xs md:text-sm text-gray-700 px-3 py-2"
+                  >
+                    {{ item.minimum_stock }}
+                  </div>
+                </div>
+              </div>
+
+              <div class="p-2 w-full">
+                <label for="quantity" class="leading-7 text-xs md:text-sm text-blue-900"
                   >出庫数</label
                 >
-                <div class="flex items-center">
+                <div class="flex items-center gap-2">
                   <input
                     type="number"
                     id="quantity"
@@ -280,15 +276,11 @@ onMounted(() => {
                     min="1"
                     :max="item.stock"
                     step="1"
-                    class="w-1/3 bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-xs md:text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
+                    class="w-24 md:w-32 bg-white rounded border border-gray-300 focus:border-orange-500 focus:ring-2 focus:ring-orange-200 text-xs md:text-sm text-gray-700 px-3 py-2 transition-colors"
                   />
-                  <div
-                    id="unit"
-                    name="unit"
-                    class="w-1/2 text-xs md:text-base outline-none text-gray-700 py-1 px-3 leading-7"
-                  >
+                  <span id="unit" name="unit" class="text-xs md:text-sm text-gray-700">
                     {{ item.unit.name }}
-                  </div>
+                  </span>
                 </div>
                 <div
                   v-if="localErrors.quantity"
@@ -315,109 +307,104 @@ onMounted(() => {
 
           <div v-if="activeTab === '入庫'" class="p-4">
             <!-- フォームの開始 -->
-            <form @submit.prevent="increaseStock(item)">
-              <div>
-                <div class="p-2 w-full">
-                  <label for="name" class="leading-7 text-xs md:text-base text-blue-900">
-                    備品名
-                  </label>
-                  <div
-                    id="name"
-                    name="name"
-                    class="w-full md:w-full lg:w-full bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-xs md:text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
-                  >
-                    {{ item.name }}
-                  </div>
-                </div>
-                <div class="p-2 w-full">
-                  <label
-                    for="transaction_date"
-                    class="leading-7 text-xs md:text-base text-blue-900"
-                  >
-                    入庫日時
-                  </label>
-                  <div class="relative">
-                    <div
-                      id="transaction_date"
-                      name="transaction_date"
-                      class="w-full md:w-full lg:w-full bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-xs md:text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
-                    >
-                      {{ formattedDate }}
-                    </div>
-                  </div>
-                </div>
-                <div class="p-2 w-full">
-                  <label for="operator_name" class="leading-7 text-xs md:text-base text-blue-900">
-                    実施者
-                  </label>
-                  <div>
-                    <input
-                      type="text"
-                      id="operator_name"
-                      name="operator_name"
-                      v-model="increaseForm.operator_name"
-                      class="w-full md:w-full lg:w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-xs md:text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
-                    />
-                    <div
-                      v-if="localErrors.operator_name"
-                      class="font-medium text-xs md:text-base text-red-600"
-                    >
-                      {{ localErrors.operator_name }}
-                    </div>
-                  </div>
-                </div>
+            <form @submit.prevent="increaseStock(item)" class="space-y-4">
+              <div class="p-2 w-full">
+                <label for="name" class="leading-7 text-xs md:text-sm text-blue-900">
+                  備品名
+                </label>
                 <div
-                  class="flex items-end md:justify-start space-x-2 md:items-end p-2 w-full md:w-full lg:w-full"
+                  id="name"
+                  name="name"
+                  class="w-full bg-gray-50 rounded border border-gray-300 text-xs md:text-sm text-gray-700 px-3 py-2"
                 >
-                  <div class="w-1/4 md:w-1/4 lg:w-1/4">
-                    <label for="name" class="leading-7 text-xs md:text-base text-blue-900">
-                      現在在庫数
-                    </label>
-                    <div
-                      id="name"
-                      name="name"
-                      class="w-full bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-xs md:text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
-                    >
-                      {{ item.stock }}
-                    </div>
-                  </div>
-                  <div class="w-1/8 md:w-1/8 lg:w-1/8 mb-2 flex items-center justify-center">
-                    <ChevronDoubleRightIcon class="w-4 md:w-6 text-black" />
-                  </div>
-                  <div class="w-1/4 md:w-1/4 lg:w-1/4">
-                    <label for="name" class="leading-7 text-xs md:text-base text-blue-900">
-                      入庫後
-                    </label>
-                    <div
-                      id="name"
-                      name="name"
-                      class="w-full bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-xs md:text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
-                    >
-                      {{ stockAfterIncrease }}
-                    </div>
-                  </div>
-                  <div class="w-1/8 md:w-1/8 lg:w-1/8">
-                    <MinusIcon class="mb-2 size-5 w-4 md:w-8 transform -rotate-45" />
-                  </div>
-                  <div class="w-1/4 md:w-1/4 lg:w-1/4">
-                    <label for="name" class="leading-7 text-xs md:text-base text-blue-900">
-                      通知在庫数
-                    </label>
-                    <div
-                      id="name"
-                      name="name"
-                      class="w-full bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-xs md:text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
-                    >
-                      {{ item.minimum_stock }}
-                    </div>
+                  {{ item.name }}
+                </div>
+              </div>
+              <div class="p-2 w-full">
+                <label for="transaction_date" class="leading-7 text-xs md:text-sm text-blue-900">
+                  入庫日時
+                </label>
+                <div class="relative">
+                  <div
+                    id="transaction_date"
+                    name="transaction_date"
+                    class="w-full bg-gray-50 rounded border border-gray-300 text-xs md:text-sm text-gray-700 px-3 py-2"
+                  >
+                    {{ formattedDate }}
                   </div>
                 </div>
               </div>
               <div class="p-2 w-full">
-                <label for="quantity" class="leading-7 text-xs md:text-base text-blue-900"
+                <label for="operator_name" class="leading-7 text-xs md:text-sm text-blue-900">
+                  実施者
+                </label>
+                <div>
+                  <input
+                    type="text"
+                    id="operator_name"
+                    name="operator_name"
+                    v-model="increaseForm.operator_name"
+                    class="w-full bg-white rounded border border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 text-xs md:text-sm text-gray-700 px-3 py-2 transition-colors"
+                  />
+                  <div
+                    v-if="localErrors.operator_name"
+                    class="font-medium text-xs md:text-sm text-red-600"
+                  >
+                    {{ localErrors.operator_name }}
+                  </div>
+                </div>
+              </div>
+              <div
+                class="flex items-end md:justify-start space-x-2 md:items-end p-2 w-full md:w-full lg:w-full"
+              >
+                <div class="w-1/4 md:w-1/4 lg:w-1/4">
+                  <label for="name" class="leading-7 text-xs md:text-sm text-blue-900">
+                    現在在庫数
+                  </label>
+                  <div
+                    id="name"
+                    name="name"
+                    class="w-full bg-gray-50 rounded border border-gray-300 text-xs md:text-sm text-gray-700 px-3 py-2"
+                  >
+                    {{ item.stock }}
+                  </div>
+                </div>
+                <div class="w-1/8 md:w-1/8 lg:w-1/8 mb-2 flex items-center justify-center">
+                  <ChevronDoubleRightIcon class="w-4 md:w-6 text-black" />
+                </div>
+                <div class="w-1/4 md:w-1/4 lg:w-1/4">
+                  <label for="name" class="leading-7 text-xs md:text-sm text-blue-900">
+                    入庫後
+                  </label>
+                  <div
+                    id="name"
+                    name="name"
+                    class="w-full bg-gray-50 rounded border border-gray-300 text-xs md:text-sm text-gray-700 px-3 py-2"
+                  >
+                    {{ stockAfterIncrease }}
+                  </div>
+                </div>
+                <div class="w-1/8 md:w-1/8 lg:w-1/8">
+                  <MinusIcon class="mb-2 size-5 w-4 md:w-8 transform -rotate-45" />
+                </div>
+                <div class="w-1/4 md:w-1/4 lg:w-1/4">
+                  <label for="name" class="leading-7 text-xs md:text-sm text-blue-900">
+                    通知在庫数
+                  </label>
+                  <div
+                    id="name"
+                    name="name"
+                    class="w-full bg-gray-50 rounded border border-gray-300 text-xs md:text-sm text-gray-700 px-3 py-2"
+                  >
+                    {{ item.minimum_stock }}
+                  </div>
+                </div>
+              </div>
+              <div class="p-2 w-full">
+                <label for="quantity" class="leading-7 text-xs md:text-sm text-blue-900"
                   >入庫数</label
                 >
-                <div class="flex items-centers">
+                <div class="flex items-center gap-2">
                   <input
                     type="number"
                     id="quantity"
@@ -426,19 +413,15 @@ onMounted(() => {
                     min="1"
                     max="500"
                     step="1"
-                    class="w-1/3 bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-xs md:text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
+                    class="w-24 md:w-32 bg-white rounded border border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 text-xs md:text-sm text-gray-700 px-3 py-2 transition-colors"
                   />
-                  <div
-                    id="unit"
-                    name="unit"
-                    class="w-1/2 text-xs md:text-base outline-none text-gray-700 py-1 px-3 leading-7"
-                  >
+                  <span id="unit" name="unit" class="text-xs md:text-sm text-gray-700">
                     {{ item.unit.name }}
-                  </div>
+                  </span>
                 </div>
                 <div
                   v-if="localErrors.quantity"
-                  class="font-medium text-xs md:text-base text-red-600"
+                  class="font-medium text-xs md:text-sm text-red-600"
                 >
                   {{ localErrors.quantity }}
                 </div>
