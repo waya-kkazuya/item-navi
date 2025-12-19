@@ -180,7 +180,7 @@ const formatDate = (timestamp: string) => {
       @click="editHistories(item)"
       type="button"
       data-micromodal-trigger="modal-1"
-      class="h-4"
+      class="text-gray-600 hover:text-gray-900 transition-colors"
     >
       <ClockIcon class="size-5" />
     </button>
@@ -189,7 +189,7 @@ const formatDate = (timestamp: string) => {
       @click="editHistories(item)"
       type="button"
       data-micromodal-trigger="modal-1"
-      class="flex items-center text-white text-xs md:text-sm bg-gray-500 border-0 py-2 px-4 mx-auto focus:outline-none hover:bg-gray-600 rounded"
+      class="inline-flex items-center gap-1.5 px-3 py-2 text-xs md:text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
     >
       <ClockIcon class="w-4 h-4 mr-1 transform -translate-y-px" />
       履歴
