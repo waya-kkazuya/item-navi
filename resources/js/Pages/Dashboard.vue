@@ -1,5 +1,13 @@
 <script setup lang="ts">
-import { MinusCircleIcon, PlusCircleIcon } from '@heroicons/vue/24/outline';
+import {
+  MinusCircleIcon,
+  PlusCircleIcon,
+  ChevronRightIcon,
+  CalendarIcon,
+  ClockIcon,
+  InformationCircleIcon,
+  ArrowPathIcon,
+} from '@heroicons/vue/24/outline';
 import { Head, Link, router } from '@inertiajs/vue3';
 import { ref, onMounted } from 'vue';
 
@@ -77,7 +85,7 @@ const toggleDetails = (history: EditHistoryType) => {
           <div class="md:flex w-full p-4">
             <div class="md:w-2/5 md:border-r border-gray-300 p-4">
               <!-- 左側のテーブル -->
-              <table class="w-full border border-gray-200 text-xs md:text-base">
+              <table class="w-full border border-gray-200 text-sm">
                 <thead>
                   <tr>
                     <th
@@ -86,11 +94,7 @@ const toggleDetails = (history: EditHistoryType) => {
                       備品の登録件数
                     </th>
                     <th class="w-1/3 border-b-2 border-gray-200 px-4 py-3 text-right bg-sky-700">
-                      <select
-                        v-model="type"
-                        @change="switchViewMode"
-                        class="h-9 text-xs md:text-base"
-                      >
+                      <select v-model="type" @change="switchViewMode" class="h-9 text-sm">
                         <option value="category">カテゴリ</option>
                         <option value="locationOfUse">使用場所</option>
                       </select>
@@ -100,13 +104,21 @@ const toggleDetails = (history: EditHistoryType) => {
                 <tbody>
                   <template v-if="type == 'category'">
                     <tr>
-                      <td class="border-b-2 border-gray-200 px-4 py-3">全体</td>
+                      <td class="border-b-2 border-gray-200 px-4 py-3">
+                        <span class="text-sm font-medium text-gray-700">全体</span>
+                      </td>
                       <td class="border-b-2 border-gray-200 px-4 py-3 text-center">
                         <Link
                           :href="route('items.index')"
-                          class="text-blue-500 hover:text-blue-700 underline block"
+                          class="inline-flex items-center justify-center gap-2 text-blue-600 hover:text-blue-700 transition-colors group"
                         >
-                          {{ allItems.length }}件
+                          <span class="text-lg font-bold text-blue-600 hover:text-blue-700">{{
+                            allItems.length
+                          }}</span>
+                          <span class="text-sm text-gray-500">件</span>
+                          <ChevronRightIcon
+                            class="size-4 text-gray-400 group-hover:text-gray-600"
+                          />
                         </Link>
                       </td>
                     </tr>
@@ -117,45 +129,57 @@ const toggleDetails = (history: EditHistoryType) => {
                       <td class="border-b-2 border-gray-200 px-4 py-3 text-center">
                         <Link
                           v-if="'category_id' in group"
-                          :href="
-                            route('items.index', {
-                              categoryId: group.category_id,
-                            })
-                          "
-                          class="text-blue-500 hover:text-blue-700 underline block"
+                          :href="route('items.index', { categoryId: group.category_id })"
+                          class="inline-flex items-center justify-center gap-2 text-blue-600 hover:text-blue-700 transition-colors group"
                         >
-                          {{ group.items.length }}件
+                          <span class="text-base font-semibold">{{ group.items.length }}</span>
+                          <span class="text-sm text-gray-500">件</span>
+                          <ChevronRightIcon
+                            class="size-4 text-gray-400 group-hover:text-gray-600"
+                          />
                         </Link>
                       </td>
                     </tr>
                   </template>
                   <template v-else>
                     <tr>
-                      <td class="border-b-2 border-gray-200 px-4 py-3">全体</td>
+                      <td class="border-b-2 border-gray-200 px-4 py-3">
+                        <span class="text-sm font-medium text-gray-700">全体</span>
+                      </td>
                       <td class="border-b-2 border-gray-200 px-4 py-3 text-center">
                         <Link
                           :href="route('items.index')"
-                          class="text-blue-500 hover:text-blue-700 underline block"
+                          class="inline-flex items-center justify-center gap-2 text-blue-600 hover:text-blue-700 transition-colors group"
                         >
-                          {{ allItems.length }}件
+                          <span class="text-lg font-bold text-blue-600 hover:text-blue-700">{{
+                            allItems.length
+                          }}</span>
+                          <span class="text-sm text-gray-500">件</span>
+                          <ChevronRightIcon
+                            class="size-4 text-gray-400 group-hover:text-gray-600"
+                          />
                         </Link>
                       </td>
                     </tr>
                     <tr v-for="(group, locationOfUseName) in itemsByType" :key="locationOfUseName">
                       <td class="border-b-2 border-gray-200 px-4 py-3">
-                        {{ locationOfUseName }}
+                        <span class="text-sm text-gray-700">{{ locationOfUseName }}</span>
                       </td>
                       <td class="border-b-2 border-gray-200 px-4 py-3 text-center">
                         <Link
                           v-if="'location_of_use_id' in group"
                           :href="
-                            route('items.index', {
-                              locationOfUseId: group.location_of_use_id,
-                            })
+                            route('items.index', { locationOfUseId: group.location_of_use_id })
                           "
-                          class="text-blue-500 hover:text-blue-700 underline block"
+                          class="inline-flex items-center justify-center gap-2 text-blue-600 hover:text-blue-700 transition-colors group"
                         >
-                          {{ group.items.length }}件
+                          <span class="text-base font-semibold text-blue-600 hover:text-blue-700">{{
+                            group.items.length
+                          }}</span>
+                          <span class="text-sm text-gray-500">件</span>
+                          <ChevronRightIcon
+                            class="size-4 text-gray-400 group-hover:text-gray-600"
+                          />
                         </Link>
                       </td>
                     </tr>
@@ -166,7 +190,7 @@ const toggleDetails = (history: EditHistoryType) => {
 
             <!-- 右側のテーブル -->
             <div class="w-full md:w-3/5 p-4">
-              <table class="w-full border border-gray-200 text-xs md:text-base">
+              <table class="w-full border border-gray-200 text-sm">
                 <thead>
                   <tr>
                     <th
@@ -181,13 +205,19 @@ const toggleDetails = (history: EditHistoryType) => {
                   <template v-for="(histories, date) in localGroupedEdithistories" :key="date">
                     <tr>
                       <td class="border-b-2 p-2 border-gray-200 text-left bg-gray-200" colspan="2">
-                        {{ date }} ({{ histories[0].day_of_week }})
+                        <div class="flex items-center gap-2">
+                          <CalendarIcon class="size-4 text-gray-500" />
+                          <span>{{ date }} ({{ histories[0].day_of_week }})</span>
+                        </div>
                       </td>
                     </tr>
                     <template v-for="history in histories" :key="history.id">
                       <tr>
                         <td class="border-b-2 p-2 align-top">
-                          {{ history.time }}
+                          <div class="flex items-center gap-1">
+                            <ClockIcon class="size-3" />
+                            <span>{{ history.time }}</span>
+                          </div>
                         </td>
                         <td class="border-b-2 p-2">
                           <div class="flex items-center">
@@ -205,10 +235,8 @@ const toggleDetails = (history: EditHistoryType) => {
                               <span class="">{{ history.edit_user }}</span
                               >が
                               <template v-if="history.operation_type === 'soft_delete'">
-                                <span class="underline md:text-base"
-                                  >【管理ID{{ history.item.management_id }}】{{
-                                    history.item.name
-                                  }}</span
+                                <span class="underline"
+                                  >【{{ history.item.management_id }}】{{ history.item.name }}</span
                                 >
                               </template>
                               <template v-else>
@@ -219,9 +247,9 @@ const toggleDetails = (history: EditHistoryType) => {
                                       item: history.item_id,
                                     })
                                   "
-                                  class="text-blue-500 hover:text-blue-700 underline md:text-base"
+                                  class="text-blue-500 hover:text-blue-700 underline"
                                 >
-                                  【管理ID{{ history.item.management_id }}】{{ history.item.name }}
+                                  【{{ history.item.management_id }}】{{ history.item.name }}
                                 </Link>
                               </template>
                               <span v-if="history.operation_type == 'update'"
@@ -237,19 +265,35 @@ const toggleDetails = (history: EditHistoryType) => {
                               history.operation_type == 'update' &&
                               history.edit_reason.reason
                             "
-                            class="relative bg-indigo-50 md:text-base p-2 mt-1 rounded"
+                            class="mt-3 bg-blue-50 rounded-lg p-3 space-y-2 border border-blue-100"
                           >
-                            <div class="arrow-up"></div>
-                            <span class="font-semibold">編集理由 </span
-                            ><span>{{ history.edit_reason.reason }}</span>
-                            <span v-if="history.edit_reason_text" class="ml-3">
-                              {{ history.edit_reason_text }}
-                            </span>
-                            <div>
-                              <span class="font-semibold">編集後 </span>{{ history.new_value }}
+                            <div class="flex items-start gap-2">
+                              <InformationCircleIcon
+                                class="size-4 text-blue-600 flex-shrink-0 mt-0.5"
+                              />
+                              <div class="text-sm">
+                                <span class="font-semibold text-blue-900">編集理由:</span>
+                                <span class="text-blue-800 ml-1">{{
+                                  history.edit_reason.reason
+                                }}</span>
+                                <span v-if="history.edit_reason_text" class="text-blue-700 ml-2">{{
+                                  history.edit_reason_text
+                                }}</span>
+                              </div>
                             </div>
-                            <div>
-                              <span class="font-semibold">編集前 </span>{{ history.old_value }}
+
+                            <div class="flex items-start gap-2">
+                              <ArrowPathIcon class="size-4 text-gray-600 flex-shrink-0 mt-0.5" />
+                              <div class="text-sm">
+                                <div class="text-gray-700">
+                                  <span class="font-semibold">変更後:</span>
+                                  <span class="ml-1">{{ history.new_value }}</span>
+                                </div>
+                                <div class="text-gray-500 mt-1">
+                                  <span class="font-semibold">変更前:</span>
+                                  <span class="ml-1">{{ history.old_value }}</span>
+                                </div>
+                              </div>
                             </div>
                           </div>
                         </td>
