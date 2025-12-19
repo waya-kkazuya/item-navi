@@ -59,8 +59,8 @@ const saveInspection = (item: ItemType): void => {
       >
         <header class="modal__header">
           <h2 class="flex modal__title" id="modal-1-title">
-            <WrenchIcon class="size-6" />
-            <span class="text-sm lg:text-lg">点検</span>
+            <WrenchIcon class="size-5" />
+            <span class="text-sm lg:text-base">点検</span>
           </h2>
           <button
             @click="toggleStatus"
@@ -72,16 +72,16 @@ const saveInspection = (item: ItemType): void => {
         </header>
         <main class="modal__content" id="modal-1-content">
           <!-- フォームの開始 -->
-          <form @submit.prevent="saveInspection(item)">
+          <form @submit.prevent="saveInspection(item)" class="space-y-4">
             <div>
               <div class="p-2 w-full">
-                <label for="name" class="leading-7 text-xs md:text-base text-blue-900">
+                <label for="name" class="leading-7 text-xs md:text-sm text-blue-900">
                   備品名
                 </label>
                 <div
                   id="name"
                   name="name"
-                  class="w-full bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-xs md:text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
+                  class="w-full bg-gray-50 rounded border border-gray-300 text-xs md:text-sm text-gray-700 px-3 py-2"
                 >
                   {{ item.name }}
                 </div>
@@ -89,14 +89,14 @@ const saveInspection = (item: ItemType): void => {
               <div class="p-2 w-full">
                 <label
                   for="inspection_scheduled_date"
-                  class="leading-7 text-xs md:text-base text-blue-900"
+                  class="leading-7 text-xs md:text-sm text-blue-900"
                 >
                   点検予定日
                 </label>
                 <div
                   id="inspection_scheduled_date"
                   name="inspection_scheduled_date"
-                  class="w-full bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-xs md:text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
+                  class="w-full bg-gray-50 rounded border border-gray-300 text-xs md:text-sm text-gray-700 px-3 py-2"
                 >
                   {{
                     uncompleted_inspection
@@ -106,7 +106,7 @@ const saveInspection = (item: ItemType): void => {
                 </div>
               </div>
               <div class="p-2 w-full">
-                <label for="inspection_date" class="leading-7 text-xs md:text-base text-blue-900">
+                <label for="inspection_date" class="leading-7 text-xs md:text-sm text-blue-900">
                   点検実施日
                   <span class="ml-1 mr-2 bg-red-400 text-white text-xs py-1 px-2 rounded-md"
                     >必須</span
@@ -118,18 +118,18 @@ const saveInspection = (item: ItemType): void => {
                     id="inspection_date"
                     name="inspection_date"
                     v-model="form.inspection_date"
-                    class="md:mt-1 w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-xs md:text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
+                    class="block w-full bg-white rounded border border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 text-xs md:text-sm text-gray-700 px-3 py-2 transition-colors"
                   />
                 </div>
                 <div
                   v-if="errors.inspection_date"
-                  class="font-medium text-xs md:text-base text-red-600"
+                  class="font-medium text-xs md:text-sm text-red-600"
                 >
                   {{ errors.inspection_date }}
                 </div>
               </div>
               <div class="p-2 w-full">
-                <label for="inspection_person" class="leading-7 text-xs md:text-base text-blue-900">
+                <label for="inspection_person" class="leading-7 text-xs md:text-sm text-blue-900">
                   点検実施者
                   <span class="ml-1 mr-2 bg-red-400 text-white text-xs py-1 px-2 rounded-md"
                     >必須</span
@@ -141,18 +141,18 @@ const saveInspection = (item: ItemType): void => {
                     id="inspection_person"
                     name="inspection_person"
                     v-model="form.inspection_person"
-                    class="md:mt-1 w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-xs md:text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
+                    class="block w-full bg-white rounded border border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 text-xs md:text-sm text-gray-700 px-3 py-2 transition-colors"
                   />
                   <div
                     v-if="errors.inspection_person"
-                    class="font-medium text-xs md:text-base text-red-600"
+                    class="font-medium text-xs md:text-sm text-red-600"
                   >
                     {{ errors.inspection_person }}
                   </div>
                 </div>
               </div>
               <div class="p-2 w-full">
-                <label for="details" class="leading-7 text-xs md:text-base text-blue-900">
+                <label for="details" class="leading-7 text-xs md:text-sm text-blue-900">
                   詳細情報
                   <span class="ml-1 mr-2 bg-red-400 text-white text-xs py-1 px-2 rounded-md"
                     >必須</span
@@ -164,9 +164,9 @@ const saveInspection = (item: ItemType): void => {
                     name="details"
                     maxlength="500"
                     v-model="form.details"
-                    class="md:mt-1 w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 h-32 text-xs md:text-base outline-none text-gray-700 py-1 px-3 resize-none leading-6 transition-colors duration-200 ease-in-out"
+                    class="block w-full bg-white rounded border border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 text-xs md:text-sm text-gray-700 px-3 py-2 resize-none transition-colors"
                   ></textarea>
-                  <div v-if="errors.details" class="font-medium text-xs md:text-base text-red-600">
+                  <div v-if="errors.details" class="font-medium text-xs md:text-sm text-red-600">
                     {{ errors.details }}
                   </div>
                 </div>
