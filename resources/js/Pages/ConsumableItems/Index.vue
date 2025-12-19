@@ -7,6 +7,8 @@ import {
   ArrowTrendingDownIcon,
   ArchiveBoxIcon,
   InformationCircleIcon,
+  CheckCircleIcon,
+  ExclamationTriangleIcon,
 } from '@heroicons/vue/24/outline';
 import { BellAlertIcon, BellSlashIcon } from '@heroicons/vue/24/solid';
 import axios from 'axios';
@@ -293,73 +295,109 @@ const fetchStock = async (itemId: number): Promise<void> => {
                   class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-0"
                 >
                   <template v-for="item in localConsumableItems.data" :key="item.id">
-                    <div class="w-full p-2 border">
-                      <div>
-                        <a class="mb-2 block relative h-48">
-                          <Link :href="route('items.show', { item: item.id })">
-                            <img
-                              alt="消耗品の画像"
-                              class="object-cover object-center w-full h-full block border border-gray-300"
-                              :src="item.image_path1"
-                            />
-                          </Link>
-                        </a>
+                    <div
+                      class="bg-white rounded-lg border border-gray-200 shadow-sm hover:shadow-lg transition-shadow overflow-hidden"
+                    >
+                      <Link
+                        :href="route('items.show', { item: item.id })"
+                        class="block relative h-48 bg-gray-100"
+                      >
+                        <img
+                          :src="item.image_path1"
+                          alt="消耗品の画像"
+                          class="w-full h-full object-cover hover:opacity-90 transition-opacity"
+                        />
 
-                        <div class="ml-4">
-                          <span class="mr-2 text-base font-medium">備品名</span>
-                          <span class="text-gray-900 title-font text-base">{{ item.name }}</span>
+                        <!-- 在庫ステータスバッジ(新規追加) -->
+                        <div class="absolute top-2 right-2">
+                          <span
+                            v-if="item.stock <= item.minimum_stock"
+                            class="inline-flex items-center gap-1 px-2 py-1 text-xs font-medium bg-red-100 text-red-800 rounded-full"
+                          >
+                            <ExclamationTriangleIcon class="size-3" />
+                            在庫少
+                          </span>
+                          <span
+                            v-else
+                            class="inline-flex items-center gap-1 px-2 py-1 text-xs font-medium bg-green-100 text-green-800 rounded-full"
+                          >
+                            <CheckCircleIcon class="size-3" />
+                            在庫あり
+                          </span>
                         </div>
+                      </Link>
 
-                        <div class="ml-4">
-                          <span class="mr-2 text-xs lg:text-sm font-medium">管理ID</span>
-                          <Link :href="route('items.show', { item: item.id })">
-                            <span class="text-blue-600 title-font text-xs lg:text-sm">{{
-                              item.management_id
-                            }}</span>
+                      <!-- コンテンツ -->
+                      <div class="p-4 space-y-3">
+                        <div>
+                          <Link
+                            :href="route('items.show', { item: item.id })"
+                            class="text-base font-semibold text-gray-900 hover:text-blue-600 transition-colors line-clamp-2"
+                          >
+                            {{ item.name }}
                           </Link>
                         </div>
-                        <div class="ml-4 mt-1">
-                          <span class="text-sm lg:text-base"
-                            >在庫数 {{ item.stock }} / 通知在庫数 {{ item.minimum_stock }} ({{
-                              item.unit.name
-                            }})</span
+
+                        <div class="flex items-center gap-2">
+                          <span class="text-xs text-gray-500">ID:</span>
+                          <Link
+                            :href="route('items.show', { item: item.id })"
+                            class="text-sm font-medium text-blue-600 hover:text-blue-700"
                           >
+                            {{ item.management_id }}
+                          </Link>
                         </div>
-                        <div class="ml-4">
-                          <!-- {{ item.notification ? 'オン' : 'オフ'}} -->
-                          <div
-                            v-if="item.notification"
-                            class="flex justify-start items-center text-xs"
-                          >
-                            <BellAlertIcon class="size-4" />
-                            <div>通知オン</div>
+
+                        <div class="bg-gray-50 rounded-md p-3 space-y-2">
+                          <!-- 在庫数 -->
+                          <div class="flex items-center justify-between">
+                            <span class="text-xs text-gray-600">現在在庫</span>
+                            <span class="text-lg font-bold text-gray-900">
+                              {{ item.stock
+                              }}<span class="text-sm font-normal text-gray-500 ml-1">{{
+                                item.unit.name
+                              }}</span>
+                            </span>
                           </div>
-                          <div v-else class="flex justify-start items-center text-xs text-gray-300">
-                            <BellSlashIcon class="size-4" />
-                            <div>通知オフ</div>
+
+                          <!-- 通知在庫数 -->
+                          <div class="flex items-center justify-between">
+                            <span class="text-xs text-gray-600">通知在庫数</span>
+                            <span class="text-sm font-semibold text-gray-700">
+                              {{ item.minimum_stock
+                              }}<span class="text-xs font-normal text-gray-500 ml-1">{{
+                                item.unit.name
+                              }}</span>
+                            </span>
                           </div>
                         </div>
-                        <div
-                          class="mt-2 flex justify-center space-x-4 md:space-x-1 lg:space-x-2 items-center max-h-20"
-                        >
-                          <!-- 親コンポーネントからモーダルを開くボタン -->
+
+                        <div class="flex items-center gap-2">
+                          <template v-if="item.notification">
+                            <BellAlertIcon class="size-4 text-blue-600" />
+                            <span class="text-xs font-medium text-blue-600">通知オン</span>
+                          </template>
+                          <template v-else>
+                            <BellSlashIcon class="size-4 text-gray-400" />
+                            <span class="text-xs text-gray-400">通知オフ</span>
+                          </template>
+                        </div>
+
+                        <div class="flex gap-2 pt-2">
                           <button
                             @click="openStockTransactionModal(item)"
                             type="button"
-                            data-micromodal-trigger="modal-1"
-                            class="flex items-center text-white text-sm bg-gray-500 border-0 py-2 px-4 focus:outline-none hover:bg-gray-600 rounded"
+                            class="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
                           >
-                            <ArrowTrendingDownIcon class="size-5 mr-1" />
+                            <ArrowTrendingDownIcon class="size-4" />
                             在庫履歴
                           </button>
                           <button
                             @click="openUpdateStockModal(item)"
                             type="button"
-                            id="updateStock"
-                            data-micromodal-trigger="modal-1"
-                            class="flex items-center text-white text-sm bg-sky-500 border-0 py-2 px-4 focus:outline-none hover:bg-sky-600 rounded"
+                            class="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition-colors"
                           >
-                            <ArchiveBoxIcon class="size-5 mr-1" />
+                            <ArchiveBoxIcon class="size-4" />
                             入出庫
                           </button>
                         </div>
