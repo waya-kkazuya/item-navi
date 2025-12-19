@@ -8,7 +8,9 @@ import {
   Squares2X2Icon,
   ArrowLeftStartOnRectangleIcon,
   ArrowRightIcon,
+  TrashIcon,
   InformationCircleIcon,
+  ArrowPathIcon,
 } from '@heroicons/vue/24/outline';
 import axios from 'axios';
 import { Head, Link, router } from '@inertiajs/vue3';
@@ -626,73 +628,110 @@ const restoreItem = async (itemId: number): Promise<void> => {
                   class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-0"
                 >
                   <template v-for="item in localItems.data" :key="item.id">
-                    <div class="w-full p-2 border" :class="isDisposal ? 'bg-red-100' : ''">
-                      <a class="mb-2 block relative h-48">
-                        <Link :href="route('items.show', { item: item.id })">
-                          <img
-                            alt="備品の画像"
-                            :src="item.image_path1"
-                            class="object-cover object-center w-full h-full block border border-gray-300"
-                          />
-                        </Link>
-                      </a>
-
-                      <span
-                        class="ml-4 bg-gray-400 text-white text-sm tracking-widest title-font py-1 px-2 rounded-md"
-                        >{{ item.category.name }}</span
+                    <div
+                      :class="[
+                        'bg-white rounded-lg border border-gray-200 shadow-sm hover:shadow-lg transition-shadow overflow-hidden',
+                        isDisposal ? 'ring-2 ring-red-300' : '',
+                      ]"
+                    >
+                      <Link
+                        :href="route('items.show', { item: item.id })"
+                        class="block relative h-48 bg-gray-100"
                       >
+                        <img
+                          :src="item.image_path1"
+                          alt="備品の画像"
+                          class="w-full h-full object-cover hover:opacity-90 transition-opacity"
+                        />
 
-                      <div class="ml-4 mt-1">
-                        <span class="mr-2 text-base font-medium">備品名</span>
-                        <span class="text-gray-900 title-font text-base">{{ item.name }}</span>
-                      </div>
-                      <div class="ml-4">
-                        <span class="mr-2 text-xs lg:text-sm font-medium">管理ID</span>
-                        <Link :href="route('items.show', { item: item.id })">
-                          <span class="text-blue-600 title-font text-xs lg:text-sm">{{
-                            item.management_id
-                          }}</span>
-                        </Link>
-                      </div>
-                      <div class="ml-4">
-                        <span class="mr-2 text-xs lg:text-sm font-medium">利用場所</span>
-                        <span class="text-gray-900 title-font text-xs lg:text-sm">{{
-                          item.location_of_use.name
-                        }}</span>
-                      </div>
-                      <div class="ml-4">
-                        <span class="mr-2 text-xs lg:text-sm font-medium">保管場所</span>
-                        <span class="text-gray-900 title-font text-xs lg:text-sm">{{
-                          item.storage_location.name
-                        }}</span>
-                      </div>
-
-                      <div
-                        class="flex justify-center space-x-4 md:space-x-1 lg:space-x-2 mt-2 w-full"
-                      >
-                        <div class="flex-shrink-0">
-                          <EditHistoryModal v-bind:item="item" :isTableView="isTableView" />
+                        <!-- カテゴリバッジ -->
+                        <div class="absolute top-2 left-2">
+                          <span
+                            class="inline-flex items-center px-2.5 py-1 text-xs font-medium bg-gray-700 text-white rounded-full"
+                          >
+                            {{ item.category.name }}
+                          </span>
                         </div>
-                        <Link
-                          v-if="!isDisposal"
-                          as="button"
-                          :href="route('items.show', { item: item.id })"
-                          class="flex items-center text-white text-sm bg-blue-800 border-0 py-2 px-4 focus:outline-none hover:bg-blue-900 rounded flex-shrink-0"
-                        >
-                          <ArrowRightIcon class="w-5 h-5 mr-1 transform -translate-y-px" />
-                          詳細を見る
-                        </Link>
-                        <button
-                          v-else
-                          type="button"
-                          @click="restoreItem(item.id)"
-                          class="flex items-center text-white text-sm bg-blue-800 border-0 py-2 px-4 focus:outline-none hover:bg-blue-900 rounded flex-shrink-0"
-                        >
-                          <ArrowLeftStartOnRectangleIcon
-                            class="size-5 mr-1 transform -translate-y-px"
-                          />
-                          復元する
-                        </button>
+
+                        <!-- 廃棄済みバッジ -->
+                        <div v-if="isDisposal" class="absolute top-2 right-2">
+                          <span
+                            class="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-medium bg-red-600 text-white rounded-full"
+                          >
+                            <TrashIcon class="size-3" />
+                            廃棄済み
+                          </span>
+                        </div>
+                      </Link>
+
+                      <div class="p-4 space-y-3">
+                        <!-- 備品名 -->
+                        <div>
+                          <Link
+                            :href="route('items.show', { item: item.id })"
+                            class="text-base font-semibold text-gray-900 hover:text-blue-600 transition-colors line-clamp-2"
+                          >
+                            {{ item.name }}
+                          </Link>
+                        </div>
+
+                        <!-- 管理ID -->
+                        <div class="flex items-center gap-2">
+                          <span class="text-xs text-gray-500">ID:</span>
+                          <Link
+                            :href="route('items.show', { item: item.id })"
+                            class="text-sm font-medium text-blue-600 hover:text-blue-700"
+                          >
+                            {{ item.management_id }}
+                          </Link>
+                        </div>
+
+                        <!-- 場所情報カード -->
+                        <div class="bg-gray-50 rounded-md p-3 space-y-2">
+                          <!-- 利用場所 -->
+                          <div class="flex items-center justify-between">
+                            <span class="text-xs text-gray-600">利用場所</span>
+                            <span class="text-sm font-medium text-gray-900">{{
+                              item.location_of_use.name
+                            }}</span>
+                          </div>
+
+                          <!-- 保管場所 -->
+                          <div class="flex items-center justify-between">
+                            <span class="text-xs text-gray-600">保管場所</span>
+                            <span class="text-sm font-medium text-gray-900">{{
+                              item.storage_location.name
+                            }}</span>
+                          </div>
+                        </div>
+
+                        <!-- アクションボタン -->
+                        <div class="flex gap-2 pt-2">
+                          <!-- 編集履歴ボタン -->
+                          <div class="flex-shrink-0">
+                            <EditHistoryModal :item="item" :isTableView="isTableView" />
+                          </div>
+
+                          <!-- 詳細 / 復元ボタン -->
+                          <Link
+                            v-if="!isDisposal"
+                            as="button"
+                            :href="route('items.show', { item: item.id })"
+                            class="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition-colors"
+                          >
+                            <ArrowRightIcon class="size-4" />
+                            詳細
+                          </Link>
+                          <button
+                            v-else
+                            type="button"
+                            @click="restoreItem(item.id)"
+                            class="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2 text-sm font-medium text-white bg-green-600 rounded-lg hover:bg-green-700 transition-colors"
+                          >
+                            <ArrowPathIcon class="size-4" />
+                            復元
+                          </button>
+                        </div>
                       </div>
                     </div>
                   </template>
