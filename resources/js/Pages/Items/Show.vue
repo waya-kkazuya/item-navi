@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { CheckSquare, Square } from 'lucide-vue-next';
+import { PencilIcon } from '@heroicons/vue/24/outline';
 import { Head, Link } from '@inertiajs/vue3';
 
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
@@ -38,14 +39,15 @@ defineProps<{
               <div class="container px-5 py-8 mx-auto">
                 <div class="md:w-full mx-auto">
                   <div class="-m-2">
-                    <div class="mb-2 flex justify-end space-x-1">
+                    <div class="mb-2 flex justify-end gap-2">
                       <EditHistoryModal :item="item" :isTableView="false" />
                       <Link
                         as="button"
                         :href="route('items.edit', { item: item.id })"
                         id="editItem"
-                        class="flex text-white bg-indigo-500 border-0 py-2 px-4 focus:outline-none hover:bg-indigo-600 rounded text-xs md:text-sm"
+                        class="inline-flex items-center gap-1.5 px-3 py-2 text-xs md:text-sm font-medium text-white bg-blue-600 border border-blue-600 rounded-lg hover:bg-blue-700 transition-colors"
                       >
+                        <PencilIcon class="size-4" />
                         編集する
                       </Link>
                     </div>
@@ -357,13 +359,14 @@ defineProps<{
                             </div>
                           </div>
                         </div>
-                        <div class="py-3 px-4 w-full">
+                        <div class="flex justify-center py-3 px-4 w-full">
                           <Link
                             as="button"
                             :href="route('items.edit', { item: item.id })"
                             id="editItem"
-                            class="flex mx-auto text-xs md:text-sm text-white bg-indigo-500 border-0 py-2 px-8 focus:outline-none hover:bg-indigo-600 rounded"
+                            class="inline-flex items-center gap-1.5 px-6 py-2 text-xs md:text-sm font-medium text-white bg-blue-600 border border-blue-600 rounded-lg hover:bg-blue-700 transition-colors"
                           >
+                            <PencilIcon class="size-4" />
                             編集する
                           </Link>
                         </div>

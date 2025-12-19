@@ -186,8 +186,9 @@ const saveDisposal = (item: ItemType): void => {
     id="disposalButton"
     data-micromodal-trigger="modal-1"
     href="javascript:;"
-    class="flex mx-auto md:ml-4 text-xs md:text-sm text-white bg-red-500 border-0 py-2 px-8 focus:outline-none hover:bg-red-600 rounded"
+    class="inline-flex items-center justify-center gap-1.5 w-full md:w-auto px-3 py-2 text-xs md:text-sm font-medium text-white bg-red-600 border border-red-600 rounded-lg hover:bg-red-700 transition-colors md:ml-4"
   >
+    <TrashIcon class="size-4" />
     廃棄する
   </button>
 </template>
