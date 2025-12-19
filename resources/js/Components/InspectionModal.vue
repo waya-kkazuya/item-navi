@@ -190,8 +190,9 @@ const saveInspection = (item: ItemType): void => {
     id="inspectionButton"
     data-micromodal-trigger="modal-1"
     href="javascript:;"
-    class="flex mx-auto md:ml-4 text-xs md:text-sm text-white bg-sky-500 border-0 py-2 px-8 focus:outline-none hover:bg-sky-600 rounded"
+    class="inline-flex items-center justify-center gap-1.5 w-full md:w-auto px-3 py-2 text-xs md:text-sm font-medium text-white bg-blue-600 border border-blue-600 rounded-lg hover:bg-blue-700 transition-colors md:ml-4"
   >
+    <WrenchIcon class="size-4" />
     点検する
   </button>
 </template>
