@@ -61,7 +61,7 @@ const formatDate = (timestamp: string) => {
         <header class="modal__header">
           <h2 class="modal__title" id="modal-1-title">
             <span class="text-sm lg:text-lg"
-              >【管理ID{{ props.item.management_id }}】{{ props.item.name }}の編集履歴</span
+              >【ID{{ props.item.management_id }}】{{ props.item.name }}の編集履歴</span
             >
           </h2>
           <button
@@ -154,7 +154,7 @@ const formatDate = (timestamp: string) => {
             <div v-else>
               <div class="flex items-center justify-center">
                 <InformationCircleIcon class="w-6 h-6 text-black" />
-                <div class="ml-2 text-center py-4 text-sm lg:text-base">編集履歴がありません</div>
+                <div class="ml-2 text-center py-4 text-xs md:text-sm">編集履歴がありません</div>
               </div>
             </div>
           </div>
@@ -182,7 +182,7 @@ const formatDate = (timestamp: string) => {
       data-micromodal-trigger="modal-1"
       class="h-4"
     >
-      <ClockIcon class="w-6 h-6 text-black" />
+      <ClockIcon class="size-5" />
     </button>
     <button
       v-else
