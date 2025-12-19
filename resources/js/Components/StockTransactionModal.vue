@@ -63,8 +63,8 @@ const closeModal = (): void => {
       >
         <header class="modal__header">
           <h2 class="modal__title" id="modal-1-title">
-            <span class="text-sm lg:text-lg"
-              >【管理ID{{ props.item.management_id }}】{{ props.item.name }}の入出庫履歴</span
+            <span class="text-sm lg:text-base"
+              >【{{ props.item.management_id }}】{{ props.item.name }}の入出庫履歴</span
             >
           </h2>
           <button
