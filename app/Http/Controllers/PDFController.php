@@ -27,7 +27,9 @@ class PDFController extends Controller
         // QRラベル画像のパスの配列を取得
         $qrCodes = [];
         foreach ($consumableItems as $consumableItem) {
-            $qrCodes[] = Storage::disk()->url('labels/' . $consumableItem->qrcode);
+            $qrCodes[] = config('filesystems.default') === 's3' 
+                ? Storage::disk()->url('labels/' . $consumableItem->qrcode)
+                : Storage::disk()->path('labels/' . $consumableItem->qrcode);
         }
 
         if (empty($qrCodes)) {
