@@ -2,7 +2,7 @@
 ![ポートフォリオ画像](public/images/ItemNavi_Welcome.png)
 
 ## 1. はじめに
-- 本リポジトリは[「waya」(Xアカウント: @8zBA40yLA6Hpgrl)](https://x.com/8zBA40yLA6Hpgrl)が作成した備品管理システム「ItemNavi」に関するものです
+- 本リポジトリは[「waya」(Xアカウント: @waya_dev)](https://x.com/waya_dev)が作成した備品管理システム「ItemNavi」に関するものです
 - ご利用いただくことでのトラブル等は一切責任を負いかねます
 
 ## 2. アプリ概要
@@ -222,4 +222,4 @@ http://localhost:8000
 
 ## 開発者
 - waya
-- Xアカウント: https://x.com/8zBA40yLA6Hpgrl
+- Xアカウント: https://x.com/waya_dev
