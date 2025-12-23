@@ -23,9 +23,10 @@ jobs:
 # Build
   build-and-push:
     if: |
-      github.event.pull_request.merged == true && 
-      (contains(github.event.pull_request.labels.*.name, 'deploy') ||
-       contains(github.event.pull_request.title, '[deploy]'))
+      github.event_name == 'workflow_dispatch' ||
+      (github.event.pull_request.merged == true && 
+       (contains(github.event.pull_request.labels.*.name, 'deploy') ||
+        contains(github.event.pull_request.title, '[deploy]')))
     runs-on: ubuntu-latest
     defaults:
       run:
