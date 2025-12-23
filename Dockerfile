@@ -62,6 +62,9 @@ COPY ./docker-config/apache2.conf /etc/apache2/sites-available/000-default.conf
 # アプリケーションのファイルをコピー
 COPY . /var/www/html
 
+# Composerの依存関係をインストール前にgitを追加
+RUN apt-get update && apt-get install -y git && rm -rf /var/lib/apt/lists/*
+
 # Composerの依存関係をインストール
 RUN composer install --no-dev --optimize-autoloader --no-interaction --prefer-dist
 
