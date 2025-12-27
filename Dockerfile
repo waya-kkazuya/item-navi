@@ -1,5 +1,5 @@
 # ベースイメージとしてphp:8.2-apacheを使用
-FROM php:8.2-apache
+FROM php:8.2-apache-bullseye
 
 # 作業ディレクトリを設定
 WORKDIR /var/www/html
@@ -32,17 +32,12 @@ RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2
     && ./aws/install \
     && rm -rf aws awscliv2.zip
 
-# ライブラリファイルを取得
-RUN wget http://archive.ubuntu.com/ubuntu/pool/main/o/openssl/libssl1.1_1.1.0g-2ubuntu4_amd64.deb && \
-    wget http://archive.ubuntu.com/ubuntu/pool/main/libj/libjpeg-turbo/libjpeg-turbo8_2.0.3-0ubuntu1_amd64.deb && \
-    wget https://github.com/wkhtmltopdf/packaging/releases/download/0.12.6-1/wkhtmltox_0.12.6-1.bionic_amd64.deb
+RUN apt-get update && apt-get install -y \
+    wkhtmltopdf \
+    xfonts-75dpi \
+    xfonts-base
 
-# ライブラリをインストール
-RUN dpkg -i libssl1.1_1.1.0g-2ubuntu4_amd64.deb && \
-    dpkg -i libjpeg-turbo8_2.0.3-0ubuntu1_amd64.deb && \
-    dpkg -i wkhtmltox_0.12.6-1.bionic_amd64.deb
-
-# GDライブラリの設定とインストール   
+# GDライブラリの設定とインストール
 RUN docker-php-ext-configure gd --with-freetype --with-jpeg --with-webp --with-xpm \
     && docker-php-ext-install -j$(nproc) gd \
     && docker-php-ext-install pdo pdo_mysql zip \
@@ -80,7 +75,7 @@ RUN mkdir -p /var/www/html/storage/app/public/items \
 COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
 RUN chmod +x /usr/local/bin/docker-entrypoint.sh
 
-# ログディレクトリの所有者と権限を設定 
+# ログディレクトリの所有者と権限を設定
 RUN chown -R www-data:www-data /var/www/html/storage \
     && chmod -R 775 /var/www/html/storage
 
