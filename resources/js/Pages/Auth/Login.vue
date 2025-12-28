@@ -7,8 +7,8 @@ import InputLabel from '@/Components/InputLabel.vue';
 import TextInput from '@/Components/TextInput.vue';
 
 defineProps<{
-  canResetPassword: boolean;
-  status: string;
+  canResetPassword?: boolean;
+  status?: string | null;
 }>();
 
 const form = useForm({
