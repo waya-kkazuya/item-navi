@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
-use App\Providers\RouteServiceProvider;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -34,12 +33,13 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
-        // return redirect()->intended(RouteServiceProvider::HOME);
         $role = Auth::user()->role;
+
+        // 権限Userだった場合は消耗品管理画面遷移
         if ($role == 9) {
-            return redirect('/consumable_items');
+            return redirect()->intended('/consumable_items');
         } else {
-            return redirect()->intended(RouteServiceProvider::HOME);
+            return redirect()->intended('/items');
         }
     }
 
