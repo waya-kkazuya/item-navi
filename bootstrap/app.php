@@ -31,4 +31,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'password_confirmation',
         ]);
     })
+    ->withProviders([
+        \App\Providers\AppServiceProvider::class,
+    ])
     ->create();
