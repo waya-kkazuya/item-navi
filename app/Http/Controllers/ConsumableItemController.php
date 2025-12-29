@@ -7,7 +7,6 @@ use App\Models\Item;
 use App\Models\Location;
 use App\Services\ImageService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
 
@@ -23,8 +22,6 @@ class ConsumableItemController extends Controller
 
     public function index(Request $request, $item_id = null)
     {
-        Gate::authorize('user-higher');
-
         Log::info('ConsumableItemController index method called');
 
         try {

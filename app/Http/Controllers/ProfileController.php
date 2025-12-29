@@ -9,7 +9,6 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Storage;
@@ -27,8 +26,6 @@ class ProfileController extends Controller
 
     public function edit(Request $request): Response
     {
-        Gate::authorize('user-higher');
-
         Log::info('ProfileController edit method called');
 
         $user          = Auth::user();
@@ -57,8 +54,6 @@ class ProfileController extends Controller
 
     public function update(ProfileUpdateRequest $request): RedirectResponse
     {
-        Gate::authorize('user-higher');
-
         Log::info('ProfileController update method called');
 
         // ロールバックした時のプロフィール画像を元に戻す準備

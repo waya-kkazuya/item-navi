@@ -9,15 +9,12 @@ use App\Http\Requests\IncreaseStockRequest;
 use App\Models\Item;
 use App\Models\StockTransaction;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
 
 class UpdateStockController extends Controller
 {
     public function decreaseStock(DecreaseStockRequest $request, Item $item)
     {
-        Gate::authorize('user-higher');
-
         Log::info('UpdateStockController decreaseStock method called');
 
         DB::beginTransaction();
@@ -81,8 +78,6 @@ class UpdateStockController extends Controller
 
     public function increaseStock(IncreaseStockRequest $request, Item $item)
     {
-        Gate::authorize('user-higher');
-
         Log::info('UpdateStockController increaseStock method called');
 
         DB::beginTransaction();

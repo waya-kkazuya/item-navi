@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use App\Models\Item;
 use Barryvdh\Snappy\Facades\SnappyPdf as PDF;
-use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
@@ -15,8 +14,6 @@ class PDFController extends Controller
 
     public function generatePDF()
     {
-        Gate::authorize('user-higher');
-
         Log::info('PDFController generatePDF method called');
 
         // 消耗品のQRコードをすべて取得する（現在カテゴリが消耗品のもの、変更されている可能性もある）
@@ -27,7 +24,7 @@ class PDFController extends Controller
         // QRラベル画像のパスの配列を取得
         $qrCodes = [];
         foreach ($consumableItems as $consumableItem) {
-            $qrCodes[] = config('filesystems.default') === 's3' 
+            $qrCodes[] = config('filesystems.default') === 's3'
                 ? Storage::disk()->url('labels/' . $consumableItem->qrcode)
                 : Storage::disk()->path('labels/' . $consumableItem->qrcode);
         }

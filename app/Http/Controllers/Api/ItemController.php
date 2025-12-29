@@ -11,8 +11,6 @@ class ItemController extends Controller
 {
     public function restore($id)
     {
-        Gate::authorize('staff-higher');
-
         Log::info('Api/ItemController restore method called');
 
         $item = Item::withTrashed()->find($id);

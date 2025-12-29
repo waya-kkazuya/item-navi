@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
 
@@ -13,8 +12,6 @@ class NotificationController extends Controller
 {
     public function index()
     {
-        Gate::authorize('staff-higher');
-
         Log::info('NotificationController index method called');
 
         // Auth::user()->notifications; ログイン中ユーザーへの通知

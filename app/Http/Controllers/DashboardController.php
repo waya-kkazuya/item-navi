@@ -25,8 +25,6 @@ class DashboardController extends Controller
 
     public function index(Request $request)
     {
-        Gate::authorize('staff-higher');
-
         Log::info('DashboardController index method called');
 
         try {

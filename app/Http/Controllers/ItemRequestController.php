@@ -11,7 +11,6 @@ use App\Models\Location;
 use App\Models\RequestStatus;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
 
@@ -19,8 +18,6 @@ class ItemRequestController extends Controller
 {
     public function index(Request $request)
     {
-        Gate::authorize('user-higher');
-
         Log::info('ItemRequestController index method called');
 
         // 作成日でソートの値、初期値はasc
@@ -70,8 +67,6 @@ class ItemRequestController extends Controller
 
     public function create()
     {
-        Gate::authorize('user-higher');
-
         Log::info('ItemRequestController create method called');
 
         $categories = Category::all();
@@ -87,8 +82,6 @@ class ItemRequestController extends Controller
 
     public function store(StoreItemRequestRequest $request)
     {
-        Gate::authorize('user-higher');
-
         Log::info('ItemRequestController store method called');
 
         DB::beginTransaction();
@@ -137,8 +130,6 @@ class ItemRequestController extends Controller
 
     public function destroy(ItemRequest $itemRequest)
     {
-        Gate::authorize('staff-higher');
-
         Log::info('ItemRequestController destroy method called');
 
         $itemRequest->delete();
