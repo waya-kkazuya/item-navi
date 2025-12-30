@@ -62,8 +62,6 @@ Route::get('/dashboard', [DashboardController::class, 'index'])
 // 備品のItemControllerはリソースコントローラなので、
 // ゲストログインのミドルウェアはコンストラクタ内で適用
 Route::resource('items', ItemController::class)->middleware(['auth', 'verified', 'can:staff-higher']);
-Route::post('/items/{id}/restore', [ItemController::class, 'restore'])
-    ->middleware(['auth', 'verified', 'can:staff-higher'])->name('items.restore');
 
 // 備品詳細画面の廃棄処理と点検処理
 Route::middleware(['auth', 'verified', 'can:staff-higher'])->group(function () {
