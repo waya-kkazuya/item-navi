@@ -12,6 +12,11 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
+        // APIルートにSanctumのstatefulミドルウェアを追加
+        $middleware->api(prepend: [
+            \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
+        ]);
+
         // Inertia 用カスタムミドルウェア
         $middleware->web(append: [
             \App\Http\Middleware\HandleInertiaRequests::class,
