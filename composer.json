@@ -16,7 +16,7 @@
         "hikaeme/monolog-ltsv-formatter": "^3.0",
         "illuminate/filesystem": "*",
         "inertiajs/inertia-laravel": "^1.0",
-        "intervention/image": "^2.7",
+        "intervention/image": "^3.0",
         "jenssegers/agent": "^2.6",
         "laravel/framework": "^11.0",
         "laravel/sanctum": "^4.0",
