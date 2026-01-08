@@ -23,7 +23,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 // 備品の廃棄
-Route::middleware(['auth:sanctum', 'verified', 'can:staff-higher'])
+Route::middleware(['auth:sanctum', 'verified', 'can:staff-higher', 'RestrictGuestAccess'])
   ->post('/items/{id}/restore', [ItemController::class, 'restore'])
   ->name('api.items.restore');
 

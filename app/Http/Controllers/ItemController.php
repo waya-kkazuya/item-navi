@@ -21,7 +21,6 @@ use App\Services\QrCodeService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Storage;
@@ -49,8 +48,6 @@ class ItemController extends Controller
 
     public function index(Request $request)
     {
-        Gate::authorize('staff-higher');
-
         Log::info('ItemController index method called');
 
         try {
@@ -184,8 +181,6 @@ class ItemController extends Controller
 
     public function create(Request $request)
     {
-        Gate::authorize('staff-higher');
-
         Log::info('ItemController create method called');
 
         $categories          = Category::all();
@@ -213,8 +208,6 @@ class ItemController extends Controller
 
     public function store(StoreItemRequest $request)
     {
-        Gate::authorize('staff-higher');
-
         Log::info('ItemController store method called');
 
         // 編集理由はItemObserverのメソッド内でセッションから取得し、edithistoriesに保存
@@ -357,8 +350,6 @@ class ItemController extends Controller
 
     public function show(Item $item)
     {
-        Gate::authorize('staff-higher');
-
         Log::info('ItemController show method called');
 
         $withRelations = ['category', 'unit', 'usageStatus', 'locationOfUse', 'storageLocation', 'acquisitionMethod', 'inspections', 'disposal'];
@@ -386,8 +377,6 @@ class ItemController extends Controller
 
     public function edit(Item $item)
     {
-        Gate::authorize('staff-higher');
-
         Log::info('ItemController edit method called');
 
         $withRelations = ['category', 'unit', 'usageStatus', 'locationOfUse', 'storageLocation', 'acquisitionMethod', 'inspections', 'disposal'];
@@ -424,8 +413,6 @@ class ItemController extends Controller
     public function update(UpdateItemRequest $request, Item $item)
     {
         // トランザクション処理は、ItemObserverでのDB保存もロールバックする
-        Gate::authorize('staff-higher');
-
         Log::info('ItemController update method called');
 
         // ロールバックした時の備品画像を元に戻す準備

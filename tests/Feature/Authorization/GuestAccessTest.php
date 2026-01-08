@@ -114,23 +114,15 @@ class GuestAccessTest extends TestCase
         // アイテムがソフトデリートされたことを確認
         $this->assertSoftDeleted('items', ['id' => $item->id]);
 
-        // アイテムを復元するリクエストを送信
-        $response = $this->from(route('items.index'))
-            ->post(route('items.restore', $item->id));
+        // APIエンドポイントにリクエストを送信
+        $response = $this->postJson('/api/items/' . $item->id . '/restore');
 
-        // レスポンスが期待通りか確認
-        $response->assertStatus(302);
-        $response->assertRedirect(route('items.index'));
-        $response = $this->followRedirects($response);
-
-        // フラッシュメッセージの内容をアサート
-        $response->assertInertia(fn(Assert $page) => $page
-                ->component('Items/Index')
-                ->has('flash.message')
-                ->where('flash.message', 'ゲストには許可されていない機能です、ログインして実行してください')
-                ->has('flash.status')
-                ->where('flash.status', 'danger')
-        );
+        // JSONレスポンスを確認
+        $response->assertStatus(403); // または適切なステータスコード
+        $response->assertJson([
+            'message' => 'ゲストには許可されていない機能です、ログインして実行してください',
+            'status'  => 'danger',
+        ]);
 
         // アイテムが復元されていないことを確認
         $this->assertSoftDeleted('items', ['id' => $item->id]);

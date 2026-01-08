@@ -8,7 +8,6 @@ use App\UseCases\InspectionAndDisposalItem\HistoryDisposalUseCase;
 use App\UseCases\InspectionAndDisposalItem\HistoryInspectionsUseCase;
 use App\UseCases\InspectionAndDisposalItem\ScheduledDisposalUseCase;
 use App\UseCases\InspectionAndDisposalItem\ScheduledInspectionsUseCase;
-use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
 
@@ -36,8 +35,6 @@ class InspectionAndDisposalItemController extends Controller
 
     public function index()
     {
-        Gate::authorize('staff-higher');
-
         Log::info('InspectionAndDisposalItemController index method called');
 
         $scheduledInspections = $this->scheduledInspectionsUseCase->handle();

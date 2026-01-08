@@ -5,15 +5,12 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Edithistory;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
 
 class EdithistoryController extends Controller
 {
     public function index(Request $request)
     {
-        Gate::authorize('user-higher');
-
         Log::info('EdithistoryController index method called');
 
         // 編集履歴で表示するために、更新種類と更新フィールドを日本語に変換する必要がある
