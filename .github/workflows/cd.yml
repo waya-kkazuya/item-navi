@@ -41,6 +41,14 @@ jobs:
           node-version: 22
           cache: 'npm'
 
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+
+      - name: Install Composer dependencies
+        run: composer install --no-dev --optimize-autoloader --no-interaction
+
       - name: Build front (Vite)
         env:
           VITE_APP_URL: ${{ secrets.PROD_VITE_APP_URL }}
