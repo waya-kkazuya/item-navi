@@ -32,10 +32,12 @@ RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2
     && ./aws/install \
     && rm -rf aws awscliv2.zip
 
-RUN apt-get update && apt-get install -y \
-    wkhtmltopdf \
-    xfonts-75dpi \
-    xfonts-base
+# wkhtmltopdf 0.12.5 を明示的にインストール（バージョン固定）
+# apt-getではなくGitHubから直接ダウンロードして確実性を担保
+RUN wget https://github.com/wkhtmltopdf/packaging/releases/download/0.12.5-1/wkhtmltox_0.12.5-1.buster_amd64.deb \
+    && dpkg -i wkhtmltox_0.12.5-1.buster_amd64.deb || apt-get install -fy \
+    && rm wkhtmltox_0.12.5-1.buster_amd64.deb \
+    && wkhtmltopdf --version  # ビルド時にバージョンを確認
 
 # GDライブラリの設定とインストール
 RUN docker-php-ext-configure gd --with-freetype --with-jpeg --with-webp --with-xpm \
