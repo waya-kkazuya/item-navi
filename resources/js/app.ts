@@ -3,7 +3,7 @@ import './micromodal';
 import '../css/app.css';
 import '../css/micromodal.css';
 
-import type { App, DefineComponent } from "vue";
+import type { DefineComponent } from "vue";
 import { createApp, h } from 'vue';
 import { createInertiaApp } from '@inertiajs/vue3';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
@@ -18,14 +18,11 @@ createInertiaApp({
             `./Pages/${name}.vue`,
             import.meta.glob<DefineComponent>('./Pages/**/*.vue')
         ),
-    setup({ el, App, props, plugin }): App {
+    setup({ el, App, props, plugin }): void {
         const app = createApp({ render: () => h(App, props) })
             .use(plugin)
             .use(ZiggyVue);
-
         app.mount(el);
-
-        return app;
     },
     progress: {
         color: '#4B5563',
