@@ -15,7 +15,7 @@
         "guzzlehttp/guzzle": "^7.8",
         "hikaeme/monolog-ltsv-formatter": "^3.0",
         "illuminate/filesystem": "*",
-        "inertiajs/inertia-laravel": "^1.0",
+        "inertiajs/inertia-laravel": "^2.0",
         "intervention/image": "^3.0",
         "jenssegers/agent": "^2.6",
         "laravel/framework": "^12.0",
