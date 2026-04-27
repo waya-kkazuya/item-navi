@@ -21,6 +21,7 @@ export default defineConfig({
     resolve: {
         alias: {
             '@': path.resolve(__dirname, './resources/js'),
+            'micromodal': path.resolve(__dirname, 'node_modules/micromodal/dist/micromodal.es.js'),
         },
     },
     legacy: {
