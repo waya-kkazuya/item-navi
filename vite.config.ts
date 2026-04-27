@@ -18,6 +18,17 @@ export default defineConfig({
             },
         }),
     ],
+    build: {
+        rolldownOptions: {
+            output: {
+                manualChunks: (id: string) => {
+                    if (id.includes('micromodal')) {
+                        return 'vendor'
+                    }
+                }
+            }
+        }
+    },
     resolve: {
         alias: {
             '@': path.resolve(__dirname, './resources/js'),
