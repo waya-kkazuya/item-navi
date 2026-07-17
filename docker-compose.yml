@@ -67,8 +67,6 @@ services:
             MYSQL_DATABASE: ems_testing
             MYSQL_USER: ems_testing
             MYSQL_PASSWORD: password123
-        volumes:
-            - './vendor/laravel/sail/database/mysql/create-testing-database.sh:/docker-entrypoint-initdb.d/10-create-testing-database.sh'
         networks:
             - sail
         healthcheck:
