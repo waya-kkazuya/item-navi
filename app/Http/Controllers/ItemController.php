@@ -100,14 +100,13 @@ class ItemController extends Controller
             // withによるeagerローディングではリレーションを使用する
             $query = $query->with($withRelations)
                 ->searchItems($search)
+                ->filterByCategory($category_id)
                 ->select($selectFields)
                 ->orderBy('created_at', $sortOrder);
 
-            // DBに設定されているidの時のみ反映
-            // 各プルダウン変更時のクエリ、ローカルスコープに切り出しリファクタリング
-            if (Category::where('id', $category_id)->exists()) {
-                $query->where('category_id', $category_id);
-            }
+            // if (Category::where('id', $category_id)->exists()) {
+            //     $query->where('category_id', $category_id);
+            // }
 
             if (Location::where('id', $location_of_use_id)->exists()) {
                 $query->where('location_of_use_id', $location_of_use_id);
