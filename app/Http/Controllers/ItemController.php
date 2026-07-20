@@ -102,12 +102,9 @@ class ItemController extends Controller
                 ->searchItems($search)
                 ->filterByCategory($category_id)
                 ->filterByLocationOfUse($location_of_use_id)
+                ->filterByStorageLocation($storage_location_id)
                 ->select($selectFields)
                 ->orderBy('created_at', $sortOrder);
-
-            if (Location::where('id', $storage_location_id)->exists()) {
-                $query->where('storage_location_id', $storage_location_id);
-            }
 
             $total_count = $query->count();
             $items = $query->paginate(20);
