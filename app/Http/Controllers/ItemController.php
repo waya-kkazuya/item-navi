@@ -52,15 +52,14 @@ class ItemController extends Controller
     {
 
         try {
-            $search = $request->query('search', '');
+            $search = (string) $request->query('search', '');
 
-            // 作成日でソートの値、初期値はasc
-            $sortOrder = $request->query('sortOrder', 'desc');
+            $sortOrder = $request->query('sortOrder') === 'asc' ? 'asc' : 'desc';
 
             // プルダウンの数値、第2引数は初期値で0
-            $category_id = $request->query('categoryId', 0);
-            $location_of_use_id = $request->query('locationOfUseId', 0);
-            $storage_location_id = $request->query('storageLocationId', 0);
+            $category_id = (int) $request->query('categoryId', 0);
+            $location_of_use_id = (int) $request->query('locationOfUseId', 0);
+            $storage_location_id = (int) $request->query('storageLocationId', 0);
             $disposal = $request->query('disposal', 'false');
 
             $withRelations = ['category', 'unit', 'usageStatus', 'locationOfUse', 'storageLocation', 'acquisitionMethod', 'inspections', 'disposal'];

@@ -12,6 +12,8 @@ use App\Models\User;
 use Faker\Factory as FakerFactory;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Inertia\Testing\AssertableInertia as Assert;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 class IndexMethodTest extends TestCase
@@ -430,6 +432,88 @@ class IndexMethodTest extends TestCase
             ->assertOk()
             ->assertInertia(fn (Assert $page) => $page
                 ->has('items.data', 5)   // 現状は全件返る
+            );
+    }
+
+    #[Test]
+    #[DataProvider('arrayParamProvider')]
+    public function プルダウンidに配列を渡しても500にならず全件返る(string $param): void
+    {
+        $categories = Category::factory()->count(11)->create();
+        $units = Unit::factory()->count(10)->create();
+        $usage_statuses = UsageStatus::factory()->count(2)->create();
+        $locations = Location::factory()->count(12)->create();
+        $aquisition_methods = AcquisitionMethod::factory()->count(6)->create();
+
+        $items = Item::factory()->count(5)->create([
+            'management_id' => $this->faker->regexify('[A-Za-z0-9]{7}'),
+            'category_id' => $categories->random()->id,
+            'unit_id' => $units->random()->id,
+            'usage_status_id' => $usage_statuses->random()->id,
+            'location_of_use_id' => $locations->random()->id,
+            'storage_location_id' => $locations->random()->id,
+            'acquisition_method_id' => $aquisition_methods->random()->id,
+            'deleted_at' => null, // ソフトデリートされていない
+        ]);
+
+        // adminユーザーでログイン
+        $this->actingAs(User::factory()->role(1)->create());
+
+        $this->get("/items?{$param}[]=1&{$param}[]=2")
+            ->assertOk()
+            ->assertInertia(fn (Assert $page) => $page->has('items.data', 5));
+    }
+
+    public static function arrayParamProvider(): array
+    {
+        return [
+            'category' => ['categoryId'],
+            'location_of_use' => ['locationOfUseId'],
+            'storage_location' => ['storageLocationId'],
+        ];
+    }
+
+    #[Test]
+    public function sort_orderに不正な値を渡してもエラーにならず新しい順で返る(): void
+    {
+        $categories = Category::factory()->count(11)->create();
+        $units = Unit::factory()->count(10)->create();
+        $usage_statuses = UsageStatus::factory()->count(2)->create();
+        $locations = Location::factory()->count(12)->create();
+        $aquisition_methods = AcquisitionMethod::factory()->count(6)->create();
+
+        // 作成日の異なる2件。desc なら new が先頭に来るはず
+        $old = Item::factory()->create([
+            'management_id' => $this->faker->regexify('[A-Za-z0-9]{7}'),
+            'category_id' => $categories->random()->id,
+            'unit_id' => $units->random()->id,
+            'usage_status_id' => $usage_statuses->random()->id,
+            'location_of_use_id' => $locations->random()->id,
+            'storage_location_id' => $locations->random()->id,
+            'acquisition_method_id' => $aquisition_methods->random()->id,
+            'deleted_at' => null,
+            'created_at' => now()->subDays(2),
+        ]);
+
+        $new = Item::factory()->create([
+            'management_id' => $this->faker->regexify('[A-Za-z0-9]{7}'),
+            'category_id' => $categories->random()->id,
+            'unit_id' => $units->random()->id,
+            'usage_status_id' => $usage_statuses->random()->id,
+            'location_of_use_id' => $locations->random()->id,
+            'storage_location_id' => $locations->random()->id,
+            'acquisition_method_id' => $aquisition_methods->random()->id,
+            'deleted_at' => null,
+            'created_at' => now(),
+        ]);
+
+        $this->actingAs(User::factory()->role(1)->create());
+
+        $this->get('/items?sortOrder=invalid')
+            ->assertOk()                       // 500 にならない
+            ->assertInertia(fn (Assert $page) => $page
+                ->has('items.data', 2)
+                ->where('items.data.0.id', $new->id)   // 先頭が新しい方 = desc に倒れた証拠
             );
     }
 }
