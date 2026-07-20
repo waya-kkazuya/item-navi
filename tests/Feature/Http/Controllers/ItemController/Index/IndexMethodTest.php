@@ -221,8 +221,6 @@ class IndexMethodTest extends TestCase
     /** @test */
     public function category_idで備品を絞り込める(): void
     {
-        // マスタとユーザーの準備...
-
         $targetCategory = Category::factory()->create();
         $otherCategory = Category::factory()->create();
 
@@ -285,6 +283,78 @@ class IndexMethodTest extends TestCase
         $this->actingAs(User::factory()->role(1)->create());
 
         $this->get('/items?categoryId=99999')
+            ->assertOk()
+            ->assertInertia(fn (Assert $page) => $page
+                ->has('items.data', 5)   // 現状は全件返る
+            );
+    }
+
+    /** @test */
+    public function location_of_use_idで備品を絞り込める(): void
+    {
+        $categories = Category::factory()->count(11)->create();
+        $units = Unit::factory()->count(10)->create();
+        $usage_statuses = UsageStatus::factory()->count(2)->create();
+
+        $targetLocation = Location::factory()->create();
+        $otherLocation = Location::factory()->create();
+
+        $aquisition_methods = AcquisitionMethod::factory()->count(6)->create();
+
+        Item::factory()->count(3)->create([
+            'management_id' => $this->faker->regexify('[A-Za-z0-9]{7}'),
+            'category_id' => $categories->random()->id,
+            'unit_id' => $units->random()->id,
+            'usage_status_id' => $usage_statuses->random()->id,
+            'location_of_use_id' => $targetLocation->id,
+            'storage_location_id' => $otherLocation->id,
+            'acquisition_method_id' => $aquisition_methods->random()->id,
+            'deleted_at' => null,
+        ]);
+
+        Item::factory()->count(2)->create([
+            'management_id' => $this->faker->regexify('[A-Za-z0-9]{7}'),
+            'category_id' => $categories->random()->id,
+            'unit_id' => $units->random()->id,
+            'usage_status_id' => $usage_statuses->random()->id,
+            'location_of_use_id' => $otherLocation->id,
+            'storage_location_id' => $otherLocation->id,
+            'acquisition_method_id' => $aquisition_methods->random()->id,
+            'deleted_at' => null,
+        ]);
+
+        $this->actingAs(User::factory()->role(1)->create());
+
+        $this->get("/items?locationOfUseId={$targetLocation->id}")
+            ->assertOk()
+            ->assertInertia(fn (Assert $page) => $page
+                ->has('items.data', 3)   // 使用場所が対象の3件だけ
+            );
+    }
+
+    /** @test */
+    public function 存在しないlocation_of_use_idでは絞り込まれず全件返る(): void
+    {
+        $categories = Category::factory()->count(11)->create();
+        $units = Unit::factory()->count(10)->create();
+        $usage_statuses = UsageStatus::factory()->count(2)->create();
+        $locations = Location::factory()->count(12)->create();
+        $aquisition_methods = AcquisitionMethod::factory()->count(6)->create();
+
+        Item::factory()->count(5)->create([
+            'management_id' => $this->faker->regexify('[A-Za-z0-9]{7}'),
+            'category_id' => $categories->random()->id,
+            'unit_id' => $units->random()->id,
+            'usage_status_id' => $usage_statuses->random()->id,
+            'location_of_use_id' => $locations->random()->id,
+            'storage_location_id' => $locations->random()->id,
+            'acquisition_method_id' => $aquisition_methods->random()->id,
+            'deleted_at' => null,
+        ]);
+
+        $this->actingAs(User::factory()->role(1)->create());
+
+        $this->get('/items?locationOfUseId=99999')
             ->assertOk()
             ->assertInertia(fn (Assert $page) => $page
                 ->has('items.data', 5)   // 現状は全件返る
