@@ -102,18 +102,7 @@ class ItemController extends Controller
             ->select($selectFields)
             ->orderBy('created_at', $sortOrder);
 
-        $total_count = $query->count();
         $items = $query->paginate(20);
-
-        $current_page = $items->currentPage(); // 現在のページ番号
-        $per_page = $items->perPage();     // 1ページあたりの項目数
-        if ($total_count !== 0) {
-            $start_number = ($current_page - 1) * $per_page + 1;                    // 現在のページの最初の項目番号
-            $end_number = min($start_number + $items->count() - 1, $total_count); // 現在のページの最後の項目番号
-        } else {
-            $start_number = 0;
-            $end_number = 0;
-        }
 
         // map関数を使用するとpaginateオブジェクトの構造が変わり、ペジネーションが使えなくなる
         $items->getCollection()->transform(function ($item) {
@@ -144,9 +133,9 @@ class ItemController extends Controller
             'categoryId' => $category_id,
             'locationOfUseId' => $location_of_use_id,
             'storageLocationId' => $storage_location_id,
-            'totalCount' => $total_count,
-            'startNumber' => $start_number,
-            'endNumber' => $end_number,
+            'totalCount' => $items->total(),
+            'startNumber' => $items->firstItem() ?? 0,
+            'endNumber' => $items->lastItem() ?? 0,
             'disposal' => $disposal,
         ]);
 

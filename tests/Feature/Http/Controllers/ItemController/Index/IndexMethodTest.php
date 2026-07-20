@@ -516,4 +516,82 @@ class IndexMethodTest extends TestCase
                 ->where('items.data.0.id', $new->id)   // 先頭が新しい方 = desc に倒れた証拠
             );
     }
+
+    #[Test]
+    public function ページ番号が正しく計算される_1ページ目(): void
+    {
+        $categories = Category::factory()->count(11)->create();
+        $units = Unit::factory()->count(10)->create();
+        $usage_statuses = UsageStatus::factory()->count(2)->create();
+        $locations = Location::factory()->count(12)->create();
+        $aquisition_methods = AcquisitionMethod::factory()->count(6)->create();
+
+        // 25件作る（1ページ20件なので、1ページ目は20件）
+        Item::factory()->count(25)->create([
+            'management_id' => $this->faker->regexify('[A-Za-z0-9]{7}'),
+            'category_id' => $categories->random()->id,
+            'unit_id' => $units->random()->id,
+            'usage_status_id' => $usage_statuses->random()->id,
+            'location_of_use_id' => $locations->random()->id,
+            'storage_location_id' => $locations->random()->id,
+            'acquisition_method_id' => $aquisition_methods->random()->id,
+            'deleted_at' => null,
+        ]);
+
+        $this->actingAs(User::factory()->role(1)->create());
+
+        $this->get('/items')
+            ->assertOk()
+            ->assertInertia(fn (Assert $page) => $page
+                ->where('totalCount', 25)
+                ->where('startNumber', 1)
+                ->where('endNumber', 20)
+            );
+    }
+
+    #[Test]
+    public function ページ番号が正しく計算される_2ページ目(): void
+    {
+        $categories = Category::factory()->count(11)->create();
+        $units = Unit::factory()->count(10)->create();
+        $usage_statuses = UsageStatus::factory()->count(2)->create();
+        $locations = Location::factory()->count(12)->create();
+        $aquisition_methods = AcquisitionMethod::factory()->count(6)->create();
+
+        // 25件（2ページ目は 21〜25 の5件）
+        Item::factory()->count(25)->create([
+            'management_id' => $this->faker->regexify('[A-Za-z0-9]{7}'),
+            'category_id' => $categories->random()->id,
+            'unit_id' => $units->random()->id,
+            'usage_status_id' => $usage_statuses->random()->id,
+            'location_of_use_id' => $locations->random()->id,
+            'storage_location_id' => $locations->random()->id,
+            'acquisition_method_id' => $aquisition_methods->random()->id,
+            'deleted_at' => null,
+        ]);
+
+        $this->actingAs(User::factory()->role(1)->create());
+
+        $this->get('/items?page=2')
+            ->assertOk()
+            ->assertInertia(fn (Assert $page) => $page
+                ->where('totalCount', 25)
+                ->where('startNumber', 21)
+                ->where('endNumber', 25)   // 半端な最終ページ = min() が効く境界
+            );
+    }
+
+    #[Test]
+    public function 備品が0件のときページ番号は0になる(): void
+    {
+        $this->actingAs(User::factory()->role(1)->create());
+
+        $this->get('/items')
+            ->assertOk()
+            ->assertInertia(fn (Assert $page) => $page
+                ->where('totalCount', 0)
+                ->where('startNumber', 0)
+                ->where('endNumber', 0)
+            );
+    }
 }
