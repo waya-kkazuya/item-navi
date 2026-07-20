@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
 use App\Models\Item;
 use Barryvdh\Snappy\Facades\SnappyPdf as PDF;
 use Illuminate\Support\Facades\Log;
@@ -14,8 +13,6 @@ class PDFController extends Controller
 
     public function generatePDF()
     {
-        Log::info('PDFController generatePDF method called');
-
         // 消耗品のQRコードをすべて取得する（現在カテゴリが消耗品のもの、変更されている可能性もある）
         $consumableItems = Item::whereNull('deleted_at')
             ->where('category_id', self::CATEGORY_ID_FOR_CONSUMABLE_ITME)
@@ -25,8 +22,8 @@ class PDFController extends Controller
         $qrCodes = [];
         foreach ($consumableItems as $consumableItem) {
             $qrCodes[] = config('filesystems.default') === 's3'
-                ? Storage::disk()->url('labels/' . $consumableItem->qrcode)
-                : Storage::disk()->path('labels/' . $consumableItem->qrcode);
+                ? Storage::disk()->url('labels/'.$consumableItem->qrcode)
+                : Storage::disk()->path('labels/'.$consumableItem->qrcode);
         }
 
         if (empty($qrCodes)) {
@@ -35,7 +32,7 @@ class PDFController extends Controller
             return to_route('consumable_items')
                 ->with([
                     'message' => 'QRラベルが存在しません',
-                    'status'  => 'danger',
+                    'status' => 'danger',
                 ]);
         }
 
@@ -49,8 +46,6 @@ class PDFController extends Controller
             ->setOption('footer-center', '[page] / [topage]') // フッター中央に現在のページ番号と総ページ数を表示
             ->setOption('footer-font-size', 10)
             ->setOption('enable-local-file-access', true);
-
-        Log::info('PDFController generatePDF method succeeded');
 
         return $pdf->inline('消耗品QRコード.pdf');
     }

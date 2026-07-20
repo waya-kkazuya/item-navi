@@ -26,9 +26,8 @@ class ProfileController extends Controller
 
     public function edit(Request $request): Response
     {
-        Log::info('ProfileController edit method called');
 
-        $user          = Auth::user();
+        $user = Auth::user();
         $profile_image = $user->profile_image;
 
         $defaultDisk = Storage::disk();
@@ -36,25 +35,22 @@ class ProfileController extends Controller
         if (is_null($profile_image)) {
             $profile_image_path = $defaultDisk->url('profile/profile_default_image.png');
         } else {
-            if (Storage::disk()->exists('profile/' . $profile_image)) {
-                $profile_image_path = $defaultDisk->url('profile/' . $profile_image);
+            if (Storage::disk()->exists('profile/'.$profile_image)) {
+                $profile_image_path = $defaultDisk->url('profile/'.$profile_image);
             } else {
                 $profile_image_path = $defaultDisk->url('profile/profile_default_image.png');
             }
         }
 
-        Log::info('ProfileController edit method succeeded');
-
         return Inertia::render('Profile/Edit', [
-            'mustVerifyEmail'    => $request->user() instanceof MustVerifyEmail,
-            'status'             => session('status'),
+            'mustVerifyEmail' => $request->user() instanceof MustVerifyEmail,
+            'status' => session('status'),
             'profile_image_path' => $profile_image_path,
         ]);
     }
 
     public function update(ProfileUpdateRequest $request): RedirectResponse
     {
-        Log::info('ProfileController update method called');
 
         // ロールバックした時のプロフィール画像を元に戻す準備
         if (! Storage::disk()->exists('temp')) {
@@ -63,8 +59,8 @@ class ProfileController extends Controller
 
         // 変数の初期化
         $profileImagefileNameToStore = null;
-        $fileNameOfOldProfileImage   = null;
-        $temporaryBackupPath         = null;
+        $fileNameOfOldProfileImage = null;
+        $temporaryBackupPath = null;
 
         DB::beginTransaction();
 
@@ -79,13 +75,13 @@ class ProfileController extends Controller
                 // すでに画像があれば削除
                 $fileNameOfOldProfileImage = $request->user()->profile_image;
                 if ($fileNameOfOldProfileImage) {
-                    $temporaryBackupPath = 'temp/' . $fileNameOfOldProfileImage;
-                    Storage::disk()->copy('items/' . $fileNameOfOldProfileImage, $temporaryBackupPath);
-                    Storage::disk()->delete('profile/' . $request->user()->profile_image);
+                    $temporaryBackupPath = 'temp/'.$fileNameOfOldProfileImage;
+                    Storage::disk()->copy('items/'.$fileNameOfOldProfileImage, $temporaryBackupPath);
+                    Storage::disk()->delete('profile/'.$request->user()->profile_image);
                 }
 
                 // 画像ファイルのアップロードとDBのimage1のファイル名更新
-                $profileImagefileNameToStore    = $this->imageService->profileImageResizeUpload($request->profile_image_file);
+                $profileImagefileNameToStore = $this->imageService->profileImageResizeUpload($request->profile_image_file);
                 $request->user()->profile_image = $profileImagefileNameToStore;
             }
 
@@ -93,36 +89,34 @@ class ProfileController extends Controller
 
             DB::commit();
 
-            Log::info('ProfileController update method succeeded');
-
             return Redirect::route('profile.edit')
                 ->with([
                     'message' => 'プロフィールを更新しました。',
-                    'status'  => 'success',
+                    'status' => 'success',
                 ]);
         } catch (\Exception $e) {
             DB::rollBack();
 
             Log::error('ProfileController update method Transaction failed', [
-                'error'   => $e->getMessage(),
-                'stack'   => $e->getTraceAsString(),
+                'error' => $e->getMessage(),
+                'stack' => $e->getTraceAsString(),
                 'request' => $request->all(),
             ]);
 
             // アップロードした備品の画像の削除
-            if (Storage::disk()->exists('profile/' . $profileImagefileNameToStore)) {
-                Storage::disk()->delete('profile/' . $profileImagefileNameToStore);
+            if (Storage::disk()->exists('profile/'.$profileImagefileNameToStore)) {
+                Storage::disk()->delete('profile/'.$profileImagefileNameToStore);
             }
 
             // バックアップした変更前のプロフィール画像を元の場所に保存
             if ($temporaryBackupPath) {
-                Storage::disk()->move($temporaryBackupPath, 'items/' . $fileNameOfOldProfileImage);
+                Storage::disk()->move($temporaryBackupPath, 'items/'.$fileNameOfOldProfileImage);
             }
 
             return redirect()->back()
                 ->with([
                     'message' => 'プロフィールの更新中にエラーが発生しました',
-                    'status'  => 'danger',
+                    'status' => 'danger',
                 ]);
         }
     }

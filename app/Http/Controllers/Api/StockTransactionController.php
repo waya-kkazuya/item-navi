@@ -7,14 +7,11 @@ use App\Models\Item;
 use App\Models\StockTransaction;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 
 class StockTransactionController extends Controller
 {
     public function index(Request $request)
     {
-        Log::info('StockTransactionController API stockTransaction method called');
-
         $item = Item::find($request->item_id);
 
         // stock_transactionsを取得 withを使うとitemの情報すべてが取れてくる
@@ -33,28 +30,26 @@ class StockTransactionController extends Controller
             $transaction->current_stock = $current_stock;
 
             // 次のレコードの在庫数を計算、次に持ち越し
-            $current_stock -= $transaction->quantity; //過去に遡るからマイナス
+            $current_stock -= $transaction->quantity; // 過去に遡るからマイナス
 
             // 曜日は日本語で表示する
-            $daysOfWeek                        = ['日', '月', '火', '水', '木', '金', '土'];
-            $created_at                        = Carbon::parse($transaction->created_at);
-            $japaneseDayOfWeek                 = $daysOfWeek[$created_at->dayOfWeek];
-            $transaction->formatted_created_at = $created_at->format('Y-m-d') . " ({$japaneseDayOfWeek}) " . $created_at->format('H:i');
+            $daysOfWeek = ['日', '月', '火', '水', '木', '金', '土'];
+            $created_at = Carbon::parse($transaction->created_at);
+            $japaneseDayOfWeek = $daysOfWeek[$created_at->dayOfWeek];
+            $transaction->formatted_created_at = $created_at->format('Y-m-d')." ({$japaneseDayOfWeek}) ".$created_at->format('H:i');
         });
 
         // グラフ用のデータを準備、時系列を左から右にするため配列を逆順にする
-        $labels            = array_reverse($stock_transactions->pluck('formatted_created_at')->toArray());
-        $stocks            = array_reverse($stock_transactions->pluck('current_stock')->toArray());
+        $labels = array_reverse($stock_transactions->pluck('formatted_created_at')->toArray());
+        $stocks = array_reverse($stock_transactions->pluck('current_stock')->toArray());
         $transaction_types = array_reverse($stock_transactions->pluck('transaction_type')->toArray());
-
-        Log::info('StockTransactionController API stockTransaction method succeeded');
 
         return [
             'stockTransactions' => $stock_transactions,
-            'labels'            => $labels,
-            'stocks'            => $stocks,
+            'labels' => $labels,
+            'stocks' => $stocks,
             'transaction_types' => $transaction_types,
-            'minimum_stock'     => $item->minimum_stock,
+            'minimum_stock' => $item->minimum_stock,
         ];
     }
 }
