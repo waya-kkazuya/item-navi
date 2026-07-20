@@ -2,25 +2,21 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
 
 class NotificationController extends Controller
 {
     public function index()
     {
-        Log::info('NotificationController index method called');
-
         // Auth::user()->notifications; ログイン中ユーザーへの通知
         // SystemNotification::all(); 全ての通知
         // ※情報がない場合、nullではなく空のコレクションとして扱われる
 
         // ログイン中のユーザーに向けた通知を取得
         $notifications = Auth::user()->notifications->map(function ($notification) {
-            $notification->id            = (string) $notification->id;                                // UUIDを文字列として扱う、明示的に文字列としないと挙動がおかしくなる
+            $notification->id = (string) $notification->id;                                // UUIDを文字列として扱う、明示的に文字列としないと挙動がおかしくなる
             $notification->relative_time = Carbon::parse($notification->created_at)->diffForHumans(); // 相対的な時間を追加
 
             return $notification;
@@ -53,20 +49,18 @@ class NotificationController extends Controller
         })->take(20);
 
         // タブの右上に表示する丸の判定基準のため、それぞれの未読の通知数を所得
-        $unreadLowStockNotifications              = $lowStockNotifications->where('read_at', null)->count();
+        $unreadLowStockNotifications = $lowStockNotifications->where('read_at', null)->count();
         $unreadInspectionAndDisposalNotifications = $inspectionAndDisposalNotifications->where('read_at', null)->count();
-        $unreadRequestedItemNotifications         = $requestedItemNotifications->where('read_at', null)->count();
-
-        Log::info('NotificationController index method succeeded');
+        $unreadRequestedItemNotifications = $requestedItemNotifications->where('read_at', null)->count();
 
         return Inertia::render('Notification', [
-            'notifications'                            => $notifications,
-            'lowStockNotifications'                    => $lowStockNotifications,
-            'inspectionAndDisposalNotifications'       => $inspectionAndDisposalNotifications,
-            'requestedItemNotifications'               => $requestedItemNotifications,
-            'unreadLowStockNotifications'              => $unreadLowStockNotifications,
+            'notifications' => $notifications,
+            'lowStockNotifications' => $lowStockNotifications,
+            'inspectionAndDisposalNotifications' => $inspectionAndDisposalNotifications,
+            'requestedItemNotifications' => $requestedItemNotifications,
+            'unreadLowStockNotifications' => $unreadLowStockNotifications,
             'unreadInspectionAndDisposalNotifications' => $unreadInspectionAndDisposalNotifications,
-            'unreadRequestedItemNotifications'         => $unreadRequestedItemNotifications,
+            'unreadRequestedItemNotifications' => $unreadRequestedItemNotifications,
         ]);
     }
 }

@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Events\LowStockDetectEvent;
-use App\Http\Controllers\Controller;
 use App\Http\Requests\DecreaseStockRequest;
 use App\Http\Requests\IncreaseStockRequest;
 use App\Models\Item;
@@ -15,7 +14,6 @@ class UpdateStockController extends Controller
 {
     public function decreaseStock(DecreaseStockRequest $request, Item $item)
     {
-        Log::info('UpdateStockController decreaseStock method called');
 
         DB::beginTransaction();
 
@@ -27,15 +25,15 @@ class UpdateStockController extends Controller
                 return to_route('consumable_items')
                     ->with([
                         'message' => '出庫数に正しい値を入力してください',
-                        'status' => 'danger'
+                        'status' => 'danger',
                     ]);
             }
 
             // stock_transactionsテーブルの新しいレコードを作成
-            $stockTransaction = new StockTransaction();
+            $stockTransaction = new StockTransaction;
             $stockTransaction->item_id = $item->id;
             $stockTransaction->transaction_type = $request->transaction_type;
-            $stockTransaction->quantity = -$request->quantity; //出庫なので数量をマイナスにして保存
+            $stockTransaction->quantity = -$request->quantity; // 出庫なので数量をマイナスにして保存
             $stockTransaction->operator_name = $request->operator_name;
             $stockTransaction->save();
 
@@ -52,12 +50,10 @@ class UpdateStockController extends Controller
 
             DB::commit();
 
-            Log::info('UpdateStockController decreaseStock method succeeded');
-
             return to_route('consumable_items')
                 ->with([
                     'message' => '在庫数を更新しました。',
-                    'status' => 'success'
+                    'status' => 'success',
                 ]);
         } catch (\Exception $e) {
             DB::rollBack();
@@ -65,20 +61,19 @@ class UpdateStockController extends Controller
             Log::error('UpdateStockController decreaseStock method Transaction failed', [
                 'error' => $e->getMessage(),
                 'stack' => $e->getTraceAsString(),
-                'request' => $request->all()
+                'request' => $request->all(),
             ]);
 
             return redirect()->back()
                 ->with([
                     'message' => '登録中にエラーが発生しました',
-                    'status' => 'danger'
+                    'status' => 'danger',
                 ]);
         }
     }
 
     public function increaseStock(IncreaseStockRequest $request, Item $item)
     {
-        Log::info('UpdateStockController increaseStock method called');
 
         DB::beginTransaction();
 
@@ -90,11 +85,11 @@ class UpdateStockController extends Controller
                 return to_route('consumable_items')
                     ->with([
                         'message' => '出庫数に正しい値を入力してください',
-                        'status' => 'danger'
+                        'status' => 'danger',
                     ]);
             }
 
-            $stockTransaction = new StockTransaction();
+            $stockTransaction = new StockTransaction;
             $stockTransaction->item_id = $item->id;
             $stockTransaction->transaction_type = $request->transaction_type;
             $stockTransaction->quantity = $request->quantity;
@@ -109,12 +104,10 @@ class UpdateStockController extends Controller
 
             DB::commit();
 
-            Log::info('UpdateStockController increaseStock method succeeded');
-
             return to_route('consumable_items')
                 ->with([
                     'message' => '在庫数を更新しました。',
-                    'status' => 'success'
+                    'status' => 'success',
                 ]);
         } catch (\Exception $e) {
             DB::rollBack();
@@ -122,13 +115,13 @@ class UpdateStockController extends Controller
             Log::error('UpdateStockController increaseStock method Transaction failed', [
                 'error' => $e->getMessage(),
                 'stack' => $e->getTraceAsString(),
-                'request' => $request->all()
+                'request' => $request->all(),
             ]);
 
             return redirect()->back()
                 ->with([
                     'message' => '登録中にエラーが発生しました',
-                    'status' => 'danger'
+                    'status' => 'danger',
                 ]);
         }
     }
