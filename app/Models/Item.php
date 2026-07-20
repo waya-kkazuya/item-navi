@@ -125,6 +125,14 @@ class Item extends Model
         );
     }
 
+    public function scopeFilterByLocationOfUse(Builder $query, ?string $locationId)
+    {
+        return $query->when(
+            $locationId && Location::whereKey($locationId)->exists(),
+            fn ($q) => $q->where('location_of_use_id', $locationId)
+        );
+    }
+
     // createad_atを'Y-m-d'形式にするアクセサ
     public function getCreatedAtAttribute($value)
     {

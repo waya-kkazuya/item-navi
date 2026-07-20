@@ -101,16 +101,9 @@ class ItemController extends Controller
             $query = $query->with($withRelations)
                 ->searchItems($search)
                 ->filterByCategory($category_id)
+                ->filterByLocationOfUse($location_of_use_id)
                 ->select($selectFields)
                 ->orderBy('created_at', $sortOrder);
-
-            // if (Category::where('id', $category_id)->exists()) {
-            //     $query->where('category_id', $category_id);
-            // }
-
-            if (Location::where('id', $location_of_use_id)->exists()) {
-                $query->where('location_of_use_id', $location_of_use_id);
-            }
 
             if (Location::where('id', $storage_location_id)->exists()) {
                 $query->where('storage_location_id', $storage_location_id);
