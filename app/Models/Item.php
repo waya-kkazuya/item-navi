@@ -2,11 +2,8 @@
 
 namespace App\Models;
 
-use App\Models\Category;
-use App\Models\Disposal;
-use App\Models\Location;
-use App\Models\Unit;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -118,6 +115,14 @@ class Item extends Model
         if (! empty($input)) {
             return $query->where('name', 'like', "%{$input}%");
         }
+    }
+
+    public function scopeFilterByCategory(Builder $query, ?string $categoryId)
+    {
+        return $query->when(
+            $categoryId && Category::whereKey($categoryId)->exists(),
+            fn ($q) => $q->where('category_id', $categoryId)
+        );
     }
 
     // createad_atを'Y-m-d'形式にするアクセサ
