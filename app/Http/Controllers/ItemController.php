@@ -120,14 +120,10 @@ class ItemController extends Controller
         // 変換後のコレクションを元のpaginateオブジェクトに戻す
         $items = $items->setCollection($items->getCollection());
 
-        // プルダウン用データ
-        $categories = Category::all();
-        $locations = Location::all();
-
         return Inertia::render('Items/Index', [
             'items' => $items,
-            'categories' => $categories,
-            'locations' => $locations,
+            'categories' => Category::all(), // 今後キャッシュ実装予定
+            'locations' => Location::all(), // 今後キャッシュ実装予定
             'search' => $search,
             'sortOrder' => $sortOrder,
             'categoryId' => $category_id,
@@ -138,7 +134,6 @@ class ItemController extends Controller
             'endNumber' => $items->lastItem() ?? 0,
             'disposal' => $disposal,
         ]);
-
     }
 
     public function create(Request $request)
